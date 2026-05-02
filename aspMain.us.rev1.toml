@@ -1,0 +1,6 @@
+text_offset = 0xC40FF0
+text_size = 0x1000
+text_address = 0x04001000
+rom_file_path = "Star Wars - Rogue Squadron (USA).n64"
+output_file_path = "rsp/aspMain.cpp"
+output_function_name = "aspMain"

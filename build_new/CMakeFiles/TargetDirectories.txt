@@ -1,0 +1,16 @@
+E:/Projects/N64Recomp/build_new/CMakeFiles/rabbitizer.dir
+E:/Projects/N64Recomp/build_new/CMakeFiles/SymbolLists.dir
+E:/Projects/N64Recomp/build_new/CMakeFiles/N64Recomp.dir
+E:/Projects/N64Recomp/build_new/CMakeFiles/N64RecompElf.dir
+E:/Projects/N64Recomp/build_new/CMakeFiles/N64RecompCLI.dir
+E:/Projects/N64Recomp/build_new/CMakeFiles/RSPRecomp.dir
+E:/Projects/N64Recomp/build_new/CMakeFiles/RecompModTool.dir
+E:/Projects/N64Recomp/build_new/CMakeFiles/OfflineModRecomp.dir
+E:/Projects/N64Recomp/build_new/CMakeFiles/RecompModMerger.dir
+E:/Projects/N64Recomp/build_new/CMakeFiles/LiveRecomp.dir
+E:/Projects/N64Recomp/build_new/CMakeFiles/LiveRecompTest.dir
+E:/Projects/N64Recomp/build_new/CMakeFiles/ALL_BUILD.dir
+E:/Projects/N64Recomp/build_new/CMakeFiles/ZERO_CHECK.dir
+E:/Projects/N64Recomp/build_new/lib/fmt/CMakeFiles/fmt.dir
+E:/Projects/N64Recomp/build_new/lib/fmt/CMakeFiles/ALL_BUILD.dir
+E:/Projects/N64Recomp/build_new/lib/tomlplusplus/CMakeFiles/ALL_BUILD.dir

@@ -133,6 +133,21 @@ uint32_t expected_c0_reg_value(int cop0_reg) {
         return 0; // Always acquire the semaphore
     case Cop0Reg::RSP_COP0_DPC_STATUS:
         return 0; // Good enough for the microcodes that would be recompiled (i.e. non-graphics ones)
+    // Graphics-ucode extensions: stub DPC counter reads and SP DMA pointer reads as 0.
+    // Real values will need to come from the host RDP when LLE graphics ucodes are wired up.
+    case Cop0Reg::RSP_COP0_DPC_START:
+    case Cop0Reg::RSP_COP0_DPC_END:
+    case Cop0Reg::RSP_COP0_DPC_CURRENT:
+    case Cop0Reg::RSP_COP0_DPC_CLOCK:
+    case Cop0Reg::RSP_COP0_DPC_BUFBUSY:
+    case Cop0Reg::RSP_COP0_DPC_PIPEBUSY:
+    case Cop0Reg::RSP_COP0_DPC_TMEM:
+        return 0;
+    case Cop0Reg::RSP_COP0_SP_MEM_ADDR:
+    case Cop0Reg::RSP_COP0_SP_DRAM_ADDR:
+    case Cop0Reg::RSP_COP0_SP_RD_LEN:
+    case Cop0Reg::RSP_COP0_SP_WR_LEN:
+        return 0;
     default:
         fmt::print(stderr, "Unhandled mfc0: {}\n", cop0_reg);
         throw std::runtime_error("Unhandled mfc0");
@@ -154,6 +169,20 @@ std::string_view c0_reg_write_action(int cop0_reg) {
         return "DO_DMA_READ";
     case Cop0Reg::RSP_COP0_SP_WR_LEN:
         return "DO_DMA_WRITE";
+    // Graphics-ucode extensions: stub DPC writes. Real wiring requires a host-side RDP command buffer.
+    case Cop0Reg::RSP_COP0_DPC_START:
+        return "SET_DPC_START";
+    case Cop0Reg::RSP_COP0_DPC_END:
+        return "SET_DPC_END";
+    case Cop0Reg::RSP_COP0_DPC_CURRENT:
+        return "SET_DPC_CURRENT";
+    case Cop0Reg::RSP_COP0_DPC_STATUS:
+        return ""; // Ignore DPC status writes
+    case Cop0Reg::RSP_COP0_DPC_CLOCK:
+    case Cop0Reg::RSP_COP0_DPC_BUFBUSY:
+    case Cop0Reg::RSP_COP0_DPC_PIPEBUSY:
+    case Cop0Reg::RSP_COP0_DPC_TMEM:
+        return ""; // Read-only counters — ignore writes
     default:
         fmt::print(stderr, "Unhandled mtc0: {}\n", cop0_reg);
         throw std::runtime_error("Unhandled mtc0");

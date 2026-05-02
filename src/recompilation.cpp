@@ -414,6 +414,11 @@ bool process_instruction(GeneratorType& generator, const N64Recomp::Context& con
     case InstrId::cpu_nop:
         fmt::print(output_file, "\n");
         break;
+    case InstrId::cpu_cache:
+    case InstrId::cpu_scd:
+        // cache maintenance / 64-bit store-conditional — no-op in recompiled output
+        fmt::print(output_file, "\n");
+        break;
     // Cop0 (Limited functionality)
     case InstrId::cpu_mfc0:
         {

@@ -917,8 +917,12 @@ int main(int argc, char** argv) {
                     section_name_trimmed.remove_prefix(1);
                 }
 
-                std::string section_funcs_array_name = fmt::format("section_{}_{}_funcs", section_index, section_name_trimmed);
-                std::string section_relocs_array_name = section_relocs.empty() ? "nullptr" : fmt::format("section_{}_{}_relocs", section_index, section_name_trimmed);
+                // Replace any remaining dots with underscores so the name is a valid C identifier.
+                std::string section_name_sanitized { section_name_trimmed };
+                std::replace(section_name_sanitized.begin(), section_name_sanitized.end(), '.', '_');
+
+                std::string section_funcs_array_name = fmt::format("section_{}_{}_funcs", section_index, section_name_sanitized);
+                std::string section_relocs_array_name = section_relocs.empty() ? "nullptr" : fmt::format("section_{}_{}_relocs", section_index, section_name_sanitized);
                 std::string section_relocs_array_size = section_relocs.empty() ? "0" : fmt::format("ARRLEN({})", section_relocs_array_name);
 
                 // Write the section's table entry.

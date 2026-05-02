@@ -1,0 +1,3 @@
+Function count: 1601
+Working dir: E:\Projects\N64Recomp
+[Info] Tail call in recomp_entrypoint to 0x8000161C

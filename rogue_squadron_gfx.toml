@@ -1,0 +1,6 @@
+text_offset          = 0x25610
+text_size            = 0x1FA0
+text_address         = 0x04001000
+rom_file_path        = "Star Wars - Rogue Squadron (USA).n64"
+output_file_path     = "rsp/gfxMain.cpp"
+output_function_name = "gfxMain"
