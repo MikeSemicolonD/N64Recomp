@@ -7710,6 +7710,21 @@ L_800123FC:
 RECOMP_FUNC void func_80012408(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    {
+        static int n = 0;
+        ++n;
+        if (n <= 10 || (n % 60) == 0) {
+            uint32_t structAddr = (uint32_t)ctx->r5;  // a1
+            uint32_t mips_alpha = (structAddr & 0x7FFFFFFFu) + 0x2F;
+            uint8_t alpha = rdram[(mips_alpha ^ 3) & 0x7FFFFFFFu];
+            uint8_t r = rdram[(((structAddr & 0x7FFFFFFFu) + 0x2C) ^ 3) & 0x7FFFFFFFu];
+            uint8_t g = rdram[(((structAddr & 0x7FFFFFFFu) + 0x2D) ^ 3) & 0x7FFFFFFFu];
+            uint8_t b = rdram[(((structAddr & 0x7FFFFFFFu) + 0x2E) ^ 3) & 0x7FFFFFFFu];
+            fprintf(stderr, "[trace] func_80012408 #%d struct=0x%08X RGBA=%02X%02X%02X%02X\n",
+                n, structAddr, r, g, b, alpha);
+            fflush(stderr);
+        }
+    }
     // 0x80012408: addiu       $sp, $sp, -0xA8
     ctx->r29 = ADD32(ctx->r29, -0XA8);
     // 0x8001240C: sw          $s3, 0x6C($sp)
@@ -17144,7 +17159,23 @@ L_80015984:
 RECOMP_FUNC void func_800159B4(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { static int n = 0; if (++n <= 5 || n % 100 == 0) { fprintf(stderr, "[trace] draw_glyph func_800159B4 #%d\n", n); fflush(stderr); } }
+    { static int n = 0; ++n;
+      uint32_t structAddr = (uint32_t)ctx->r4;  // a0 → s3
+      uint32_t base = structAddr & 0x7FFFFFFFu;
+      uint8_t r = rdram[((base + 0x2C) ^ 3) & 0x7FFFFFFFu];
+      uint8_t g = rdram[((base + 0x2D) ^ 3) & 0x7FFFFFFFu];
+      uint8_t b = rdram[((base + 0x2E) ^ 3) & 0x7FFFFFFFu];
+      uint8_t a = rdram[((base + 0x2F) ^ 3) & 0x7FFFFFFFu];
+      // log first 30, plus every 200th, plus any change to the cream-text alpha at 0x80193FA0
+      static uint8_t lastA_at_FA0 = 0xFFu;
+      int isFA0_change = (structAddr == 0x80193FA0u) && (a != lastA_at_FA0);
+      if (isFA0_change) lastA_at_FA0 = a;
+      if (n <= 30 || (n % 200) == 0 || isFA0_change) {
+          fprintf(stderr, "[trace] draw_glyph #%d struct=0x%08X RGBA=%02X%02X%02X%02X\n",
+              n, structAddr, r, g, b, a);
+          fflush(stderr);
+      }
+    }
     // 0x800159B4: lui         $v0, 0x8012
     ctx->r2 = S32(0X8012 << 16);
     // 0x800159B8: lbu         $v0, -0x5BAC($v0)
@@ -28921,11 +28952,18 @@ L_800198E8:
     // 0x800198F4: jal         0x800331D0
     // 0x800198F8: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
+    { static int n=0; if (++n<=10 || (n%200)==0) { fprintf(stderr, "[trace] frame::recv1-pre #%d (retrace mq=0x%08X)\n", n, (uint32_t)ctx->r4); fflush(stderr); } }
     osRecvMesg_recomp(rdram, ctx);
         goto after_3;
     // 0x800198F8: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
     after_3:
+    { static int n=0; if (++n<=10 || (n%200)==0) { fprintf(stderr, "[trace] frame::recv1-post #%d\n", n); fflush(stderr); } }
+    { static int iter=0; ++iter; if (iter>=5 && iter<=15) {
+        uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
+        fprintf(stderr, "[ck] iter=%d post-recv1 cE=%u\n", iter, (unsigned)cE);
+        fflush(stderr);
+    } }
     // 0x800198FC: jal         0x80034D90
     // 0x80019900: nop
 
@@ -28946,6 +28984,11 @@ L_800198E8:
     // 0x80019910: addu        $s1, $zero, $zero
     ctx->r17 = ADD32(0, 0);
     after_5:
+    { static int iter=0; ++iter; if (iter>=5 && iter<=15) {
+        uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
+        fprintf(stderr, "[ck] iter=%d pre-B7F0 cE=%u\n", iter, (unsigned)cE);
+        fflush(stderr);
+    } }
     // 0x80019914: jal         0x8001B7F0
     // 0x80019918: addu        $s0, $v1, $zero
     ctx->r16 = ADD32(ctx->r3, 0);
@@ -28954,6 +28997,11 @@ L_800198E8:
     // 0x80019918: addu        $s0, $v1, $zero
     ctx->r16 = ADD32(ctx->r3, 0);
     after_6:
+    { static int iter=0; ++iter; if (iter>=5 && iter<=15) {
+        uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
+        fprintf(stderr, "[ck] iter=%d post-B7F0 cE=%u\n", iter, (unsigned)cE);
+        fflush(stderr);
+    } }
     // 0x8001991C: lui         $a0, 0x8013
     ctx->r4 = S32(0X8013 << 16);
     // 0x80019920: addiu       $a0, $a0, -0x72F0
@@ -28963,15 +29011,29 @@ L_800198E8:
     // 0x80019928: jal         0x800331D0
     // 0x8001992C: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
+    { static int n=0; if (++n<=10 || (n%200)==0) { fprintf(stderr, "[trace] frame::recv2-pre #%d (mq=0x%08X)\n", n, (uint32_t)ctx->r4); fflush(stderr); } }
     osRecvMesg_recomp(rdram, ctx);
+    { static int n=0; if (++n<=10 || (n%200)==0) { fprintf(stderr, "[trace] frame::recv2-post #%d ret=%d\n", n, (int)(int32_t)ctx->r2); fflush(stderr); } }
         goto after_7;
     // 0x8001992C: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
     after_7:
+    { static int iter=0; ++iter; if (iter>=5 && iter<=15) {
+        uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
+        fprintf(stderr, "[ck] iter=%d post-recv2 cE=%u\n", iter, (unsigned)cE);
+        fflush(stderr);
+    } }
     // 0x80019930: lbu         $v0, 0x0($s6)
     ctx->r2 = MEM_BU(ctx->r22, 0X0);
     // 0x80019934: lbu         $v1, -0x1($s6)
     ctx->r3 = MEM_BU(ctx->r22, -0X1);
+    { static int n=0; ++n; if (n<=10 || (n%20)==0) {
+        uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
+        uint8_t cF = *(uint8_t*)(rdram + (size_t)((0x80128EAFu ^ 3) & 0x7FFFFFFFu));
+        fprintf(stderr, "[trace] frame::counter-pre-inc #%d r2(E)=%u r3(LIMIT)=%u realE=%u realF=%u\n",
+            n, (unsigned)(ctx->r2 & 0xFF), (unsigned)(ctx->r3 & 0xFF), (unsigned)cE, (unsigned)cF);
+        fflush(stderr);
+    } }
     // 0x80019938: lui         $at, 0x8013
     ctx->r1 = S32(0X8013 << 16);
     // 0x8001993C: sw          $s0, -0x7128($at)
@@ -28982,10 +29044,22 @@ L_800198E8:
     if (SIGNED(ctx->r3) <= 0) {
         // 0x80019948: sb          $v0, 0x0($s6)
         MEM_B(0X0, ctx->r22) = ctx->r2;
+        { static int n=0; ++n; if (n<=10 || (n%20)==0) {
+            uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
+            fprintf(stderr, "[trace] frame::counter-post-write(blez) #%d wrote=%u realE_now=%u\n",
+                n, (unsigned)(ctx->r2 & 0xFF), (unsigned)cE);
+            fflush(stderr);
+        } }
             goto L_80019A0C;
     }
     // 0x80019948: sb          $v0, 0x0($s6)
     MEM_B(0X0, ctx->r22) = ctx->r2;
+    { static int n=0; ++n; if (n<=10 || (n%20)==0) {
+        uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
+        fprintf(stderr, "[trace] frame::counter-post-write #%d wrote=%u realE_now=%u\n",
+            n, (unsigned)(ctx->r2 & 0xFF), (unsigned)cE);
+        fflush(stderr);
+    } }
     // 0x8001994C: lui         $v0, 0x8013
     ctx->r2 = S32(0X8013 << 16);
     // 0x80019950: addiu       $v0, $v0, -0x7134
@@ -29212,10 +29286,14 @@ L_80019A7C:
 L_80019A90:
     // 0x80019A90: addiu       $v0, $zero, -0x1
     ctx->r2 = ADD32(0, -0X1);
+    { static int n=0; ++n; if (n<=10 || (n%10)==0) {
+        fprintf(stderr, "[trace] frame::L_80019A90 #%d a1=%d\n", n, (int)(int32_t)ctx->r5);
+        fflush(stderr);
+    } }
     // 0x80019A94: beq         $a1, $v0, L_80019B1C
     if (ctx->r5 == ctx->r2) {
         // 0x80019A98: nop
-    
+        { static int n=0; if (++n<=15 || (n%50)==0) { fprintf(stderr, "[trace] frame::skip-swap (a1==-1) #%d\n", n); fflush(stderr); } }
             goto L_80019B1C;
     }
     // 0x80019A98: nop
@@ -29263,6 +29341,7 @@ L_80019AB4:
     if (ctx->r3 != 0) {
         // 0x80019ADC: addiu       $t2, $zero, 0x4
         ctx->r10 = ADD32(0, 0X4);
+        { static int n=0; if (++n<=15 || (n%50)==0) { fprintf(stderr, "[trace] frame::skip-swap (loopgate) #%d\n", n); fflush(stderr); } }
             goto L_80019B1C;
     }
     // 0x80019ADC: addiu       $t2, $zero, 0x4
@@ -29312,6 +29391,11 @@ L_80019AF8:
 
     after_10:
 L_80019B1C:
+    { static int iter=0; ++iter; if (iter>=5 && iter<=15) {
+        uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
+        fprintf(stderr, "[ck] iter=%d pre-C12C cE=%u\n", iter, (unsigned)cE);
+        fflush(stderr);
+    } }
     // 0x80019B1C: jal         0x8001C12C
     // 0x80019B20: nop
 
@@ -29320,6 +29404,11 @@ L_80019B1C:
     // 0x80019B20: nop
 
     after_11:
+    { static int iter=0; ++iter; if (iter>=5 && iter<=15) {
+        uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
+        fprintf(stderr, "[ck] iter=%d post-C12C cE=%u\n", iter, (unsigned)cE);
+        fflush(stderr);
+    } }
     // 0x80019B24: lui         $a0, 0x8013
     ctx->r4 = S32(0X8013 << 16);
     // 0x80019B28: addiu       $a0, $a0, -0x72F0
@@ -29334,6 +29423,11 @@ L_80019B1C:
     // 0x80019B34: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
     after_12:
+    { static int iter=0; ++iter; if (iter>=5 && iter<=15) {
+        uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
+        fprintf(stderr, "[ck] iter=%d post-Send_D10 cE=%u\n", iter, (unsigned)cE);
+        fflush(stderr);
+    } }
     // 0x80019B38: lui         $v0, 0x8003
     ctx->r2 = S32(0X8003 << 16);
     // 0x80019B3C: lbu         $v0, 0x7808($v0)
@@ -29362,11 +29456,21 @@ L_80019B58:
     // 0x80019B58: jal         0x80037510
     // 0x80019B5C: addu        $s1, $zero, $zero
     ctx->r17 = ADD32(0, 0);
+    { static int iter=0; ++iter; if (iter>=5 && iter<=15) {
+        uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
+        fprintf(stderr, "[ck] iter=%d pre-Yield cE=%u\n", iter, (unsigned)cE);
+        fflush(stderr);
+    } }
     osYieldThread_recomp(rdram, ctx);
         goto after_14;
     // 0x80019B5C: addu        $s1, $zero, $zero
     ctx->r17 = ADD32(0, 0);
     after_14:
+    { static int iter=0; ++iter; if (iter>=5 && iter<=15) {
+        uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
+        fprintf(stderr, "[ck] iter=%d post-Yield cE=%u\n", iter, (unsigned)cE);
+        fflush(stderr);
+    } }
     // 0x80019B60: lui         $s0, 0x8012
     ctx->r16 = S32(0X8012 << 16);
     // 0x80019B64: addiu       $s0, $s0, -0x575C
@@ -29384,12 +29488,18 @@ L_80019B68:
     ctx->r17 = ADD32(ctx->r17, 0X1);
     // 0x80019B74: jalr        $v0
     // 0x80019B78: nop
-
+    { static int n=0; if (++n<=20 || (n%500)==0) { fprintf(stderr, "[trace] frame::dispatch[%d] #%d func=0x%08X\n", (int)(int32_t)ctx->r17, n, (uint32_t)ctx->r2); fflush(stderr); } }
     LOOKUP_FUNC(ctx->r2)(rdram, ctx);
+    { static int n=0; if (++n<=20 || (n%500)==0) { fprintf(stderr, "[trace] frame::dispatch-done #%d\n", n); fflush(stderr); } }
         goto after_15;
     // 0x80019B78: nop
 
     after_15:
+    { static int iter=0; ++iter; if (iter>=5*2 && iter<=15*2) {
+        uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
+        fprintf(stderr, "[ck] dispatch-iter=%d post-dispatch cE=%u\n", iter, (unsigned)cE);
+        fflush(stderr);
+    } }
 L_80019B7C:
     // 0x80019B7C: slti        $v0, $s1, 0x4
     ctx->r2 = SIGNED(ctx->r17) < 0X4 ? 1 : 0;
@@ -29732,6 +29842,7 @@ L_80019D10:
     // 0x80019D68: jal         0x80033FCC
     // 0x80019D6C: nop
 
+    { static int n=0; ++n; if (n<=10 || (n%50)==0) { fprintf(stderr, "[trace] GFX_SCHED osSpTaskStartGo branch=A site=after_7 #%d\n", n); fflush(stderr); } }
     osSpTaskStartGo_recomp(rdram, ctx);
         goto after_7;
     // 0x80019D6C: nop
@@ -29827,6 +29938,7 @@ L_80019DCC:
     // 0x80019DEC: jal         0x80033FCC
     // 0x80019DF0: nop
 
+    { static int n=0; ++n; if (n<=10 || (n%50)==0) { fprintf(stderr, "[trace] GFX_SCHED osSpTaskStartGo branch=B site=after_10 #%d\n", n); fflush(stderr); } }
     osSpTaskStartGo_recomp(rdram, ctx);
         goto after_10;
     // 0x80019DF0: nop
@@ -29895,6 +30007,7 @@ L_80019E0C:
     // 0x80019E44: jal         0x80033FCC
     // 0x80019E48: nop
 
+    { static int n=0; ++n; if (n<=10 || (n%50)==0) { fprintf(stderr, "[trace] GFX_SCHED osSpTaskStartGo branch=C site=after_13 #%d\n", n); fflush(stderr); } }
     osSpTaskStartGo_recomp(rdram, ctx);
         goto after_13;
     // 0x80019E48: nop
@@ -29981,6 +30094,7 @@ L_80019E7C:
     // 0x80019EBC: jal         0x80033FCC
     // 0x80019EC0: nop
 
+    { static int n=0; ++n; if (n<=10 || (n%50)==0) { fprintf(stderr, "[trace] GFX_SCHED osSpTaskStartGo branch=D site=after_16 #%d\n", n); fflush(stderr); } }
     osSpTaskStartGo_recomp(rdram, ctx);
         goto after_16;
     // 0x80019EC0: nop
@@ -30159,6 +30273,7 @@ L_80019F70:
     // 0x80019FB8: jal         0x80033FCC
     // 0x80019FBC: nop
 
+    { static int n=0; ++n; if (n<=10 || (n%50)==0) { fprintf(stderr, "[trace] GFX_SCHED osSpTaskStartGo branch=E site=after_23 #%d\n", n); fflush(stderr); } }
     osSpTaskStartGo_recomp(rdram, ctx);
         goto after_23;
     // 0x80019FBC: nop

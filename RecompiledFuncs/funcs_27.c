@@ -9706,6 +9706,15 @@ L_800A7198:
 RECOMP_FUNC void func_800A71B8(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    {
+        static int n = 0;
+        ++n;
+        if (n <= 10 || (n % 60) == 0) {
+            uint8_t gate = rdram[((0x800B09B0u) ^ 3) & 0x7FFFFFFFu];
+            fprintf(stderr, "[trace] func_800A71B8 #%d gate@800B09B0=0x%02X\n", n, gate);
+            fflush(stderr);
+        }
+    }
     // 0x800A71B8: addiu       $sp, $sp, -0x30
     ctx->r29 = ADD32(ctx->r29, -0X30);
     // 0x800A71BC: sw          $s0, 0x10($sp)

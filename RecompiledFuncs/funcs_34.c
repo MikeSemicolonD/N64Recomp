@@ -8871,6 +8871,7 @@ L_800C5A14:
     { static int n=0; if (++n<=3) { fprintf(stderr, "[trace] func_800C58A0 returned from func_800B4020 @0x800C5A5C\n"); fflush(stderr); } }
     // 0x800C5A5C: lhu         $v1, -0xB0($s1)
     ctx->r3 = MEM_HU(ctx->r17, -0XB0);
+    { static int n=0; if (++n<=10) { fprintf(stderr, "[trace] func_800C58A0 dispatch #%d state=%u (s1=0x%08X)\n", n, (unsigned)(ctx->r3 & 0xFFFFu), (uint32_t)ctx->r17); fflush(stderr); } }
     // 0x800C5A60: sltiu       $v0, $v1, 0xB
     ctx->r2 = ctx->r3 < 0XB ? 1 : 0;
     // 0x800C5A64: beq         $v0, $zero, L_800C5CEC
@@ -8893,6 +8894,7 @@ L_800C5A14:
     // 0x800C5A7C: jr          $v0
     // 0x800C5A80: nop
 
+    { static int n=0; if (++n<=10) { fprintf(stderr, "[trace] func_800C58A0 switch #%d case=%u\n", n, (unsigned)(jr_addend_800C5A7C >> 2)); fflush(stderr); } }
     switch (jr_addend_800C5A7C >> 2) {
         case 0: goto L_800C5A84; break;
         case 1: goto L_800C5ACC; break;
@@ -9306,6 +9308,7 @@ L_800C5C64:
     // 0x800C5C94: sh          $s7, -0xB0($s1)
     MEM_H(-0XB0, ctx->r17) = ctx->r23;
 L_800C5C98:
+    { static int n=0; if (++n<=5) { fprintf(stderr, "[trace] L_800C5C98 case9 #%d before func_800C28F0\n", n); fflush(stderr); } }
     // 0x800C5C98: jal         0x800C28F0
     // 0x800C5C9C: addu        $a0, $zero, $zero
     ctx->r4 = ADD32(0, 0);
@@ -9371,6 +9374,7 @@ L_800C5CC0:
     // 0x800C5CE8: sh          $s6, -0xB0($s1)
     MEM_H(-0XB0, ctx->r17) = ctx->r22;
 L_800C5CEC:
+    { static int n=0; if (++n<=5) { fprintf(stderr, "[trace] L_800C5CEC #%d before func_8000BF60\n", n); fflush(stderr); } }
     // 0x800C5CEC: jal         0x8000BF60
     // 0x800C5CF0: nop
 
@@ -9379,6 +9383,7 @@ L_800C5CEC:
     // 0x800C5CF0: nop
 
     after_24:
+    { static int n=0; if (++n<=5) { fprintf(stderr, "[trace] L_800C5CEC #%d after func_8000BF60, before func_800668B0\n", n); fflush(stderr); } }
     // 0x800C5CF4: jal         0x800668B0
     // 0x800C5CF8: nop
 
@@ -9387,6 +9392,7 @@ L_800C5CEC:
     // 0x800C5CF8: nop
 
     after_25:
+    { static int n=0; if (++n<=5) { fprintf(stderr, "[trace] L_800C5CEC #%d after func_800668B0, before freeTxtFile\n", n); fflush(stderr); } }
     // 0x800C5CFC: jal         0x800558D4
     // 0x800C5D00: nop
 
@@ -9395,6 +9401,7 @@ L_800C5CEC:
     // 0x800C5D00: nop
 
     after_26:
+    { static int n=0; if (++n<=5) { fprintf(stderr, "[trace] L_800C5CEC #%d after freeTxtFile, before func_80004994\n", n); fflush(stderr); } }
     // 0x800C5D04: lui         $v0, 0x8013
     ctx->r2 = S32(0X8013 << 16);
     // 0x800C5D08: lw          $a0, 0x7CFC($v0)
@@ -9407,6 +9414,7 @@ L_800C5CEC:
     // 0x800C5D10: nop
 
     after_27:
+    { static int n=0; if (++n<=5) { fprintf(stderr, "[trace] L_800C5CEC #%d after func_80004994, before func_8006EFDC\n", n); fflush(stderr); } }
     // 0x800C5D14: jal         0x8006EFDC
     // 0x800C5D18: nop
 
@@ -9415,6 +9423,7 @@ L_800C5CEC:
     // 0x800C5D18: nop
 
     after_28:
+    { static int n=0; if (++n<=5) { fprintf(stderr, "[trace] L_800C5CEC #%d after func_8006EFDC, before func_8003DF78\n", n); fflush(stderr); } }
     // 0x800C5D1C: jal         0x8003DF78
     // 0x800C5D20: nop
 
@@ -9423,6 +9432,7 @@ L_800C5CEC:
     // 0x800C5D20: nop
 
     after_29:
+    { static int n=0; if (++n<=5) { fprintf(stderr, "[trace] L_800C5CEC #%d after func_8003DF78\n", n); fflush(stderr); } }
     // 0x800C5D24: lhu         $v0, -0xB0($s1)
     ctx->r2 = MEM_HU(ctx->r17, -0XB0);
     // 0x800C5D28: addiu       $v0, $v0, -0xB
@@ -9495,6 +9505,7 @@ L_800C5CEC:
     // 0x800C5D94: jr          $ra
     // 0x800C5D98: addiu       $sp, $sp, 0x38
     ctx->r29 = ADD32(ctx->r29, 0X38);
+    { fprintf(stderr, "[trace] menu_overlay_init func_800C58A0 EXIT\n"); fflush(stderr); }
     return;
     // 0x800C5D98: addiu       $sp, $sp, 0x38
     ctx->r29 = ADD32(ctx->r29, 0X38);

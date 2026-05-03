@@ -4495,6 +4495,16 @@ L_80091220:
 RECOMP_FUNC void func_8009123C(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    {
+        static int n = 0;
+        uint8_t gateA = rdram[((0x80149AF0u) ^ 3) & 0x7FFFFFFFu]; // -0x6910($v1=0x8015<<16) = 0x80149AF0 (used at +0x44)
+        uint8_t gateB = rdram[((0x800A0F50u) ^ 3) & 0x7FFFFFFFu]; // 0xF50($v0=0x800A<<16)   = 0x800A0F50 (used at +0x6C)
+        if (++n <= 10 || (n % 60) == 0) {
+            fprintf(stderr, "[trace] func_8009123C #%d gateA[80149AF0]=0x%02X gateB[800A0F50]=0x%02X\n",
+                n, gateA, gateB);
+            fflush(stderr);
+        }
+    }
     // 0x8009123C: addiu       $sp, $sp, -0x40
     ctx->r29 = ADD32(ctx->r29, -0X40);
     // 0x80091240: sw          $ra, 0x3C($sp)

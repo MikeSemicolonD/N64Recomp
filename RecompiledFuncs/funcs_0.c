@@ -59,7 +59,7 @@ L_80000434:
 RECOMP_FUNC void loadOverlay(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { fprintf(stderr, "[trace] loadOverlay arg=0x%08X\n", (uint32_t)ctx->r4); fflush(stderr); }
+    { static int n=0; ++n; if (n<=10 || (n%50)==0) { fprintf(stderr, "[trace] loadOverlay ENTRY #%d arg=0x%08X\n", n, (uint32_t)ctx->r4); fflush(stderr); } }
     // 0x80000B20: lui         $v0, 0x8003
     ctx->r2 = S32(0X8003 << 16);
     // 0x80000B24: lw          $v0, 0x75B0($v0)
@@ -247,6 +247,7 @@ L_80000C34:
     // 0x80000C3C: jr          $ra
     // 0x80000C40: addiu       $sp, $sp, 0x88
     ctx->r29 = ADD32(ctx->r29, 0X88);
+    { static int n=0; ++n; if (n<=10 || (n%50)==0) { fprintf(stderr, "[trace] loadOverlay EXIT #%d\n", n); fflush(stderr); } }
     return;
     // 0x80000C40: addiu       $sp, $sp, 0x88
     ctx->r29 = ADD32(ctx->r29, 0X88);
@@ -7046,6 +7047,15 @@ L_8000322C:
 RECOMP_FUNC void func_80003250(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    {
+        static int n = 0;
+        uint32_t mips_addr = 0x80110742u;
+        uint8_t gate = rdram[(mips_addr ^ 3) & 0x7FFFFFFFu];
+        if (++n <= 10 || (n % 60) == 0) {
+            fprintf(stderr, "[trace] func_80003250 #%d gate@0x80110742=0x%02X\n", n, gate);
+            fflush(stderr);
+        }
+    }
     // 0x80003250: lui         $v0, 0x8011
     ctx->r2 = S32(0X8011 << 16);
     // 0x80003254: lbu         $v0, 0x742($v0)

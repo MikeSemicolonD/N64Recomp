@@ -15894,6 +15894,14 @@ L_80052F30:
 RECOMP_FUNC void func_80052F94(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    {
+        static int n = 0;
+        ++n;
+        if (n <= 10 || (n % 60) == 0) {
+            fprintf(stderr, "[trace] func_80052F94 #%d (intro draw)\n", n);
+            fflush(stderr);
+        }
+    }
     // 0x80052F94: addiu       $sp, $sp, -0x70
     ctx->r29 = ADD32(ctx->r29, -0X70);
     // 0x80052F98: sw          $s5, 0x54($sp)

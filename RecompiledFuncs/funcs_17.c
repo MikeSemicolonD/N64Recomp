@@ -408,6 +408,14 @@ L_8006CB98:
 RECOMP_FUNC void func_8006CBB0(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    {
+        static int n = 0;
+        ++n;
+        if (n <= 10 || (n % 60) == 0) {
+            fprintf(stderr, "[trace] func_8006CBB0 #%d a0=0x%08X\n", n, (uint32_t)ctx->r4);
+            fflush(stderr);
+        }
+    }
     // 0x8006CBB0: addiu       $sp, $sp, -0xE0
     ctx->r29 = ADD32(ctx->r29, -0XE0);
     // 0x8006CBB4: sw          $s5, 0xAC($sp)
@@ -6560,6 +6568,7 @@ RECOMP_FUNC void func_8006ED50(uint8_t* rdram, recomp_context* ctx) {
 RECOMP_FUNC void func_8006ED90(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    { static int n=0; if (++n<=5) { fprintf(stderr, "[trace] func_8006ED90 ENTRY #%d a0=0x%X\n", n, (unsigned)ctx->r4); fflush(stderr); } }
     // 0x8006ED90: lui         $v1, 0x8014
     ctx->r3 = S32(0X8014 << 16);
     // 0x8006ED94: addiu       $v1, $v1, -0x5A40
@@ -6579,6 +6588,7 @@ RECOMP_FUNC void func_8006ED90(uint8_t* rdram, recomp_context* ctx) {
     // 0x8006EDB0: jr          $ra
     // 0x8006EDB4: andi        $v0, $v0, 0x1
     ctx->r2 = ctx->r2 & 0X1;
+    { static int n=0; if (++n<=5) { fprintf(stderr, "[trace] func_8006ED90 EXIT #%d\n", n); fflush(stderr); } }
     return;
     // 0x8006EDB4: andi        $v0, $v0, 0x1
     ctx->r2 = ctx->r2 & 0X1;
@@ -6998,6 +7008,7 @@ L_8006F004:
 RECOMP_FUNC void isViModeTypePal(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    { static int n=0; if (++n<=5) { fprintf(stderr, "[trace] isViModeTypePal ENTRY #%d\n", n); fflush(stderr); } }
     // 0x8006F01C: addiu       $sp, $sp, -0x18
     ctx->r29 = ADD32(ctx->r29, -0X18);
     // 0x8006F020: sw          $ra, 0x10($sp)
@@ -7021,6 +7032,7 @@ RECOMP_FUNC void isViModeTypePal(uint8_t* rdram, recomp_context* ctx) {
     // 0x8006F03C: jr          $ra
     // 0x8006F040: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
+    { static int n=0; if (++n<=5) { fprintf(stderr, "[trace] isViModeTypePal EXIT #%d ret=%u\n", n, (unsigned)(ctx->r2 & 0xFF)); fflush(stderr); } }
     return;
     // 0x8006F040: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);

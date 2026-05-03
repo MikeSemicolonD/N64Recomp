@@ -7148,6 +7148,13 @@ L_800998C0:
 RECOMP_FUNC void func_800998E8(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    {
+        static int n = 0;
+        if (++n <= 10 || (n % 60) == 0) {
+            fprintf(stderr, "[trace] func_800998E8 #%d\n", n);
+            fflush(stderr);
+        }
+    }
     // 0x800998E8: addiu       $sp, $sp, -0x58
     ctx->r29 = ADD32(ctx->r29, -0X58);
     // 0x800998EC: sw          $s0, 0x30($sp)
