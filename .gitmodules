@@ -13,3 +13,6 @@
 [submodule "lib/sljit"]
 	path = lib/sljit
 	url = https://github.com/zherczeg/sljit
+[submodule "lib/toml11"]
+	path = lib/toml11
+	url = https://github.com/ToruNiina/toml11
