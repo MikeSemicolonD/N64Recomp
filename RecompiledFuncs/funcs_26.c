@@ -7152,7 +7152,7 @@ RECOMP_FUNC void func_800998E8(uint8_t* rdram, recomp_context* ctx) {
     {
         static int n = 0;
         if (++n <= 10 || (n % 60) == 0) {
-            fprintf(stderr, "[trace] func_800998E8 #%d\n", n);
+            if(0) fprintf(stderr, "[trace] func_800998E8 #%d\n", n);
             fflush(stderr);
         }
     }

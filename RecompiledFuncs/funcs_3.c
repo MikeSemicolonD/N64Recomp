@@ -12368,7 +12368,7 @@ L_8000C044:
 RECOMP_FUNC void func_8000C07C(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { static int n=0; ++n; if (n<=200) { fprintf(stderr, "[trace] func_8000C07C ENTRY #%d ctx=%p\n", n, (void*)ctx); fflush(stderr); } }
+    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C ENTRY #%d ctx=%p\n", n, (void*)ctx); fflush(stderr); } }
     // 0x8000C07C: addiu       $sp, $sp, -0x48
     ctx->r29 = ADD32(ctx->r29, -0X48);
     // 0x8000C080: sw          $ra, 0x40($sp)
@@ -12408,13 +12408,13 @@ RECOMP_FUNC void func_8000C07C(uint8_t* rdram, recomp_context* ctx) {
     // 0x8000C0B4: jal         0x800331D0
     // 0x8000C0B8: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
-    { static int n=0; ++n; if (n<=200) { fprintf(stderr, "[trace] func_8000C07C #%d BEFORE osRecvMesg(queue=0x%08X, BLOCK)\n", n, (uint32_t)ctx->r4); fflush(stderr); } }
+    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d BEFORE osRecvMesg(queue=0x%08X, BLOCK)\n", n, (uint32_t)ctx->r4); fflush(stderr); } }
     osRecvMesg_recomp(rdram, ctx);
         goto after_1;
     // 0x8000C0B8: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
     after_1:
-    { static int n=0; ++n; if (n<=200) { fprintf(stderr, "[trace] func_8000C07C #%d AFTER osRecvMesg\n", n); fflush(stderr); } }
+    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d AFTER osRecvMesg\n", n); fflush(stderr); } }
     // 0x8000C0BC: jal         0x8001A018
     // 0x8000C0C0: nop
 
@@ -12424,7 +12424,7 @@ RECOMP_FUNC void func_8000C07C(uint8_t* rdram, recomp_context* ctx) {
 
     after_2:
 L_8000C0C4:
-    { static int n=0; ++n; if (n<=200) { fprintf(stderr, "[trace] func_8000C07C #%d before func_8001BEC8\n", n); fflush(stderr); } }
+    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d before func_8001BEC8\n", n); fflush(stderr); } }
     // 0x8000C0C4: jal         0x8001BEC8
     // 0x8000C0C8: addu        $s0, $zero, $zero
     ctx->r16 = ADD32(0, 0);
@@ -12433,7 +12433,7 @@ L_8000C0C4:
     // 0x8000C0C8: addu        $s0, $zero, $zero
     ctx->r16 = ADD32(0, 0);
     after_3:
-    { static int n=0; ++n; if (n<=200) { fprintf(stderr, "[trace] func_8000C07C #%d after func_8001BEC8\n", n); fflush(stderr); } }
+    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d after func_8001BEC8\n", n); fflush(stderr); } }
     // 0x8000C0CC: jal         0x8000815C
     // 0x8000C0D0: nop
 
@@ -12442,7 +12442,7 @@ L_8000C0C4:
     // 0x8000C0D0: nop
 
     after_4:
-    { static int n=0; ++n; if (n<=200) { fprintf(stderr, "[trace] func_8000C07C #%d after func_8000815C\n", n); fflush(stderr); } }
+    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d after func_8000815C\n", n); fflush(stderr); } }
     // 0x8000C0D4: lui         $v0, 0x8011
     ctx->r2 = S32(0X8011 << 16);
     // 0x8000C0D8: lhu         $v0, -0x202C($v0)
@@ -12487,7 +12487,7 @@ L_8000C0EC:
     // 0x8000C10C: nop
 
 L_8000C110:
-    { static int n=0; ++n; if (n<=200) { fprintf(stderr, "[trace] func_8000C07C #%d at L_8000C110\n", n); fflush(stderr); } }
+    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d at L_8000C110\n", n); fflush(stderr); } }
     // 0x8000C110: lui         $v0, 0x8012
     ctx->r2 = S32(0X8012 << 16);
     // 0x8000C114: lbu         $v0, -0x5767($v0)
@@ -12514,7 +12514,7 @@ L_8000C110:
     }
     // 0x8000C138: nop
 
-    { static int n=0; ++n; if (n<=200) { fprintf(stderr, "[trace] func_8000C07C #%d before func_8001BF20(1)\n", n); fflush(stderr); } }
+    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d before func_8001BF20(1)\n", n); fflush(stderr); } }
     // 0x8000C13C: jal         0x8001BF20
     // 0x8000C140: addiu       $a0, $zero, 0x1
     ctx->r4 = ADD32(0, 0X1);
@@ -12523,7 +12523,7 @@ L_8000C110:
     // 0x8000C140: addiu       $a0, $zero, 0x1
     ctx->r4 = ADD32(0, 0X1);
     after_6:
-    { static int n=0; ++n; if (n<=200) { fprintf(stderr, "[trace] func_8000C07C #%d after func_8001BF20\n", n); fflush(stderr); } }
+    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d after func_8001BF20\n", n); fflush(stderr); } }
     // 0x8000C144: addu        $s0, $v0, $zero
     ctx->r16 = ADD32(ctx->r2, 0);
     // 0x8000C148: beq         $s0, $zero, L_8000C498
@@ -12534,7 +12534,7 @@ L_8000C110:
     }
     // 0x8000C14C: nop
 
-    { static int n=0; ++n; if (n<=200) { fprintf(stderr, "[trace] func_8000C07C #%d before func_80019BE4\n", n); fflush(stderr); } }
+    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d before func_80019BE4\n", n); fflush(stderr); } }
     // 0x8000C150: jal         0x80019BE4
     // 0x8000C154: nop
 
@@ -12543,7 +12543,7 @@ L_8000C110:
     // 0x8000C154: nop
 
     after_7:
-    { static int n=0; ++n; if (n<=200) { fprintf(stderr, "[trace] func_8000C07C #%d after func_80019BE4\n", n); fflush(stderr); } }
+    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d after func_80019BE4\n", n); fflush(stderr); } }
     // 0x8000C158: lui         $v1, 0x8011
     ctx->r3 = S32(0X8011 << 16);
     // 0x8000C15C: lhu         $v1, -0x202A($v1)
@@ -13168,7 +13168,7 @@ L_8000C480:
     // 0x8000C494: nop
 
 L_8000C498:
-    { static int n=0; ++n; if (n<=200) { fprintf(stderr, "[trace] func_8000C07C #%d at L_8000C498 s1=0x%X\n", n, (unsigned)(ctx->r17 & 0xFF)); fflush(stderr); } }
+    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d at L_8000C498 s1=0x%X\n", n, (unsigned)(ctx->r17 & 0xFF)); fflush(stderr); } }
     // 0x8000C498: beq         $s1, $zero, L_8000C4B8
     if (ctx->r17 == 0) {
         // 0x8000C49C: addu        $a1, $zero, $zero
@@ -13184,13 +13184,13 @@ L_8000C498:
     // 0x8000C4A8: jal         0x800331D0
     // 0x8000C4AC: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
-    { static int n=0; ++n; if (n<=200) { fprintf(stderr, "[trace] func_8000C07C #%d BEFORE osRecvMesg(queue=0x%08X, BLOCK) [SECOND]\n", n, (uint32_t)ctx->r4); fflush(stderr); } }
+    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d BEFORE osRecvMesg(queue=0x%08X, BLOCK) [SECOND]\n", n, (uint32_t)ctx->r4); fflush(stderr); } }
     osRecvMesg_recomp(rdram, ctx);
         goto after_15;
     // 0x8000C4AC: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
     after_15:
-    { static int n=0; ++n; if (n<=200) { fprintf(stderr, "[trace] func_8000C07C #%d AFTER osRecvMesg [SECOND]\n", n); fflush(stderr); } }
+    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d AFTER osRecvMesg [SECOND]\n", n); fflush(stderr); } }
     // 0x8000C4B0: jal         0x8001A038
     // 0x8000C4B4: nop
 
@@ -13555,7 +13555,7 @@ L_8000C620:
     // 0x8000C63C: nop
 
 L_8000C640:
-    { static int n=0; ++n; if (n<=200) { fprintf(stderr, "[trace] func_8000C07C #%d at L_8000C640 (early-return path)\n", n); fflush(stderr); } }
+    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d at L_8000C640 (early-return path)\n", n); fflush(stderr); } }
     // 0x8000C640: sb          $zero, 0x0($v1)
     MEM_B(0X0, ctx->r3) = 0;
     // 0x8000C644: lui         $at, 0x8012
@@ -13571,7 +13571,7 @@ L_8000C640:
 
     after_20:
 L_8000C654:
-    { static int n=0; ++n; if (n<=200) { fprintf(stderr, "[trace] func_8000C07C #%d at L_8000C654 inner-loop (calls func_80000C50)\n", n); fflush(stderr); } }
+    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d at L_8000C654 inner-loop (calls func_80000C50)\n", n); fflush(stderr); } }
     // 0x8000C654: jal         0x80000C50
     // 0x8000C658: nop
 
@@ -13580,7 +13580,7 @@ L_8000C654:
     // 0x8000C658: nop
 
     after_21:
-    { static int n=0; ++n; if (n<=200) { fprintf(stderr, "[trace] func_8000C07C #%d at L_8000C654 after func_80000C50 v0=0x%X\n", n, (unsigned)(ctx->r2 & 0xFF)); fflush(stderr); } }
+    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d at L_8000C654 after func_80000C50 v0=0x%X\n", n, (unsigned)(ctx->r2 & 0xFF)); fflush(stderr); } }
     // 0x8000C65C: andi        $v0, $v0, 0xFF
     ctx->r2 = ctx->r2 & 0XFF;
     // 0x8000C660: bne         $v0, $zero, L_8000C654

@@ -3528,7 +3528,7 @@ RECOMP_FUNC void func_80006C20(uint8_t* rdram, recomp_context* ctx) {
 RECOMP_FUNC void func_80006C28(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { fprintf(stderr, "[trace] worker_spawn a0=%u a1=%u entry=0x%08X arg=0x%08X\n", (uint32_t)ctx->r4, (uint32_t)ctx->r5, (uint32_t)ctx->r6, (uint32_t)ctx->r7); fflush(stderr); }
+    { if(0) fprintf(stderr, "[trace] worker_spawn a0=%u a1=%u entry=0x%08X arg=0x%08X\n", (uint32_t)ctx->r4, (uint32_t)ctx->r5, (uint32_t)ctx->r6, (uint32_t)ctx->r7); fflush(stderr); }
     // 0x80006C28: addiu       $sp, $sp, -0x38
     ctx->r29 = ADD32(ctx->r29, -0X38);
     // 0x80006C2C: sw          $s2, 0x20($sp)
@@ -3684,7 +3684,7 @@ L_80006D18:
     // 0x80006D38: addu        $a3, $s5, $zero
     ctx->r7 = ADD32(ctx->r21, 0);
     after_2:
-    { fprintf(stderr, "[trace] worker_spawn: osCreateThread done, struct@$s5 id=*(0)=will-be-logged-on-next-iteration\n"); fflush(stderr); }
+    { if(0) fprintf(stderr, "[trace] worker_spawn: osCreateThread done, struct@$s5 id=*(0)=will-be-logged-on-next-iteration\n"); fflush(stderr); }
     // 0x80006D3C: lui         $v1, 0x8011
     ctx->r3 = S32(0X8011 << 16);
     // 0x80006D40: lw          $v0, 0x28D0($v1)
@@ -4148,7 +4148,7 @@ L_80006F58:
 RECOMP_FUNC void func_80006F78(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { static int n=0; if (++n<=20 || (n%500)==0) { fprintf(stderr, "[trace] func_80006F78(reg) #%d id_a=0x%08X id_b=0x%08X msg=0x%08X flags=%u\n", n, (uint32_t)ctx->r4, (uint32_t)ctx->r5, (uint32_t)ctx->r6, (uint32_t)ctx->r7); fflush(stderr); } }
+    { static int n=0; if (++n<=20 || (n%500)==0) { if(0) fprintf(stderr, "[trace] func_80006F78(reg) #%d id_a=0x%08X id_b=0x%08X msg=0x%08X flags=%u\n", n, (uint32_t)ctx->r4, (uint32_t)ctx->r5, (uint32_t)ctx->r6, (uint32_t)ctx->r7); fflush(stderr); } }
     // 0x80006F78: addiu       $sp, $sp, -0x20
     ctx->r29 = ADD32(ctx->r29, -0X20);
     // 0x80006F7C: lui         $v0, 0x8011
@@ -4335,7 +4335,7 @@ RECOMP_FUNC void func_80007064(uint8_t* rdram, recomp_context* ctx) {
 RECOMP_FUNC void func_80007070(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { static int n=0; if (++n<=20 || (n%500)==0) { fprintf(stderr, "[trace] func_80007070(send) #%d id=0x%08X\n", n, (uint32_t)ctx->r4); fflush(stderr); } }
+    { static int n=0; if (++n<=20 || (n%500)==0) { if(0) fprintf(stderr, "[trace] func_80007070(send) #%d id=0x%08X\n", n, (uint32_t)ctx->r4); fflush(stderr); } }
     // 0x80007070: addu        $v1, $a0, $zero
     ctx->r3 = ADD32(ctx->r4, 0);
     // 0x80007074: lui         $v0, 0x8011

@@ -60,7 +60,7 @@ L_80000434:
 RECOMP_FUNC void loadOverlay(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { static int n=0; ++n; if (n<=10 || (n%50)==0) { fprintf(stderr, "[trace] loadOverlay ENTRY #%d arg=0x%08X\n", n, (uint32_t)ctx->r4); fflush(stderr); } }
+    { static int n=0; ++n; if (n<=10 || (n%50)==0) { if(0) fprintf(stderr, "[trace] loadOverlay ENTRY #%d arg=0x%08X\n", n, (uint32_t)ctx->r4); fflush(stderr); } }
     // 0x80000B20: lui         $v0, 0x8003
     ctx->r2 = S32(0X8003 << 16);
     // 0x80000B24: lw          $v0, 0x75B0($v0)
@@ -248,7 +248,7 @@ L_80000C34:
     // 0x80000C3C: jr          $ra
     // 0x80000C40: addiu       $sp, $sp, 0x88
     ctx->r29 = ADD32(ctx->r29, 0X88);
-    { static int n=0; ++n; if (n<=10 || (n%50)==0) { fprintf(stderr, "[trace] loadOverlay EXIT #%d\n", n); fflush(stderr); } }
+    { static int n=0; ++n; if (n<=10 || (n%50)==0) { if(0) fprintf(stderr, "[trace] loadOverlay EXIT #%d\n", n); fflush(stderr); } }
     return;
     // 0x80000C40: addiu       $sp, $sp, 0x88
     ctx->r29 = ADD32(ctx->r29, 0X88);
@@ -1460,7 +1460,7 @@ L_80001324:
 RECOMP_FUNC void func_80001354(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { fprintf(stderr, "[trace] func_80001354 ENTRY a0=0x%08X a1=0x%08X a2=0x%08X\n", (uint32_t)ctx->r4, (uint32_t)ctx->r5, (uint32_t)ctx->r6); fflush(stderr); }
+    { if(0) fprintf(stderr, "[trace] func_80001354 ENTRY a0=0x%08X a1=0x%08X a2=0x%08X\n", (uint32_t)ctx->r4, (uint32_t)ctx->r5, (uint32_t)ctx->r6); fflush(stderr); }
     // 0x80001354: addiu       $sp, $sp, -0x80
     ctx->r29 = ADD32(ctx->r29, -0X80);
     // 0x80001358: sw          $s3, 0x64($sp)
@@ -1495,7 +1495,7 @@ RECOMP_FUNC void func_80001354(uint8_t* rdram, recomp_context* ctx) {
     // 0x8000138C: sw          $s1, 0x5C($sp)
     MEM_W(0X5C, ctx->r29) = ctx->r17;
     after_0:
-    { fprintf(stderr, "[trace] func_80001354 returned from func_8008ED00\n"); fflush(stderr); }
+    { if(0) fprintf(stderr, "[trace] func_80001354 returned from func_8008ED00\n"); fflush(stderr); }
     // 0x80001390: lhu         $s1, 0x6($s3)
     ctx->r17 = MEM_HU(ctx->r19, 0X6);
     // 0x80001394: lhu         $s5, 0x2($s3)
@@ -1559,7 +1559,7 @@ L_800013B4:
     // 0x800013F4: sw          $v0, 0x14($sp)
     MEM_W(0X14, ctx->r29) = ctx->r2;
     after_1:
-    { fprintf(stderr, "[trace] func_80001354 returned from func_80000DD4\n"); fflush(stderr); }
+    { if(0) fprintf(stderr, "[trace] func_80001354 returned from func_80000DD4\n"); fflush(stderr); }
     // 0x800013F8: andi        $v0, $v0, 0xFF
     ctx->r2 = ctx->r2 & 0XFF;
     // 0x800013FC: beq         $v0, $zero, L_80001414
@@ -1604,7 +1604,7 @@ L_80001420:
     // 0x80001434: addu        $a2, $v0, $a2
     ctx->r6 = ADD32(ctx->r2, ctx->r6);
     after_2:
-    { fprintf(stderr, "[trace] func_80001354 returned from func_800022F8\n"); fflush(stderr); }
+    { if(0) fprintf(stderr, "[trace] func_80001354 returned from func_800022F8\n"); fflush(stderr); }
     // 0x80001438: lui         $a0, 0x8011
     ctx->r4 = S32(0X8011 << 16);
     // 0x8000143C: lw          $a0, 0x63E4($a0)
@@ -1705,7 +1705,7 @@ L_80001420:
     // 0x800014F4: sw          $v0, 0x44($sp)
     MEM_W(0X44, ctx->r29) = ctx->r2;
     after_3:
-    { fprintf(stderr, "[trace] func_80001354 returned from func_8001818C v0=%u\n", (uint32_t)ctx->r2 & 0xFF); fflush(stderr); }
+    { if(0) fprintf(stderr, "[trace] func_80001354 returned from func_8001818C v0=%u\n", (uint32_t)ctx->r2 & 0xFF); fflush(stderr); }
     // 0x800014F8: andi        $v0, $v0, 0xFF
     ctx->r2 = ctx->r2 & 0XFF;
     // 0x800014FC: beq         $v0, $zero, L_800015E8
@@ -1760,7 +1760,7 @@ L_80001420:
     // 0x80001540: nop
 
     after_4:
-    { fprintf(stderr, "[trace] func_80001354 returned from func_8008EB5C\n"); fflush(stderr); }
+    { if(0) fprintf(stderr, "[trace] func_80001354 returned from func_8008EB5C\n"); fflush(stderr); }
     // 0x80001544: bnel        $v0, $zero, L_800015E8
     if (ctx->r2 != 0) {
         // 0x80001548: addu        $v0, $zero, $zero
@@ -7053,7 +7053,7 @@ RECOMP_FUNC void func_80003250(uint8_t* rdram, recomp_context* ctx) {
         uint32_t mips_addr = 0x80110742u;
         uint8_t gate = rdram[(mips_addr ^ 3) & 0x7FFFFFFFu];
         if (++n <= 10 || (n % 60) == 0) {
-            fprintf(stderr, "[trace] func_80003250 #%d gate@0x80110742=0x%02X\n", n, gate);
+            if(0) fprintf(stderr, "[trace] func_80003250 #%d gate@0x80110742=0x%02X\n", n, gate);
             fflush(stderr);
         }
     }

@@ -9712,7 +9712,7 @@ RECOMP_FUNC void func_800A71B8(uint8_t* rdram, recomp_context* ctx) {
         ++n;
         if (n <= 10 || (n % 60) == 0) {
             uint8_t gate = rdram[((0x800B09B0u) ^ 3) & 0x7FFFFFFFu];
-            fprintf(stderr, "[trace] func_800A71B8 #%d gate@800B09B0=0x%02X\n", n, gate);
+            if(0) fprintf(stderr, "[trace] func_800A71B8 #%d gate@800B09B0=0x%02X\n", n, gate);
             fflush(stderr);
         }
     }

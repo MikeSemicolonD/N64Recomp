@@ -413,7 +413,7 @@ RECOMP_FUNC void func_8006CBB0(uint8_t* rdram, recomp_context* ctx) {
         static int n = 0;
         ++n;
         if (n <= 10 || (n % 60) == 0) {
-            fprintf(stderr, "[trace] func_8006CBB0 #%d a0=0x%08X\n", n, (uint32_t)ctx->r4);
+            if(0) fprintf(stderr, "[trace] func_8006CBB0 #%d a0=0x%08X\n", n, (uint32_t)ctx->r4);
             fflush(stderr);
         }
     }
@@ -3032,7 +3032,7 @@ RECOMP_FUNC void fake_func_8006D8FC(uint8_t* rdram, recomp_context* ctx) {
 RECOMP_FUNC void func_8006D900(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { fprintf(stderr, "[trace] func_8006D900 entry\n"); fflush(stderr); }
+    { if(0) fprintf(stderr, "[trace] func_8006D900 entry\n"); fflush(stderr); }
     // 0x8006D900: addiu       $sp, $sp, -0x80
     ctx->r29 = ADD32(ctx->r29, -0X80);
     // 0x8006D904: addiu       $a0, $sp, 0x10
@@ -3358,7 +3358,7 @@ L_8006DA7C:
     ctx->r3 = ADD32(0, 0X1);
     // 0x8006DAB8: sb          $v1, 0x20($v0)
     MEM_B(0X20, ctx->r2) = ctx->r3;
-    { uint32_t off = 0x130B30; uint8_t b = rdram[off^3]; fprintf(stderr, "[trace] func_8006D900 after SB 0x80130B30=0x%02X\n", b); fflush(stderr); }
+    { uint32_t off = 0x130B30; uint8_t b = rdram[off^3]; if(0) fprintf(stderr, "[trace] func_8006D900 after SB 0x80130B30=0x%02X\n", b); fflush(stderr); }
     // 0x8006DABC: sb          $zero, 0x21($v0)
     MEM_B(0X21, ctx->r2) = 0;
 L_8006DAC0:
@@ -6569,7 +6569,7 @@ RECOMP_FUNC void func_8006ED50(uint8_t* rdram, recomp_context* ctx) {
 RECOMP_FUNC void func_8006ED90(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { static int n=0; if (++n<=5) { fprintf(stderr, "[trace] func_8006ED90 ENTRY #%d a0=0x%X\n", n, (unsigned)ctx->r4); fflush(stderr); } }
+    { static int n=0; if (++n<=5) { if(0) fprintf(stderr, "[trace] func_8006ED90 ENTRY #%d a0=0x%X\n", n, (unsigned)ctx->r4); fflush(stderr); } }
     // 0x8006ED90: lui         $v1, 0x8014
     ctx->r3 = S32(0X8014 << 16);
     // 0x8006ED94: addiu       $v1, $v1, -0x5A40
@@ -6589,7 +6589,7 @@ RECOMP_FUNC void func_8006ED90(uint8_t* rdram, recomp_context* ctx) {
     // 0x8006EDB0: jr          $ra
     // 0x8006EDB4: andi        $v0, $v0, 0x1
     ctx->r2 = ctx->r2 & 0X1;
-    { static int n=0; if (++n<=5) { fprintf(stderr, "[trace] func_8006ED90 EXIT #%d\n", n); fflush(stderr); } }
+    { static int n=0; if (++n<=5) { if(0) fprintf(stderr, "[trace] func_8006ED90 EXIT #%d\n", n); fflush(stderr); } }
     return;
     // 0x8006EDB4: andi        $v0, $v0, 0x1
     ctx->r2 = ctx->r2 & 0X1;
@@ -7009,7 +7009,7 @@ L_8006F004:
 RECOMP_FUNC void isViModeTypePal(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { static int n=0; if (++n<=5) { fprintf(stderr, "[trace] isViModeTypePal ENTRY #%d\n", n); fflush(stderr); } }
+    { static int n=0; if (++n<=5) { if(0) fprintf(stderr, "[trace] isViModeTypePal ENTRY #%d\n", n); fflush(stderr); } }
     // 0x8006F01C: addiu       $sp, $sp, -0x18
     ctx->r29 = ADD32(ctx->r29, -0X18);
     // 0x8006F020: sw          $ra, 0x10($sp)
@@ -7033,7 +7033,7 @@ RECOMP_FUNC void isViModeTypePal(uint8_t* rdram, recomp_context* ctx) {
     // 0x8006F03C: jr          $ra
     // 0x8006F040: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
-    { static int n=0; if (++n<=5) { fprintf(stderr, "[trace] isViModeTypePal EXIT #%d ret=%u\n", n, (unsigned)(ctx->r2 & 0xFF)); fflush(stderr); } }
+    { static int n=0; if (++n<=5) { if(0) fprintf(stderr, "[trace] isViModeTypePal EXIT #%d ret=%u\n", n, (unsigned)(ctx->r2 & 0xFF)); fflush(stderr); } }
     return;
     // 0x8006F040: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
@@ -7493,7 +7493,7 @@ RECOMP_FUNC void func_8006F274(uint8_t* rdram, recomp_context* ctx) {
 RECOMP_FUNC void func_8006F2CC(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { uint32_t id = (uint32_t)MEM_W(ctx->r4, 0); fprintf(stderr, "[trace] GRAPH thread ENTRY arg=0x%08X id=0x%08X\n", (uint32_t)ctx->r4, id); fflush(stderr); }
+    { uint32_t id = (uint32_t)MEM_W(ctx->r4, 0); if(0) fprintf(stderr, "[trace] GRAPH thread ENTRY arg=0x%08X id=0x%08X\n", (uint32_t)ctx->r4, id); fflush(stderr); }
     // 0x8006F2CC: addiu       $sp, $sp, -0x48
     ctx->r29 = ADD32(ctx->r29, -0X48);
     // 0x8006F2D0: sw          $s5, 0x3C($sp)
@@ -7537,7 +7537,7 @@ RECOMP_FUNC void func_8006F2CC(uint8_t* rdram, recomp_context* ctx) {
     // 0x8006F314: addiu       $s1, $zero, 0x1
     ctx->r17 = ADD32(0, 0X1);
 L_8006F318:
-    { static int n=0; if (++n<=5 || (n%50)==0) { fprintf(stderr, "[trace] GRAPH loop iter=%d\n", n); fflush(stderr); } }
+    { static int n=0; if (++n<=5 || (n%50)==0) { if(0) fprintf(stderr, "[trace] GRAPH loop iter=%d\n", n); fflush(stderr); } }
     // 0x8006F318: lw          $a0, 0x0($s5)
     ctx->r4 = MEM_W(ctx->r21, 0X0);
     // 0x8006F31C: jal         0x80006F24
@@ -7548,7 +7548,7 @@ L_8006F318:
     // 0x8006F320: nop
 
     after_1:
-    { static int n=0; if (++n<=5 || (n%50)==0) { fprintf(stderr, "[trace] GRAPH after func_80006F24 iter=%d\n", n); fflush(stderr); } }
+    { static int n=0; if (++n<=5 || (n%50)==0) { if(0) fprintf(stderr, "[trace] GRAPH after func_80006F24 iter=%d\n", n); fflush(stderr); } }
     // 0x8006F324: addiu       $a0, $zero, 0x1
     ctx->r4 = ADD32(0, 0X1);
     // 0x8006F328: addu        $a1, $zero, $zero
@@ -7569,7 +7569,7 @@ L_8006F318:
     // 0x8006F340: sw          $s3, 0x14($sp)
     MEM_W(0X14, ctx->r29) = ctx->r19;
     after_2:
-    { static int n=0; if (++n<=5 || (n%50)==0) { fprintf(stderr, "[trace] GRAPH after first func_80006798 iter=%d v0=%d\n", n, (int)(ctx->r2 & 0xFF)); fflush(stderr); } }
+    { static int n=0; if (++n<=5 || (n%50)==0) { if(0) fprintf(stderr, "[trace] GRAPH after first func_80006798 iter=%d v0=%d\n", n, (int)(ctx->r2 & 0xFF)); fflush(stderr); } }
     // 0x8006F344: andi        $v0, $v0, 0xFF
     ctx->r2 = ctx->r2 & 0XFF;
     // 0x8006F348: beql        $v0, $zero, L_8006F350
@@ -7614,7 +7614,7 @@ L_8006F350:
     MEM_B(0X2C, ctx->r18) = ctx->r17;
     skip_1:
 L_8006F378:
-    { static int n=0; if (++n<=5 || (n%50)==0) { fprintf(stderr, "[trace] GRAPH after second func_80006798 iter=%d\n", n); fflush(stderr); } }
+    { static int n=0; if (++n<=5 || (n%50)==0) { if(0) fprintf(stderr, "[trace] GRAPH after second func_80006798 iter=%d\n", n); fflush(stderr); } }
     // 0x8006F378: jal         0x80001C98
     // 0x8006F37C: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);

@@ -10322,7 +10322,7 @@ RECOMP_FUNC void fake_func_8003DF98(uint8_t* rdram, recomp_context* ctx) {
 RECOMP_FUNC void func_8003DFA0(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { static int n=0; if (++n<=5) { uint32_t s4 = 0x80130B10; uint32_t off = s4 - 0x80000000; uint8_t flag = rdram[(off+0x20)^3]; fprintf(stderr, "[trace] func_8003DFA0 #%d flag@s4+0x20=0x%02X\n", n, flag); fflush(stderr); } }
+    { static int n=0; if (++n<=5) { uint32_t s4 = 0x80130B10; uint32_t off = s4 - 0x80000000; uint8_t flag = rdram[(off+0x20)^3]; if(0) fprintf(stderr, "[trace] func_8003DFA0 #%d flag@s4+0x20=0x%02X\n", n, flag); fflush(stderr); } }
     // 0x8003DFA0: addiu       $sp, $sp, -0x38
     ctx->r29 = ADD32(ctx->r29, -0X38);
     // 0x8003DFA4: sw          $ra, 0x34($sp)
@@ -10432,7 +10432,7 @@ RECOMP_FUNC void func_8003DFA0(uint8_t* rdram, recomp_context* ctx) {
     // 0x8003E044: sh          $v0, -0x7FA4($v1)
     MEM_H(-0X7FA4, ctx->r3) = ctx->r2;
 L_8003E048:
-    { static int n=0; if (++n<=20 || (n%500)==0) { fprintf(stderr, "[trace] LOOP iter=%d at L_8003E048\n", n); fflush(stderr); } }
+    { static int n=0; if (++n<=20 || (n%500)==0) { if(0) fprintf(stderr, "[trace] LOOP iter=%d at L_8003E048\n", n); fflush(stderr); } }
     // 0x8003E048: addiu       $a0, $zero, 0x1
     ctx->r4 = ADD32(0, 0X1);
 L_8003E04C:
@@ -10459,16 +10459,16 @@ L_8003E04C:
     // 0x8003E074: jal         0x80000B20
     // 0x8003E078: sw          $v1, 0x18($s3)
     MEM_W(0X18, ctx->r19) = ctx->r3;
-    { static int n=0; if (++n<=20) { fprintf(stderr, "[trace] CALL1 loadOv1 ENTER #%d\n", n); fflush(stderr); } }
+    { static int n=0; if (++n<=20) { if(0) fprintf(stderr, "[trace] CALL1 loadOv1 ENTER #%d\n", n); fflush(stderr); } }
     loadOverlay(rdram, ctx);
         goto after_6;
     // 0x8003E078: sw          $v1, 0x18($s3)
     MEM_W(0X18, ctx->r19) = ctx->r3;
     after_6:
-    { static int n=0; if (++n<=20) { fprintf(stderr, "[trace] CALL1 loadOv1 EXIT #%d\n", n); fflush(stderr); } }
+    { static int n=0; if (++n<=20) { if(0) fprintf(stderr, "[trace] CALL1 loadOv1 EXIT #%d\n", n); fflush(stderr); } }
     // 0x8003E07C: lbu         $v0, 0x20($s4)
     ctx->r2 = MEM_BU(ctx->r20, 0X20);
-    { static int n=0; static uint8_t prev=0xFE; uint8_t cur = (uint8_t)(ctx->r2 & 0xFF); if (cur != prev || ++n<=3 || (n%200)==0) { fprintf(stderr, "[trace] menu_gate iter=%d byte@0x80130B30=0x%02X (prev=0x%02X)\n", n, cur, prev); fflush(stderr); prev=cur; } }
+    { static int n=0; static uint8_t prev=0xFE; uint8_t cur = (uint8_t)(ctx->r2 & 0xFF); if (cur != prev || ++n<=3 || (n%200)==0) { if(0) fprintf(stderr, "[trace] menu_gate iter=%d byte@0x80130B30=0x%02X (prev=0x%02X)\n", n, cur, prev); fflush(stderr); prev=cur; } }
     // 0x8003E080: beq         $v0, $zero, L_8003E0DC
     if (ctx->r2 == 0) {
         // 0x8003E084: addiu       $a1, $zero, 0x9
@@ -10482,23 +10482,23 @@ L_8003E04C:
     // 0x8003E08C: jal         0x800C58A0
     // 0x8003E090: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
-    { static int n=0; if (++n<=20) { fprintf(stderr, "[trace] CALL2 credits1 ENTER #%d\n", n); fflush(stderr); } }
+    { static int n=0; if (++n<=20) { if(0) fprintf(stderr, "[trace] CALL2 credits1 ENTER #%d\n", n); fflush(stderr); } }
     func_800C58A0(rdram, ctx);
         goto after_7;
     // 0x8003E090: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
     after_7:
-    { static int n=0; if (++n<=20) { fprintf(stderr, "[trace] CALL2 credits1 EXIT #%d\n", n); fflush(stderr); } }
+    { static int n=0; if (++n<=20) { if(0) fprintf(stderr, "[trace] CALL2 credits1 EXIT #%d\n", n); fflush(stderr); } }
     // 0x8003E094: jal         0x8006F01C
     // 0x8003E098: nop
 
-    { static int n=0; if (++n<=20) { fprintf(stderr, "[trace] CALL3 isPal ENTER #%d\n", n); fflush(stderr); } }
+    { static int n=0; if (++n<=20) { if(0) fprintf(stderr, "[trace] CALL3 isPal ENTER #%d\n", n); fflush(stderr); } }
     isViModeTypePal(rdram, ctx);
         goto after_8;
     // 0x8003E098: nop
 
     after_8:
-    { static int n=0; if (++n<=20) { fprintf(stderr, "[trace] CALL3 isPal EXIT #%d\n", n); fflush(stderr); } }
+    { static int n=0; if (++n<=20) { if(0) fprintf(stderr, "[trace] CALL3 isPal EXIT #%d\n", n); fflush(stderr); } }
     // 0x8003E09C: andi        $v0, $v0, 0xFF
     ctx->r2 = ctx->r2 & 0XFF;
     // 0x8003E0A0: beq         $v0, $zero, L_8003E0DC
@@ -10512,13 +10512,13 @@ L_8003E04C:
     // 0x8003E0A8: jal         0x8006ED90
     // 0x8003E0AC: addiu       $a0, $zero, 0x5
     ctx->r4 = ADD32(0, 0X5);
-    { static int n=0; if (++n<=20) { fprintf(stderr, "[trace] CALL4 fn6ED90 ENTER #%d\n", n); fflush(stderr); } }
+    { static int n=0; if (++n<=20) { if(0) fprintf(stderr, "[trace] CALL4 fn6ED90 ENTER #%d\n", n); fflush(stderr); } }
     func_8006ED90(rdram, ctx);
         goto after_9;
     // 0x8003E0AC: addiu       $a0, $zero, 0x5
     ctx->r4 = ADD32(0, 0X5);
     after_9:
-    { static int n=0; if (++n<=20) { fprintf(stderr, "[trace] CALL4 fn6ED90 EXIT #%d\n", n); fflush(stderr); } }
+    { static int n=0; if (++n<=20) { if(0) fprintf(stderr, "[trace] CALL4 fn6ED90 EXIT #%d\n", n); fflush(stderr); } }
     // 0x8003E0B0: andi        $v0, $v0, 0xFF
     ctx->r2 = ctx->r2 & 0XFF;
     // 0x8003E0B4: bne         $v0, $zero, L_8003E0DC
@@ -10532,13 +10532,13 @@ L_8003E04C:
     // 0x8003E0BC: jal         0x80000B20
     // 0x8003E0C0: addiu       $a0, $zero, 0x1
     ctx->r4 = ADD32(0, 0X1);
-    { static int n=0; if (++n<=20) { fprintf(stderr, "[trace] CALL5 loadOv2 ENTER #%d\n", n); fflush(stderr); } }
+    { static int n=0; if (++n<=20) { if(0) fprintf(stderr, "[trace] CALL5 loadOv2 ENTER #%d\n", n); fflush(stderr); } }
     loadOverlay(rdram, ctx);
         goto after_10;
     // 0x8003E0C0: addiu       $a0, $zero, 0x1
     ctx->r4 = ADD32(0, 0X1);
     after_10:
-    { static int n=0; if (++n<=20) { fprintf(stderr, "[trace] CALL5 loadOv2 EXIT #%d\n", n); fflush(stderr); } }
+    { static int n=0; if (++n<=20) { if(0) fprintf(stderr, "[trace] CALL5 loadOv2 EXIT #%d\n", n); fflush(stderr); } }
     // 0x8003E0C4: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
     // 0x8003E0C8: addiu       $a1, $zero, 0x2
@@ -10546,13 +10546,13 @@ L_8003E04C:
     // 0x8003E0CC: jal         0x800C58A0
     // 0x8003E0D0: addiu       $a2, $zero, 0xB
     ctx->r6 = ADD32(0, 0XB);
-    { static int n=0; if (++n<=20) { fprintf(stderr, "[trace] CALL6 credits2 ENTER #%d\n", n); fflush(stderr); } }
+    { static int n=0; if (++n<=20) { if(0) fprintf(stderr, "[trace] CALL6 credits2 ENTER #%d\n", n); fflush(stderr); } }
     func_800C58A0(rdram, ctx);
         goto after_11;
     // 0x8003E0D0: addiu       $a2, $zero, 0xB
     ctx->r6 = ADD32(0, 0XB);
     after_11:
-    { static int n=0; if (++n<=20) { fprintf(stderr, "[trace] CALL6 credits2 EXIT #%d\n", n); fflush(stderr); } }
+    { static int n=0; if (++n<=20) { if(0) fprintf(stderr, "[trace] CALL6 credits2 EXIT #%d\n", n); fflush(stderr); } }
     // 0x8003E0D4: jal         0x8006E360
     // 0x8003E0D8: addiu       $a0, $zero, 0x5
     ctx->r4 = ADD32(0, 0X5);

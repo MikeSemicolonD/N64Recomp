@@ -4496,16 +4496,6 @@ L_80091220:
 RECOMP_FUNC void func_8009123C(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    {
-        static int n = 0;
-        uint8_t gateA = rdram[((0x80149AF0u) ^ 3) & 0x7FFFFFFFu]; // -0x6910($v1=0x8015<<16) = 0x80149AF0 (used at +0x44)
-        uint8_t gateB = rdram[((0x800A0F50u) ^ 3) & 0x7FFFFFFFu]; // 0xF50($v0=0x800A<<16)   = 0x800A0F50 (used at +0x6C)
-        if (++n <= 10 || (n % 60) == 0) {
-            fprintf(stderr, "[trace] func_8009123C #%d gateA[80149AF0]=0x%02X gateB[800A0F50]=0x%02X\n",
-                n, gateA, gateB);
-            fflush(stderr);
-        }
-    }
     // 0x8009123C: addiu       $sp, $sp, -0x40
     ctx->r29 = ADD32(ctx->r29, -0X40);
     // 0x80091240: sw          $ra, 0x3C($sp)
@@ -4618,7 +4608,7 @@ L_800912C0:
     // 0x800912CC: beq         $v1, $v0, L_800917E0
     if (ctx->r3 == ctx->r2) {
         // 0x800912D0: nop
-    
+
             goto L_800917E0;
     }
     // 0x800912D0: nop
@@ -4752,7 +4742,7 @@ L_80091384:
     // 0x80091390: beq         $v1, $v0, L_800916A8
     if (ctx->r3 == ctx->r2) {
         // 0x80091394: nop
-    
+
             goto L_800916A8;
     }
     // 0x80091394: nop
@@ -5641,7 +5631,7 @@ L_80091814:
 RECOMP_FUNC void func_8009189C(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { fprintf(stderr, "[trace] func_8009189C ENTRY (vtable register) a0=0x%08X\n", (uint32_t)ctx->r4); fflush(stderr); }
+    { if(0) fprintf(stderr, "[trace] func_8009189C ENTRY (vtable register) a0=0x%08X\n", (uint32_t)ctx->r4); fflush(stderr); }
     // 0x8009189C: addiu       $sp, $sp, -0x28
     ctx->r29 = ADD32(ctx->r29, -0X28);
     // 0x800918A0: sw          $s1, 0x14($sp)
@@ -6064,7 +6054,7 @@ L_80091A78:
 RECOMP_FUNC void func_80091B3C(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { fprintf(stderr, "[trace] func_80091B3C ENTRY\n"); fflush(stderr); }
+    { if(0) fprintf(stderr, "[trace] func_80091B3C ENTRY\n"); fflush(stderr); }
     // 0x80091B3C: addiu       $sp, $sp, -0x30
     ctx->r29 = ADD32(ctx->r29, -0X30);
     // 0x80091B40: sw          $s2, 0x20($sp)
@@ -6282,7 +6272,7 @@ L_80091C4C:
 RECOMP_FUNC void func_80091C88(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { fprintf(stderr, "[trace] func_80091C88 ENTRY (audio+gfx init)\n"); fflush(stderr); }
+    { if(0) fprintf(stderr, "[trace] func_80091C88 ENTRY (audio+gfx init)\n"); fflush(stderr); }
     // 0x80091C88: addiu       $sp, $sp, -0x28
     ctx->r29 = ADD32(ctx->r29, -0X28);
     // 0x80091C8C: sw          $s1, 0x14($sp)

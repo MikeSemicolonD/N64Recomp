@@ -31,7 +31,7 @@ RECOMP_FUNC void func_8001A038(uint8_t* rdram, recomp_context* ctx) {
 RECOMP_FUNC void func_8001A058(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { static int n=0; if (++n<=10 || (n%100)==0) { fprintf(stderr, "[trace] func_8001A058(audio-submit) #%d dl=0x%08X\n", n, (uint32_t)ctx->r4); fflush(stderr); } }
+    { static int n=0; if (++n<=10 || (n%100)==0) { if(0) fprintf(stderr, "[trace] func_8001A058(audio-submit) #%d dl=0x%08X\n", n, (uint32_t)ctx->r4); fflush(stderr); } }
     // 0x8001A058: addiu       $sp, $sp, -0x18
     ctx->r29 = ADD32(ctx->r29, -0X18);
     // 0x8001A05C: lui         $a1, 0x8013
@@ -5120,7 +5120,7 @@ L_8001BCDC:
 RECOMP_FUNC void func_8001BCE4(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { static int n=0; ++n; if (n<=10 || (n%20)==0) { fprintf(stderr, "[trace] producer::func_8001BCE4 ENTRY #%d\n", n); fflush(stderr); } }
+    { static int n=0; ++n; if (n<=10 || (n%20)==0) { if(0) fprintf(stderr, "[trace] producer::func_8001BCE4 ENTRY #%d\n", n); fflush(stderr); } }
     // 0x8001BCE4: addiu       $sp, $sp, -0x38
     ctx->r29 = ADD32(ctx->r29, -0X38);
     // 0x8001BCE8: lui         $a0, 0x8013
@@ -5183,7 +5183,7 @@ L_8001BD40:
         uint8_t t1 = *(uint8_t*)(rdram + (size_t)((0x80128EABu ^ 3) & 0x7FFFFFFFu));
         uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
         uint8_t cF = *(uint8_t*)(rdram + (size_t)((0x80128EAFu ^ 3) & 0x7FFFFFFFu));
-        fprintf(stderr, "[trace] producer::scan-loop #%d a0_byte=%d types=[%02X %02X] counters=[%u %u]\n",
+        if(0) fprintf(stderr, "[trace] producer::scan-loop #%d a0_byte=%d types=[%02X %02X] counters=[%u %u]\n",
             n, (int)(int32_t)ctx->r3, (unsigned)t0, (unsigned)t1, (unsigned)cE, (unsigned)cF);
         fflush(stderr);
     } }
@@ -5245,7 +5245,7 @@ L_8001BD84:
     // 0x8001BD94: addiu       $v1, $v1, 0x1
     ctx->r3 = ADD32(ctx->r3, 0X1);
     // 0x8001BD98: sb          $t1, 0x0($s0)
-    { static int n=0; ++n; if (n<=10 || (n%20)==0) { fprintf(stderr, "[trace] producer::write-type3 #%d slot_ptr=0x%016llX\n", n, (unsigned long long)(uintptr_t)ctx->r16); fflush(stderr); } }
+    { static int n=0; ++n; if (n<=10 || (n%20)==0) { if(0) fprintf(stderr, "[trace] producer::write-type3 #%d slot_ptr=0x%016llX\n", n, (unsigned long long)(uintptr_t)ctx->r16); fflush(stderr); } }
     MEM_B(0X0, ctx->r16) = ctx->r9;
     // 0x8001BD9C: j           L_8001BE54
     // 0x8001BDA0: sh          $zero, 0x0($a0)
@@ -5323,7 +5323,7 @@ L_8001BDD0:
         uint8_t t1 = *(uint8_t*)(rdram + (size_t)((0x80128EABu ^ 3) & 0x7FFFFFFFu));
         uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
         uint8_t cF = *(uint8_t*)(rdram + (size_t)((0x80128EAFu ^ 3) & 0x7FFFFFFFu));
-        fprintf(stderr, "[trace] producer::POST-write3-B #%d types=[%02X %02X] counters=[%u %u] r16=0x%016llX\n",
+        if(0) fprintf(stderr, "[trace] producer::POST-write3-B #%d types=[%02X %02X] counters=[%u %u] r16=0x%016llX\n",
             n, (unsigned)t0, (unsigned)t1, (unsigned)cE, (unsigned)cF,
             (unsigned long long)(uintptr_t)ctx->r16);
         fflush(stderr);
@@ -5907,7 +5907,7 @@ RECOMP_FUNC void func_8001C12C(uint8_t* rdram, recomp_context* ctx) {
     int c1cs = 0;
     { static int n=0; if (++n<=20 || (n%50)==0) {
         uint8_t gate = (uint8_t)MEM_BU((uint32_t)0x801128C8, 0);
-        fprintf(stderr, "[trace] func_8001C12C(gfx-submit) #%d gate@0x801128C8=0x%02X\n", n, gate);
+        if(0) fprintf(stderr, "[trace] func_8001C12C(gfx-submit) #%d gate@0x801128C8=0x%02X\n", n, gate);
         fflush(stderr);
     } }
     // 0x8001C12C: addiu       $sp, $sp, -0x18
@@ -6062,7 +6062,7 @@ RECOMP_FUNC void func_8001C12C(uint8_t* rdram, recomp_context* ctx) {
     MEM_B(0X0, ctx->r5) = ctx->r2;
     { static int n=0; if (++n<=10) {
         uint8_t rb = (uint8_t)MEM_BU(0, ctx->r5);
-        fprintf(stderr, "[trace] func_8001C12C POST-SB #%d wrote_via_r2=0x%02X readback msg[0]@0x%08X=0x%02X\n",
+        if(0) fprintf(stderr, "[trace] func_8001C12C POST-SB #%d wrote_via_r2=0x%02X readback msg[0]@0x%08X=0x%02X\n",
             n, (uint8_t)(ctx->r2 & 0xFF), (uint32_t)ctx->r5, rb);
         fflush(stderr);
     } }
@@ -6072,7 +6072,7 @@ RECOMP_FUNC void func_8001C12C(uint8_t* rdram, recomp_context* ctx) {
     MEM_W(-0X731C, ctx->r1) = ctx->r16;
     { static int n=0; if (++n<=20 || (n%50)==0) {
         uint8_t mt = ctx->r5 ? (uint8_t)MEM_BU(0, ctx->r5) : 0xFF;
-        fprintf(stderr, "[trace] func_8001C12C ABOUT TO osSendMesg #%d queue=0x%08X msg=0x%08X type=0x%02X\n",
+        if(0) fprintf(stderr, "[trace] func_8001C12C ABOUT TO osSendMesg #%d queue=0x%08X msg=0x%08X type=0x%02X\n",
             n, (uint32_t)ctx->r4, (uint32_t)ctx->r5, mt);
         fflush(stderr);
     } }
@@ -6361,7 +6361,7 @@ L_8001C380:
     after_5:
     // 0x8001C3B8: lbu         $v1, 0x0($s0)
     ctx->r3 = MEM_BU(ctx->r16, 0X0);
-    { static int n=0; ++n; if (n<=20 || (n%50)==0) { fprintf(stderr, "[trace] gate_thread iter=%d gate@0x8011A89D=0x%X\n", n, (unsigned)(ctx->r3 & 0xFF)); fflush(stderr); } }
+    { static int n=0; ++n; if (n<=20 || (n%50)==0) { if(0) fprintf(stderr, "[trace] gate_thread iter=%d gate@0x8011A89D=0x%X\n", n, (unsigned)(ctx->r3 & 0xFF)); fflush(stderr); } }
     // 0x8001C3BC: lui         $at, 0x8013
     ctx->r1 = S32(0X8013 << 16);
     // 0x8001C3C0: sw          $v0, -0x7124($at)
@@ -6381,7 +6381,7 @@ L_8001C380:
     // 0x8001C3D4: jal         0x80033410
     // 0x8001C3D8: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
-    { static int n=0; ++n; if (n<=20 || (n%50)==0) { fprintf(stderr, "[trace] gate_thread #%d sending to 0x8011A7E8\n", n); fflush(stderr); } }
+    { static int n=0; ++n; if (n<=20 || (n%50)==0) { if(0) fprintf(stderr, "[trace] gate_thread #%d sending to 0x8011A7E8\n", n); fflush(stderr); } }
     osSendMesg_recomp(rdram, ctx);
         goto after_6;
     // 0x8001C3D8: addu        $a2, $zero, $zero

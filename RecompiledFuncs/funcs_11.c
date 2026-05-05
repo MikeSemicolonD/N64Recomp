@@ -15899,7 +15899,7 @@ RECOMP_FUNC void func_80052F94(uint8_t* rdram, recomp_context* ctx) {
         static int n = 0;
         ++n;
         if (n <= 10 || (n % 60) == 0) {
-            fprintf(stderr, "[trace] func_80052F94 #%d (intro draw)\n", n);
+            if(0) fprintf(stderr, "[trace] func_80052F94 #%d (intro draw)\n", n);
             fflush(stderr);
         }
     }
