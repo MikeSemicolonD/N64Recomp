@@ -6061,6 +6061,29 @@ RECOMP_FUNC void fake_func_80007908(uint8_t* rdram, recomp_context* ctx) {
 RECOMP_FUNC void func_80007910(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    // Patch: skip audio-tick callback (0x8009123C) registration entirely.
+    // Audio is stubbed in this recompile (MusyX RSP ucode not yet recompiled),
+    // so the audio service routine has no valid backing state. Three different
+    // audio init paths each register this same callback, filling the 4-slot
+    // table so the cinematic state driver (0x8009B5A8) can't register. Then
+    // when the audio tick does run from the dispatch loop, it dereferences
+    // uninitialised audio state and AVs in func_80090E04. Skipping the
+    // registration both frees slots and prevents the AV.
+    if ((uint32_t)ctx->r4 == 0x8009123Cu) {
+        ctx->r2 = 1;
+        return;
+    }
+    // Also dedup any other genuinely-duplicate registrations.
+    {
+        uint32_t* tbl = (uint32_t*)(rdram + 0x11A8A4);
+        uint32_t want = (uint32_t)ctx->r4;
+        for (int i = 0; i < 4; ++i) {
+            if (tbl[i] == want) {
+                ctx->r2 = 1;
+                return;
+            }
+        }
+    }
     // 0x80007910: addu        $a1, $zero, $zero
     ctx->r5 = ADD32(0, 0);
     // 0x80007914: lui         $v1, 0x8012

@@ -16711,10 +16711,10 @@ L_800156BC:
 RECOMP_FUNC void func_80015708(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { static int n = 0; if (++n <= 5 || n % 100 == 0) {
+    if(0) { static int n = 0; if (++n <= 5 || n % 100 == 0) {
     uint32_t wp = (uint32_t)MEM_W(0xFFFFFFFF8011DC58, 0);  /* D_8011DC58 = DL write ptr */
     uint32_t end = (uint32_t)MEM_W(0xFFFFFFFF801163D4, 0); /* D_801163D4 = chunk end */
-    if(0) fprintf(stderr, "[trace] emit_TEXRECT func_80015708 #%d wp=0x%08X end=0x%08X\n", n, wp, end);
+    fprintf(stderr, "[trace] emit_TEXRECT func_80015708 #%d wp=0x%08X end=0x%08X\n", n, wp, end);
     fflush(stderr);
 }
 /* On the 200th TEXRECT, dump 64KB of the chunk region for offline analysis. */
@@ -29028,10 +29028,10 @@ L_800198E8:
     ctx->r2 = MEM_BU(ctx->r22, 0X0);
     // 0x80019934: lbu         $v1, -0x1($s6)
     ctx->r3 = MEM_BU(ctx->r22, -0X1);
-    { static int n=0; ++n; if (n<=10 || (n%20)==0) {
+    if(0) { static int n=0; ++n; if (n<=10 || (n%20)==0) {
         uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
         uint8_t cF = *(uint8_t*)(rdram + (size_t)((0x80128EAFu ^ 3) & 0x7FFFFFFFu));
-        if(0) fprintf(stderr, "[trace] frame::counter-pre-inc #%d r2(E)=%u r3(LIMIT)=%u realE=%u realF=%u\n",
+        fprintf(stderr, "[trace] frame::counter-pre-inc #%d r2(E)=%u r3(LIMIT)=%u realE=%u realF=%u\n",
             n, (unsigned)(ctx->r2 & 0xFF), (unsigned)(ctx->r3 & 0xFF), (unsigned)cE, (unsigned)cF);
         fflush(stderr);
     } }
@@ -29199,6 +29199,21 @@ L_80019A0C:
     ctx->r2 = S32(0X8013 << 16);
     // 0x80019A10: lbu         $v0, -0x7153($v0)
     ctx->r2 = MEM_BU(ctx->r2, -0X7153);
+    if(0) {
+        static int n=0;
+        if (++n<=20 || (n%200)==0) {
+            #define MV_B(addr) (*(uint8_t*)(rdram + (((uint32_t)(addr) ^ 3) & 0x7FFFFFFFu)))
+            uint8_t s0 = MV_B(0x80128EAA), s1b = MV_B(0x80128EAB), s2 = MV_B(0x80128EAC);
+            uint8_t cnt = MV_B(0x80128EAD);
+            uint16_t p0 = (uint16_t)((MV_B(0x80128EA4) << 8) | MV_B(0x80128EA5));
+            uint16_t p1 = (uint16_t)((MV_B(0x80128EA6) << 8) | MV_B(0x80128EA7));
+            uint16_t p2 = (uint16_t)((MV_B(0x80128EA8) << 8) | MV_B(0x80128EA9));
+            #undef MV_B
+            fprintf(stderr, "[trace] swap-arb #%d count=%u states=[%02x %02x %02x] prios=[%04x %04x %04x] fp=%d\n",
+                n, (unsigned)cnt, s0, s1b, s2, p0, p1, p2, (int)(int32_t)ctx->r30);
+            fflush(stderr);
+        }
+    }
     // 0x80019A14: addiu       $a1, $zero, -0x1
     ctx->r5 = ADD32(0, -0X1);
     // 0x80019A18: blez        $v0, L_80019A90
@@ -29287,14 +29302,14 @@ L_80019A7C:
 L_80019A90:
     // 0x80019A90: addiu       $v0, $zero, -0x1
     ctx->r2 = ADD32(0, -0X1);
-    { static int n=0; ++n; if (n<=10 || (n%10)==0) {
-        if(0) fprintf(stderr, "[trace] frame::L_80019A90 #%d a1=%d\n", n, (int)(int32_t)ctx->r5);
+    if(0) { static int n=0; ++n; if (n<=10 || (n%10)==0) {
+        fprintf(stderr, "[trace] frame::L_80019A90 #%d a1=%d\n", n, (int)(int32_t)ctx->r5);
         fflush(stderr);
     } }
     // 0x80019A94: beq         $a1, $v0, L_80019B1C
     if (ctx->r5 == ctx->r2) {
         // 0x80019A98: nop
-        { static int n=0; if (++n<=15 || (n%50)==0) { if(0) fprintf(stderr, "[trace] frame::skip-swap (a1==-1) #%d\n", n); fflush(stderr); } }
+        if(0) { static int n=0; if (++n<=15 || (n%50)==0) { fprintf(stderr, "[trace] frame::skip-swap (a1==-1) #%d\n", n); fflush(stderr); } }
             goto L_80019B1C;
     }
     // 0x80019A98: nop
@@ -29489,8 +29504,38 @@ L_80019B68:
     ctx->r17 = ADD32(ctx->r17, 0X1);
     // 0x80019B74: jalr        $v0
     // 0x80019B78: nop
-    { static int n=0; if (++n<=20 || (n%500)==0) { if(0) fprintf(stderr, "[trace] frame::dispatch[%d] #%d func=0x%08X\n", (int)(int32_t)ctx->r17, n, (uint32_t)ctx->r2); fflush(stderr); } }
+    {
+        // Print every dispatch where r17 >= 3 (slot 2 or 3) — those are the
+        // ones we never observe in the trace, despite registers having filled
+        // them. Also print 1st-time-each-slot.
+        static int seen_slot[5] = {0};
+        int s = (int)(int32_t)ctx->r17;
+        if (s >= 0 && s < 5 && (!seen_slot[s] || s >= 3)) {
+            seen_slot[s] = 1;
+            uint32_t* tbl = (uint32_t*)(rdram + 0x11A8A4);
+            fprintf(stderr, "[trace] DISPATCH slot=%d func=0x%08X table=[0x%08X 0x%08X 0x%08X 0x%08X]\n",
+                s, (uint32_t)ctx->r2,
+                __builtin_bswap32(tbl[0]), __builtin_bswap32(tbl[1]), __builtin_bswap32(tbl[2]), __builtin_bswap32(tbl[3]));
+            fflush(stderr);
+        }
+    }
+    {
+        static uint32_t last = 0; static int init = 0;
+        uint32_t cur = *(uint32_t*)(rdram + 0x3CBC4);
+        int slot_b = (int)(int32_t)ctx->r17;
+        uint32_t fn_b = (uint32_t)ctx->r2;
+        if (!init) { init = 1; last = cur; fprintf(stderr, "[wp@disp-pre slot=%d fn=0x%08X] rdram@0x3CBC4=0x%08X\n", slot_b, fn_b, cur); fflush(stderr); }
+        else if (cur != last) { fprintf(stderr, "[wp@disp-pre slot=%d fn=0x%08X] rdram@0x3CBC4 CHANGED 0x%08X->0x%08X\n", slot_b, fn_b, last, cur); fflush(stderr); last = cur; }
+    }
     LOOKUP_FUNC(ctx->r2)(rdram, ctx);
+    {
+        static uint32_t last = 0; static int init = 0;
+        uint32_t cur = *(uint32_t*)(rdram + 0x3CBC4);
+        int slot_a = (int)(int32_t)ctx->r17;
+        uint32_t fn_a = (uint32_t)ctx->r2;
+        if (!init) { init = 1; last = cur; fprintf(stderr, "[wp@disp-post slot=%d fn=0x%08X] rdram@0x3CBC4=0x%08X\n", slot_a, fn_a, cur); fflush(stderr); }
+        else if (cur != last) { fprintf(stderr, "[wp@disp-post slot=%d fn=0x%08X] rdram@0x3CBC4 CHANGED 0x%08X->0x%08X\n", slot_a, fn_a, last, cur); fflush(stderr); last = cur; }
+    }
     { static int n=0; if (++n<=20 || (n%500)==0) { if(0) fprintf(stderr, "[trace] frame::dispatch-done #%d\n", n); fflush(stderr); } }
         goto after_15;
     // 0x80019B78: nop
@@ -29729,7 +29774,7 @@ L_80019CC4:
     after_4:
     // 0x80019CD8: lw          $a0, 0x10($sp)
     ctx->r4 = MEM_W(ctx->r29, 0X10);
-    { gpr msgPtr = (gpr)MEM_W(ctx->r29, 0X10); uint8_t mt = (msgPtr ? (uint8_t)MEM_BU(0, msgPtr) : 0xFF); if(0) fprintf(stderr, "[trace] GFX_SCHED recv msg=0x%08X type=0x%02X\n", (uint32_t)msgPtr, mt); fflush(stderr); }
+    if(0) { gpr msgPtr = (gpr)MEM_W(ctx->r29, 0X10); uint8_t mt = (msgPtr ? (uint8_t)MEM_BU(0, msgPtr) : 0xFF); fprintf(stderr, "[trace] GFX_SCHED recv msg=0x%08X type=0x%02X\n", (uint32_t)msgPtr, mt); fflush(stderr); }
     // 0x80019CDC: lbu         $v1, 0x0($a0)
     ctx->r3 = MEM_BU(ctx->r4, 0X0);
     // 0x80019CE0: beq         $v1, $s5, L_80019D90

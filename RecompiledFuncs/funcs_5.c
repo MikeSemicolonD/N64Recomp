@@ -5905,9 +5905,9 @@ L_8001C10C:
 RECOMP_FUNC void func_8001C12C(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { static int n=0; if (++n<=20 || (n%50)==0) {
-        uint8_t gate = (uint8_t)MEM_BU((uint32_t)0x801128C8, 0);
-        if(0) fprintf(stderr, "[trace] func_8001C12C(gfx-submit) #%d gate@0x801128C8=0x%02X\n", n, gate);
+    if(0) { static int n=0; if (++n<=20 || (n%50)==0) {
+        uint8_t gate = (uint8_t)MEM_BU(0xFFFFFFFF801128C8ULL, 0);
+        fprintf(stderr, "[trace] func_8001C12C(gfx-submit) #%d gate@0x801128C8=0x%02X\n", n, gate);
         fflush(stderr);
     } }
     // 0x8001C12C: addiu       $sp, $sp, -0x18

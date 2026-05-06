@@ -3060,6 +3060,16 @@ L_80001C60:
 L_80001C74:
     // 0x80001C74: addu        $v0, $s2, $zero
     ctx->r2 = ADD32(ctx->r18, 0);
+    if(0) {
+        static int n=0; ++n;
+        uint64_t v = (uint64_t)ctx->r2;
+        uint32_t hi = (uint32_t)(v >> 32);
+        if (n<=20 || (hi != 0xFFFFFFFFu && hi != 0x00000000u)) {
+            fprintf(stderr, "[trace] rs_malloc EXIT #%d -> r2=0x%016llX\n",
+                n, (unsigned long long)v);
+            fflush(stderr);
+        }
+    }
     // 0x80001C78: lw          $ra, 0x30($sp)
     ctx->r31 = MEM_W(ctx->r29, 0X30);
     // 0x80001C7C: lw          $s3, 0x2C($sp)
@@ -7056,6 +7066,13 @@ RECOMP_FUNC void func_80003250(uint8_t* rdram, recomp_context* ctx) {
             if(0) fprintf(stderr, "[trace] func_80003250 #%d gate@0x80110742=0x%02X\n", n, gate);
             fflush(stderr);
         }
+    }
+    {
+        static uint32_t last = 0; static int init = 0;
+        uint32_t cur = *(uint32_t*)(rdram + 0x3CBC4);
+        static int n2 = 0; ++n2;
+        if (!init) { init = 1; last = cur; fprintf(stderr, "[wp@03250 #%d] enter rdram@0x3CBC4=0x%08X\n", n2, cur); fflush(stderr); }
+        else if (cur != last) { fprintf(stderr, "[wp@03250 #%d] enter rdram@0x3CBC4 CHANGED 0x%08X->0x%08X\n", n2, last, cur); fflush(stderr); last = cur; }
     }
     // 0x80003250: lui         $v0, 0x8011
     ctx->r2 = S32(0X8011 << 16);

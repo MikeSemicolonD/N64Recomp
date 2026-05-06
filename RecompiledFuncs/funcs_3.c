@@ -5,6 +5,7 @@
 RECOMP_FUNC void func_8000794C(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    fprintf(stderr, "[trace] dispatch_unregister func=0x%08X\n", (uint32_t)ctx->r4); fflush(stderr);
     // 0x8000794C: addu        $a1, $zero, $zero
     ctx->r5 = ADD32(0, 0);
     // 0x80007950: lui         $v1, 0x8012

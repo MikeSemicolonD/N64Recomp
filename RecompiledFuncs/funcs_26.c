@@ -9754,6 +9754,30 @@ L_8009B580:
 RECOMP_FUNC void func_8009B5A8(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    {
+        static int n=0;
+        ++n;
+        // Bumped throttle: print first 8 + every 64th to see actual tick rate
+        // (was n<=3 — masked the steady-state cadence).
+        if (n<=8 || (n & 63) == 0) {
+            fprintf(stderr, "[trace] cinematic_drv ENTRY #%d (about to recv on 0x80154650)\n", n);
+            fflush(stderr);
+        }
+        // Watch rdram[0x3CBC4] (first corrupted word). Log when it changes.
+        static uint32_t last_word = 0;
+        static int initialized = 0;
+        uint32_t cur = *(uint32_t*)(rdram + 0x3CBC4);
+        if (!initialized) {
+            initialized = 1;
+            last_word = cur;
+            fprintf(stderr, "[wp] cinematic_drv #%d: initial rdram@0x3CBC4 = 0x%08X\n", n, cur);
+            fflush(stderr);
+        } else if (cur != last_word) {
+            fprintf(stderr, "[wp] cinematic_drv #%d: rdram@0x3CBC4 CHANGED 0x%08X -> 0x%08X\n", n, last_word, cur);
+            fflush(stderr);
+            last_word = cur;
+        }
+    }
     // 0x8009B5A8: lui         $v0, 0x800A
     ctx->r2 = S32(0X800A << 16);
     // 0x8009B5AC: lbu         $v0, 0x5121($v0)
@@ -9792,6 +9816,10 @@ RECOMP_FUNC void func_8009B5A8(uint8_t* rdram, recomp_context* ctx) {
     ctx->r4 = ADD32(ctx->r4, 0X4650);
     // 0x8009B5E8: addu        $a1, $zero, $zero
     ctx->r5 = ADD32(0, 0);
+    {
+        static int n=0; ++n;
+        if (n<=8 || (n & 63) == 0) { fprintf(stderr, "[trace] cinematic_drv #%d BEFORE recv\n", n); fflush(stderr); }
+    }
     // 0x8009B5EC: jal         0x800331D0
     // 0x8009B5F0: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
@@ -9800,6 +9828,10 @@ RECOMP_FUNC void func_8009B5A8(uint8_t* rdram, recomp_context* ctx) {
     // 0x8009B5F0: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
     after_0:
+    {
+        static int n=0; ++n;
+        if (n<=8 || (n & 63) == 0) { fprintf(stderr, "[trace] cinematic_drv #%d AFTER recv (got mutex)\n", n); fflush(stderr); }
+    }
     // 0x8009B5F4: jal         0x8002BF00
     // 0x8009B5F8: addu        $s6, $zero, $zero
     ctx->r22 = ADD32(0, 0);

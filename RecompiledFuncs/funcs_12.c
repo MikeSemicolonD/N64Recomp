@@ -1,5 +1,7 @@
 #include "recomp.h"
 #include "funcs.h"
+#include <stdio.h>
+#include <string.h>
 
 RECOMP_FUNC void func_80054C54(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
@@ -4017,6 +4019,14 @@ RECOMP_FUNC void fake_func_80056344(uint8_t* rdram, recomp_context* ctx) {
 RECOMP_FUNC void func_80056350(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    {
+        static int n=0; ++n;
+        if (n<=20 || (n%500)==0) {
+            fprintf(stderr, "[trace] func_80056350(asset_registry_init+insert) ENTRY #%d a0=0x%016llX a1=0x%016llX a2=0x%016llX\n",
+                n, (unsigned long long)ctx->r4, (unsigned long long)ctx->r5, (unsigned long long)ctx->r6);
+            fflush(stderr);
+        }
+    }
     // 0x80056350: addiu       $sp, $sp, -0x18
     ctx->r29 = ADD32(ctx->r29, -0X18);
     // 0x80056354: sw          $ra, 0x10($sp)
@@ -4183,6 +4193,29 @@ L_8005642C:
 RECOMP_FUNC void load_hmt_and_hob(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    {
+        static int n=0; ++n;
+        if (n<=30) {
+            // Decode r4 as a string (likely the asset name being loaded).
+            char strbuf[64];
+            int sl = 0;
+            uint64_t v = (uint64_t)ctx->r4;
+            if ((uint32_t)(v >> 32) == 0xFFFFFFFFu) {
+                uint32_t mips_addr = (uint32_t)v;
+                for (sl = 0; sl < (int)sizeof(strbuf) - 1; ++sl) {
+                    uint32_t off = ((mips_addr + sl) ^ 3) & 0x7FFFFFFFu;
+                    if (off >= 0x800000) break;
+                    char c = (char)rdram[off];
+                    strbuf[sl] = (c >= 32 && c < 127) ? c : '?';
+                    if (c == 0) break;
+                }
+            }
+            strbuf[sl] = 0;
+            if(0) fprintf(stderr, "[trace] load_hmt_and_hob ENTRY #%d str=\"%s\" a1=0x%016llX a2=0x%016llX\n",
+                n, strbuf, (unsigned long long)ctx->r5, (unsigned long long)ctx->r6);
+            fflush(stderr);
+        }
+    }
     // 0x8005645C: addiu       $sp, $sp, -0xC0
     ctx->r29 = ADD32(ctx->r29, -0XC0);
     // 0x80056460: sw          $s6, 0xB0($sp)
@@ -6790,6 +6823,131 @@ L_80057308:
 RECOMP_FUNC void func_80057338(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    {
+        static int n=0;
+        if (++n<=10) {
+            // Decode the lookup-string at MIPS r4 (bytes via XOR-3 swizzle).
+            uint64_t v = (uint64_t)ctx->r4;
+            char strbuf[64];
+            int sl = 0;
+            if ((uint32_t)(v >> 32) == 0xFFFFFFFFu) {
+                uint32_t mips_addr = (uint32_t)v;
+                for (sl = 0; sl < (int)sizeof(strbuf) - 1; ++sl) {
+                    uint32_t a = (mips_addr + sl) ^ 3;
+                    uint32_t off = a & 0x7FFFFFFFu;
+                    if (off >= 0x800000) break;
+                    char c = (char)rdram[off];
+                    strbuf[sl] = (c >= 32 && c < 127) ? c : '?';
+                    if (c == 0) break;
+                }
+            }
+            strbuf[sl] = 0;
+            fprintf(stderr, "[trace] func_80057338 LOOKUP #%d str=\"%s\" (r4=0x%016llX)\n",
+                n, strbuf, (unsigned long long)v);
+            fflush(stderr);
+        }
+        // One-shot probe: dump the table at MIPS 0x800A0A90 (the suspect lookup table)
+        // and the asset registry bucket data at 0x80139020.
+        static int probed=0;
+        if (!probed) {
+            probed = 1;
+            fprintf(stderr, "[probe] === Table at 0x800A0A90 (16 entries) ===\n");
+            for (int i = 0; i < 16; ++i) {
+                uint32_t entry_addr = 0x800A0A90u + (uint32_t)i*4u;
+                uint32_t off_w = entry_addr & 0x7FFFFFFFu;
+                uint32_t entry_val = (off_w < 0x800000u) ? *(uint32_t*)(rdram + off_w) : 0u;
+                int has_high = ((entry_val >> 24) == 0x80);
+                char preview[17];
+                for (int j = 0; j < 16; ++j) {
+                    uint8_t b = 0;
+                    if (has_high) {
+                        uint32_t bo = ((entry_val + (uint32_t)j) ^ 3u) & 0x7FFFFFFFu;
+                        if (bo < 0x800000u) b = rdram[bo];
+                    }
+                    preview[j] = (b >= 32 && b < 127) ? (char)b : '.';
+                }
+                preview[16] = 0;
+                uint8_t b0=0,b1=0,b2=0,b3=0;
+                if (has_high) {
+                    uint32_t bo0 = ((entry_val+0u) ^ 3u) & 0x7FFFFFFFu;
+                    uint32_t bo1 = ((entry_val+1u) ^ 3u) & 0x7FFFFFFFu;
+                    uint32_t bo2 = ((entry_val+2u) ^ 3u) & 0x7FFFFFFFu;
+                    uint32_t bo3 = ((entry_val+3u) ^ 3u) & 0x7FFFFFFFu;
+                    if (bo0 < 0x800000u) b0 = rdram[bo0];
+                    if (bo1 < 0x800000u) b1 = rdram[bo1];
+                    if (bo2 < 0x800000u) b2 = rdram[bo2];
+                    if (bo3 < 0x800000u) b3 = rdram[bo3];
+                }
+                fprintf(stderr, "[probe] [%2d] @0x%08X = 0x%08X  bytes=%02X %02X %02X %02X  ascii=\"%s\"\n",
+                    i, entry_addr, entry_val, b0,b1,b2,b3, preview);
+            }
+            fprintf(stderr, "[probe] === Asset registry bucket counts (0x80139450, 23 halfwords) ===\n");
+            for (int i = 0; i < 23; ++i) {
+                uint32_t a = 0x80139450u + (uint32_t)i*2u;
+                uint32_t bo_hi = ((a+0u) ^ 3u) & 0x7FFFFFFFu;
+                uint32_t bo_lo = ((a+1u) ^ 3u) & 0x7FFFFFFFu;
+                uint8_t hi_b = (bo_hi < 0x800000u) ? rdram[bo_hi] : 0;
+                uint8_t lo_b = (bo_lo < 0x800000u) ? rdram[bo_lo] : 0;
+                uint16_t cnt = ((uint16_t)hi_b << 8) | lo_b;
+                fprintf(stderr, "[probe]   bucket[%2d] count=%u\n", i, cnt);
+            }
+            fprintf(stderr, "[probe] === RAW rdram bytes 0x3CBC0-0x3CBF8 (string \"shock_sph\" should land here) ===\n");
+            for (uint32_t off = 0x3CBC0; off < 0x3CBF8; off += 16) {
+                fprintf(stderr, "[probe] rdram[0x%05X]:", off);
+                for (int j = 0; j < 16; ++j) fprintf(stderr, " %02X", rdram[off+j]);
+                fprintf(stderr, "  |");
+                for (int j = 0; j < 16; ++j) {
+                    uint8_t b = rdram[off+j];
+                    fputc((b>=32 && b<127)?b:'.', stderr);
+                }
+                fprintf(stderr, "|\n");
+            }
+            // Search rdram for "shock_sph" to find where it really landed.
+            fprintf(stderr, "[probe] === Searching rdram for \"shock_sph\" / \"shock_sml\" ===\n");
+            const char* s1 = "shock_sph";
+            const char* s2 = "shock_sml";
+            int n1 = (int)strlen(s1), n2 = (int)strlen(s2);
+            int found1 = 0, found2 = 0;
+            for (uint32_t off = 0; off + n1 < 0x800000u; ++off) {
+                if (rdram[off]==(uint8_t)s1[0] && rdram[off+1]==(uint8_t)s1[1] &&
+                    rdram[off+2]==(uint8_t)s1[2] && rdram[off+3]==(uint8_t)s1[3] &&
+                    rdram[off+4]==(uint8_t)s1[4] && rdram[off+5]==(uint8_t)s1[5] &&
+                    rdram[off+6]==(uint8_t)s1[6] && rdram[off+7]==(uint8_t)s1[7]) {
+                    fprintf(stderr, "[probe]   raw match \"shock_sph\" at rdram[0x%05X]\n", off);
+                    if (++found1 >= 3) break;
+                }
+            }
+            for (uint32_t off = 0; off + n2 < 0x800000u; ++off) {
+                if (rdram[off]==(uint8_t)s2[0] && rdram[off+1]==(uint8_t)s2[1] &&
+                    rdram[off+2]==(uint8_t)s2[2] && rdram[off+3]==(uint8_t)s2[3] &&
+                    rdram[off+4]==(uint8_t)s2[4] && rdram[off+5]==(uint8_t)s2[5] &&
+                    rdram[off+6]==(uint8_t)s2[6] && rdram[off+7]==(uint8_t)s2[7]) {
+                    fprintf(stderr, "[probe]   raw match \"shock_sml\" at rdram[0x%05X]\n", off);
+                    if (++found2 >= 3) break;
+                }
+            }
+            // Also search for byte-swizzled (XOR-3) forms.
+            fprintf(stderr, "[probe] === Searching rdram for swizzled \"shock_sph\" (XOR-3) ===\n");
+            for (uint32_t off = 0; off + n1 + 3 < 0x800000u; ++off) {
+                int ok = 1;
+                for (int j = 0; j < n1; ++j) {
+                    if (rdram[(off+j)^3] != (uint8_t)s1[j]) { ok = 0; break; }
+                }
+                if (ok) {
+                    fprintf(stderr, "[probe]   swizzled match (XOR-3) for \"shock_sph\" at MIPS 0x%08X (rdram base offset 0x%05X)\n", 0x80000000u | off, off);
+                    if (++found1 >= 6) break;
+                }
+            }
+            fprintf(stderr, "[probe] === Asset registry bucket data first 32 entries (0x80139020) ===\n");
+            for (int i = 0; i < 32; ++i) {
+                uint32_t a = 0x80139020u + (uint32_t)i*4u;
+                uint32_t off = a & 0x7FFFFFFFu;
+                uint32_t v = (off < 0x800000u) ? *(uint32_t*)(rdram + off) : 0u;
+                fprintf(stderr, "[probe]   bd[%2d]@0x%08X = 0x%08X\n", i, a, v);
+            }
+            fflush(stderr);
+        }
+    }
     // 0x80057338: addiu       $sp, $sp, -0x28
     ctx->r29 = ADD32(ctx->r29, -0X28);
     // 0x8005733C: addu        $t0, $a0, $zero

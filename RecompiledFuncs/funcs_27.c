@@ -2,6 +2,23 @@
 #include "funcs.h"
 #include <stdio.h>
 
+// Stash rdram for the main.cpp watchdog thread.
+extern volatile uint8_t* volatile g_recomp_rdram_for_wp_raw;
+
+// Shared watchpoint helper: log the FIRST tag that observes a change at MIPS 0x8003CBC4.
+static inline void wp_chk(uint8_t* rdram, const char* tag) {
+    if (!g_recomp_rdram_for_wp_raw) g_recomp_rdram_for_wp_raw = rdram;
+    static uint32_t last = 0xFFFFFFFFu;
+    static int init = 0;
+    uint32_t cur = *(uint32_t*)(rdram + 0x3CBC4);
+    if (!init) { init = 1; last = cur; }
+    else if (cur != last) {
+        fprintf(stderr, "[wp:%s] rdram@0x3CBC4 CHANGED 0x%08X->0x%08X\n", tag, last, cur);
+        fflush(stderr);
+        last = cur;
+    }
+}
+
 RECOMP_FUNC void loadSpeechFile(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
@@ -5785,6 +5802,9 @@ L_8009DDC8:
 RECOMP_FUNC void func_800A5D80(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    { static uint32_t L=0; static int I=0; uint32_t C=*(uint32_t*)(rdram+0x3CBC4);
+      if(!I){I=1;L=C;fprintf(stderr,"[wp@A5D80:entry] 0x%08X\n",C);fflush(stderr);}
+      else if(C!=L){fprintf(stderr,"[wp@A5D80:entry] CHANGED 0x%08X->0x%08X\n",L,C);fflush(stderr);L=C;} }
     // 0x800A5D80: addiu       $sp, $sp, -0xD8
     ctx->r29 = ADD32(ctx->r29, -0XD8);
     // 0x800A5D84: sw          $s7, 0xB4($sp)
@@ -6050,6 +6070,9 @@ L_800A5ECC:
     // 0x800A5F30: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
     load_cutscene(rdram, ctx);
+    { static uint32_t L=0; static int I=0; uint32_t C=*(uint32_t*)(rdram+0x3CBC4);
+      if(!I){I=1;L=C;fprintf(stderr,"[wp@A5D80:after_load_cs] 0x%08X\n",C);fflush(stderr);}
+      else if(C!=L){fprintf(stderr,"[wp@A5D80:after_load_cs] CHANGED 0x%08X->0x%08X\n",L,C);fflush(stderr);L=C;} }
         goto after_5;
     // 0x800A5F30: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
@@ -6479,6 +6502,9 @@ L_800A614C:
     // 0x800A6150: nop
 
     func_8006ED90(rdram, ctx);
+    { static uint32_t L=0; static int I=0; uint32_t C=*(uint32_t*)(rdram+0x3CBC4);
+      if(!I){I=1;L=C;fprintf(stderr,"[wp@A5D80:after_6ED90] 0x%08X\n",C);fflush(stderr);}
+      else if(C!=L){fprintf(stderr,"[wp@A5D80:after_6ED90] CHANGED 0x%08X->0x%08X\n",L,C);fflush(stderr);L=C;} }
         goto after_16;
     // 0x800A6150: nop
 
@@ -6913,6 +6939,9 @@ L_800A62EC:
     // 0x800A6378: nop
 
     func_800AEE14(rdram, ctx);
+    { static uint32_t L=0; static int I=0; uint32_t C=*(uint32_t*)(rdram+0x3CBC4);
+      if(!I){I=1;L=C;fprintf(stderr,"[wp@A5D80:after_AEE14] 0x%08X\n",C);fflush(stderr);}
+      else if(C!=L){fprintf(stderr,"[wp@A5D80:after_AEE14] CHANGED 0x%08X->0x%08X\n",L,C);fflush(stderr);L=C;} }
         goto after_29;
     // 0x800A6378: nop
 
@@ -7132,6 +7161,9 @@ L_800A6454:
     CHECK_FR(ctx, 20);
     ctx->f12.fl = ctx->f20.fl;
     func_80067300(rdram, ctx);
+    { static uint32_t L=0; static int I=0; uint32_t C=*(uint32_t*)(rdram+0x3CBC4);
+      if(!I){I=1;L=C;fprintf(stderr,"[wp@A5D80:after_67300] 0x%08X\n",C);fflush(stderr);}
+      else if(C!=L){fprintf(stderr,"[wp@A5D80:after_67300] CHANGED 0x%08X->0x%08X\n",L,C);fflush(stderr);L=C;} }
         goto after_44;
     // 0x800A6470: mov.s       $f12, $f20
     CHECK_FR(ctx, 12);
@@ -7143,7 +7175,7 @@ L_800A6454:
     CHECK_FR(ctx, 12);
     CHECK_FR(ctx, 20);
     ctx->f12.fl = ctx->f20.fl;
-    func_80055CB0(rdram, ctx);
+    func_80055CB0(rdram, ctx); wp_chk(rdram,"after_55CB0");
         goto after_45;
     // 0x800A6478: mov.s       $f12, $f20
     CHECK_FR(ctx, 12);
@@ -7159,7 +7191,7 @@ L_800A6454:
     // 0x800A6488: jal         0x800AA1BC
     // 0x800A648C: addiu       $a1, $t1, 0x1938
     ctx->r5 = ADD32(ctx->r9, 0X1938);
-    func_800AA1BC(rdram, ctx);
+    func_800AA1BC(rdram, ctx); wp_chk(rdram,"after_AA1BC");
         goto after_46;
     // 0x800A648C: addiu       $a1, $t1, 0x1938
     ctx->r5 = ADD32(ctx->r9, 0X1938);
@@ -7167,7 +7199,7 @@ L_800A6454:
     // 0x800A6490: jal         0x8000A6CC
     // 0x800A6494: nop
 
-    func_8000A6CC(rdram, ctx);
+    func_8000A6CC(rdram, ctx); wp_chk(rdram,"after_0A6CC");
         goto after_47;
     // 0x800A6494: nop
 
@@ -7177,7 +7209,7 @@ L_800A6454:
     // 0x800A649C: jal         0x800A71B8
     // 0x800A64A0: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
-    func_800A71B8(rdram, ctx);
+    func_800A71B8(rdram, ctx); wp_chk(rdram,"after_A71B8");
         goto after_48;
     // 0x800A64A0: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
@@ -7185,7 +7217,7 @@ L_800A6454:
     // 0x800A64A4: jal         0x8000B6F4
     // 0x800A64A8: nop
 
-    func_8000B6F4(rdram, ctx);
+    func_8000B6F4(rdram, ctx); wp_chk(rdram,"after_0B6F4");
         goto after_49;
     // 0x800A64A8: nop
 
@@ -7193,7 +7225,7 @@ L_800A6454:
     // 0x800A64AC: jal         0x8000C07C
     // 0x800A64B0: nop
 
-    func_8000C07C(rdram, ctx);
+    func_8000C07C(rdram, ctx); wp_chk(rdram,"after_0C07C");
         goto after_50;
     // 0x800A64B0: nop
 
@@ -7208,7 +7240,7 @@ L_800A64BC:
     // 0x800A64BC: jal         0x8000BF60
     // 0x800A64C0: nop
 
-    func_8000BF60(rdram, ctx);
+    func_8000BF60(rdram, ctx); wp_chk(rdram,"after_0BF60");
         goto after_51;
     // 0x800A64C0: nop
 
@@ -7221,6 +7253,9 @@ L_800A64BC:
     // 0x800A64D0: addiu       $a1, $sp, 0x18
     ctx->r5 = ADD32(ctx->r29, 0X18);
     func_800AF60C(rdram, ctx);
+    { static uint32_t L=0; static int I=0; uint32_t C=*(uint32_t*)(rdram+0x3CBC4);
+      if(!I){I=1;L=C;fprintf(stderr,"[wp@A5D80:after_AF60C] 0x%08X\n",C);fflush(stderr);}
+      else if(C!=L){fprintf(stderr,"[wp@A5D80:after_AF60C] CHANGED 0x%08X->0x%08X\n",L,C);fflush(stderr);L=C;} }
         goto after_52;
     // 0x800A64D0: addiu       $a1, $sp, 0x18
     ctx->r5 = ADD32(ctx->r29, 0X18);
@@ -7228,7 +7263,7 @@ L_800A64BC:
     // 0x800A64D4: jal         0x800668B0
     // 0x800A64D8: nop
 
-    func_800668B0(rdram, ctx);
+    func_800668B0(rdram, ctx); wp_chk(rdram,"after_668B0");
         goto after_53;
     // 0x800A64D8: nop
 
@@ -7240,7 +7275,7 @@ L_800A64BC:
     // 0x800A64E4: jal         0x800AEB30
     // 0x800A64E8: nop
 
-    func_800AEB30(rdram, ctx);
+    func_800AEB30(rdram, ctx); wp_chk(rdram,"after_AEB30");
         goto after_54;
     // 0x800A64E8: nop
 
@@ -7248,7 +7283,7 @@ L_800A64BC:
     // 0x800A64EC: jal         0x800AF260
     // 0x800A64F0: nop
 
-    func_800AF260(rdram, ctx);
+    func_800AF260(rdram, ctx); wp_chk(rdram,"after_AF260");
         goto after_55;
     // 0x800A64F0: nop
 
@@ -7256,7 +7291,7 @@ L_800A64BC:
     // 0x800A64F4: jal         0x800AEB38
     // 0x800A64F8: nop
 
-    func_800AEB38(rdram, ctx);
+    func_800AEB38(rdram, ctx); wp_chk(rdram,"after_AEB38");
         goto after_56;
     // 0x800A64F8: nop
 
@@ -7303,7 +7338,7 @@ L_800A651C:
     // 0x800A6538: jal         0x8006E468
     // 0x800A653C: sb          $t0, 0x22($s0)
     MEM_B(0X22, ctx->r16) = ctx->r8;
-    func_8006E468(rdram, ctx);
+    func_8006E468(rdram, ctx); wp_chk(rdram,"after_6E468");
         goto after_57;
     // 0x800A653C: sb          $t0, 0x22($s0)
     MEM_B(0X22, ctx->r16) = ctx->r8;
@@ -7430,6 +7465,9 @@ L_800A65DC:
     // 0x800A65E0: nop
 
     func_8003DF78(rdram, ctx);
+    { static uint32_t L=0; static int I=0; uint32_t C=*(uint32_t*)(rdram+0x3CBC4);
+      if(!I){I=1;L=C;fprintf(stderr,"[wp@A5D80:after_3DF78] 0x%08X\n",C);fflush(stderr);}
+      else if(C!=L){fprintf(stderr,"[wp@A5D80:after_3DF78] CHANGED 0x%08X->0x%08X\n",L,C);fflush(stderr);L=C;} }
         goto after_60;
     // 0x800A65E0: nop
 
@@ -7464,6 +7502,9 @@ L_800A65E4:
     // 0x800A6614: ldc1        $f20, 0xC0($sp)
     CHECK_FR(ctx, 20);
     ctx->f20.u64 = LD(ctx->r29, 0XC0);
+    { static uint32_t L=0; static int I=0; uint32_t C=*(uint32_t*)(rdram+0x3CBC4);
+      if(!I){I=1;L=C;fprintf(stderr,"[wp@A5D80:exit] 0x%08X\n",C);fflush(stderr);}
+      else if(C!=L){fprintf(stderr,"[wp@A5D80:exit] CHANGED 0x%08X->0x%08X\n",L,C);fflush(stderr);L=C;} }
     // 0x800A6618: jr          $ra
     // 0x800A661C: addiu       $sp, $sp, 0xD8
     ctx->r29 = ADD32(ctx->r29, 0XD8);
@@ -7474,6 +7515,9 @@ L_800A65E4:
 RECOMP_FUNC void load_cutscene(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    { static uint32_t L=0; static int I=0; uint32_t C=*(uint32_t*)(rdram+0x3CBC4);
+      if(!I){I=1;L=C;fprintf(stderr,"[wp@load_cs:entry] 0x%08X\n",C);fflush(stderr);}
+      else if(C!=L){fprintf(stderr,"[wp@load_cs:entry] CHANGED 0x%08X->0x%08X\n",L,C);fflush(stderr);L=C;} }
     // 0x800A6620: addiu       $sp, $sp, -0x60
     ctx->r29 = ADD32(ctx->r29, -0X60);
     // 0x800A6624: sb          $a0, 0x30($sp)
@@ -7854,6 +7898,9 @@ L_800A684C:
     // 0x800A686C: nop
 
     func_80079A70(rdram, ctx);
+    { static uint32_t L=0; static int I=0; uint32_t C=*(uint32_t*)(rdram+0x3CBC4);
+      if(!I){I=1;L=C;fprintf(stderr,"[wp@A5D80:after_79A70] 0x%08X\n",C);fflush(stderr);}
+      else if(C!=L){fprintf(stderr,"[wp@A5D80:after_79A70] CHANGED 0x%08X->0x%08X\n",L,C);fflush(stderr);L=C;} }
         goto after_10;
     // 0x800A686C: nop
 
@@ -7950,6 +7997,9 @@ L_800A68B4:
     ctx->r17 = MEM_W(ctx->r29, 0X3C);
     // 0x800A68F8: lw          $s0, 0x38($sp)
     ctx->r16 = MEM_W(ctx->r29, 0X38);
+    { static uint32_t L=0; static int I=0; uint32_t C=*(uint32_t*)(rdram+0x3CBC4);
+      if(!I){I=1;L=C;fprintf(stderr,"[wp@load_cs:exit] 0x%08X\n",C);fflush(stderr);}
+      else if(C!=L){fprintf(stderr,"[wp@load_cs:exit] CHANGED 0x%08X->0x%08X\n",L,C);fflush(stderr);L=C;} }
     // 0x800A68FC: jr          $ra
     // 0x800A6900: addiu       $sp, $sp, 0x60
     ctx->r29 = ADD32(ctx->r29, 0X60);

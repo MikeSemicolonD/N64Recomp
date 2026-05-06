@@ -10323,6 +10323,13 @@ RECOMP_FUNC void func_8003DFA0(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     { static int n=0; if (++n<=5) { uint32_t s4 = 0x80130B10; uint32_t off = s4 - 0x80000000; uint8_t flag = rdram[(off+0x20)^3]; if(0) fprintf(stderr, "[trace] func_8003DFA0 #%d flag@s4+0x20=0x%02X\n", n, flag); fflush(stderr); } }
+    {
+        static uint32_t last = 0; static int init = 0;
+        uint32_t cur = *(uint32_t*)(rdram + 0x3CBC4);
+        static int n = 0; ++n;
+        if (!init) { init = 1; last = cur; fprintf(stderr, "[wp@DFA0 #%d] enter rdram@0x3CBC4=0x%08X\n", n, cur); fflush(stderr); }
+        else if (cur != last) { fprintf(stderr, "[wp@DFA0 #%d] enter rdram@0x3CBC4 CHANGED 0x%08X->0x%08X\n", n, last, cur); fflush(stderr); last = cur; }
+    }
     // 0x8003DFA0: addiu       $sp, $sp, -0x38
     ctx->r29 = ADD32(ctx->r29, -0X38);
     // 0x8003DFA4: sw          $ra, 0x34($sp)
