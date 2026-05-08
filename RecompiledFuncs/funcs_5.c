@@ -5120,7 +5120,7 @@ L_8001BCDC:
 RECOMP_FUNC void func_8001BCE4(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { static int n=0; ++n; if (n<=10 || (n%20)==0) { if(0) fprintf(stderr, "[trace] producer::func_8001BCE4 ENTRY #%d\n", n); fflush(stderr); } }
+    { static int n=0; ++n; if (n<=10 || (n%20)==0) { if(1) fprintf(stderr, "[trace] producer::func_8001BCE4 ENTRY #%d\n", n); fflush(stderr); } }
     // 0x8001BCE4: addiu       $sp, $sp, -0x38
     ctx->r29 = ADD32(ctx->r29, -0X38);
     // 0x8001BCE8: lui         $a0, 0x8013
@@ -5183,7 +5183,7 @@ L_8001BD40:
         uint8_t t1 = *(uint8_t*)(rdram + (size_t)((0x80128EABu ^ 3) & 0x7FFFFFFFu));
         uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
         uint8_t cF = *(uint8_t*)(rdram + (size_t)((0x80128EAFu ^ 3) & 0x7FFFFFFFu));
-        if(0) fprintf(stderr, "[trace] producer::scan-loop #%d a0_byte=%d types=[%02X %02X] counters=[%u %u]\n",
+        if(1) fprintf(stderr, "[trace] producer::scan-loop #%d a0_byte=%d types=[%02X %02X] counters=[%u %u]\n",
             n, (int)(int32_t)ctx->r3, (unsigned)t0, (unsigned)t1, (unsigned)cE, (unsigned)cF);
         fflush(stderr);
     } }
@@ -5472,6 +5472,14 @@ RECOMP_FUNC void func_8001BE80(uint8_t* rdram, recomp_context* ctx) {
 RECOMP_FUNC void func_8001BEC8(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    { static int n=0; ++n; if (n<=10 || (n%50)==0) {
+        uint8_t t0 = *(uint8_t*)(rdram + (size_t)((0x80128EAAu ^ 3) & 0x7FFFFFFFu));
+        uint8_t t1 = *(uint8_t*)(rdram + (size_t)((0x80128EABu ^ 3) & 0x7FFFFFFFu));
+        uint8_t t2 = *(uint8_t*)(rdram + (size_t)((0x80128EACu ^ 3) & 0x7FFFFFFFu));
+        uint8_t count = *(uint8_t*)(rdram + (size_t)((0x80128EADu ^ 3) & 0x7FFFFFFFu));
+        fprintf(stderr, "[trace] mark-ready(1->2) func_8001BEC8 ENTRY #%d slots=[%02X %02X %02X] count=%u\n", n, (unsigned)t0, (unsigned)t1, (unsigned)t2, (unsigned)count);
+        fflush(stderr);
+    } }
     // 0x8001BEC8: lui         $v1, 0x8013
     ctx->r3 = S32(0X8013 << 16);
     // 0x8001BECC: addiu       $v1, $v1, -0x7153
@@ -5539,6 +5547,14 @@ L_8001BF14:
 RECOMP_FUNC void func_8001BF20(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    { static int n=0; ++n; if (n<=10 || (n%50)==0) {
+        uint8_t t0 = *(uint8_t*)(rdram + (size_t)((0x80128EAAu ^ 3) & 0x7FFFFFFFu));
+        uint8_t t1 = *(uint8_t*)(rdram + (size_t)((0x80128EABu ^ 3) & 0x7FFFFFFFu));
+        uint8_t t2 = *(uint8_t*)(rdram + (size_t)((0x80128EACu ^ 3) & 0x7FFFFFFFu));
+        uint8_t count = *(uint8_t*)(rdram + (size_t)((0x80128EADu ^ 3) & 0x7FFFFFFFu));
+        fprintf(stderr, "[trace] alloc(0->1) func_8001BF20 ENTRY #%d slots=[%02X %02X %02X] count=%u\n", n, (unsigned)t0, (unsigned)t1, (unsigned)t2, (unsigned)count);
+        fflush(stderr);
+    } }
     // 0x8001BF20: addiu       $sp, $sp, -0x30
     ctx->r29 = ADD32(ctx->r29, -0X30);
     // 0x8001BF24: addiu       $a2, $zero, 0x1

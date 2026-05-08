@@ -7203,6 +7203,15 @@ L_8005BC8C:
 RECOMP_FUNC void func_8005BCC4(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    // ROGUESQ: trace sub-particle callback. This is the second-level particle
+    // (spawned BY func_80044724's init). Per Phase 5 finding, FCFFFFFF
+    // particles (likely emitted by this callback) render at sub-pixel scale.
+    // a1=1 init, a1=4 per-frame update.
+    { static int n=0; if (++n<=20 || (n%500)==0) {
+        fprintf(stderr, "[trace] func_8005BCC4 SUB-CB #%d a0=0x%08X a1=0x%08X\n",
+            n, (uint32_t)(uint64_t)ctx->r4, (uint32_t)(uint64_t)ctx->r5);
+        fflush(stderr);
+    } }
     // 0x8005BCC4: addiu       $sp, $sp, -0xE0
     ctx->r29 = ADD32(ctx->r29, -0XE0);
     // 0x8005BCC8: sw          $s0, 0xB0($sp)

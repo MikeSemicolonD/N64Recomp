@@ -28953,13 +28953,14 @@ L_800198E8:
     // 0x800198F4: jal         0x800331D0
     // 0x800198F8: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
-    { static int n=0; if (++n<=10 || (n%200)==0) { if(0) fprintf(stderr, "[trace] frame::recv1-pre #%d (retrace mq=0x%08X)\n", n, (uint32_t)ctx->r4); fflush(stderr); } }
+    { static int n=0; if (++n<=10 || (n%200)==0) { if(1) fprintf(stderr, "[trace] frame::recv1-pre #%d (retrace mq=0x%08X)\n", n, (uint32_t)ctx->r4); fflush(stderr); } }
     osRecvMesg_recomp(rdram, ctx);
         goto after_3;
     // 0x800198F8: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
     after_3:
-    { static int n=0; if (++n<=10 || (n%200)==0) { if(0) fprintf(stderr, "[trace] frame::recv1-post #%d\n", n); fflush(stderr); } }
+    { static int n=0; if (++n<=10 || (n%200)==0) { if(1) fprintf(stderr, "[trace] frame::recv1-post #%d\n", n); fflush(stderr); } }
+    { extern void roguesq_rate_count_sample(uint32_t); roguesq_rate_count_sample(0); }
     { static int iter=0; ++iter; if (iter>=5 && iter<=15) {
         uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
         if(0) fprintf(stderr, "[ck] iter=%d post-recv1 cE=%u\n", iter, (unsigned)cE);
@@ -29012,9 +29013,9 @@ L_800198E8:
     // 0x80019928: jal         0x800331D0
     // 0x8001992C: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
-    { static int n=0; if (++n<=10 || (n%200)==0) { if(0) fprintf(stderr, "[trace] frame::recv2-pre #%d (mq=0x%08X)\n", n, (uint32_t)ctx->r4); fflush(stderr); } }
+    { static int n=0; if (++n<=10 || (n%200)==0) { if(1) fprintf(stderr, "[trace] frame::recv2-pre #%d (mq=0x%08X)\n", n, (uint32_t)ctx->r4); fflush(stderr); } }
     osRecvMesg_recomp(rdram, ctx);
-    { static int n=0; if (++n<=10 || (n%200)==0) { if(0) fprintf(stderr, "[trace] frame::recv2-post #%d ret=%d\n", n, (int)(int32_t)ctx->r2); fflush(stderr); } }
+    { static int n=0; if (++n<=10 || (n%200)==0) { if(1) fprintf(stderr, "[trace] frame::recv2-post #%d ret=%d\n", n, (int)(int32_t)ctx->r2); fflush(stderr); } }
         goto after_7;
     // 0x8001992C: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);

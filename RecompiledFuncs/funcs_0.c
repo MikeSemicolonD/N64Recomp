@@ -60,7 +60,7 @@ L_80000434:
 RECOMP_FUNC void loadOverlay(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { static int n=0; ++n; if (n<=10 || (n%50)==0) { if(0) fprintf(stderr, "[trace] loadOverlay ENTRY #%d arg=0x%08X\n", n, (uint32_t)ctx->r4); fflush(stderr); } }
+    { static int n=0; ++n; fprintf(stderr, "[trace] loadOverlay ENTRY #%d arg=0x%08X\n", n, (uint32_t)ctx->r4); fflush(stderr); }
     // 0x80000B20: lui         $v0, 0x8003
     ctx->r2 = S32(0X8003 << 16);
     // 0x80000B24: lw          $v0, 0x75B0($v0)

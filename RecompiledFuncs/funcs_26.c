@@ -1,6 +1,7 @@
 #include "recomp.h"
 #include "funcs.h"
 #include <stdio.h>
+#include <stdlib.h>  // getenv for ROGUESQ_LOG_DPC gate
 
 RECOMP_FUNC void func_800971E8(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
@@ -3044,6 +3045,11 @@ L_80098274:
 RECOMP_FUNC void func_80098298(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    { static int n=0; ++n; if (n<=10 || (n%50)==0) {
+        fprintf(stderr, "[trace] func_80098298 (stage-render) ENTRY #%d a0=0x%08X\n",
+            n, (uint32_t)ctx->r4);
+        fflush(stderr);
+    } }
     // 0x80098298: lui         $v0, 0x800A
     ctx->r2 = S32(0X800A << 16);
     // 0x8009829C: lbu         $v0, 0xF50($v0)
@@ -9759,9 +9765,51 @@ RECOMP_FUNC void func_8009B5A8(uint8_t* rdram, recomp_context* ctx) {
         ++n;
         // Bumped throttle: print first 8 + every 64th to see actual tick rate
         // (was n<=3 — masked the steady-state cadence).
-        if (n<=8 || (n & 63) == 0) {
-            fprintf(stderr, "[trace] cinematic_drv ENTRY #%d (about to recv on 0x80154650)\n", n);
+        // Cinematic-driver tick trace. Fires every cinematic frame during
+        // playback. Useful when investigating the cinematic_drv message
+        // queue / state-machine. Default off — gate on ROGUESQ_LOG_DPC.
+        // (funcs_26.c is C, not C++, so the gate is a manual init.)
+        static int log_cd_init = 0;
+        static int log_cd = 0;
+        if (!log_cd_init) {
+            const char *a = getenv("ROGUESQ_LOG_ALL");
+            const char *e = getenv("ROGUESQ_LOG_DPC");
+            log_cd = ((a && *a && *a != '0') || (e && *e && *e != '0')) ? 1 : 0;
+            log_cd_init = 1;
+        }
+        if (log_cd && (n<=8 || (n & 63) == 0)) {
+            // Read per-stage state bytes at MIPS 0x80154620 + i*0x1228 for stages 0-4.
+            uint8_t s0 = *(uint8_t*)(rdram + (size_t)((0x80154620u ^ 3) & 0x7FFFFFFFu));
+            uint8_t s1 = *(uint8_t*)(rdram + (size_t)(((0x80154620u + 0x1228u) ^ 3) & 0x7FFFFFFFu));
+            uint8_t s2 = *(uint8_t*)(rdram + (size_t)(((0x80154620u + 0x2450u) ^ 3) & 0x7FFFFFFFu));
+            uint8_t s3 = *(uint8_t*)(rdram + (size_t)(((0x80154620u + 0x3678u) ^ 3) & 0x7FFFFFFFu));
+            uint8_t s4 = *(uint8_t*)(rdram + (size_t)(((0x80154620u + 0x48A0u) ^ 3) & 0x7FFFFFFFu));
+            fprintf(stderr, "[trace] cinematic_drv ENTRY #%d stage_states=[%02X %02X %02X %02X %02X]\n",
+                n, (unsigned)s0, (unsigned)s1, (unsigned)s2, (unsigned)s3, (unsigned)s4);
             fflush(stderr);
+        }
+        // ROGUESQ_FORCE_STAGE_ACTIVATE=1 — diagnostic: at first cinematic_drv tick
+        // after entry, force all 5 stages from state 0 to state 1 once. If the
+        // cinematic_drv state machine then advances 1->2 and func_80098298
+        // starts firing, we've proved the activation handshake is the only
+        // missing link. If it crashes / produces nonsense, stages need more
+        // setup than just the state byte (possibly the struct[0] field at
+        // -0x23 from state byte and others).
+        {
+            static int once = 0;
+            if (!once) {
+                const char *e = getenv("ROGUESQ_FORCE_STAGE_ACTIVATE");
+                if (e && *e && *e != '0' && n >= 5) {
+                    once = 1;
+                    for (int i = 0; i < 5; ++i) {
+                        uint32_t addr = 0x80154620u + (uint32_t)i * 0x1228u;
+                        uint8_t *p = (uint8_t*)(rdram + (size_t)((addr ^ 3) & 0x7FFFFFFFu));
+                        *p = 1;
+                    }
+                    fprintf(stderr, "[force] wrote stage state = 1 to all 5 stages\n");
+                    fflush(stderr);
+                }
+            }
         }
         // Watch rdram[0x3CBC4] (first corrupted word). Log when it changes.
         static uint32_t last_word = 0;
@@ -9817,8 +9865,17 @@ RECOMP_FUNC void func_8009B5A8(uint8_t* rdram, recomp_context* ctx) {
     // 0x8009B5E8: addu        $a1, $zero, $zero
     ctx->r5 = ADD32(0, 0);
     {
+        // Pre-recv trace. Same gate as ENTRY trace above (ROGUESQ_LOG_DPC).
         static int n=0; ++n;
-        if (n<=8 || (n & 63) == 0) { fprintf(stderr, "[trace] cinematic_drv #%d BEFORE recv\n", n); fflush(stderr); }
+        static int log_cd_init = 0;
+        static int log_cd = 0;
+        if (!log_cd_init) {
+            const char *a = getenv("ROGUESQ_LOG_ALL");
+            const char *e = getenv("ROGUESQ_LOG_DPC");
+            log_cd = ((a && *a && *a != '0') || (e && *e && *e != '0')) ? 1 : 0;
+            log_cd_init = 1;
+        }
+        if (log_cd && (n<=8 || (n & 63) == 0)) { fprintf(stderr, "[trace] cinematic_drv #%d BEFORE recv\n", n); fflush(stderr); }
     }
     // 0x8009B5EC: jal         0x800331D0
     // 0x8009B5F0: addiu       $a2, $zero, 0x1
@@ -9829,8 +9886,17 @@ RECOMP_FUNC void func_8009B5A8(uint8_t* rdram, recomp_context* ctx) {
     ctx->r6 = ADD32(0, 0X1);
     after_0:
     {
+        // Post-recv trace. Same gate as ENTRY trace above (ROGUESQ_LOG_DPC).
         static int n=0; ++n;
-        if (n<=8 || (n & 63) == 0) { fprintf(stderr, "[trace] cinematic_drv #%d AFTER recv (got mutex)\n", n); fflush(stderr); }
+        static int log_cd_init = 0;
+        static int log_cd = 0;
+        if (!log_cd_init) {
+            const char *a = getenv("ROGUESQ_LOG_ALL");
+            const char *e = getenv("ROGUESQ_LOG_DPC");
+            log_cd = ((a && *a && *a != '0') || (e && *e && *e != '0')) ? 1 : 0;
+            log_cd_init = 1;
+        }
+        if (log_cd && (n<=8 || (n & 63) == 0)) { fprintf(stderr, "[trace] cinematic_drv #%d AFTER recv (got mutex)\n", n); fflush(stderr); }
     }
     // 0x8009B5F4: jal         0x8002BF00
     // 0x8009B5F8: addu        $s6, $zero, $zero

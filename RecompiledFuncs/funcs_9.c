@@ -1,5 +1,7 @@
 #include "recomp.h"
 #include "funcs.h"
+#include <stdio.h>
+#include <string.h>
 
 RECOMP_FUNC void func_8003EC10(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
@@ -3551,6 +3553,15 @@ L_8003FF3C:
 RECOMP_FUNC void func_8003FFEC(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    // ROGUESQ: trace every particle-spawn-registry call. Logs a0 (callback ptr),
+    // a1 (struct), a2 (count), a3 (lifetime) — confirms whether cinematic
+    // explosion code is reaching the spawn code path. Always-on; throttled.
+    { static int n=0; if (++n<=20 || (n%500)==0) {
+        fprintf(stderr, "[trace] func_8003FFEC SPAWN #%d cb=0x%08X arg=0x%08X count=%d life=%d\n",
+            n, (uint32_t)(uint64_t)ctx->r4, (uint32_t)(uint64_t)ctx->r5,
+            (int)(int32_t)(uint64_t)ctx->r6, (int)(int32_t)(uint64_t)ctx->r7);
+        fflush(stderr);
+    } }
     // 0x8003FFEC: lui         $v0, 0x8013
     ctx->r2 = S32(0X8013 << 16);
     // 0x8003FFF0: lw          $v0, 0xBC8($v0)
@@ -16901,6 +16912,24 @@ L_800446EC:
 RECOMP_FUNC void func_80044724(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    // ROGUESQ: trace cinematic explosion particle callback execution. If this
+    // fires N times per frame, particles are alive. If it never fires, the
+    // particles either died immediately or the per-frame dispatcher isn't
+    // running them.
+    // Also reads D_80136DD0 — the suspect "scale" variable. If it stays 0
+    // throughout cinematic, no writer initializes it → particles get scaled
+    // to zero → invisible. If non-zero, hypothesis is wrong.
+    { static int n=0; if (++n<=20 || (n%500)==0) {
+        // D_80136DD0 lives at MIPS 0x80136DD0 → rdram offset 0x136DD0 (XOR
+        // not needed for word read).
+        uint32_t scale_bits = *(uint32_t*)(rdram + 0x136DD0);
+        float scale_val;
+        memcpy(&scale_val, &scale_bits, 4);
+        fprintf(stderr, "[trace] func_80044724 EXPLOSION-CB #%d a0=0x%08X a1=0x%08X D_80136DD0=0x%08X(=%.6f)\n",
+            n, (uint32_t)(uint64_t)ctx->r4, (uint32_t)(uint64_t)ctx->r5,
+            scale_bits, scale_val);
+        fflush(stderr);
+    } }
     // 0x80044724: addiu       $sp, $sp, -0x50
     ctx->r29 = ADD32(ctx->r29, -0X50);
     // 0x80044728: sw          $s0, 0x38($sp)
@@ -17660,6 +17689,15 @@ L_80044B70:
 L_80044B94:
     // 0x80044B94: lhu         $a0, 0x104($s2)
     ctx->r4 = MEM_HU(ctx->r18, 0X104);
+    // ROGUESQ: trace when parent's per-frame path reaches sub-particle dispatch.
+    // If this fires but [trace] func_8005BCC4 SUB-CB a1=4 doesn't, the issue
+    // is INSIDE func_8003E8DC (iterator skipping the sub-particle).
+    // If this never fires, the parent's per-frame path doesn't reach here.
+    { static int n=0; if (++n<=20 || (n%500)==0) {
+        fprintf(stderr, "[trace] func_80044724 SUB-DISPATCH #%d slot=0x%04X\n",
+            n, (uint32_t)(uint64_t)ctx->r4 & 0xFFFF);
+        fflush(stderr);
+    } }
     // 0x80044B98: addiu       $a1, $zero, 0x4
     ctx->r5 = ADD32(0, 0X4);
     // 0x80044B9C: jal         0x8003E8DC

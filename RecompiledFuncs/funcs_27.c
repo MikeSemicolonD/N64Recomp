@@ -9612,6 +9612,14 @@ L_800A6FEC:
 RECOMP_FUNC void func_800A70E4(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    // ROGUESQ: trace entry to cinematic phase=4 dispatcher. Iterates 7 slots
+    // (offsets 0x6, 0x8, 0xC, 0xE, 0x10, 0x14 of D_80139560 + D_80130BA2)
+    // with phase=4. If this fires often (per-frame), the dispatch system is
+    // running. If only once or twice, parent particle iteration is rare.
+    { static int n=0; if (++n<=20 || (n%500)==0) {
+        fprintf(stderr, "[trace] func_800A70E4 PHASE4-DISPATCH #%d\n", n);
+        fflush(stderr);
+    } }
     // 0x800A70E4: addiu       $sp, $sp, -0x20
     ctx->r29 = ADD32(ctx->r29, -0X20);
     // 0x800A70E8: sw          $s2, 0x18($sp)
