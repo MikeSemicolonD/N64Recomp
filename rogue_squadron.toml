@@ -15,12 +15,12 @@ manual_funcs = [
 
 [patches]
 stubs = [
-    # NOTE: func_8000040C is actually bzero+cache-invalidate (NOT pure cache-flush).
-    # The 'cache 0x0D' instruction is unsupported by recomp, but the 'sd $zero'
-    # stores zero memory. Stubbing meant ~290KB of BSS at 0x8010D200 was never
-    # zeroed — game ran with garbage globals. Replaced with a hand-written stub
-    # in librecomp/extensions.cpp instead of stubbing it as no-op.
-    # "func_8000040C",
+    # NOTE: func_8000040C is bzero + cache-invalidate. The 'cache 0x0D' instruction
+    # is unsupported by N64Recomp. Older builds tolerated it; the rebuilt one
+    # (lib/N64ModernRuntime/N64Recomp) errors out and truncates funcs.h.
+    # Stub it here — a hand-written equivalent in librecomp/extensions.cpp
+    # does the bzero portion that the game actually depends on.
+    "func_8000040C",
     # RSP microcode blobs — not MIPS code, must not be recompiled
     "gspF3DEXTextStart",
     "gspF3DEXDataStart",
