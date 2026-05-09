@@ -3174,15 +3174,30 @@ L_80010828:
     // 0x8001082C: lw          $v0, 0x63B0($v0)
     ctx->r2 = MEM_W(ctx->r2, 0X63B0);
     // 0x80010830: lw          $v0, 0x0($v0)
-    ctx->r2 = MEM_W(ctx->r2, 0X0);
+    // PATCH (2026-05-08): guard corrupt free-list head deref (same family
+    // of crashes as func_80007D74, func_8000CFD4).
+    if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) {
+        static int s_warned = 0;
+        if (s_warned++ < 5) {
+            fprintf(stderr, "[guard] func_80010014 L_80010828: head=0x%08X invalid -> 0\n", (uint32_t)(uint64_t)ctx->r2);
+            fflush(stderr);
+        }
+        ctx->r2 = 0;
+    } else {
+        ctx->r2 = MEM_W(ctx->r2, 0X0);
+    }
     // 0x80010834: lui         $at, 0x8011
     ctx->r1 = S32(0X8011 << 16);
     // 0x80010838: sw          $v0, 0x63B0($at)
     MEM_W(0X63B0, ctx->r1) = ctx->r2;
     // 0x8001083C: bnel        $v0, $zero, L_80010844
     if (ctx->r2 != 0) {
-        // 0x80010840: sw          $zero, 0x4($v0)
-        MEM_W(0X4, ctx->r2) = 0;
+        // PATCH: r2 may have been valid head ptr but inner sw deref crashes if
+        // head's next field points into garbage. Guard the write address.
+        if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) {
+            // 0x80010840: sw          $zero, 0x4($v0)
+            MEM_W(0X4, ctx->r2) = 0;
+        }
             goto L_80010844;
     }
     goto skip_7;
@@ -5722,7 +5737,7 @@ L_80011714:
     // 0x8001180C: addiu       $v0, $v0, -0x1
     ctx->r2 = ADD32(ctx->r2, -0X1);
     // 0x80011810: div         $zero, $v1, $v0
-    lo = S32(S64(S32(ctx->r3)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r3)) % S64(S32(ctx->r2)));
+    if (S32(ctx->r2) != 0) { lo = S32(S64(S32(ctx->r3)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r3)) % S64(S32(ctx->r2))); } else { lo = 0; hi = S32(ctx->r3); }
     // 0x80011814: bne         $v0, $zero, L_80011820
     if (ctx->r2 != 0) {
         // 0x80011818: nop
@@ -7002,7 +7017,7 @@ L_80011F14:
     // 0x80012008: addiu       $v0, $v0, -0x1
     ctx->r2 = ADD32(ctx->r2, -0X1);
     // 0x8001200C: div         $zero, $v1, $v0
-    lo = S32(S64(S32(ctx->r3)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r3)) % S64(S32(ctx->r2)));
+    if (S32(ctx->r2) != 0) { lo = S32(S64(S32(ctx->r3)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r3)) % S64(S32(ctx->r2))); } else { lo = 0; hi = S32(ctx->r3); }
     // 0x80012010: bne         $v0, $zero, L_8001201C
     if (ctx->r2 != 0) {
         // 0x80012014: nop
@@ -20985,7 +21000,12 @@ L_80016F10:
     // 0x80016F14: lw          $v0, 0x63B0($v0)
     ctx->r2 = MEM_W(ctx->r2, 0X63B0);
     // 0x80016F18: lw          $v0, 0x0($v0)
-    ctx->r2 = MEM_W(ctx->r2, 0X0);
+    // PATCH: guard inlined free-list dequeue (matches func_80010014 pattern).
+    if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) {
+        ctx->r2 = 0;
+    } else {
+        ctx->r2 = MEM_W(ctx->r2, 0X0);
+    }
     // 0x80016F1C: lui         $at, 0x8011
     ctx->r1 = S32(0X8011 << 16);
     // 0x80016F20: sw          $v0, 0x63B0($at)
@@ -20993,12 +21013,16 @@ L_80016F10:
     // 0x80016F24: bnel        $v0, $zero, L_80016F2C
     if (ctx->r2 != 0) {
         // 0x80016F28: sw          $zero, 0x4($v0)
-        MEM_W(0X4, ctx->r2) = 0;
+        if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) {
+            MEM_W(0X4, ctx->r2) = 0;
+        }
             goto L_80016F2C;
     }
     goto skip_0;
     // 0x80016F28: sw          $zero, 0x4($v0)
-    MEM_W(0X4, ctx->r2) = 0;
+    if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) {
+        MEM_W(0X4, ctx->r2) = 0;
+    }
     skip_0:
 L_80016F2C:
     // 0x80016F2C: lui         $v1, 0x8011
@@ -27232,6 +27256,18 @@ L_80019058:
 RECOMP_FUNC void func_800191C4(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    // PATCH (2026-05-08): defensive matrix-multiply guard. $a0 and $a1 are
+    // matrix pointers (12 floats each). During cinematic, $a1 sometimes
+    // arrives as a non-KSEG0 pointer (high bit clear) due to upstream
+    // corruption, causing high-VA AV at `MEM_W($a1, 0x0)`. Bail safely.
+    // Root cause (UAF/race/sign-ext) tracked in project_cinematic_visibility.md.
+    {
+        uint64_t a0_hi = (uint64_t)ctx->r4 & 0xFFFFFFFFE0000000ULL;
+        uint64_t a1_hi = (uint64_t)ctx->r5 & 0xFFFFFFFFE0000000ULL;
+        if (a0_hi != 0xFFFFFFFF80000000ULL || a1_hi != 0xFFFFFFFF80000000ULL) {
+            return;
+        }
+    }
     // 0x800191C4: addiu       $sp, $sp, -0x20
     ctx->r29 = ADD32(ctx->r29, -0X20);
     // 0x800191C8: sdc1        $f20, 0x0($sp)

@@ -1,6 +1,8 @@
 #include "recomp.h"
 #include "funcs.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 RECOMP_FUNC void bcmp_recomp(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
@@ -8189,7 +8191,7 @@ L_80036A18:
     // 0x80036A2C: addiu       $v0, $zero, 0x3E8
     ctx->r2 = ADD32(0, 0X3E8);
     // 0x80036A30: div         $zero, $s2, $v0
-    lo = S32(S64(S32(ctx->r18)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r18)) % S64(S32(ctx->r2)));
+    if (S32(ctx->r2) != 0) { lo = S32(S64(S32(ctx->r18)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r18)) % S64(S32(ctx->r2))); } else { lo = 0; hi = S32(ctx->r18); }
     // 0x80036A34: bne         $v0, $zero, L_80036A40
     if (ctx->r2 != 0) {
         // 0x80036A38: nop
@@ -8242,7 +8244,7 @@ L_80036A78:
     // 0x80036A78: addiu       $v0, $zero, 0x64
     ctx->r2 = ADD32(0, 0X64);
     // 0x80036A7C: div         $zero, $s2, $v0
-    lo = S32(S64(S32(ctx->r18)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r18)) % S64(S32(ctx->r2)));
+    if (S32(ctx->r2) != 0) { lo = S32(S64(S32(ctx->r18)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r18)) % S64(S32(ctx->r2))); } else { lo = 0; hi = S32(ctx->r18); }
     // 0x80036A80: bne         $v0, $zero, L_80036A8C
     if (ctx->r2 != 0) {
         // 0x80036A84: nop
@@ -8295,7 +8297,7 @@ L_80036AA4:
     ctx->r2 = ADD32(0, 0XA);
 L_80036AC8:
     // 0x80036AC8: div         $zero, $s2, $v0
-    lo = S32(S64(S32(ctx->r18)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r18)) % S64(S32(ctx->r2)));
+    if (S32(ctx->r2) != 0) { lo = S32(S64(S32(ctx->r18)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r18)) % S64(S32(ctx->r2))); } else { lo = 0; hi = S32(ctx->r18); }
     // 0x80036ACC: bne         $v0, $zero, L_80036AD8
     if (ctx->r2 != 0) {
         // 0x80036AD0: nop
@@ -8778,7 +8780,7 @@ L_80036D48:
     // 0x80036D60: nop
 
     // 0x80036D64: div         $zero, $t8, $at
-    lo = S32(S64(S32(ctx->r24)) / S64(S32(ctx->r1))); hi = S32(S64(S32(ctx->r24)) % S64(S32(ctx->r1)));
+    if (S32(ctx->r1) != 0) { lo = S32(S64(S32(ctx->r24)) / S64(S32(ctx->r1))); hi = S32(S64(S32(ctx->r24)) % S64(S32(ctx->r1))); } else { lo = 0; hi = S32(ctx->r24); }
     // 0x80036D68: mflo        $t6
     ctx->r14 = lo;
     // 0x80036D6C: addiu       $t7, $t6, -0x4
@@ -9636,7 +9638,7 @@ RECOMP_FUNC void ldiv_recomp(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x800371E0: div         $zero, $a1, $a2
-    lo = S32(S64(S32(ctx->r5)) / S64(S32(ctx->r6))); hi = S32(S64(S32(ctx->r5)) % S64(S32(ctx->r6)));
+    if (S32(ctx->r6) != 0) { lo = S32(S64(S32(ctx->r5)) / S64(S32(ctx->r6))); hi = S32(S64(S32(ctx->r5)) % S64(S32(ctx->r6))); } else { lo = 0; hi = S32(ctx->r5); }
     // 0x800371E4: mflo        $v0
     ctx->r2 = lo;
     // 0x800371E8: addiu       $sp, $sp, -0x8
@@ -10322,7 +10324,7 @@ RECOMP_FUNC void fake_func_8003DF98(uint8_t* rdram, recomp_context* ctx) {
 RECOMP_FUNC void func_8003DFA0(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { static int n=0; if (++n<=5) { uint32_t s4 = 0x80130B10; uint32_t off = s4 - 0x80000000; uint8_t flag = rdram[(off+0x20)^3]; if(0) fprintf(stderr, "[trace] func_8003DFA0 #%d flag@s4+0x20=0x%02X\n", n, flag); fflush(stderr); } }
+    { static int n=0; ++n; if (n<=20 || (n%20)==0) { uint32_t s4 = 0x80130B10; uint32_t off = s4 - 0x80000000; uint8_t flag = rdram[(off+0x20)^3]; uint8_t a0_arg = (uint8_t)(ctx->r4 & 0xFF); uint8_t a1_arg = (uint8_t)(ctx->r5 & 0xFF); uint32_t phase_off = 0x130B70; uint32_t phase = *(uint32_t*)(rdram + phase_off); fprintf(stderr, "[trace] func_8003DFA0 ENTRY #%d a0=0x%02X a1=0x%02X flag@s4+0x20=0x%02X phase@0xB70=0x%08X\n", n, a0_arg, a1_arg, flag, phase); fflush(stderr); } }
     {
         static uint32_t last = 0; static int init = 0;
         uint32_t cur = *(uint32_t*)(rdram + 0x3CBC4);
@@ -10439,7 +10441,7 @@ RECOMP_FUNC void func_8003DFA0(uint8_t* rdram, recomp_context* ctx) {
     // 0x8003E044: sh          $v0, -0x7FA4($v1)
     MEM_H(-0X7FA4, ctx->r3) = ctx->r2;
 L_8003E048:
-    { static int n=0; if (++n<=20 || (n%500)==0) { if(0) fprintf(stderr, "[trace] LOOP iter=%d at L_8003E048\n", n); fflush(stderr); } }
+    { static int n=0; if (++n<=5 || (n%500)==0) { if(0) fprintf(stderr, "[loop-trace] L_8003E048 iter=%d\n", n); fflush(stderr); } }
     // 0x8003E048: addiu       $a0, $zero, 0x1
     ctx->r4 = ADD32(0, 0X1);
 L_8003E04C:
@@ -10569,6 +10571,7 @@ L_8003E04C:
     ctx->r4 = ADD32(0, 0X5);
     after_12:
 L_8003E0DC:
+    { static int n=0; if (++n<=5 || (n%500)==0) { if(0) fprintf(stderr, "[loop-trace] L_8003E0DC iter=%d\n", n); fflush(stderr); } }
     // 0x8003E0DC: lbu         $v0, 0x21($s4)
     ctx->r2 = MEM_BU(ctx->r20, 0X21);
     // 0x8003E0E0: bne         $v0, $zero, L_8003E114
@@ -10618,6 +10621,7 @@ L_8003E0DC:
     ctx->r6 = ADD32(0, 0);
     after_14:
 L_8003E114:
+    { static int n=0; if (++n<=5 || (n%500)==0) { if(0) fprintf(stderr, "[loop-trace] L_8003E114 iter=%d\n", n); fflush(stderr); } }
     // 0x8003E114: lbu         $v0, 0x22($s4)
     ctx->r2 = MEM_BU(ctx->r20, 0X22);
     // 0x8003E118: addiu       $a0, $zero, 0x1
@@ -10842,6 +10846,7 @@ L_8003E230:
     // 0x8003E24C: nop
 
 L_8003E250:
+    { static int n=0; if (++n<=5 || (n%500)==0) { if(0) { uint32_t b58 = MEM_W(ctx->r19, 0X18); fprintf(stderr, "[loop-trace] L_8003E250 iter=%d B58=0x%08X bit25=%d\n", n, b58, (b58 & 0x02000000) ? 1 : 0); } fflush(stderr); } }
     // 0x8003E250: lw          $v1, 0x18($s3)
     ctx->r3 = MEM_W(ctx->r19, 0X18);
     // 0x8003E254: lui         $v0, 0x200
@@ -12126,6 +12131,15 @@ L_8003E92C:
         ctx->r17 = ADD32(ctx->r4, 0);
             goto L_8003EA08;
     }
+    // PATCH (2026-05-08): defensive slot-dispatcher guard. The entry_ptr loaded
+    // at $a0 occasionally arrives non-canonical (KUSEG-shaped) during cinematic
+    // — same corruption-cascade pattern. Treat as empty slot; the dispatcher
+    // will then advance to the next slot in the chain.
+    // Root cause tracked in project_cinematic_visibility.md.
+    if (((uint64_t)ctx->r4 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) {
+        ctx->r17 = ADD32(ctx->r4, 0);
+        goto L_8003EA08;
+    }
     // 0x8003E940: addu        $s1, $a0, $zero
     ctx->r17 = ADD32(ctx->r4, 0);
     // 0x8003E944: lbu         $v0, 0x1A($s1)
@@ -12159,7 +12173,18 @@ L_8003E92C:
     // 0x8003E974: jalr        $v0
     // 0x8003E978: addu        $a2, $fp, $zero
     ctx->r6 = ADD32(ctx->r30, 0);
-    LOOKUP_FUNC(ctx->r2)(rdram, ctx);
+    {
+        // PHASE 21 correlation: tag SET_COLOR_IMAGE / TEXRECT events
+        // emitted by this handler with the current slot index. Read via
+        // dpc_bridge (extern int g_cine_current_slot — plain global,
+        // not thread_local, since recompiled .c is C not C++).
+        extern int g_cine_current_slot;
+        const int prev_slot = g_cine_current_slot;
+        const int slot_idx_local = (int)(ctx->r20 & 0xFFFF);
+        g_cine_current_slot = slot_idx_local;
+        LOOKUP_FUNC(ctx->r2)(rdram, ctx);
+        g_cine_current_slot = prev_slot;
+    }
         goto after_0;
     // 0x8003E978: addu        $a2, $fp, $zero
     ctx->r6 = ADD32(ctx->r30, 0);
@@ -12555,8 +12580,17 @@ L_8003EB98:
     // 0x8003EB9C: beq         $v1, $zero, L_8003EBFC
     if (ctx->r3 == 0) {
         // 0x8003EBA0: nop
-    
+
             goto L_8003EBFC;
+    }
+    // PATCH (2026-05-08): also guard non-KSEG0 corrupt pointer (slot-walk).
+    if (((uint64_t)ctx->r3 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) {
+        static int s_warned = 0;
+        if (s_warned++ < 5) {
+            fprintf(stderr, "[guard] func_8003EA4C L_8003EBA4: r3=0x%08X invalid -> skip\n", (uint32_t)(uint64_t)ctx->r3);
+            fflush(stderr);
+        }
+        goto L_8003EBFC;
     }
     // 0x8003EBA0: nop
 

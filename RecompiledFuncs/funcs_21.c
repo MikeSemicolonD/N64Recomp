@@ -5460,7 +5460,7 @@ RECOMP_FUNC void func_80086A44(uint8_t* rdram, recomp_context* ctx) {
     // 0x80086A6C: srl         $v0, $v1, 8
     ctx->r2 = S32(U32(ctx->r3) >> 8);
     // 0x80086A70: divu        $zero, $a0, $v0
-    lo = S32(U32(ctx->r4) / U32(ctx->r2)); hi = S32(U32(ctx->r4) % U32(ctx->r2));
+    if (U32(ctx->r2) != 0) { lo = S32(U32(ctx->r4) / U32(ctx->r2)); hi = S32(U32(ctx->r4) % U32(ctx->r2)); } else { lo = 0; hi = S32(ctx->r4); }
     // 0x80086A74: bne         $v0, $zero, L_80086A80
     if (ctx->r2 != 0) {
         // 0x80086A78: nop
@@ -5848,7 +5848,7 @@ L_80086C48:
     // 0x80086C80: sll         $a0, $a2, 8
     ctx->r4 = S32(ctx->r6 << 8);
     // 0x80086C84: divu        $zero, $a0, $v0
-    lo = S32(U32(ctx->r4) / U32(ctx->r2)); hi = S32(U32(ctx->r4) % U32(ctx->r2));
+    if (U32(ctx->r2) != 0) { lo = S32(U32(ctx->r4) / U32(ctx->r2)); hi = S32(U32(ctx->r4) % U32(ctx->r2)); } else { lo = 0; hi = S32(ctx->r4); }
     // 0x80086C88: bne         $v0, $zero, L_80086C94
     if (ctx->r2 != 0) {
         // 0x80086C8C: nop

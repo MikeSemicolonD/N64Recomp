@@ -3668,7 +3668,7 @@ L_80090C88:
     // 0x80090CDC: sll         $v0, $v0, 16
     ctx->r2 = S32(ctx->r2 << 16);
     // 0x80090CE0: div         $zero, $v0, $a0
-    lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r4))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r4)));
+    if (S32(ctx->r4) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r4))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r4))); } else { lo = 0; hi = S32(ctx->r2); }
     // 0x80090CE4: bne         $a0, $zero, L_80090CF0
     if (ctx->r4 != 0) {
         // 0x80090CE8: nop
@@ -3716,7 +3716,7 @@ L_80090D08:
     // 0x80090D20: sll         $v0, $v0, 16
     ctx->r2 = S32(ctx->r2 << 16);
     // 0x80090D24: div         $zero, $v0, $a0
-    lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r4))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r4)));
+    if (S32(ctx->r4) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r4))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r4))); } else { lo = 0; hi = S32(ctx->r2); }
     // 0x80090D28: bne         $a0, $zero, L_80090D34
     if (ctx->r4 != 0) {
         // 0x80090D2C: nop
@@ -3764,7 +3764,7 @@ L_80090D4C:
     // 0x80090D64: sll         $v0, $v0, 16
     ctx->r2 = S32(ctx->r2 << 16);
     // 0x80090D68: div         $zero, $v0, $a0
-    lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r4))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r4)));
+    if (S32(ctx->r4) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r4))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r4))); } else { lo = 0; hi = S32(ctx->r2); }
     // 0x80090D6C: bne         $a0, $zero, L_80090D78
     if (ctx->r4 != 0) {
         // 0x80090D70: nop
@@ -3812,7 +3812,7 @@ L_80090D90:
     // 0x80090DA8: sll         $v0, $v0, 16
     ctx->r2 = S32(ctx->r2 << 16);
     // 0x80090DAC: div         $zero, $v0, $a0
-    lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r4))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r4)));
+    if (S32(ctx->r4) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r4))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r4))); } else { lo = 0; hi = S32(ctx->r2); }
     // 0x80090DB0: bne         $a0, $zero, L_80090DBC
     if (ctx->r4 != 0) {
         // 0x80090DB4: nop

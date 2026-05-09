@@ -1,6 +1,7 @@
 #include "recomp.h"
 #include "funcs.h"
 #include <stdio.h>
+#include <string.h>
 
 RECOMP_FUNC void recomp_entrypoint(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
@@ -2752,6 +2753,25 @@ L_80001AC4:
 RECOMP_FUNC void rs_malloc(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    /* RS64-DEBUG: leak tracking. Count alloc calls and total bytes requested.
+     * Compare with rs_free counter to spot drift. */
+    extern unsigned long long g_rs_malloc_calls;
+    extern unsigned long long g_rs_malloc_bytes;
+    extern unsigned long long g_rs_free_calls;
+    g_rs_malloc_calls++;
+    g_rs_malloc_bytes += (unsigned)(uint32_t)ctx->r4;
+    if ((g_rs_malloc_calls % 500) == 0) {
+        fprintf(stderr, "[mem] malloc=%llu (%llu bytes) free=%llu live=%lld\n",
+            g_rs_malloc_calls, g_rs_malloc_bytes, g_rs_free_calls,
+            (long long)(g_rs_malloc_calls - g_rs_free_calls));
+        fflush(stderr);
+    }
+    /* PATCH (2026-05-08): zero-initialize allocated memory. The original game
+     * tolerated some "uninitialized memory == 0" assumptions (likely because
+     * the N64's heap was previously-zeroed bytes from BSS clears). Our recomp
+     * heap leaves 0xFFFFFFFF, which trips list-walk code that only checks ==0.
+     * Capture original size for use at exit. */
+    uint32_t _rs_malloc_orig_size = (uint32_t)ctx->r4;
     // 0x80001ACC: addiu       $sp, $sp, -0x38
     ctx->r29 = ADD32(ctx->r29, -0X38);
     // 0x80001AD0: sw          $s0, 0x20($sp)
@@ -3060,6 +3080,19 @@ L_80001C60:
 L_80001C74:
     // 0x80001C74: addu        $v0, $s2, $zero
     ctx->r2 = ADD32(ctx->r18, 0);
+    /* PATCH (2026-05-08): zero-init the allocated memory if non-null.
+     * Skip if pointer is non-canonical (some early init paths).
+     * Cap at 256 bytes — large allocations (stacks, asset buffers) get
+     * explicitly initialized by the game. Cap reduces blast radius of any
+     * unintended zero-clobbering. */
+    {
+        uint32_t _ret = (uint32_t)(uint64_t)ctx->r2;
+        if (_ret >= 0x80000000u && _ret < 0x80800000u && _rs_malloc_orig_size > 0 && _rs_malloc_orig_size <= 256) {
+            uint32_t _off = _ret & 0x7FFFFFu;
+            uint32_t _max = (_off + _rs_malloc_orig_size <= 0x800000u) ? _rs_malloc_orig_size : (0x800000u - _off);
+            memset(rdram + _off, 0, _max);
+        }
+    }
     if(0) {
         static int n=0; ++n;
         uint64_t v = (uint64_t)ctx->r2;
@@ -3089,7 +3122,11 @@ L_80001C74:
     // 0x80001C94: nop
 
 ;}
+unsigned long long g_rs_malloc_calls = 0;
+unsigned long long g_rs_malloc_bytes = 0;
+unsigned long long g_rs_free_calls = 0;
 RECOMP_FUNC void rs_free(uint8_t* rdram, recomp_context* ctx) {
+    g_rs_free_calls++;
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80001C98: addiu       $sp, $sp, -0x18
@@ -3265,6 +3302,16 @@ L_80001D7C:
 L_80001D80:
     // 0x80001D80: addu        $a1, $a3, $zero
     ctx->r5 = ADD32(ctx->r7, 0);
+    /* PATCH (2026-05-08): allocation-tracker walker can fall off list when
+     * a block's size field is corrupt. Treat invalid r5 as end-of-list. */
+    if (((uint32_t)(uint64_t)ctx->r5 < 0x80000000u) || ((uint32_t)(uint64_t)ctx->r5 >= 0x80800000u)) {
+        static int s_warned = 0;
+        if (s_warned++ < 5) {
+            fprintf(stderr, "[guard] rs_free walker: a1=0x%08X invalid -> end-of-list\n", (uint32_t)(uint64_t)ctx->r5);
+            fflush(stderr);
+        }
+        goto L_80001D94;
+    }
     // 0x80001D84: lhu         $v1, 0x0($a1)
     ctx->r3 = MEM_HU(ctx->r5, 0X0);
     // 0x80001D88: andi        $v0, $v1, 0x8
@@ -4443,6 +4490,16 @@ L_8000242C:
     // 0x80002430: addu        $v0, $t0, $v0
     ctx->r2 = ADD32(ctx->r8, ctx->r2);
     // 0x80002434: lhu         $v1, 0x10($v0)
+    /* PATCH (2026-05-08): heap-block walker bounds check.
+     * Block size field can be garbage on first menu-init walk; treat as end. */
+    if (((uint32_t)(uint64_t)ctx->r2 < 0x80000000u) || ((uint32_t)(uint64_t)ctx->r2 >= 0x80800000u)) {
+        static int s_warned = 0;
+        if (s_warned++ < 5) {
+            fprintf(stderr, "[guard] func_800022F8 L_8000242C: blockEnd=0x%08X invalid -> exit walker\n", (uint32_t)(uint64_t)ctx->r2);
+            fflush(stderr);
+        }
+        goto L_80002474;
+    }
     ctx->r3 = MEM_HU(ctx->r2, 0X10);
     // 0x80002438: andi        $v1, $v1, 0x8
     ctx->r3 = ctx->r3 & 0X8;
@@ -4492,8 +4549,20 @@ L_80002474:
     ctx->r2 = MEM_W(ctx->r6, 0X4);
     // 0x80002478: addu        $v0, $a2, $v0
     ctx->r2 = ADD32(ctx->r6, ctx->r2);
+    /* PATCH (2026-05-08): same heap-walker bounds check as L_8000242C. */
+    if (((uint32_t)(uint64_t)ctx->r2 < 0x80000000u) || ((uint32_t)(uint64_t)ctx->r2 >= 0x80800000u)) {
+        static int s_warned = 0;
+        if (s_warned++ < 5) {
+            fprintf(stderr, "[guard] func_800022F8 L_80002474: blockEnd=0x%08X invalid -> exit walker\n", (uint32_t)(uint64_t)ctx->r2);
+            fflush(stderr);
+        }
+        ctx->r2 = (uint64_t)(int64_t)(int32_t)0x80000000;  /* land somewhere safe */
+        ctx->r3 = 0x8;  /* synthesize "this is end-of-list" flag */
+        goto skip_walker_deref;
+    }
     // 0x8000247C: lhu         $v1, 0x10($v0)
     ctx->r3 = MEM_HU(ctx->r2, 0X10);
+    skip_walker_deref:;
     // 0x80002480: addu        $a3, $a2, $zero
     ctx->r7 = ADD32(ctx->r6, 0);
     // 0x80002484: andi        $v1, $v1, 0x8

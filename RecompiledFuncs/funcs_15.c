@@ -542,6 +542,14 @@ L_800646A4:
 RECOMP_FUNC void func_800646AC(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    // PATCH (2026-05-08): defensive lookup-array guard. $a0 is a struct with
+    // an array pointer at +0x0 and a count at +0x4. During cinematic, the
+    // array pointer at +0 occasionally arrives non-canonical, crashing the
+    // L_800646BC loop's MEM_W($v1+0). Validate $a0 first; if not KSEG0, bail.
+    // Root cause (UAF/race/sign-ext) tracked in project_cinematic_visibility.md.
+    if (((uint64_t)ctx->r4 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) {
+        return;
+    }
     // 0x800646AC: lhu         $v0, 0x4($a0)
     ctx->r2 = MEM_HU(ctx->r4, 0X4);
     // 0x800646B0: beq         $v0, $zero, L_800646F0

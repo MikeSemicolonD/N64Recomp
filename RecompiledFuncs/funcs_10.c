@@ -1,5 +1,6 @@
 #include "recomp.h"
 #include "funcs.h"
+#include <stdio.h>
 
 RECOMP_FUNC void func_800453C8(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
@@ -3042,7 +3043,7 @@ L_800464C4:
     // 0x800464F0: mfc1        $v0, $f4
     ctx->r2 = (int32_t)ctx->f4.u32l;
     // 0x800464F4: div         $zero, $v0, $v1
-    lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3)));
+    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = S32(ctx->r2); }
     // 0x800464F8: bne         $v1, $zero, L_80046504
     if (ctx->r3 != 0) {
         // 0x800464FC: nop
@@ -6266,7 +6267,17 @@ L_80047518:
     // 0x80047534: lbu         $v0, 0xB39($v0)
     ctx->r2 = MEM_BU(ctx->r2, 0XB39);
     // 0x80047538: lhu         $s4, 0x0($a1)
-    ctx->r20 = MEM_HU(ctx->r5, 0X0);
+    // PATCH (2026-05-08): guard corrupt $a1 pointer (struct table walk).
+    if (((uint64_t)ctx->r5 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) {
+        static int s_warned = 0;
+        if (s_warned++ < 5) {
+            fprintf(stderr, "[guard] func_80047368 L_80047538: a1=0x%08X invalid -> skip\n", (uint32_t)(uint64_t)ctx->r5);
+            fflush(stderr);
+        }
+        ctx->r20 = 0;
+    } else {
+        ctx->r20 = MEM_HU(ctx->r5, 0X0);
+    }
     // 0x8004753C: bne         $v0, $zero, L_80047580
     if (ctx->r2 != 0) {
         // 0x80047540: addiu       $a2, $zero, 0x3

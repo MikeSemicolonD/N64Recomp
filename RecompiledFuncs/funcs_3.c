@@ -179,12 +179,18 @@ RECOMP_FUNC void func_800079F0(uint8_t* rdram, recomp_context* ctx) {
 L_80007A1C:
     // 0x80007A1C: lw          $v1, 0x0($v1)
     ctx->r3 = MEM_W(ctx->r3, 0X0);
+    // PATCH (2026-05-08): list-walk guard. If next pointer is non-canonical,
+    // treat as end-of-chain rather than crashing on the dereference at line 183.
+    if (((uint64_t)ctx->r3 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) {
+        ctx->r2 = 0;
+        goto L_80007A2C;
+    }
     // 0x80007A20: lw          $v0, 0x0($v1)
     ctx->r2 = MEM_W(ctx->r3, 0X0);
     // 0x80007A24: bne         $v0, $zero, L_80007A1C
     if (ctx->r2 != 0) {
         // 0x80007A28: nop
-    
+
             goto L_80007A1C;
     }
     // 0x80007A28: nop
@@ -194,6 +200,16 @@ L_80007A2C:
     ctx->r2 = S32(0X8011 << 16);
     // 0x80007A30: lw          $v0, 0x63B0($v0)
     ctx->r2 = MEM_W(ctx->r2, 0X63B0);
+    // PATCH (2026-05-08): r3 might be invalid here if the L_80007A1C list-walk
+    // guard fired. Skip the write rather than AV.
+    if (((uint32_t)(uint64_t)ctx->r3 < 0x80000000u) || ((uint32_t)(uint64_t)ctx->r3 >= 0x80800000u)) {
+        static int s_warned = 0;
+        if (s_warned++ < 5) {
+            fprintf(stderr, "[guard] func_800079F0 L_80007A2C: v1=0x%08X invalid -> skip writes\n", (uint32_t)(uint64_t)ctx->r3);
+            fflush(stderr);
+        }
+        goto L_80007A40;
+    }
     // 0x80007A34: beq         $v0, $zero, L_80007A40
     if (ctx->r2 == 0) {
         // 0x80007A38: sw          $v0, 0x0($v1)
@@ -848,7 +864,18 @@ L_80007DE0:
     // 0x80007DE4: lw          $v0, 0x63B0($v0)
     ctx->r2 = MEM_W(ctx->r2, 0X63B0);
     // 0x80007DE8: lw          $v0, 0x0($v0)
-    ctx->r2 = MEM_W(ctx->r2, 0X0);
+    // PATCH (2026-05-08): guard corrupt/null head pointer (free-list dequeue).
+    // If head is not a valid KSEG0 ptr, treat as empty list to prevent AV.
+    if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) {
+        static int s_warned = 0;
+        if (s_warned++ < 5) {
+            fprintf(stderr, "[guard] func_80007D74 L_80007DE0: head=0x%08X invalid -> 0\n", (uint32_t)(uint64_t)ctx->r2);
+            fflush(stderr);
+        }
+        ctx->r2 = 0;
+    } else {
+        ctx->r2 = MEM_W(ctx->r2, 0X0);
+    }
     // 0x80007DEC: lui         $at, 0x8011
     ctx->r1 = S32(0X8011 << 16);
     // 0x80007DF0: sw          $v0, 0x63B0($at)
@@ -898,6 +925,21 @@ L_80007E18:
     // 0x80007E2C: sw          $v0, 0x4($a0)
     MEM_W(0X4, ctx->r4) = ctx->r2;
 L_80007E30:
+    // PATCH (2026-05-08): guard corrupt r4 (queue node) before stores. Without
+    // this, a stale/race-torn head value lands in r4 and the writes below AV
+    // (e.g. crash at iter ~929 inside func_800A71B8 → ... → func_80007D74).
+    // Bail out with r2=0 (alloc-failure sentinel) to let the caller cope.
+    if (((uint64_t)ctx->r4 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) {
+        static int s_warned = 0;
+        if (s_warned++ < 5) {
+            fprintf(stderr, "[guard] func_80007D74 L_80007E30: r4=0x%08X invalid -> bail\n", (uint32_t)(uint64_t)ctx->r4);
+            fflush(stderr);
+        }
+        ctx->r31 = MEM_W(ctx->r29, 0X10);
+        ctx->r2 = 0;
+        ctx->r29 = ADD32(ctx->r29, 0X18);
+        return;
+    }
     // 0x80007E30: lui         $v1, 0x8012
     ctx->r3 = S32(0X8012 << 16);
     // 0x80007E34: lw          $v1, -0x5824($v1)
@@ -15815,7 +15857,18 @@ L_8000D31C:
     // 0x8000D320: lw          $v0, 0x63B0($v0)
     ctx->r2 = MEM_W(ctx->r2, 0X63B0);
     // 0x8000D324: lw          $v0, 0x0($v0)
-    ctx->r2 = MEM_W(ctx->r2, 0X0);
+    // PATCH (2026-05-08): guard corrupt/null head pointer (free-list dequeue).
+    // If head is not a valid KSEG0 ptr, treat as empty list to prevent AV.
+    if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) {
+        static int s_warned = 0;
+        if (s_warned++ < 5) {
+            fprintf(stderr, "[guard] func_8000CFD4 L_8000D31C: head=0x%08X invalid -> 0\n", (uint32_t)(uint64_t)ctx->r2);
+            fflush(stderr);
+        }
+        ctx->r2 = 0;
+    } else {
+        ctx->r2 = MEM_W(ctx->r2, 0X0);
+    }
     // 0x8000D328: lui         $at, 0x8011
     ctx->r1 = S32(0X8011 << 16);
     // 0x8000D32C: sw          $v0, 0x63B0($at)

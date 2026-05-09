@@ -1889,7 +1889,7 @@ RECOMP_FUNC void func_80093FE4(uint8_t* rdram, recomp_context* ctx) {
     // 0x80093FE4: ori         $t0, $zero, 0x300
     ctx->r8 = 0 | 0X300;
     // 0x80093FE8: divu        $zero, $a0, $t0
-    lo = S32(U32(ctx->r4) / U32(ctx->r8)); hi = S32(U32(ctx->r4) % U32(ctx->r8));
+    if (U32(ctx->r8) != 0) { lo = S32(U32(ctx->r4) / U32(ctx->r8)); hi = S32(U32(ctx->r4) % U32(ctx->r8)); } else { lo = 0; hi = S32(ctx->r4); }
     // 0x80093FEC: mfhi        $t1
     ctx->r9 = hi;
     // 0x80093FF0: mflo        $t0
@@ -1955,7 +1955,7 @@ RECOMP_FUNC void func_8009405C(uint8_t* rdram, recomp_context* ctx) {
     // 0x8009405C: ori         $t0, $zero, 0x300
     ctx->r8 = 0 | 0X300;
     // 0x80094060: divu        $zero, $a0, $t0
-    lo = S32(U32(ctx->r4) / U32(ctx->r8)); hi = S32(U32(ctx->r4) % U32(ctx->r8));
+    if (U32(ctx->r8) != 0) { lo = S32(U32(ctx->r4) / U32(ctx->r8)); hi = S32(U32(ctx->r4) % U32(ctx->r8)); } else { lo = 0; hi = S32(ctx->r4); }
     // 0x80094064: mfhi        $t1
     ctx->r9 = hi;
     // 0x80094068: mflo        $t0
@@ -5698,7 +5698,7 @@ L_80095648:
     // 0x80095658: sll         $a0, $a0, 16
     ctx->r4 = S32(ctx->r4 << 16);
     // 0x8009565C: div         $zero, $a0, $v0
-    lo = S32(S64(S32(ctx->r4)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r4)) % S64(S32(ctx->r2)));
+    if (S32(ctx->r2) != 0) { lo = S32(S64(S32(ctx->r4)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r4)) % S64(S32(ctx->r2))); } else { lo = 0; hi = S32(ctx->r4); }
     // 0x80095660: bne         $v0, $zero, L_8009566C
     if (ctx->r2 != 0) {
         // 0x80095664: nop
@@ -9982,7 +9982,7 @@ L_80096E20:
     // 0x80096E30: sll         $a0, $a0, 16
     ctx->r4 = S32(ctx->r4 << 16);
     // 0x80096E34: div         $zero, $a0, $v0
-    lo = S32(S64(S32(ctx->r4)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r4)) % S64(S32(ctx->r2)));
+    if (S32(ctx->r2) != 0) { lo = S32(S64(S32(ctx->r4)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r4)) % S64(S32(ctx->r2))); } else { lo = 0; hi = S32(ctx->r4); }
     // 0x80096E38: bne         $v0, $zero, L_80096E44
     if (ctx->r2 != 0) {
         // 0x80096E3C: nop
