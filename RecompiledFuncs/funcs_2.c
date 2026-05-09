@@ -1,6 +1,5 @@
 #include "recomp.h"
 #include "funcs.h"
-#include <stdio.h>
 
 RECOMP_FUNC void fake_func_8000595C(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
@@ -3528,7 +3527,6 @@ RECOMP_FUNC void func_80006C20(uint8_t* rdram, recomp_context* ctx) {
 RECOMP_FUNC void func_80006C28(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { if(0) fprintf(stderr, "[trace] worker_spawn a0=%u a1=%u entry=0x%08X arg=0x%08X\n", (uint32_t)ctx->r4, (uint32_t)ctx->r5, (uint32_t)ctx->r6, (uint32_t)ctx->r7); fflush(stderr); }
     // 0x80006C28: addiu       $sp, $sp, -0x38
     ctx->r29 = ADD32(ctx->r29, -0X38);
     // 0x80006C2C: sw          $s2, 0x20($sp)
@@ -3684,7 +3682,6 @@ L_80006D18:
     // 0x80006D38: addu        $a3, $s5, $zero
     ctx->r7 = ADD32(ctx->r21, 0);
     after_2:
-    { if(0) fprintf(stderr, "[trace] worker_spawn: osCreateThread done, struct@$s5 id=*(0)=will-be-logged-on-next-iteration\n"); fflush(stderr); }
     // 0x80006D3C: lui         $v1, 0x8011
     ctx->r3 = S32(0X8011 << 16);
     // 0x80006D40: lw          $v0, 0x28D0($v1)
@@ -4148,7 +4145,6 @@ L_80006F58:
 RECOMP_FUNC void func_80006F78(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { static int n=0; if (++n<=20 || (n%500)==0) { if(0) fprintf(stderr, "[trace] func_80006F78(reg) #%d id_a=0x%08X id_b=0x%08X msg=0x%08X flags=%u\n", n, (uint32_t)ctx->r4, (uint32_t)ctx->r5, (uint32_t)ctx->r6, (uint32_t)ctx->r7); fflush(stderr); } }
     // 0x80006F78: addiu       $sp, $sp, -0x20
     ctx->r29 = ADD32(ctx->r29, -0X20);
     // 0x80006F7C: lui         $v0, 0x8011
@@ -4335,7 +4331,6 @@ RECOMP_FUNC void func_80007064(uint8_t* rdram, recomp_context* ctx) {
 RECOMP_FUNC void func_80007070(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { static int n=0; if (++n<=20 || (n%500)==0) { if(0) fprintf(stderr, "[trace] func_80007070(send) #%d id=0x%08X\n", n, (uint32_t)ctx->r4); fflush(stderr); } }
     // 0x80007070: addu        $v1, $a0, $zero
     ctx->r3 = ADD32(ctx->r4, 0);
     // 0x80007074: lui         $v0, 0x8011
@@ -6061,29 +6056,6 @@ RECOMP_FUNC void fake_func_80007908(uint8_t* rdram, recomp_context* ctx) {
 RECOMP_FUNC void func_80007910(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    // Patch: skip audio-tick callback (0x8009123C) registration entirely.
-    // Audio is stubbed in this recompile (MusyX RSP ucode not yet recompiled),
-    // so the audio service routine has no valid backing state. Three different
-    // audio init paths each register this same callback, filling the 4-slot
-    // table so the cinematic state driver (0x8009B5A8) can't register. Then
-    // when the audio tick does run from the dispatch loop, it dereferences
-    // uninitialised audio state and AVs in func_80090E04. Skipping the
-    // registration both frees slots and prevents the AV.
-    if ((uint32_t)ctx->r4 == 0x8009123Cu) {
-        ctx->r2 = 1;
-        return;
-    }
-    // Also dedup any other genuinely-duplicate registrations.
-    {
-        uint32_t* tbl = (uint32_t*)(rdram + 0x11A8A4);
-        uint32_t want = (uint32_t)ctx->r4;
-        for (int i = 0; i < 4; ++i) {
-            if (tbl[i] == want) {
-                ctx->r2 = 1;
-                return;
-            }
-        }
-    }
     // 0x80007910: addu        $a1, $zero, $zero
     ctx->r5 = ADD32(0, 0);
     // 0x80007914: lui         $v1, 0x8012

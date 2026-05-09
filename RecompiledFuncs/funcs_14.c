@@ -2525,7 +2525,7 @@ L_800616F0:
     // 0x800616F4: sllv        $v1, $fp, $a1
     ctx->r3 = S32(ctx->r30 << (ctx->r5 & 31));
     // 0x800616F8: divu        $zero, $v0, $v1
-    if (U32(ctx->r3) != 0) { lo = S32(U32(ctx->r2) / U32(ctx->r3)); hi = S32(U32(ctx->r2) % U32(ctx->r3)); } else { lo = 0; hi = S32(ctx->r2); }
+    lo = S32(U32(ctx->r2) / U32(ctx->r3)); hi = S32(U32(ctx->r2) % U32(ctx->r3));
     // 0x800616FC: bne         $v1, $zero, L_80061708
     if (ctx->r3 != 0) {
         // 0x80061700: nop
@@ -2554,7 +2554,7 @@ L_80061708:
     // 0x80061724: nop
 
     // 0x80061728: divu        $zero, $t4, $v1
-    if (U32(ctx->r3) != 0) { lo = S32(U32(ctx->r12) / U32(ctx->r3)); hi = S32(U32(ctx->r12) % U32(ctx->r3)); } else { lo = 0; hi = S32(ctx->r12); }
+    lo = S32(U32(ctx->r12) / U32(ctx->r3)); hi = S32(U32(ctx->r12) % U32(ctx->r3));
     // 0x8006172C: bne         $v1, $zero, L_80061738
     if (ctx->r3 != 0) {
         // 0x80061730: nop

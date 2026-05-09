@@ -1,6 +1,5 @@
 #include "recomp.h"
 #include "funcs.h"
-#include <stdio.h>
 
 RECOMP_FUNC void func_8000F624(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
@@ -3174,30 +3173,15 @@ L_80010828:
     // 0x8001082C: lw          $v0, 0x63B0($v0)
     ctx->r2 = MEM_W(ctx->r2, 0X63B0);
     // 0x80010830: lw          $v0, 0x0($v0)
-    // PATCH (2026-05-08): guard corrupt free-list head deref (same family
-    // of crashes as func_80007D74, func_8000CFD4).
-    if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) {
-        static int s_warned = 0;
-        if (s_warned++ < 5) {
-            fprintf(stderr, "[guard] func_80010014 L_80010828: head=0x%08X invalid -> 0\n", (uint32_t)(uint64_t)ctx->r2);
-            fflush(stderr);
-        }
-        ctx->r2 = 0;
-    } else {
-        ctx->r2 = MEM_W(ctx->r2, 0X0);
-    }
+    ctx->r2 = MEM_W(ctx->r2, 0X0);
     // 0x80010834: lui         $at, 0x8011
     ctx->r1 = S32(0X8011 << 16);
     // 0x80010838: sw          $v0, 0x63B0($at)
     MEM_W(0X63B0, ctx->r1) = ctx->r2;
     // 0x8001083C: bnel        $v0, $zero, L_80010844
     if (ctx->r2 != 0) {
-        // PATCH: r2 may have been valid head ptr but inner sw deref crashes if
-        // head's next field points into garbage. Guard the write address.
-        if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) {
-            // 0x80010840: sw          $zero, 0x4($v0)
-            MEM_W(0X4, ctx->r2) = 0;
-        }
+        // 0x80010840: sw          $zero, 0x4($v0)
+        MEM_W(0X4, ctx->r2) = 0;
             goto L_80010844;
     }
     goto skip_7;
@@ -5737,7 +5721,7 @@ L_80011714:
     // 0x8001180C: addiu       $v0, $v0, -0x1
     ctx->r2 = ADD32(ctx->r2, -0X1);
     // 0x80011810: div         $zero, $v1, $v0
-    if (S32(ctx->r2) != 0) { lo = S32(S64(S32(ctx->r3)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r3)) % S64(S32(ctx->r2))); } else { lo = 0; hi = S32(ctx->r3); }
+    lo = S32(S64(S32(ctx->r3)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r3)) % S64(S32(ctx->r2)));
     // 0x80011814: bne         $v0, $zero, L_80011820
     if (ctx->r2 != 0) {
         // 0x80011818: nop
@@ -7017,7 +7001,7 @@ L_80011F14:
     // 0x80012008: addiu       $v0, $v0, -0x1
     ctx->r2 = ADD32(ctx->r2, -0X1);
     // 0x8001200C: div         $zero, $v1, $v0
-    if (S32(ctx->r2) != 0) { lo = S32(S64(S32(ctx->r3)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r3)) % S64(S32(ctx->r2))); } else { lo = 0; hi = S32(ctx->r3); }
+    lo = S32(S64(S32(ctx->r3)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r3)) % S64(S32(ctx->r2)));
     // 0x80012010: bne         $v0, $zero, L_8001201C
     if (ctx->r2 != 0) {
         // 0x80012014: nop
@@ -7726,21 +7710,6 @@ L_800123FC:
 RECOMP_FUNC void func_80012408(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    {
-        static int n = 0;
-        ++n;
-        if (n <= 10 || (n % 60) == 0) {
-            uint32_t structAddr = (uint32_t)ctx->r5;  // a1
-            uint32_t mips_alpha = (structAddr & 0x7FFFFFFFu) + 0x2F;
-            uint8_t alpha = rdram[(mips_alpha ^ 3) & 0x7FFFFFFFu];
-            uint8_t r = rdram[(((structAddr & 0x7FFFFFFFu) + 0x2C) ^ 3) & 0x7FFFFFFFu];
-            uint8_t g = rdram[(((structAddr & 0x7FFFFFFFu) + 0x2D) ^ 3) & 0x7FFFFFFFu];
-            uint8_t b = rdram[(((structAddr & 0x7FFFFFFFu) + 0x2E) ^ 3) & 0x7FFFFFFFu];
-            if(0) fprintf(stderr, "[trace] func_80012408 #%d struct=0x%08X RGBA=%02X%02X%02X%02X\n",
-                n, structAddr, r, g, b, alpha);
-            fflush(stderr);
-        }
-    }
     // 0x80012408: addiu       $sp, $sp, -0xA8
     ctx->r29 = ADD32(ctx->r29, -0XA8);
     // 0x8001240C: sw          $s3, 0x6C($sp)
@@ -16726,19 +16695,6 @@ L_800156BC:
 RECOMP_FUNC void func_80015708(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    if(0) { static int n = 0; if (++n <= 5 || n % 100 == 0) {
-    uint32_t wp = (uint32_t)MEM_W(0xFFFFFFFF8011DC58, 0);  /* D_8011DC58 = DL write ptr */
-    uint32_t end = (uint32_t)MEM_W(0xFFFFFFFF801163D4, 0); /* D_801163D4 = chunk end */
-    fprintf(stderr, "[trace] emit_TEXRECT func_80015708 #%d wp=0x%08X end=0x%08X\n", n, wp, end);
-    fflush(stderr);
-}
-/* On the 200th TEXRECT, dump 64KB of the chunk region for offline analysis. */
-if (n == 200) {
-    FILE *fp = fopen("texrect_chunks.bin", "wb");
-    if (fp) { fwrite(rdram + 0x720000, 1, 0x10000, fp); fclose(fp); }
-    if(0) fprintf(stderr, "[trace] dumped texrect_chunks.bin (rdram[0x720000..0x730000))\n");
-    fflush(stderr);
-} }
     // 0x80015708: addiu       $sp, $sp, -0x38
     ctx->r29 = ADD32(ctx->r29, -0X38);
     // 0x8001570C: lw          $v0, 0x48($sp)
@@ -17175,23 +17131,6 @@ L_80015984:
 RECOMP_FUNC void func_800159B4(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { static int n = 0; ++n;
-      uint32_t structAddr = (uint32_t)ctx->r4;  // a0 → s3
-      uint32_t base = structAddr & 0x7FFFFFFFu;
-      uint8_t r = rdram[((base + 0x2C) ^ 3) & 0x7FFFFFFFu];
-      uint8_t g = rdram[((base + 0x2D) ^ 3) & 0x7FFFFFFFu];
-      uint8_t b = rdram[((base + 0x2E) ^ 3) & 0x7FFFFFFFu];
-      uint8_t a = rdram[((base + 0x2F) ^ 3) & 0x7FFFFFFFu];
-      // log first 30, plus every 200th, plus any change to the cream-text alpha at 0x80193FA0
-      static uint8_t lastA_at_FA0 = 0xFFu;
-      int isFA0_change = (structAddr == 0x80193FA0u) && (a != lastA_at_FA0);
-      if (isFA0_change) lastA_at_FA0 = a;
-      if (n <= 30 || (n % 200) == 0 || isFA0_change) {
-          if(0) fprintf(stderr, "[trace] draw_glyph #%d struct=0x%08X RGBA=%02X%02X%02X%02X\n",
-              n, structAddr, r, g, b, a);
-          fflush(stderr);
-      }
-    }
     // 0x800159B4: lui         $v0, 0x8012
     ctx->r2 = S32(0X8012 << 16);
     // 0x800159B8: lbu         $v0, -0x5BAC($v0)
@@ -20512,12 +20451,6 @@ L_80016BE8:
 RECOMP_FUNC void func_80016C44(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { static int n = 0; if (++n <= 5 || n % 100 == 0) {
-    uint32_t arg0 = (uint32_t)ctx->r4;
-    uint32_t ra   = (uint32_t)ctx->r31;
-    if(0) fprintf(stderr, "[trace] draw_string #%d arg=0x%08X ra=0x%08X\n", n, arg0, ra);
-    fflush(stderr);
-} }
     // 0x80016C44: addiu       $sp, $sp, -0xB0
     ctx->r29 = ADD32(ctx->r29, -0XB0);
     // 0x80016C48: sw          $s1, 0x9C($sp)
@@ -21000,12 +20933,7 @@ L_80016F10:
     // 0x80016F14: lw          $v0, 0x63B0($v0)
     ctx->r2 = MEM_W(ctx->r2, 0X63B0);
     // 0x80016F18: lw          $v0, 0x0($v0)
-    // PATCH: guard inlined free-list dequeue (matches func_80010014 pattern).
-    if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) {
-        ctx->r2 = 0;
-    } else {
-        ctx->r2 = MEM_W(ctx->r2, 0X0);
-    }
+    ctx->r2 = MEM_W(ctx->r2, 0X0);
     // 0x80016F1C: lui         $at, 0x8011
     ctx->r1 = S32(0X8011 << 16);
     // 0x80016F20: sw          $v0, 0x63B0($at)
@@ -21013,16 +20941,12 @@ L_80016F10:
     // 0x80016F24: bnel        $v0, $zero, L_80016F2C
     if (ctx->r2 != 0) {
         // 0x80016F28: sw          $zero, 0x4($v0)
-        if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) {
-            MEM_W(0X4, ctx->r2) = 0;
-        }
+        MEM_W(0X4, ctx->r2) = 0;
             goto L_80016F2C;
     }
     goto skip_0;
     // 0x80016F28: sw          $zero, 0x4($v0)
-    if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) {
-        MEM_W(0X4, ctx->r2) = 0;
-    }
+    MEM_W(0X4, ctx->r2) = 0;
     skip_0:
 L_80016F2C:
     // 0x80016F2C: lui         $v1, 0x8011
@@ -26396,13 +26320,13 @@ RECOMP_FUNC void func_80018D80(uint8_t* rdram, recomp_context* ctx) {
     ctx->r15 = ADD32(ctx->r4, 0);
     // 0x80018D84: addu        $t9, $ra, $zero
     ctx->r25 = ADD32(ctx->r31, 0);
-    // 0x80018D88: cache       0x0D, 0x0($a0)
+    // 0x80018D88: nop
 
-    // 0x80018D8C: cache       0x0D, 0x10($a0)
+    // 0x80018D8C: nop
 
-    // 0x80018D90: cache       0x0D, 0x20($a0)
+    // 0x80018D90: nop
 
-    // 0x80018D94: cache       0x0D, 0x30($a0)
+    // 0x80018D94: nop
 
     // 0x80018D98: ori         $t8, $zero, 0xFFFF
     ctx->r24 = 0 | 0XFFFF;
@@ -26623,159 +26547,10 @@ RECOMP_FUNC void func_80018E60(uint8_t* rdram, recomp_context* ctx) {
 RECOMP_FUNC void func_80018ED4(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-L_80018ED4:
-    // 0x80018ED4: addu        $t0, $a0, $zero
-    ctx->r8 = ADD32(ctx->r4, 0);
-    // 0x80018ED8: addu        $t1, $a1, $zero
-    ctx->r9 = ADD32(ctx->r5, 0);
-    // 0x80018EDC: cache       0x0D, 0x0($t0)
-
-    // 0x80018EE0: addiu       $t1, $t1, -0x10
-    ctx->r9 = ADD32(ctx->r9, -0X10);
-    // 0x80018EE4: bne         $t1, $zero, L_80018ED4
-    if (ctx->r9 != 0) {
-        // 0x80018EE8: addiu       $t0, $t0, 0x10
-        ctx->r8 = ADD32(ctx->r8, 0X10);
-            goto L_80018ED4;
-    }
-    // 0x80018EE8: addiu       $t0, $t0, 0x10
-    ctx->r8 = ADD32(ctx->r8, 0X10);
-    // 0x80018EEC: jr          $ra
-    // 0x80018EF0: nop
-
-    return;
-    // 0x80018EF0: nop
-
 ;}
 RECOMP_FUNC void zmemcpy(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { static int n=0; if (++n<=5) { if(0) fprintf(stderr, "[trace] zmemcpy #%d dst=0x%08X src=0x%08X n=%d\n", n, (uint32_t)ctx->r4, (uint32_t)ctx->r5, (int32_t)ctx->r6); fflush(stderr); } }
-    // 0x80018EF4: beq         $a2, $zero, L_80018F90
-    if (ctx->r6 == 0) {
-        // 0x80018EF8: addu        $t5, $a0, $zero
-        ctx->r13 = ADD32(ctx->r4, 0);
-            goto L_80018F90;
-    }
-    // 0x80018EF8: addu        $t5, $a0, $zero
-    ctx->r13 = ADD32(ctx->r4, 0);
-    // 0x80018EFC: addu        $t4, $a1, $zero
-    ctx->r12 = ADD32(ctx->r5, 0);
-    // 0x80018F00: addu        $t3, $a2, $zero
-    ctx->r11 = ADD32(ctx->r6, 0);
-    // 0x80018F04: sltiu       $t0, $t3, 0x10
-    ctx->r8 = ctx->r11 < 0X10 ? 1 : 0;
-    // 0x80018F08: bne         $t0, $zero, L_80018F78
-    if (ctx->r8 != 0) {
-        // 0x80018F0C: andi        $t0, $t5, 0xF
-        ctx->r8 = ctx->r13 & 0XF;
-            goto L_80018F78;
-    }
-    // 0x80018F0C: andi        $t0, $t5, 0xF
-    ctx->r8 = ctx->r13 & 0XF;
-    // 0x80018F10: andi        $t1, $t4, 0xF
-    ctx->r9 = ctx->r12 & 0XF;
-    // 0x80018F14: bne         $t0, $t1, L_80018F78
-    if (ctx->r8 != ctx->r9) {
-        // 0x80018F18: ori         $t0, $zero, 0x10
-        ctx->r8 = 0 | 0X10;
-            goto L_80018F78;
-    }
-    // 0x80018F18: ori         $t0, $zero, 0x10
-    ctx->r8 = 0 | 0X10;
-    // 0x80018F1C: beq         $t1, $zero, L_80018F40
-    if (ctx->r9 == 0) {
-        // 0x80018F20: subu        $t0, $t0, $t1
-        ctx->r8 = SUB32(ctx->r8, ctx->r9);
-            goto L_80018F40;
-    }
-    // 0x80018F20: subu        $t0, $t0, $t1
-    ctx->r8 = SUB32(ctx->r8, ctx->r9);
-    // 0x80018F24: subu        $t3, $t3, $t0
-    ctx->r11 = SUB32(ctx->r11, ctx->r8);
-L_80018F28:
-    // 0x80018F28: lbu         $t1, 0x0($t4)
-    ctx->r9 = MEM_BU(ctx->r12, 0X0);
-    // 0x80018F2C: addiu       $t4, $t4, 0x1
-    ctx->r12 = ADD32(ctx->r12, 0X1);
-    // 0x80018F30: sb          $t1, 0x0($t5)
-    MEM_B(0X0, ctx->r13) = ctx->r9;
-    // 0x80018F34: addiu       $t0, $t0, -0x1
-    ctx->r8 = ADD32(ctx->r8, -0X1);
-    // 0x80018F38: bne         $t0, $zero, L_80018F28
-    if (ctx->r8 != 0) {
-        // 0x80018F3C: addiu       $t5, $t5, 0x1
-        ctx->r13 = ADD32(ctx->r13, 0X1);
-            goto L_80018F28;
-    }
-    // 0x80018F3C: addiu       $t5, $t5, 0x1
-    ctx->r13 = ADD32(ctx->r13, 0X1);
-L_80018F40:
-    // 0x80018F40: srl         $t0, $t3, 4
-    ctx->r8 = S32(U32(ctx->r11) >> 4);
-    // 0x80018F44: beq         $t0, $zero, L_80018F78
-    if (ctx->r8 == 0) {
-        // 0x80018F48: andi        $t3, $t3, 0xF
-        ctx->r11 = ctx->r11 & 0XF;
-            goto L_80018F78;
-    }
-    // 0x80018F48: andi        $t3, $t3, 0xF
-    ctx->r11 = ctx->r11 & 0XF;
-L_80018F4C:
-    // 0x80018F4C: cache       0x0D, 0x0($t5)
-
-    // 0x80018F50: ld          $t1, 0x0($t4)
-    ctx->r9 = LD(ctx->r12, 0X0);
-    // 0x80018F54: ld          $t2, 0x8($t4)
-    ctx->r10 = LD(ctx->r12, 0X8);
-    // 0x80018F58: addiu       $t4, $t4, 0x10
-    ctx->r12 = ADD32(ctx->r12, 0X10);
-    // 0x80018F5C: sd          $t1, 0x0($t5)
-    SD(ctx->r9, 0X0, ctx->r13);
-    // 0x80018F60: sd          $t2, 0x8($t5)
-    SD(ctx->r10, 0X8, ctx->r13);
-    // 0x80018F64: addiu       $t0, $t0, -0x1
-    ctx->r8 = ADD32(ctx->r8, -0X1);
-    // 0x80018F68: bne         $t0, $zero, L_80018F4C
-    if (ctx->r8 != 0) {
-        // 0x80018F6C: addiu       $t5, $t5, 0x10
-        ctx->r13 = ADD32(ctx->r13, 0X10);
-            goto L_80018F4C;
-    }
-    // 0x80018F6C: addiu       $t5, $t5, 0x10
-    ctx->r13 = ADD32(ctx->r13, 0X10);
-    // 0x80018F70: beq         $t3, $zero, L_80018F90
-    if (ctx->r11 == 0) {
-        // 0x80018F74: nop
-    
-            goto L_80018F90;
-    }
-    // 0x80018F74: nop
-
-L_80018F78:
-    // 0x80018F78: lbu         $t0, 0x0($t4)
-    ctx->r8 = MEM_BU(ctx->r12, 0X0);
-    // 0x80018F7C: addiu       $t4, $t4, 0x1
-    ctx->r12 = ADD32(ctx->r12, 0X1);
-    // 0x80018F80: sb          $t0, 0x0($t5)
-    MEM_B(0X0, ctx->r13) = ctx->r8;
-    // 0x80018F84: addiu       $t3, $t3, -0x1
-    ctx->r11 = ADD32(ctx->r11, -0X1);
-    // 0x80018F88: bne         $t3, $zero, L_80018F78
-    if (ctx->r11 != 0) {
-        // 0x80018F8C: addiu       $t5, $t5, 0x1
-        ctx->r13 = ADD32(ctx->r13, 0X1);
-            goto L_80018F78;
-    }
-    // 0x80018F8C: addiu       $t5, $t5, 0x1
-    ctx->r13 = ADD32(ctx->r13, 0X1);
-L_80018F90:
-    // 0x80018F90: jr          $ra
-    // 0x80018F94: nop
-
-    return;
-    // 0x80018F94: nop
-
 ;}
 RECOMP_FUNC void func_80018F98(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
@@ -27256,18 +27031,7 @@ L_80019058:
 RECOMP_FUNC void func_800191C4(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    // PATCH (2026-05-08): defensive matrix-multiply guard. $a0 and $a1 are
-    // matrix pointers (12 floats each). During cinematic, $a1 sometimes
-    // arrives as a non-KSEG0 pointer (high bit clear) due to upstream
-    // corruption, causing high-VA AV at `MEM_W($a1, 0x0)`. Bail safely.
-    // Root cause (UAF/race/sign-ext) tracked in project_cinematic_visibility.md.
-    {
-        uint64_t a0_hi = (uint64_t)ctx->r4 & 0xFFFFFFFFE0000000ULL;
-        uint64_t a1_hi = (uint64_t)ctx->r5 & 0xFFFFFFFFE0000000ULL;
-        if (a0_hi != 0xFFFFFFFF80000000ULL || a1_hi != 0xFFFFFFFF80000000ULL) {
-            return;
-        }
-    }
+    { uint64_t a0h = (uint64_t)ctx->r4 & 0xFFFFFFFFE0000000ULL; uint64_t a1h = (uint64_t)ctx->r5 & 0xFFFFFFFFE0000000ULL; if (a0h != 0xFFFFFFFF80000000ULL || a1h != 0xFFFFFFFF80000000ULL) return; }
     // 0x800191C4: addiu       $sp, $sp, -0x20
     ctx->r29 = ADD32(ctx->r29, -0X20);
     // 0x800191C8: sdc1        $f20, 0x0($sp)
@@ -28902,7 +28666,6 @@ RECOMP_FUNC void func_8001983C(uint8_t* rdram, recomp_context* ctx) {
 RECOMP_FUNC void func_80019868(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { if(0) fprintf(stderr, "[trace] func_80019868 thread ENTRY\n"); fflush(stderr); }
     // 0x80019868: addiu       $sp, $sp, -0x58
     ctx->r29 = ADD32(ctx->r29, -0X58);
     // 0x8001986C: sw          $s0, 0x30($sp)
@@ -28989,19 +28752,11 @@ L_800198E8:
     // 0x800198F4: jal         0x800331D0
     // 0x800198F8: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
-    { static int n=0; if (++n<=10 || (n%200)==0) { if(1) fprintf(stderr, "[trace] frame::recv1-pre #%d (retrace mq=0x%08X)\n", n, (uint32_t)ctx->r4); fflush(stderr); } }
     osRecvMesg_recomp(rdram, ctx);
         goto after_3;
     // 0x800198F8: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
     after_3:
-    { static int n=0; if (++n<=10 || (n%200)==0) { if(1) fprintf(stderr, "[trace] frame::recv1-post #%d\n", n); fflush(stderr); } }
-    { extern void roguesq_rate_count_sample(uint32_t); roguesq_rate_count_sample(0); }
-    { static int iter=0; ++iter; if (iter>=5 && iter<=15) {
-        uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
-        if(0) fprintf(stderr, "[ck] iter=%d post-recv1 cE=%u\n", iter, (unsigned)cE);
-        fflush(stderr);
-    } }
     // 0x800198FC: jal         0x80034D90
     // 0x80019900: nop
 
@@ -29022,11 +28777,6 @@ L_800198E8:
     // 0x80019910: addu        $s1, $zero, $zero
     ctx->r17 = ADD32(0, 0);
     after_5:
-    { static int iter=0; ++iter; if (iter>=5 && iter<=15) {
-        uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
-        if(0) fprintf(stderr, "[ck] iter=%d pre-B7F0 cE=%u\n", iter, (unsigned)cE);
-        fflush(stderr);
-    } }
     // 0x80019914: jal         0x8001B7F0
     // 0x80019918: addu        $s0, $v1, $zero
     ctx->r16 = ADD32(ctx->r3, 0);
@@ -29035,11 +28785,6 @@ L_800198E8:
     // 0x80019918: addu        $s0, $v1, $zero
     ctx->r16 = ADD32(ctx->r3, 0);
     after_6:
-    { static int iter=0; ++iter; if (iter>=5 && iter<=15) {
-        uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
-        if(0) fprintf(stderr, "[ck] iter=%d post-B7F0 cE=%u\n", iter, (unsigned)cE);
-        fflush(stderr);
-    } }
     // 0x8001991C: lui         $a0, 0x8013
     ctx->r4 = S32(0X8013 << 16);
     // 0x80019920: addiu       $a0, $a0, -0x72F0
@@ -29049,29 +28794,15 @@ L_800198E8:
     // 0x80019928: jal         0x800331D0
     // 0x8001992C: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
-    { static int n=0; if (++n<=10 || (n%200)==0) { if(1) fprintf(stderr, "[trace] frame::recv2-pre #%d (mq=0x%08X)\n", n, (uint32_t)ctx->r4); fflush(stderr); } }
     osRecvMesg_recomp(rdram, ctx);
-    { static int n=0; if (++n<=10 || (n%200)==0) { if(1) fprintf(stderr, "[trace] frame::recv2-post #%d ret=%d\n", n, (int)(int32_t)ctx->r2); fflush(stderr); } }
         goto after_7;
     // 0x8001992C: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
     after_7:
-    { static int iter=0; ++iter; if (iter>=5 && iter<=15) {
-        uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
-        if(0) fprintf(stderr, "[ck] iter=%d post-recv2 cE=%u\n", iter, (unsigned)cE);
-        fflush(stderr);
-    } }
     // 0x80019930: lbu         $v0, 0x0($s6)
     ctx->r2 = MEM_BU(ctx->r22, 0X0);
     // 0x80019934: lbu         $v1, -0x1($s6)
     ctx->r3 = MEM_BU(ctx->r22, -0X1);
-    if(0) { static int n=0; ++n; if (n<=10 || (n%20)==0) {
-        uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
-        uint8_t cF = *(uint8_t*)(rdram + (size_t)((0x80128EAFu ^ 3) & 0x7FFFFFFFu));
-        fprintf(stderr, "[trace] frame::counter-pre-inc #%d r2(E)=%u r3(LIMIT)=%u realE=%u realF=%u\n",
-            n, (unsigned)(ctx->r2 & 0xFF), (unsigned)(ctx->r3 & 0xFF), (unsigned)cE, (unsigned)cF);
-        fflush(stderr);
-    } }
     // 0x80019938: lui         $at, 0x8013
     ctx->r1 = S32(0X8013 << 16);
     // 0x8001993C: sw          $s0, -0x7128($at)
@@ -29082,22 +28813,10 @@ L_800198E8:
     if (SIGNED(ctx->r3) <= 0) {
         // 0x80019948: sb          $v0, 0x0($s6)
         MEM_B(0X0, ctx->r22) = ctx->r2;
-        { static int n=0; ++n; if (n<=10 || (n%20)==0) {
-            uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
-            if(0) fprintf(stderr, "[trace] frame::counter-post-write(blez) #%d wrote=%u realE_now=%u\n",
-                n, (unsigned)(ctx->r2 & 0xFF), (unsigned)cE);
-            fflush(stderr);
-        } }
             goto L_80019A0C;
     }
     // 0x80019948: sb          $v0, 0x0($s6)
     MEM_B(0X0, ctx->r22) = ctx->r2;
-    { static int n=0; ++n; if (n<=10 || (n%20)==0) {
-        uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
-        if(0) fprintf(stderr, "[trace] frame::counter-post-write #%d wrote=%u realE_now=%u\n",
-            n, (unsigned)(ctx->r2 & 0xFF), (unsigned)cE);
-        fflush(stderr);
-    } }
     // 0x8001994C: lui         $v0, 0x8013
     ctx->r2 = S32(0X8013 << 16);
     // 0x80019950: addiu       $v0, $v0, -0x7134
@@ -29236,21 +28955,6 @@ L_80019A0C:
     ctx->r2 = S32(0X8013 << 16);
     // 0x80019A10: lbu         $v0, -0x7153($v0)
     ctx->r2 = MEM_BU(ctx->r2, -0X7153);
-    if(0) {
-        static int n=0;
-        if (++n<=20 || (n%200)==0) {
-            #define MV_B(addr) (*(uint8_t*)(rdram + (((uint32_t)(addr) ^ 3) & 0x7FFFFFFFu)))
-            uint8_t s0 = MV_B(0x80128EAA), s1b = MV_B(0x80128EAB), s2 = MV_B(0x80128EAC);
-            uint8_t cnt = MV_B(0x80128EAD);
-            uint16_t p0 = (uint16_t)((MV_B(0x80128EA4) << 8) | MV_B(0x80128EA5));
-            uint16_t p1 = (uint16_t)((MV_B(0x80128EA6) << 8) | MV_B(0x80128EA7));
-            uint16_t p2 = (uint16_t)((MV_B(0x80128EA8) << 8) | MV_B(0x80128EA9));
-            #undef MV_B
-            fprintf(stderr, "[trace] swap-arb #%d count=%u states=[%02x %02x %02x] prios=[%04x %04x %04x] fp=%d\n",
-                n, (unsigned)cnt, s0, s1b, s2, p0, p1, p2, (int)(int32_t)ctx->r30);
-            fflush(stderr);
-        }
-    }
     // 0x80019A14: addiu       $a1, $zero, -0x1
     ctx->r5 = ADD32(0, -0X1);
     // 0x80019A18: blez        $v0, L_80019A90
@@ -29339,14 +29043,10 @@ L_80019A7C:
 L_80019A90:
     // 0x80019A90: addiu       $v0, $zero, -0x1
     ctx->r2 = ADD32(0, -0X1);
-    if(0) { static int n=0; ++n; if (n<=10 || (n%10)==0) {
-        fprintf(stderr, "[trace] frame::L_80019A90 #%d a1=%d\n", n, (int)(int32_t)ctx->r5);
-        fflush(stderr);
-    } }
     // 0x80019A94: beq         $a1, $v0, L_80019B1C
     if (ctx->r5 == ctx->r2) {
         // 0x80019A98: nop
-        if(0) { static int n=0; if (++n<=15 || (n%50)==0) { fprintf(stderr, "[trace] frame::skip-swap (a1==-1) #%d\n", n); fflush(stderr); } }
+    
             goto L_80019B1C;
     }
     // 0x80019A98: nop
@@ -29394,7 +29094,6 @@ L_80019AB4:
     if (ctx->r3 != 0) {
         // 0x80019ADC: addiu       $t2, $zero, 0x4
         ctx->r10 = ADD32(0, 0X4);
-        { static int n=0; if (++n<=15 || (n%50)==0) { if(0) fprintf(stderr, "[trace] frame::skip-swap (loopgate) #%d\n", n); fflush(stderr); } }
             goto L_80019B1C;
     }
     // 0x80019ADC: addiu       $t2, $zero, 0x4
@@ -29434,7 +29133,6 @@ L_80019AF8:
     ctx->r1 = ADD32(ctx->r1, ctx->r2);
     // 0x80019B10: lw          $a0, -0x7168($at)
     ctx->r4 = MEM_W(ctx->r1, -0X7168);
-    { static int n=0; if (++n<=10 || (n%50)==0) { if(0) fprintf(stderr, "[trace] osViSwapBuffer #%d fb=0x%08X\n", n, (uint32_t)ctx->r4); fflush(stderr); } }
     // 0x80019B14: jal         0x80035500
     // 0x80019B18: nop
 
@@ -29444,11 +29142,6 @@ L_80019AF8:
 
     after_10:
 L_80019B1C:
-    { static int iter=0; ++iter; if (iter>=5 && iter<=15) {
-        uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
-        if(0) fprintf(stderr, "[ck] iter=%d pre-C12C cE=%u\n", iter, (unsigned)cE);
-        fflush(stderr);
-    } }
     // 0x80019B1C: jal         0x8001C12C
     // 0x80019B20: nop
 
@@ -29457,11 +29150,6 @@ L_80019B1C:
     // 0x80019B20: nop
 
     after_11:
-    { static int iter=0; ++iter; if (iter>=5 && iter<=15) {
-        uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
-        if(0) fprintf(stderr, "[ck] iter=%d post-C12C cE=%u\n", iter, (unsigned)cE);
-        fflush(stderr);
-    } }
     // 0x80019B24: lui         $a0, 0x8013
     ctx->r4 = S32(0X8013 << 16);
     // 0x80019B28: addiu       $a0, $a0, -0x72F0
@@ -29476,11 +29164,6 @@ L_80019B1C:
     // 0x80019B34: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
     after_12:
-    { static int iter=0; ++iter; if (iter>=5 && iter<=15) {
-        uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
-        if(0) fprintf(stderr, "[ck] iter=%d post-Send_D10 cE=%u\n", iter, (unsigned)cE);
-        fflush(stderr);
-    } }
     // 0x80019B38: lui         $v0, 0x8003
     ctx->r2 = S32(0X8003 << 16);
     // 0x80019B3C: lbu         $v0, 0x7808($v0)
@@ -29509,21 +29192,11 @@ L_80019B58:
     // 0x80019B58: jal         0x80037510
     // 0x80019B5C: addu        $s1, $zero, $zero
     ctx->r17 = ADD32(0, 0);
-    { static int iter=0; ++iter; if (iter>=5 && iter<=15) {
-        uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
-        if(0) fprintf(stderr, "[ck] iter=%d pre-Yield cE=%u\n", iter, (unsigned)cE);
-        fflush(stderr);
-    } }
     osYieldThread_recomp(rdram, ctx);
         goto after_14;
     // 0x80019B5C: addu        $s1, $zero, $zero
     ctx->r17 = ADD32(0, 0);
     after_14:
-    { static int iter=0; ++iter; if (iter>=5 && iter<=15) {
-        uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
-        if(0) fprintf(stderr, "[ck] iter=%d post-Yield cE=%u\n", iter, (unsigned)cE);
-        fflush(stderr);
-    } }
     // 0x80019B60: lui         $s0, 0x8012
     ctx->r16 = S32(0X8012 << 16);
     // 0x80019B64: addiu       $s0, $s0, -0x575C
@@ -29541,48 +29214,12 @@ L_80019B68:
     ctx->r17 = ADD32(ctx->r17, 0X1);
     // 0x80019B74: jalr        $v0
     // 0x80019B78: nop
-    {
-        // Print every dispatch where r17 >= 3 (slot 2 or 3) — those are the
-        // ones we never observe in the trace, despite registers having filled
-        // them. Also print 1st-time-each-slot.
-        static int seen_slot[5] = {0};
-        int s = (int)(int32_t)ctx->r17;
-        if (s >= 0 && s < 5 && (!seen_slot[s] || s >= 3)) {
-            seen_slot[s] = 1;
-            uint32_t* tbl = (uint32_t*)(rdram + 0x11A8A4);
-            fprintf(stderr, "[trace] DISPATCH slot=%d func=0x%08X table=[0x%08X 0x%08X 0x%08X 0x%08X]\n",
-                s, (uint32_t)ctx->r2,
-                __builtin_bswap32(tbl[0]), __builtin_bswap32(tbl[1]), __builtin_bswap32(tbl[2]), __builtin_bswap32(tbl[3]));
-            fflush(stderr);
-        }
-    }
-    {
-        static uint32_t last = 0; static int init = 0;
-        uint32_t cur = *(uint32_t*)(rdram + 0x3CBC4);
-        int slot_b = (int)(int32_t)ctx->r17;
-        uint32_t fn_b = (uint32_t)ctx->r2;
-        if (!init) { init = 1; last = cur; fprintf(stderr, "[wp@disp-pre slot=%d fn=0x%08X] rdram@0x3CBC4=0x%08X\n", slot_b, fn_b, cur); fflush(stderr); }
-        else if (cur != last) { fprintf(stderr, "[wp@disp-pre slot=%d fn=0x%08X] rdram@0x3CBC4 CHANGED 0x%08X->0x%08X\n", slot_b, fn_b, last, cur); fflush(stderr); last = cur; }
-    }
+
     LOOKUP_FUNC(ctx->r2)(rdram, ctx);
-    {
-        static uint32_t last = 0; static int init = 0;
-        uint32_t cur = *(uint32_t*)(rdram + 0x3CBC4);
-        int slot_a = (int)(int32_t)ctx->r17;
-        uint32_t fn_a = (uint32_t)ctx->r2;
-        if (!init) { init = 1; last = cur; fprintf(stderr, "[wp@disp-post slot=%d fn=0x%08X] rdram@0x3CBC4=0x%08X\n", slot_a, fn_a, cur); fflush(stderr); }
-        else if (cur != last) { fprintf(stderr, "[wp@disp-post slot=%d fn=0x%08X] rdram@0x3CBC4 CHANGED 0x%08X->0x%08X\n", slot_a, fn_a, last, cur); fflush(stderr); last = cur; }
-    }
-    { static int n=0; if (++n<=20 || (n%500)==0) { if(0) fprintf(stderr, "[trace] frame::dispatch-done #%d\n", n); fflush(stderr); } }
         goto after_15;
     // 0x80019B78: nop
 
     after_15:
-    { static int iter=0; ++iter; if (iter>=5*2 && iter<=15*2) {
-        uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
-        if(0) fprintf(stderr, "[ck] dispatch-iter=%d post-dispatch cE=%u\n", iter, (unsigned)cE);
-        fflush(stderr);
-    } }
 L_80019B7C:
     // 0x80019B7C: slti        $v0, $s1, 0x4
     ctx->r2 = SIGNED(ctx->r17) < 0X4 ? 1 : 0;
@@ -29672,7 +29309,6 @@ RECOMP_FUNC void func_80019BE4(uint8_t* rdram, recomp_context* ctx) {
 RECOMP_FUNC void func_80019BF4(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { if(0) fprintf(stderr, "[trace] GFX_SCHED thread ENTRY (func_80019BF4)\n"); fflush(stderr); }
     // 0x80019BF4: addiu       $sp, $sp, -0x38
     ctx->r29 = ADD32(ctx->r29, -0X38);
     // 0x80019BF8: sw          $s1, 0x1C($sp)
@@ -29800,7 +29436,6 @@ L_80019CC4:
     ctx->r4 = ADD32(ctx->r4, -0X5BE0);
     // 0x80019CCC: addiu       $a1, $sp, 0x10
     ctx->r5 = ADD32(ctx->r29, 0X10);
-    { static int n=0; if (++n<=5 || (n%100)==0) { if(0) fprintf(stderr, "[trace] GFX_SCHED loop iter=%d (about to osRecvMesg)\n", n); fflush(stderr); } }
     // 0x80019CD0: jal         0x800331D0
     // 0x80019CD4: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
@@ -29811,7 +29446,6 @@ L_80019CC4:
     after_4:
     // 0x80019CD8: lw          $a0, 0x10($sp)
     ctx->r4 = MEM_W(ctx->r29, 0X10);
-    if(0) { gpr msgPtr = (gpr)MEM_W(ctx->r29, 0X10); uint8_t mt = (msgPtr ? (uint8_t)MEM_BU(0, msgPtr) : 0xFF); fprintf(stderr, "[trace] GFX_SCHED recv msg=0x%08X type=0x%02X\n", (uint32_t)msgPtr, mt); fflush(stderr); }
     // 0x80019CDC: lbu         $v1, 0x0($a0)
     ctx->r3 = MEM_BU(ctx->r4, 0X0);
     // 0x80019CE0: beq         $v1, $s5, L_80019D90
@@ -29925,7 +29559,6 @@ L_80019D10:
     // 0x80019D68: jal         0x80033FCC
     // 0x80019D6C: nop
 
-    { static int n=0; ++n; if (n<=10 || (n%50)==0) { if(0) fprintf(stderr, "[trace] GFX_SCHED osSpTaskStartGo branch=A site=after_7 #%d\n", n); fflush(stderr); } }
     osSpTaskStartGo_recomp(rdram, ctx);
         goto after_7;
     // 0x80019D6C: nop
@@ -30021,7 +29654,6 @@ L_80019DCC:
     // 0x80019DEC: jal         0x80033FCC
     // 0x80019DF0: nop
 
-    { static int n=0; ++n; if (n<=10 || (n%50)==0) { if(0) fprintf(stderr, "[trace] GFX_SCHED osSpTaskStartGo branch=B site=after_10 #%d\n", n); fflush(stderr); } }
     osSpTaskStartGo_recomp(rdram, ctx);
         goto after_10;
     // 0x80019DF0: nop
@@ -30090,7 +29722,6 @@ L_80019E0C:
     // 0x80019E44: jal         0x80033FCC
     // 0x80019E48: nop
 
-    { static int n=0; ++n; if (n<=10 || (n%50)==0) { if(0) fprintf(stderr, "[trace] GFX_SCHED osSpTaskStartGo branch=C site=after_13 #%d\n", n); fflush(stderr); } }
     osSpTaskStartGo_recomp(rdram, ctx);
         goto after_13;
     // 0x80019E48: nop
@@ -30177,7 +29808,6 @@ L_80019E7C:
     // 0x80019EBC: jal         0x80033FCC
     // 0x80019EC0: nop
 
-    { static int n=0; ++n; if (n<=10 || (n%50)==0) { if(0) fprintf(stderr, "[trace] GFX_SCHED osSpTaskStartGo branch=D site=after_16 #%d\n", n); fflush(stderr); } }
     osSpTaskStartGo_recomp(rdram, ctx);
         goto after_16;
     // 0x80019EC0: nop
@@ -30356,7 +29986,6 @@ L_80019F70:
     // 0x80019FB8: jal         0x80033FCC
     // 0x80019FBC: nop
 
-    { static int n=0; ++n; if (n<=10 || (n%50)==0) { if(0) fprintf(stderr, "[trace] GFX_SCHED osSpTaskStartGo branch=E site=after_23 #%d\n", n); fflush(stderr); } }
     osSpTaskStartGo_recomp(rdram, ctx);
         goto after_23;
     // 0x80019FBC: nop

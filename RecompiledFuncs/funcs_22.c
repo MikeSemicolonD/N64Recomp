@@ -2494,7 +2494,7 @@ L_80089580:
     // 0x80089598: sll         $v0, $v0, 8
     ctx->r2 = S32(ctx->r2 << 8);
     // 0x8008959C: divu        $zero, $v0, $a0
-    if (U32(ctx->r4) != 0) { lo = S32(U32(ctx->r2) / U32(ctx->r4)); hi = S32(U32(ctx->r2) % U32(ctx->r4)); } else { lo = 0; hi = S32(ctx->r2); }
+    lo = S32(U32(ctx->r2) / U32(ctx->r4)); hi = S32(U32(ctx->r2) % U32(ctx->r4));
     // 0x800895A0: bne         $a0, $zero, L_800895AC
     if (ctx->r4 != 0) {
         // 0x800895A4: nop
@@ -2673,7 +2673,7 @@ L_80089668:
     // 0x80089698: andi        $v0, $v0, 0xFFFF
     ctx->r2 = ctx->r2 & 0XFFFF;
     // 0x8008969C: divu        $zero, $v0, $a0
-    if (U32(ctx->r4) != 0) { lo = S32(U32(ctx->r2) / U32(ctx->r4)); hi = S32(U32(ctx->r2) % U32(ctx->r4)); } else { lo = 0; hi = S32(ctx->r2); }
+    lo = S32(U32(ctx->r2) / U32(ctx->r4)); hi = S32(U32(ctx->r2) % U32(ctx->r4));
     // 0x800896A0: bne         $a0, $zero, L_800896AC
     if (ctx->r4 != 0) {
         // 0x800896A4: nop
@@ -2779,7 +2779,7 @@ L_8008971C:
     // 0x80089734: sll         $v0, $v0, 8
     ctx->r2 = S32(ctx->r2 << 8);
     // 0x80089738: divu        $zero, $v0, $a0
-    if (U32(ctx->r4) != 0) { lo = S32(U32(ctx->r2) / U32(ctx->r4)); hi = S32(U32(ctx->r2) % U32(ctx->r4)); } else { lo = 0; hi = S32(ctx->r2); }
+    lo = S32(U32(ctx->r2) / U32(ctx->r4)); hi = S32(U32(ctx->r2) % U32(ctx->r4));
     // 0x8008973C: bne         $a0, $zero, L_80089748
     if (ctx->r4 != 0) {
         // 0x80089740: nop
@@ -3532,7 +3532,7 @@ RECOMP_FUNC void func_80089B50(uint8_t* rdram, recomp_context* ctx) {
     // 0x80089B8C: andi        $v0, $v0, 0xFFFF
     ctx->r2 = ctx->r2 & 0XFFFF;
     // 0x80089B90: divu        $zero, $v0, $a0
-    if (U32(ctx->r4) != 0) { lo = S32(U32(ctx->r2) / U32(ctx->r4)); hi = S32(U32(ctx->r2) % U32(ctx->r4)); } else { lo = 0; hi = S32(ctx->r2); }
+    lo = S32(U32(ctx->r2) / U32(ctx->r4)); hi = S32(U32(ctx->r2) % U32(ctx->r4));
     // 0x80089B94: bne         $a0, $zero, L_80089BA0
     if (ctx->r4 != 0) {
         // 0x80089B98: nop
@@ -4043,7 +4043,7 @@ RECOMP_FUNC void func_80089E5C(uint8_t* rdram, recomp_context* ctx) {
     // 0x80089E6C: srl         $v0, $v0, 8
     ctx->r2 = S32(U32(ctx->r2) >> 8);
     // 0x80089E70: divu        $zero, $v0, $v1
-    if (U32(ctx->r3) != 0) { lo = S32(U32(ctx->r2) / U32(ctx->r3)); hi = S32(U32(ctx->r2) % U32(ctx->r3)); } else { lo = 0; hi = S32(ctx->r2); }
+    lo = S32(U32(ctx->r2) / U32(ctx->r3)); hi = S32(U32(ctx->r2) % U32(ctx->r3));
     // 0x80089E74: bne         $v1, $zero, L_80089E80
     if (ctx->r3 != 0) {
         // 0x80089E78: nop
@@ -5566,7 +5566,7 @@ L_8008A778:
     // 0x8008A790: sll         $v0, $v0, 8
     ctx->r2 = S32(ctx->r2 << 8);
     // 0x8008A794: divu        $zero, $v0, $a0
-    if (U32(ctx->r4) != 0) { lo = S32(U32(ctx->r2) / U32(ctx->r4)); hi = S32(U32(ctx->r2) % U32(ctx->r4)); } else { lo = 0; hi = S32(ctx->r2); }
+    lo = S32(U32(ctx->r2) / U32(ctx->r4)); hi = S32(U32(ctx->r2) % U32(ctx->r4));
     // 0x8008A798: bne         $a0, $zero, L_8008A7A4
     if (ctx->r4 != 0) {
         // 0x8008A79C: nop
@@ -6104,7 +6104,7 @@ RECOMP_FUNC void func_8008AAA4(uint8_t* rdram, recomp_context* ctx) {
     // 0x8008AAE0: sw          $v0, 0xA8($a2)
     MEM_W(0XA8, ctx->r6) = ctx->r2;
     // 0x8008AAE4: divu        $zero, $v1, $a3
-    if (U32(ctx->r7) != 0) { lo = S32(U32(ctx->r3) / U32(ctx->r7)); hi = S32(U32(ctx->r3) % U32(ctx->r7)); } else { lo = 0; hi = S32(ctx->r3); }
+    lo = S32(U32(ctx->r3) / U32(ctx->r7)); hi = S32(U32(ctx->r3) % U32(ctx->r7));
     // 0x8008AAE8: bne         $a3, $zero, L_8008AAF4
     if (ctx->r7 != 0) {
         // 0x8008AAEC: nop

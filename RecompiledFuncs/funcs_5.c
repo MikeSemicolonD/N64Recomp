@@ -1,6 +1,5 @@
 #include "recomp.h"
 #include "funcs.h"
-#include <stdio.h>
 
 RECOMP_FUNC void func_8001A038(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
@@ -31,7 +30,6 @@ RECOMP_FUNC void func_8001A038(uint8_t* rdram, recomp_context* ctx) {
 RECOMP_FUNC void func_8001A058(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { static int n=0; if (++n<=10 || (n%100)==0) { if(0) fprintf(stderr, "[trace] func_8001A058(audio-submit) #%d dl=0x%08X\n", n, (uint32_t)ctx->r4); fflush(stderr); } }
     // 0x8001A058: addiu       $sp, $sp, -0x18
     ctx->r29 = ADD32(ctx->r29, -0X18);
     // 0x8001A05C: lui         $a1, 0x8013
@@ -1098,7 +1096,7 @@ L_8001A650:
     // 0x8001A6B4: sw          $a0, 0x40($a1)
     MEM_W(0X40, ctx->r5) = ctx->r4;
     // 0x8001A6B8: div         $zero, $t6, $t0
-    if (S32(ctx->r8) != 0) { lo = S32(S64(S32(ctx->r14)) / S64(S32(ctx->r8))); hi = S32(S64(S32(ctx->r14)) % S64(S32(ctx->r8))); } else { lo = 0; hi = S32(ctx->r14); }
+    lo = S32(S64(S32(ctx->r14)) / S64(S32(ctx->r8))); hi = S32(S64(S32(ctx->r14)) % S64(S32(ctx->r8)));
     // 0x8001A6BC: bne         $t0, $zero, L_8001A6C8
     if (ctx->r8 != 0) {
         // 0x8001A6C0: nop
@@ -1190,7 +1188,7 @@ L_8001A714:
     ctx->r4 = ctx->r4 | ctx->r10;
 L_8001A724:
     // 0x8001A724: div         $zero, $t6, $t0
-    if (S32(ctx->r8) != 0) { lo = S32(S64(S32(ctx->r14)) / S64(S32(ctx->r8))); hi = S32(S64(S32(ctx->r14)) % S64(S32(ctx->r8))); } else { lo = 0; hi = S32(ctx->r14); }
+    lo = S32(S64(S32(ctx->r14)) / S64(S32(ctx->r8))); hi = S32(S64(S32(ctx->r14)) % S64(S32(ctx->r8)));
     // 0x8001A728: bne         $t0, $zero, L_8001A734
     if (ctx->r8 != 0) {
         // 0x8001A72C: nop
@@ -1283,7 +1281,7 @@ L_8001A74C:
     ctx->f0.fl = ctx->f2.fl - ctx->f4.fl;
 L_8001A794:
     // 0x8001A794: div         $zero, $t5, $t0
-    if (S32(ctx->r8) != 0) { lo = S32(S64(S32(ctx->r13)) / S64(S32(ctx->r8))); hi = S32(S64(S32(ctx->r13)) % S64(S32(ctx->r8))); } else { lo = 0; hi = S32(ctx->r13); }
+    lo = S32(S64(S32(ctx->r13)) / S64(S32(ctx->r8))); hi = S32(S64(S32(ctx->r13)) % S64(S32(ctx->r8)));
     // 0x8001A798: bne         $t0, $zero, L_8001A7A4
     if (ctx->r8 != 0) {
         // 0x8001A79C: nop
@@ -1373,7 +1371,7 @@ L_8001A7EC:
     ctx->r4 = ctx->r4 | ctx->r10;
 L_8001A7FC:
     // 0x8001A7FC: div         $zero, $t5, $t0
-    if (S32(ctx->r8) != 0) { lo = S32(S64(S32(ctx->r13)) / S64(S32(ctx->r8))); hi = S32(S64(S32(ctx->r13)) % S64(S32(ctx->r8))); } else { lo = 0; hi = S32(ctx->r13); }
+    lo = S32(S64(S32(ctx->r13)) / S64(S32(ctx->r8))); hi = S32(S64(S32(ctx->r13)) % S64(S32(ctx->r8)));
     // 0x8001A800: bne         $t0, $zero, L_8001A80C
     if (ctx->r8 != 0) {
         // 0x8001A804: nop
@@ -2059,7 +2057,7 @@ L_8001ABEC:
     MEM_W(0X28, ctx->r3) = 0;
 L_8001ABF0:
     // 0x8001ABF0: div         $zero, $t4, $t3
-    if (S32(ctx->r11) != 0) { lo = S32(S64(S32(ctx->r12)) / S64(S32(ctx->r11))); hi = S32(S64(S32(ctx->r12)) % S64(S32(ctx->r11))); } else { lo = 0; hi = S32(ctx->r12); }
+    lo = S32(S64(S32(ctx->r12)) / S64(S32(ctx->r11))); hi = S32(S64(S32(ctx->r12)) % S64(S32(ctx->r11)));
     // 0x8001ABF4: bne         $t3, $zero, L_8001AC00
     if (ctx->r11 != 0) {
         // 0x8001ABF8: nop
@@ -2807,7 +2805,7 @@ L_8001AFF0:
     // 0x8001B050: sw          $a0, 0x40($a1)
     MEM_W(0X40, ctx->r5) = ctx->r4;
     // 0x8001B054: div         $zero, $t5, $t0
-    if (S32(ctx->r8) != 0) { lo = S32(S64(S32(ctx->r13)) / S64(S32(ctx->r8))); hi = S32(S64(S32(ctx->r13)) % S64(S32(ctx->r8))); } else { lo = 0; hi = S32(ctx->r13); }
+    lo = S32(S64(S32(ctx->r13)) / S64(S32(ctx->r8))); hi = S32(S64(S32(ctx->r13)) % S64(S32(ctx->r8)));
     // 0x8001B058: bne         $t0, $zero, L_8001B064
     if (ctx->r8 != 0) {
         // 0x8001B05C: nop
@@ -2897,7 +2895,7 @@ L_8001B0AC:
     ctx->r4 = ctx->r4 | ctx->r10;
 L_8001B0BC:
     // 0x8001B0BC: div         $zero, $t5, $t0
-    if (S32(ctx->r8) != 0) { lo = S32(S64(S32(ctx->r13)) / S64(S32(ctx->r8))); hi = S32(S64(S32(ctx->r13)) % S64(S32(ctx->r8))); } else { lo = 0; hi = S32(ctx->r13); }
+    lo = S32(S64(S32(ctx->r13)) / S64(S32(ctx->r8))); hi = S32(S64(S32(ctx->r13)) % S64(S32(ctx->r8)));
     // 0x8001B0C0: bne         $t0, $zero, L_8001B0CC
     if (ctx->r8 != 0) {
         // 0x8001B0C4: nop
@@ -2990,7 +2988,7 @@ L_8001B0E4:
     ctx->f0.fl = ctx->f2.fl - ctx->f4.fl;
 L_8001B12C:
     // 0x8001B12C: div         $zero, $t4, $t0
-    if (S32(ctx->r8) != 0) { lo = S32(S64(S32(ctx->r12)) / S64(S32(ctx->r8))); hi = S32(S64(S32(ctx->r12)) % S64(S32(ctx->r8))); } else { lo = 0; hi = S32(ctx->r12); }
+    lo = S32(S64(S32(ctx->r12)) / S64(S32(ctx->r8))); hi = S32(S64(S32(ctx->r12)) % S64(S32(ctx->r8)));
     // 0x8001B130: bne         $t0, $zero, L_8001B13C
     if (ctx->r8 != 0) {
         // 0x8001B134: nop
@@ -3080,7 +3078,7 @@ L_8001B184:
     ctx->r4 = ctx->r4 | ctx->r10;
 L_8001B194:
     // 0x8001B194: div         $zero, $t4, $t0
-    if (S32(ctx->r8) != 0) { lo = S32(S64(S32(ctx->r12)) / S64(S32(ctx->r8))); hi = S32(S64(S32(ctx->r12)) % S64(S32(ctx->r8))); } else { lo = 0; hi = S32(ctx->r12); }
+    lo = S32(S64(S32(ctx->r12)) / S64(S32(ctx->r8))); hi = S32(S64(S32(ctx->r12)) % S64(S32(ctx->r8)));
     // 0x8001B198: bne         $t0, $zero, L_8001B1A4
     if (ctx->r8 != 0) {
         // 0x8001B19C: nop
@@ -3766,7 +3764,7 @@ L_8001B584:
     MEM_W(0X28, ctx->r3) = 0;
 L_8001B588:
     // 0x8001B588: div         $zero, $t4, $t3
-    if (S32(ctx->r11) != 0) { lo = S32(S64(S32(ctx->r12)) / S64(S32(ctx->r11))); hi = S32(S64(S32(ctx->r12)) % S64(S32(ctx->r11))); } else { lo = 0; hi = S32(ctx->r12); }
+    lo = S32(S64(S32(ctx->r12)) / S64(S32(ctx->r11))); hi = S32(S64(S32(ctx->r12)) % S64(S32(ctx->r11)));
     // 0x8001B58C: bne         $t3, $zero, L_8001B598
     if (ctx->r11 != 0) {
         // 0x8001B590: nop
@@ -5120,7 +5118,6 @@ L_8001BCDC:
 RECOMP_FUNC void func_8001BCE4(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { static int n=0; ++n; if (n<=10 || (n%20)==0) { if(1) fprintf(stderr, "[trace] producer::func_8001BCE4 ENTRY #%d\n", n); fflush(stderr); } }
     // 0x8001BCE4: addiu       $sp, $sp, -0x38
     ctx->r29 = ADD32(ctx->r29, -0X38);
     // 0x8001BCE8: lui         $a0, 0x8013
@@ -5178,15 +5175,6 @@ RECOMP_FUNC void func_8001BCE4(uint8_t* rdram, recomp_context* ctx) {
 L_8001BD40:
     // 0x8001BD40: lbu         $v1, 0x0($s0)
     ctx->r3 = MEM_BU(ctx->r16, 0X0);
-    { static int n=0; ++n; if (n<=20 || (n%50)==0) {
-        uint8_t t0 = *(uint8_t*)(rdram + (size_t)((0x80128EAAu ^ 3) & 0x7FFFFFFFu));
-        uint8_t t1 = *(uint8_t*)(rdram + (size_t)((0x80128EABu ^ 3) & 0x7FFFFFFFu));
-        uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
-        uint8_t cF = *(uint8_t*)(rdram + (size_t)((0x80128EAFu ^ 3) & 0x7FFFFFFFu));
-        if(1) fprintf(stderr, "[trace] producer::scan-loop #%d a0_byte=%d types=[%02X %02X] counters=[%u %u]\n",
-            n, (int)(int32_t)ctx->r3, (unsigned)t0, (unsigned)t1, (unsigned)cE, (unsigned)cF);
-        fflush(stderr);
-    } }
     // 0x8001BD44: addiu       $v0, $zero, 0x2
     ctx->r2 = ADD32(0, 0X2);
     // 0x8001BD48: bnel        $v1, $v0, L_8001BE34
@@ -5245,7 +5233,6 @@ L_8001BD84:
     // 0x8001BD94: addiu       $v1, $v1, 0x1
     ctx->r3 = ADD32(ctx->r3, 0X1);
     // 0x8001BD98: sb          $t1, 0x0($s0)
-    { static int n=0; ++n; if (n<=10 || (n%20)==0) { if(0) fprintf(stderr, "[trace] producer::write-type3 #%d slot_ptr=0x%016llX\n", n, (unsigned long long)(uintptr_t)ctx->r16); fflush(stderr); } }
     MEM_B(0X0, ctx->r16) = ctx->r9;
     // 0x8001BD9C: j           L_8001BE54
     // 0x8001BDA0: sh          $zero, 0x0($a0)
@@ -5318,16 +5305,6 @@ L_8001BDD0:
 
     // 0x8001BDFC: sb          $t1, 0x0($s0)
     MEM_B(0X0, ctx->r16) = ctx->r9;
-    { static int n=0; ++n; if (n<=10 || (n%20)==0) {
-        uint8_t t0 = *(uint8_t*)(rdram + (size_t)((0x80128EAAu ^ 3) & 0x7FFFFFFFu));
-        uint8_t t1 = *(uint8_t*)(rdram + (size_t)((0x80128EABu ^ 3) & 0x7FFFFFFFu));
-        uint8_t cE = *(uint8_t*)(rdram + (size_t)((0x80128EAEu ^ 3) & 0x7FFFFFFFu));
-        uint8_t cF = *(uint8_t*)(rdram + (size_t)((0x80128EAFu ^ 3) & 0x7FFFFFFFu));
-        if(0) fprintf(stderr, "[trace] producer::POST-write3-B #%d types=[%02X %02X] counters=[%u %u] r16=0x%016llX\n",
-            n, (unsigned)t0, (unsigned)t1, (unsigned)cE, (unsigned)cF,
-            (unsigned long long)(uintptr_t)ctx->r16);
-        fflush(stderr);
-    } }
     // 0x8001BE00: j           L_8001BE54
     // 0x8001BE04: sh          $zero, 0x0($a2)
     MEM_H(0X0, ctx->r6) = 0;
@@ -5472,14 +5449,6 @@ RECOMP_FUNC void func_8001BE80(uint8_t* rdram, recomp_context* ctx) {
 RECOMP_FUNC void func_8001BEC8(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { static int n=0; ++n; if (n<=10 || (n%50)==0) {
-        uint8_t t0 = *(uint8_t*)(rdram + (size_t)((0x80128EAAu ^ 3) & 0x7FFFFFFFu));
-        uint8_t t1 = *(uint8_t*)(rdram + (size_t)((0x80128EABu ^ 3) & 0x7FFFFFFFu));
-        uint8_t t2 = *(uint8_t*)(rdram + (size_t)((0x80128EACu ^ 3) & 0x7FFFFFFFu));
-        uint8_t count = *(uint8_t*)(rdram + (size_t)((0x80128EADu ^ 3) & 0x7FFFFFFFu));
-        fprintf(stderr, "[trace] mark-ready(1->2) func_8001BEC8 ENTRY #%d slots=[%02X %02X %02X] count=%u\n", n, (unsigned)t0, (unsigned)t1, (unsigned)t2, (unsigned)count);
-        fflush(stderr);
-    } }
     // 0x8001BEC8: lui         $v1, 0x8013
     ctx->r3 = S32(0X8013 << 16);
     // 0x8001BECC: addiu       $v1, $v1, -0x7153
@@ -5547,14 +5516,6 @@ L_8001BF14:
 RECOMP_FUNC void func_8001BF20(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { static int n=0; ++n; if (n<=10 || (n%50)==0) {
-        uint8_t t0 = *(uint8_t*)(rdram + (size_t)((0x80128EAAu ^ 3) & 0x7FFFFFFFu));
-        uint8_t t1 = *(uint8_t*)(rdram + (size_t)((0x80128EABu ^ 3) & 0x7FFFFFFFu));
-        uint8_t t2 = *(uint8_t*)(rdram + (size_t)((0x80128EACu ^ 3) & 0x7FFFFFFFu));
-        uint8_t count = *(uint8_t*)(rdram + (size_t)((0x80128EADu ^ 3) & 0x7FFFFFFFu));
-        fprintf(stderr, "[trace] alloc(0->1) func_8001BF20 ENTRY #%d slots=[%02X %02X %02X] count=%u\n", n, (unsigned)t0, (unsigned)t1, (unsigned)t2, (unsigned)count);
-        fflush(stderr);
-    } }
     // 0x8001BF20: addiu       $sp, $sp, -0x30
     ctx->r29 = ADD32(ctx->r29, -0X30);
     // 0x8001BF24: addiu       $a2, $zero, 0x1
@@ -5921,11 +5882,6 @@ L_8001C10C:
 RECOMP_FUNC void func_8001C12C(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    if(0) { static int n=0; if (++n<=20 || (n%50)==0) {
-        uint8_t gate = (uint8_t)MEM_BU(0xFFFFFFFF801128C8ULL, 0);
-        fprintf(stderr, "[trace] func_8001C12C(gfx-submit) #%d gate@0x801128C8=0x%02X\n", n, gate);
-        fflush(stderr);
-    } }
     // 0x8001C12C: addiu       $sp, $sp, -0x18
     ctx->r29 = ADD32(ctx->r29, -0X18);
     // 0x8001C130: sw          $s0, 0x10($sp)
@@ -6076,22 +6032,10 @@ RECOMP_FUNC void func_8001C12C(uint8_t* rdram, recomp_context* ctx) {
     MEM_B(-0X5763, ctx->r1) = ctx->r2;
     // 0x8001C21C: sb          $v0, 0x0($a1)
     MEM_B(0X0, ctx->r5) = ctx->r2;
-    { static int n=0; if (++n<=10) {
-        uint8_t rb = (uint8_t)MEM_BU(0, ctx->r5);
-        if(0) fprintf(stderr, "[trace] func_8001C12C POST-SB #%d wrote_via_r2=0x%02X readback msg[0]@0x%08X=0x%02X\n",
-            n, (uint8_t)(ctx->r2 & 0xFF), (uint32_t)ctx->r5, rb);
-        fflush(stderr);
-    } }
     // 0x8001C220: lui         $at, 0x8013
     ctx->r1 = S32(0X8013 << 16);
     // 0x8001C224: sw          $s0, -0x731C($at)
     MEM_W(-0X731C, ctx->r1) = ctx->r16;
-    { static int n=0; if (++n<=20 || (n%50)==0) {
-        uint8_t mt = ctx->r5 ? (uint8_t)MEM_BU(0, ctx->r5) : 0xFF;
-        if(0) fprintf(stderr, "[trace] func_8001C12C ABOUT TO osSendMesg #%d queue=0x%08X msg=0x%08X type=0x%02X\n",
-            n, (uint32_t)ctx->r4, (uint32_t)ctx->r5, mt);
-        fflush(stderr);
-    } }
     // 0x8001C228: jal         0x80033410
     // 0x8001C22C: nop
 
@@ -6377,7 +6321,6 @@ L_8001C380:
     after_5:
     // 0x8001C3B8: lbu         $v1, 0x0($s0)
     ctx->r3 = MEM_BU(ctx->r16, 0X0);
-    { static int n=0; ++n; if (n<=20 || (n%50)==0) { if(0) fprintf(stderr, "[trace] gate_thread iter=%d gate@0x8011A89D=0x%X\n", n, (unsigned)(ctx->r3 & 0xFF)); fflush(stderr); } }
     // 0x8001C3BC: lui         $at, 0x8013
     ctx->r1 = S32(0X8013 << 16);
     // 0x8001C3C0: sw          $v0, -0x7124($at)
@@ -6397,7 +6340,6 @@ L_8001C380:
     // 0x8001C3D4: jal         0x80033410
     // 0x8001C3D8: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
-    { static int n=0; ++n; if (n<=20 || (n%50)==0) { if(0) fprintf(stderr, "[trace] gate_thread #%d sending to 0x8011A7E8\n", n); fflush(stderr); } }
     osSendMesg_recomp(rdram, ctx);
         goto after_6;
     // 0x8001C3D8: addu        $a2, $zero, $zero

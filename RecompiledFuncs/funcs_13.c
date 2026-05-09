@@ -1,16 +1,5 @@
 #include "recomp.h"
 #include "funcs.h"
-#include <stdio.h>
-
-/* Helper: detect a value that escaped from native 64-bit pointer space and
- * is masquerading as a MIPS pointer. Valid MIPS-domain pointers in 64-bit
- * gpr have either upper 32 bits = 0xFFFFFFFF (sign-extended 0x8XXXXXXX) or
- * the value is 0 (NULL). Anything else is garbage from a stale heap. */
-static inline int rs_bogus_ptr(uint64_t v) {
-    if (v == 0) return 1;
-    uint32_t hi = (uint32_t)(v >> 32);
-    return (hi != 0xFFFFFFFFu && hi != 0x00000000u);
-}
 
 RECOMP_FUNC void func_800595A0(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
@@ -7203,15 +7192,6 @@ L_8005BC8C:
 RECOMP_FUNC void func_8005BCC4(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    // ROGUESQ: trace sub-particle callback. This is the second-level particle
-    // (spawned BY func_80044724's init). Per Phase 5 finding, FCFFFFFF
-    // particles (likely emitted by this callback) render at sub-pixel scale.
-    // a1=1 init, a1=4 per-frame update.
-    { static int n=0; if (++n<=20 || (n%500)==0) {
-        fprintf(stderr, "[trace] func_8005BCC4 SUB-CB #%d a0=0x%08X a1=0x%08X\n",
-            n, (uint32_t)(uint64_t)ctx->r4, (uint32_t)(uint64_t)ctx->r5);
-        fflush(stderr);
-    } }
     // 0x8005BCC4: addiu       $sp, $sp, -0xE0
     ctx->r29 = ADD32(ctx->r29, -0XE0);
     // 0x8005BCC8: sw          $s0, 0xB0($sp)
@@ -18904,17 +18884,6 @@ L_8005F9FC:
     // 0x8005FA18: nop
 
     after_0:
-    // Patch: hash-lookup func_80056EB0 returns asset pointer in r2. Bail
-    // gracefully on bogus values (same pattern as func_8006FC90 patch).
-    if (rs_bogus_ptr((uint64_t)ctx->r2)) {
-        static int n=0; if (++n<=5) {
-            fprintf(stderr, "[patch] func_8005F9A4: bogus asset ptr 0x%016llX from func_80056EB0 — bailing\n",
-                (unsigned long long)ctx->r2);
-            fflush(stderr);
-        }
-        ctx->r2 = 0;  // signal "not found"
-        goto L_8006063C;
-    }
     // 0x8005FA1C: lui         $v1, 0x800A
     ctx->r3 = S32(0X800A << 16);
     // 0x8005FA20: addiu       $v1, $v1, -0x12A0

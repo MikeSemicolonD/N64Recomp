@@ -1,11 +1,9 @@
 #include "recomp.h"
 #include "funcs.h"
-#include <stdio.h>
 
 RECOMP_FUNC void func_8000794C(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    fprintf(stderr, "[trace] dispatch_unregister func=0x%08X\n", (uint32_t)ctx->r4); fflush(stderr);
     // 0x8000794C: addu        $a1, $zero, $zero
     ctx->r5 = ADD32(0, 0);
     // 0x80007950: lui         $v1, 0x8012
@@ -179,18 +177,12 @@ RECOMP_FUNC void func_800079F0(uint8_t* rdram, recomp_context* ctx) {
 L_80007A1C:
     // 0x80007A1C: lw          $v1, 0x0($v1)
     ctx->r3 = MEM_W(ctx->r3, 0X0);
-    // PATCH (2026-05-08): list-walk guard. If next pointer is non-canonical,
-    // treat as end-of-chain rather than crashing on the dereference at line 183.
-    if (((uint64_t)ctx->r3 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) {
-        ctx->r2 = 0;
-        goto L_80007A2C;
-    }
     // 0x80007A20: lw          $v0, 0x0($v1)
     ctx->r2 = MEM_W(ctx->r3, 0X0);
     // 0x80007A24: bne         $v0, $zero, L_80007A1C
     if (ctx->r2 != 0) {
         // 0x80007A28: nop
-
+    
             goto L_80007A1C;
     }
     // 0x80007A28: nop
@@ -200,16 +192,6 @@ L_80007A2C:
     ctx->r2 = S32(0X8011 << 16);
     // 0x80007A30: lw          $v0, 0x63B0($v0)
     ctx->r2 = MEM_W(ctx->r2, 0X63B0);
-    // PATCH (2026-05-08): r3 might be invalid here if the L_80007A1C list-walk
-    // guard fired. Skip the write rather than AV.
-    if (((uint32_t)(uint64_t)ctx->r3 < 0x80000000u) || ((uint32_t)(uint64_t)ctx->r3 >= 0x80800000u)) {
-        static int s_warned = 0;
-        if (s_warned++ < 5) {
-            fprintf(stderr, "[guard] func_800079F0 L_80007A2C: v1=0x%08X invalid -> skip writes\n", (uint32_t)(uint64_t)ctx->r3);
-            fflush(stderr);
-        }
-        goto L_80007A40;
-    }
     // 0x80007A34: beq         $v0, $zero, L_80007A40
     if (ctx->r2 == 0) {
         // 0x80007A38: sw          $v0, 0x0($v1)
@@ -864,18 +846,7 @@ L_80007DE0:
     // 0x80007DE4: lw          $v0, 0x63B0($v0)
     ctx->r2 = MEM_W(ctx->r2, 0X63B0);
     // 0x80007DE8: lw          $v0, 0x0($v0)
-    // PATCH (2026-05-08): guard corrupt/null head pointer (free-list dequeue).
-    // If head is not a valid KSEG0 ptr, treat as empty list to prevent AV.
-    if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) {
-        static int s_warned = 0;
-        if (s_warned++ < 5) {
-            fprintf(stderr, "[guard] func_80007D74 L_80007DE0: head=0x%08X invalid -> 0\n", (uint32_t)(uint64_t)ctx->r2);
-            fflush(stderr);
-        }
-        ctx->r2 = 0;
-    } else {
-        ctx->r2 = MEM_W(ctx->r2, 0X0);
-    }
+    ctx->r2 = MEM_W(ctx->r2, 0X0);
     // 0x80007DEC: lui         $at, 0x8011
     ctx->r1 = S32(0X8011 << 16);
     // 0x80007DF0: sw          $v0, 0x63B0($at)
@@ -925,21 +896,6 @@ L_80007E18:
     // 0x80007E2C: sw          $v0, 0x4($a0)
     MEM_W(0X4, ctx->r4) = ctx->r2;
 L_80007E30:
-    // PATCH (2026-05-08): guard corrupt r4 (queue node) before stores. Without
-    // this, a stale/race-torn head value lands in r4 and the writes below AV
-    // (e.g. crash at iter ~929 inside func_800A71B8 → ... → func_80007D74).
-    // Bail out with r2=0 (alloc-failure sentinel) to let the caller cope.
-    if (((uint64_t)ctx->r4 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) {
-        static int s_warned = 0;
-        if (s_warned++ < 5) {
-            fprintf(stderr, "[guard] func_80007D74 L_80007E30: r4=0x%08X invalid -> bail\n", (uint32_t)(uint64_t)ctx->r4);
-            fflush(stderr);
-        }
-        ctx->r31 = MEM_W(ctx->r29, 0X10);
-        ctx->r2 = 0;
-        ctx->r29 = ADD32(ctx->r29, 0X18);
-        return;
-    }
     // 0x80007E30: lui         $v1, 0x8012
     ctx->r3 = S32(0X8012 << 16);
     // 0x80007E34: lw          $v1, -0x5824($v1)
@@ -12411,7 +12367,6 @@ L_8000C044:
 RECOMP_FUNC void func_8000C07C(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C ENTRY #%d ctx=%p\n", n, (void*)ctx); fflush(stderr); } }
     // 0x8000C07C: addiu       $sp, $sp, -0x48
     ctx->r29 = ADD32(ctx->r29, -0X48);
     // 0x8000C080: sw          $ra, 0x40($sp)
@@ -12451,13 +12406,11 @@ RECOMP_FUNC void func_8000C07C(uint8_t* rdram, recomp_context* ctx) {
     // 0x8000C0B4: jal         0x800331D0
     // 0x8000C0B8: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
-    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d BEFORE osRecvMesg(queue=0x%08X, BLOCK)\n", n, (uint32_t)ctx->r4); fflush(stderr); } }
     osRecvMesg_recomp(rdram, ctx);
         goto after_1;
     // 0x8000C0B8: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
     after_1:
-    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d AFTER osRecvMesg\n", n); fflush(stderr); } }
     // 0x8000C0BC: jal         0x8001A018
     // 0x8000C0C0: nop
 
@@ -12467,7 +12420,6 @@ RECOMP_FUNC void func_8000C07C(uint8_t* rdram, recomp_context* ctx) {
 
     after_2:
 L_8000C0C4:
-    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d before func_8001BEC8\n", n); fflush(stderr); } }
     // 0x8000C0C4: jal         0x8001BEC8
     // 0x8000C0C8: addu        $s0, $zero, $zero
     ctx->r16 = ADD32(0, 0);
@@ -12476,7 +12428,6 @@ L_8000C0C4:
     // 0x8000C0C8: addu        $s0, $zero, $zero
     ctx->r16 = ADD32(0, 0);
     after_3:
-    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d after func_8001BEC8\n", n); fflush(stderr); } }
     // 0x8000C0CC: jal         0x8000815C
     // 0x8000C0D0: nop
 
@@ -12485,7 +12436,6 @@ L_8000C0C4:
     // 0x8000C0D0: nop
 
     after_4:
-    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d after func_8000815C\n", n); fflush(stderr); } }
     // 0x8000C0D4: lui         $v0, 0x8011
     ctx->r2 = S32(0X8011 << 16);
     // 0x8000C0D8: lhu         $v0, -0x202C($v0)
@@ -12530,7 +12480,6 @@ L_8000C0EC:
     // 0x8000C10C: nop
 
 L_8000C110:
-    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d at L_8000C110\n", n); fflush(stderr); } }
     // 0x8000C110: lui         $v0, 0x8012
     ctx->r2 = S32(0X8012 << 16);
     // 0x8000C114: lbu         $v0, -0x5767($v0)
@@ -12557,7 +12506,6 @@ L_8000C110:
     }
     // 0x8000C138: nop
 
-    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d before func_8001BF20(1)\n", n); fflush(stderr); } }
     // 0x8000C13C: jal         0x8001BF20
     // 0x8000C140: addiu       $a0, $zero, 0x1
     ctx->r4 = ADD32(0, 0X1);
@@ -12566,7 +12514,6 @@ L_8000C110:
     // 0x8000C140: addiu       $a0, $zero, 0x1
     ctx->r4 = ADD32(0, 0X1);
     after_6:
-    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d after func_8001BF20\n", n); fflush(stderr); } }
     // 0x8000C144: addu        $s0, $v0, $zero
     ctx->r16 = ADD32(ctx->r2, 0);
     // 0x8000C148: beq         $s0, $zero, L_8000C498
@@ -12577,7 +12524,6 @@ L_8000C110:
     }
     // 0x8000C14C: nop
 
-    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d before func_80019BE4\n", n); fflush(stderr); } }
     // 0x8000C150: jal         0x80019BE4
     // 0x8000C154: nop
 
@@ -12586,7 +12532,6 @@ L_8000C110:
     // 0x8000C154: nop
 
     after_7:
-    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d after func_80019BE4\n", n); fflush(stderr); } }
     // 0x8000C158: lui         $v1, 0x8011
     ctx->r3 = S32(0X8011 << 16);
     // 0x8000C15C: lhu         $v1, -0x202A($v1)
@@ -13211,7 +13156,6 @@ L_8000C480:
     // 0x8000C494: nop
 
 L_8000C498:
-    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d at L_8000C498 s1=0x%X\n", n, (unsigned)(ctx->r17 & 0xFF)); fflush(stderr); } }
     // 0x8000C498: beq         $s1, $zero, L_8000C4B8
     if (ctx->r17 == 0) {
         // 0x8000C49C: addu        $a1, $zero, $zero
@@ -13227,13 +13171,11 @@ L_8000C498:
     // 0x8000C4A8: jal         0x800331D0
     // 0x8000C4AC: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
-    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d BEFORE osRecvMesg(queue=0x%08X, BLOCK) [SECOND]\n", n, (uint32_t)ctx->r4); fflush(stderr); } }
     osRecvMesg_recomp(rdram, ctx);
         goto after_15;
     // 0x8000C4AC: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
     after_15:
-    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d AFTER osRecvMesg [SECOND]\n", n); fflush(stderr); } }
     // 0x8000C4B0: jal         0x8001A038
     // 0x8000C4B4: nop
 
@@ -13598,7 +13540,6 @@ L_8000C620:
     // 0x8000C63C: nop
 
 L_8000C640:
-    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d at L_8000C640 (early-return path)\n", n); fflush(stderr); } }
     // 0x8000C640: sb          $zero, 0x0($v1)
     MEM_B(0X0, ctx->r3) = 0;
     // 0x8000C644: lui         $at, 0x8012
@@ -13614,7 +13555,6 @@ L_8000C640:
 
     after_20:
 L_8000C654:
-    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d at L_8000C654 inner-loop (calls func_80000C50)\n", n); fflush(stderr); } }
     // 0x8000C654: jal         0x80000C50
     // 0x8000C658: nop
 
@@ -13623,7 +13563,6 @@ L_8000C654:
     // 0x8000C658: nop
 
     after_21:
-    { static int n=0; ++n; if (n<=200) { if(0) fprintf(stderr, "[trace] func_8000C07C #%d at L_8000C654 after func_80000C50 v0=0x%X\n", n, (unsigned)(ctx->r2 & 0xFF)); fflush(stderr); } }
     // 0x8000C65C: andi        $v0, $v0, 0xFF
     ctx->r2 = ctx->r2 & 0XFF;
     // 0x8000C660: bne         $v0, $zero, L_8000C654
@@ -15857,18 +15796,7 @@ L_8000D31C:
     // 0x8000D320: lw          $v0, 0x63B0($v0)
     ctx->r2 = MEM_W(ctx->r2, 0X63B0);
     // 0x8000D324: lw          $v0, 0x0($v0)
-    // PATCH (2026-05-08): guard corrupt/null head pointer (free-list dequeue).
-    // If head is not a valid KSEG0 ptr, treat as empty list to prevent AV.
-    if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) {
-        static int s_warned = 0;
-        if (s_warned++ < 5) {
-            fprintf(stderr, "[guard] func_8000CFD4 L_8000D31C: head=0x%08X invalid -> 0\n", (uint32_t)(uint64_t)ctx->r2);
-            fflush(stderr);
-        }
-        ctx->r2 = 0;
-    } else {
-        ctx->r2 = MEM_W(ctx->r2, 0X0);
-    }
+    ctx->r2 = MEM_W(ctx->r2, 0X0);
     // 0x8000D328: lui         $at, 0x8011
     ctx->r1 = S32(0X8011 << 16);
     // 0x8000D32C: sw          $v0, 0x63B0($at)

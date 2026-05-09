@@ -1,7 +1,5 @@
 #include "recomp.h"
 #include "funcs.h"
-#include <time.h>
-#include <stdio.h>
 
 RECOMP_FUNC void func_800BE4A8(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
@@ -24674,7 +24672,6 @@ RECOMP_FUNC void func_800C28F0(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C2934: addu        $s5, $zero, $zero
     ctx->r21 = ADD32(0, 0);
     after_0:
-    { static int n=0; if (++n<=5) { if(0) fprintf(stderr, "[trace] func_800C28F0 #%d after func_800C2E08\n", n); fflush(stderr); } }
     // 0x800C2938: jal         0x800C2EFC
     // 0x800C293C: addu        $s2, $s5, $zero
     ctx->r18 = ADD32(ctx->r21, 0);
@@ -24683,7 +24680,6 @@ RECOMP_FUNC void func_800C28F0(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C293C: addu        $s2, $s5, $zero
     ctx->r18 = ADD32(ctx->r21, 0);
     after_1:
-    { static int n=0; if (++n<=5) { if(0) fprintf(stderr, "[trace] func_800C28F0 #%d after func_800C2EFC\n", n); fflush(stderr); } }
     // 0x800C2940: jal         0x80056350
     // 0x800C2944: nop
 
@@ -24692,7 +24688,6 @@ RECOMP_FUNC void func_800C28F0(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C2944: nop
 
     after_2:
-    { static int n=0; if (++n<=5) { if(0) fprintf(stderr, "[trace] func_800C28F0 #%d after func_80056350\n", n); fflush(stderr); } }
     // 0x800C2948: lui         $a0, 0x800A
     ctx->r4 = S32(0X800A << 16);
     // 0x800C294C: addiu       $a0, $a0, 0x72D8
@@ -24709,7 +24704,6 @@ RECOMP_FUNC void func_800C28F0(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C295C: addu        $a3, $a1, $zero
     ctx->r7 = ADD32(ctx->r5, 0);
     after_3:
-    { static int n=0; if (++n<=5) { if(0) fprintf(stderr, "[trace] func_800C28F0 #%d after load_hmt_and_hob\n", n); fflush(stderr); } }
     // 0x800C2960: lui         $a0, 0x800A
     ctx->r4 = S32(0X800A << 16);
     // 0x800C2964: jal         0x80056EB0
@@ -24720,7 +24714,6 @@ RECOMP_FUNC void func_800C28F0(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C2968: addiu       $a0, $a0, 0x72F0
     ctx->r4 = ADD32(ctx->r4, 0X72F0);
     after_4:
-    { static int n=0; if (++n<=5) { if(0) fprintf(stderr, "[trace] func_800C28F0 #%d after func_80056EB0\n", n); fflush(stderr); } }
     // 0x800C296C: addu        $s1, $v0, $zero
     ctx->r17 = ADD32(ctx->r2, 0);
     // 0x800C2970: addu        $a0, $s1, $zero
@@ -24737,7 +24730,6 @@ RECOMP_FUNC void func_800C28F0(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C2980: addu        $a3, $a1, $zero
     ctx->r7 = ADD32(ctx->r5, 0);
     after_5:
-    { static int n=0; if (++n<=5) { if(0) fprintf(stderr, "[trace] func_800C28F0 #%d after func_8005955C\n", n); fflush(stderr); } }
     // 0x800C2984: jal         0x8001B7B8
     // 0x800C2988: addiu       $a0, $zero, 0x11
     ctx->r4 = ADD32(0, 0X11);
@@ -24746,7 +24738,6 @@ RECOMP_FUNC void func_800C28F0(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C2988: addiu       $a0, $zero, 0x11
     ctx->r4 = ADD32(0, 0X11);
     after_6:
-    { static int n=0; if (++n<=5) { if(0) fprintf(stderr, "[trace] func_800C28F0 #%d after func_8001B7B8\n", n); fflush(stderr); } }
     // 0x800C298C: lui         $v0, 0x8013
     ctx->r2 = S32(0X8013 << 16);
     // 0x800C2990: lui         $v1, 0x800D
@@ -24797,7 +24788,6 @@ L_800C29C8:
     // 0x800C29DC: lwc1        $f30, 0x7304($at)
     ctx->f30.u32l = MEM_W(ctx->r1, 0X7304);
 L_800C29E0:
-    { static int n=0; ++n; if (n<=10 || (n%50)==0) { if(0) fprintf(stderr, "[trace] [t=%ldms] func_800C28F0 LOOP iter=%d before func_800C6660\n", (long)(clock() * 1000 / CLOCKS_PER_SEC), n); fflush(stderr); } }
     // 0x800C29E0: jal         0x800C6660
     // 0x800C29E4: nop
 
@@ -24806,7 +24796,6 @@ L_800C29E0:
     // 0x800C29E4: nop
 
     after_7:
-    { static int n=0; ++n; if (n<=10 || (n%50)==0) { if(0) fprintf(stderr, "[trace] [t=%ldms] func_800C28F0 LOOP iter=%d after func_800C6660\n", (long)(clock() * 1000 / CLOCKS_PER_SEC), n); fflush(stderr); } }
     // 0x800C29E8: jal         0x80002FF4
     // 0x800C29EC: mov.s       $f22, $f0
     CHECK_FR(ctx, 22);
@@ -24819,17 +24808,14 @@ L_800C29E0:
     CHECK_FR(ctx, 0);
     ctx->f22.fl = ctx->f0.fl;
     after_8:
-    { static int n=0; ++n; if (n<=10 || (n%50)==0) { if(0) fprintf(stderr, "[trace] [t=%ldms] func_800C28F0 LOOP iter=%d after func_80002FF4\n", (long)(clock() * 1000 / CLOCKS_PER_SEC), n); fflush(stderr); } }
     // 0x800C29F0: jal         0x80079CE0
     // 0x800C29F4: nop
 
-    { static int n=0; ++n; if (n<=10 || (n%50)==0) { if(0) fprintf(stderr, "[trace] [t=%ldms] func_800C28F0 LOOP iter=%d before setNewAndPreviousButtonsPressed\n", (long)(clock() * 1000 / CLOCKS_PER_SEC), n); fflush(stderr); } }
     setNewAndPreviousButtonsPressed(rdram, ctx);
         goto after_9;
     // 0x800C29F4: nop
 
     after_9:
-    { static int n=0; ++n; if (n<=10 || (n%50)==0) { if(0) fprintf(stderr, "[trace] [t=%ldms] func_800C28F0 LOOP iter=%d after setNewAndPreviousButtonsPressed\n", (long)(clock() * 1000 / CLOCKS_PER_SEC), n); fflush(stderr); } }
     // 0x800C29F8: lwc1        $f0, -0xF8C($s3)
     ctx->f0.u32l = MEM_W(ctx->r19, -0XF8C);
     // 0x800C29FC: andi        $v1, $s2, 0xFF
@@ -25049,7 +25035,6 @@ L_800C2AA0:
     // 0x800C2AD8: nop
 
 L_800C2ADC:
-    { static int n=0; ++n; if (n<=10 || (n%50)==0) { if(0) fprintf(stderr, "[trace] func_800C28F0 at L_800C2ADC #%d\n", n); fflush(stderr); } }
     // 0x800C2ADC: add.s       $f28, $f28, $f22
     CHECK_FR(ctx, 28);
     CHECK_FR(ctx, 28);
@@ -25083,7 +25068,6 @@ L_800C2ADC:
     // 0x800C2AFC: addiu       $s2, $zero, 0x2
     ctx->r18 = ADD32(0, 0X2);
 L_800C2B00:
-    { static int n=0; ++n; if (n<=10 || (n%50)==0) { if(0) fprintf(stderr, "[trace] func_800C28F0 at L_800C2B00 #%d\n", n); fflush(stderr); } }
     // 0x800C2B00: sub.s       $f24, $f24, $f0
     CHECK_FR(ctx, 24);
     CHECK_FR(ctx, 24);
@@ -25211,7 +25195,6 @@ L_800C2B5C:
     ctx->r21 = ADD32(0, 0X1);
     skip_5:
 L_800C2B8C:
-    { static int n=0; ++n; if (n<=10 || (n%50)==0) { if(0) fprintf(stderr, "[trace] func_800C28F0 at L_800C2B8C #%d s2=%u\n", n, (unsigned)(ctx->r18 & 0xFFu)); fflush(stderr); } }
     // 0x800C2B8C: jal         0x800BF6D8
     // 0x800C2B90: addiu       $a0, $zero, 0x1
     ctx->r4 = ADD32(0, 0X1);
@@ -25608,14 +25591,13 @@ L_800C2D44:
     // 0x800C2D48: sw          $v1, -0xF70($s4)
     MEM_W(-0XF70, ctx->r20) = ctx->r3;
 L_800C2D4C:
-    { static int n=0; ++n; if (n<=10 || (n%50)==0) { if(0) fprintf(stderr, "[trace] func_800C28F0 at L_800C2D4C #%d s5=%u\n", n, (unsigned)(ctx->r21 & 0xFFu)); fflush(stderr); } }
     // 0x800C2D4C: addiu       $v0, $zero, 0x1
     ctx->r2 = ADD32(0, 0X1);
 L_800C2D50:
     // 0x800C2D50: beq         $s5, $v0, L_800C2DA0
     if (ctx->r21 == ctx->r2) {
         // 0x800C2D54: nop
-
+    
             goto L_800C2DA0;
     }
     // 0x800C2D54: nop
@@ -25628,7 +25610,6 @@ L_800C2D50:
     // 0x800C2D5C: nop
 
     after_22:
-    { static int n=0; ++n; if (n<=10 || (n%50)==0) { if(0) fprintf(stderr, "[trace] L_800C2D50 #%d after func_8000A86C\n", n); fflush(stderr); } }
     // 0x800C2D60: jal         0x8000A6CC
     // 0x800C2D64: nop
 
@@ -25637,7 +25618,6 @@ L_800C2D50:
     // 0x800C2D64: nop
 
     after_23:
-    { static int n=0; ++n; if (n<=10 || (n%50)==0) { if(0) fprintf(stderr, "[trace] L_800C2D50 #%d after func_8000A6CC\n", n); fflush(stderr); } }
     // 0x800C2D68: lui         $v0, 0x800D
     ctx->r2 = S32(0X800D << 16);
     // 0x800C2D6C: lw          $a0, -0xF88($v0)
@@ -25650,7 +25630,6 @@ L_800C2D50:
     // 0x800C2D74: nop
 
     after_24:
-    { static int n=0; ++n; if (n<=10 || (n%50)==0) { if(0) fprintf(stderr, "[trace] L_800C2D50 #%d after func_80064488\n", n); fflush(stderr); } }
     // 0x800C2D78: addu        $a0, $s6, $zero
     ctx->r4 = ADD32(ctx->r22, 0);
     // 0x800C2D7C: sw          $v0, 0x8($s6)
@@ -25663,7 +25642,6 @@ L_800C2D50:
     // 0x800C2D84: sw          $zero, 0xC($s6)
     MEM_W(0XC, ctx->r22) = 0;
     after_25:
-    { static int n=0; ++n; if (n<=10 || (n%50)==0) { if(0) fprintf(stderr, "[trace] L_800C2D50 #%d after draw_string\n", n); fflush(stderr); } }
     // 0x800C2D88: jal         0x8000B6F4
     // 0x800C2D8C: nop
 
@@ -25672,7 +25650,6 @@ L_800C2D50:
     // 0x800C2D8C: nop
 
     after_26:
-    { static int n=0; ++n; if (n<=10 || (n%50)==0) { if(0) fprintf(stderr, "[trace] L_800C2D50 #%d after func_8000B6F4\n", n); fflush(stderr); } }
     // 0x800C2D90: jal         0x8000C07C
     // 0x800C2D94: nop
 
@@ -25681,7 +25658,6 @@ L_800C2D50:
     // 0x800C2D94: nop
 
     after_27:
-    { static int n=0; ++n; if (n<=10 || (n%50)==0) { if(0) fprintf(stderr, "[trace] L_800C2D50 #%d after func_8000C07C\n", n); fflush(stderr); } }
     // 0x800C2D98: j           L_800C29E0
     // 0x800C2D9C: nop
 

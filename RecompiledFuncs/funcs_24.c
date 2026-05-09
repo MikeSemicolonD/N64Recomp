@@ -1,6 +1,5 @@
 #include "recomp.h"
 #include "funcs.h"
-#include <stdio.h>
 
 RECOMP_FUNC void func_8008F758(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
@@ -3224,6 +3223,7 @@ L_800909C0:
 RECOMP_FUNC void func_80090A3C(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    { return; }
     // 0x80090A3C: addiu       $sp, $sp, -0x20
     ctx->r29 = ADD32(ctx->r29, -0X20);
     // 0x80090A40: sw          $s0, 0x10($sp)
@@ -3668,7 +3668,7 @@ L_80090C88:
     // 0x80090CDC: sll         $v0, $v0, 16
     ctx->r2 = S32(ctx->r2 << 16);
     // 0x80090CE0: div         $zero, $v0, $a0
-    if (S32(ctx->r4) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r4))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r4))); } else { lo = 0; hi = S32(ctx->r2); }
+    lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r4))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r4)));
     // 0x80090CE4: bne         $a0, $zero, L_80090CF0
     if (ctx->r4 != 0) {
         // 0x80090CE8: nop
@@ -3716,7 +3716,7 @@ L_80090D08:
     // 0x80090D20: sll         $v0, $v0, 16
     ctx->r2 = S32(ctx->r2 << 16);
     // 0x80090D24: div         $zero, $v0, $a0
-    if (S32(ctx->r4) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r4))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r4))); } else { lo = 0; hi = S32(ctx->r2); }
+    lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r4))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r4)));
     // 0x80090D28: bne         $a0, $zero, L_80090D34
     if (ctx->r4 != 0) {
         // 0x80090D2C: nop
@@ -3764,7 +3764,7 @@ L_80090D4C:
     // 0x80090D64: sll         $v0, $v0, 16
     ctx->r2 = S32(ctx->r2 << 16);
     // 0x80090D68: div         $zero, $v0, $a0
-    if (S32(ctx->r4) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r4))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r4))); } else { lo = 0; hi = S32(ctx->r2); }
+    lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r4))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r4)));
     // 0x80090D6C: bne         $a0, $zero, L_80090D78
     if (ctx->r4 != 0) {
         // 0x80090D70: nop
@@ -3812,7 +3812,7 @@ L_80090D90:
     // 0x80090DA8: sll         $v0, $v0, 16
     ctx->r2 = S32(ctx->r2 << 16);
     // 0x80090DAC: div         $zero, $v0, $a0
-    if (S32(ctx->r4) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r4))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r4))); } else { lo = 0; hi = S32(ctx->r2); }
+    lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r4))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r4)));
     // 0x80090DB0: bne         $a0, $zero, L_80090DBC
     if (ctx->r4 != 0) {
         // 0x80090DB4: nop
@@ -4608,7 +4608,7 @@ L_800912C0:
     // 0x800912CC: beq         $v1, $v0, L_800917E0
     if (ctx->r3 == ctx->r2) {
         // 0x800912D0: nop
-
+    
             goto L_800917E0;
     }
     // 0x800912D0: nop
@@ -4742,7 +4742,7 @@ L_80091384:
     // 0x80091390: beq         $v1, $v0, L_800916A8
     if (ctx->r3 == ctx->r2) {
         // 0x80091394: nop
-
+    
             goto L_800916A8;
     }
     // 0x80091394: nop
@@ -5631,7 +5631,6 @@ L_80091814:
 RECOMP_FUNC void func_8009189C(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { if(0) fprintf(stderr, "[trace] func_8009189C ENTRY (vtable register) a0=0x%08X\n", (uint32_t)ctx->r4); fflush(stderr); }
     // 0x8009189C: addiu       $sp, $sp, -0x28
     ctx->r29 = ADD32(ctx->r29, -0X28);
     // 0x800918A0: sw          $s1, 0x14($sp)
@@ -6054,7 +6053,6 @@ L_80091A78:
 RECOMP_FUNC void func_80091B3C(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { if(0) fprintf(stderr, "[trace] func_80091B3C ENTRY\n"); fflush(stderr); }
     // 0x80091B3C: addiu       $sp, $sp, -0x30
     ctx->r29 = ADD32(ctx->r29, -0X30);
     // 0x80091B40: sw          $s2, 0x20($sp)
@@ -6272,7 +6270,6 @@ L_80091C4C:
 RECOMP_FUNC void func_80091C88(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { if(0) fprintf(stderr, "[trace] func_80091C88 ENTRY (audio+gfx init)\n"); fflush(stderr); }
     // 0x80091C88: addiu       $sp, $sp, -0x28
     ctx->r29 = ADD32(ctx->r29, -0X28);
     // 0x80091C8C: sw          $s1, 0x14($sp)
@@ -7944,11 +7941,11 @@ L_800926E0:
     ctx->r14 = lo;
 L_800926F8:
     // 0x800926F8: jal         0x800927B0
-    // 0x800926FC: cache       0x0D, 0x0($t2)
+    // 0x800926FC: nop
 
     func_800927B0(rdram, ctx);
         goto after_0;
-    // 0x800926FC: cache       0x0D, 0x0($t2)
+    // 0x800926FC: nop
 
     after_0:
     // 0x80092700: sd          $t3, 0x0($t2)
@@ -7963,7 +7960,7 @@ L_800926F8:
     after_1:
     // 0x8009270C: sd          $t3, 0x0($t2)
     SD(ctx->r11, 0X0, ctx->r10);
-    // 0x80092710: cache       0x19, -0x8($t2)
+    // 0x80092710: nop
 
     // 0x80092714: addiu       $t8, $t8, -0x1
     ctx->r24 = ADD32(ctx->r24, -0X1);
@@ -8035,7 +8032,7 @@ L_8009276C:
     ctx->r10 = ADD32(ctx->r10, 0X8);
     // 0x8009277C: sd          $zero, 0x0($t2)
     SD(0, 0X0, ctx->r10);
-    // 0x80092780: cache       0x19, -0x8($t2)
+    // 0x80092780: nop
 
     // 0x80092784: j           L_8009279C
     // 0x80092788: addiu       $t2, $t2, 0x8
@@ -8044,13 +8041,13 @@ L_8009276C:
     // 0x80092788: addiu       $t2, $t2, 0x8
     ctx->r10 = ADD32(ctx->r10, 0X8);
 L_8009278C:
-    // 0x8009278C: cache       0x0D, 0x0($t2)
+    // 0x8009278C: nop
 
     // 0x80092790: sd          $zero, 0x0($t2)
     SD(0, 0X0, ctx->r10);
     // 0x80092794: sd          $zero, 0x8($t2)
     SD(0, 0X8, ctx->r10);
-    // 0x80092798: cache       0x19, 0x0($t2)
+    // 0x80092798: nop
 
 L_8009279C:
     // 0x8009279C: addiu       $t8, $t8, -0x1
@@ -8195,11 +8192,11 @@ L_8009296C:
     ctx->r14 = lo;
 L_8009299C:
     // 0x8009299C: jal         0x80092A54
-    // 0x800929A0: cache       0x0D, 0x0($t2)
+    // 0x800929A0: nop
 
     func_80092A54(rdram, ctx);
         goto after_0;
-    // 0x800929A0: cache       0x0D, 0x0($t2)
+    // 0x800929A0: nop
 
     after_0:
     // 0x800929A4: sd          $t3, 0x0($t2)
@@ -8214,7 +8211,7 @@ L_8009299C:
     after_1:
     // 0x800929B0: sd          $t3, 0x0($t2)
     SD(ctx->r11, 0X0, ctx->r10);
-    // 0x800929B4: cache       0x19, -0x8($t2)
+    // 0x800929B4: nop
 
     // 0x800929B8: addiu       $t8, $t8, -0x1
     ctx->r24 = ADD32(ctx->r24, -0X1);
@@ -8286,7 +8283,7 @@ L_80092A10:
     ctx->r10 = ADD32(ctx->r10, 0X8);
     // 0x80092A20: sd          $zero, 0x0($t2)
     SD(0, 0X0, ctx->r10);
-    // 0x80092A24: cache       0x19, -0x8($t2)
+    // 0x80092A24: nop
 
     // 0x80092A28: j           L_80092A40
     // 0x80092A2C: addiu       $t2, $t2, 0x8
@@ -8295,13 +8292,13 @@ L_80092A10:
     // 0x80092A2C: addiu       $t2, $t2, 0x8
     ctx->r10 = ADD32(ctx->r10, 0X8);
 L_80092A30:
-    // 0x80092A30: cache       0x0D, 0x0($t2)
+    // 0x80092A30: nop
 
     // 0x80092A34: sd          $zero, 0x0($t2)
     SD(0, 0X0, ctx->r10);
     // 0x80092A38: sd          $zero, 0x8($t2)
     SD(0, 0X8, ctx->r10);
-    // 0x80092A3C: cache       0x19, 0x0($t2)
+    // 0x80092A3C: nop
 
 L_80092A40:
     // 0x80092A40: addiu       $t8, $t8, -0x1
@@ -8391,11 +8388,11 @@ L_80092C10:
     ctx->r25 = ctx->r25 << 15;
 L_80092C18:
     // 0x80092C18: jal         0x80092CF0
-    // 0x80092C1C: cache       0x0D, 0x0($t2)
+    // 0x80092C1C: nop
 
     func_80092CF0(rdram, ctx);
         goto after_0;
-    // 0x80092C1C: cache       0x0D, 0x0($t2)
+    // 0x80092C1C: nop
 
     after_0:
     // 0x80092C20: sd          $t3, 0x0($t2)
@@ -8410,7 +8407,7 @@ L_80092C18:
     after_1:
     // 0x80092C2C: sd          $t3, 0x0($t2)
     SD(ctx->r11, 0X0, ctx->r10);
-    // 0x80092C30: cache       0x19, -0x8($t2)
+    // 0x80092C30: nop
 
     // 0x80092C34: addiu       $t8, $t8, -0x1
     ctx->r24 = ADD32(ctx->r24, -0X1);
@@ -8519,11 +8516,11 @@ L_80092EA4:
     ctx->r3 = S32(U32(ctx->r3) >> 1);
 L_80092EBC:
     // 0x80092EBC: jal         0x80092F94
-    // 0x80092EC0: cache       0x0D, 0x0($t2)
+    // 0x80092EC0: nop
 
     func_80092F94(rdram, ctx);
         goto after_0;
-    // 0x80092EC0: cache       0x0D, 0x0($t2)
+    // 0x80092EC0: nop
 
     after_0:
     // 0x80092EC4: sd          $t3, 0x0($t2)
@@ -8538,7 +8535,7 @@ L_80092EBC:
     after_1:
     // 0x80092ED0: sd          $t3, 0x0($t2)
     SD(ctx->r11, 0X0, ctx->r10);
-    // 0x80092ED4: cache       0x19, -0x8($t2)
+    // 0x80092ED4: nop
 
     // 0x80092ED8: addiu       $t8, $t8, -0x1
     ctx->r24 = ADD32(ctx->r24, -0X1);
@@ -8898,7 +8895,7 @@ RECOMP_FUNC void func_8009314C(uint8_t* rdram, recomp_context* ctx) {
     // 0x80093180: srl         $t8, $t8, 3
     ctx->r24 = S32(U32(ctx->r24) >> 3);
 L_80093184:
-    // 0x80093184: cache       0x0D, 0x0($t2)
+    // 0x80093184: nop
 
     // 0x80093188: lhu         $t4, 0x0($t1)
     ctx->r12 = MEM_HU(ctx->r9, 0X0);
@@ -9104,7 +9101,7 @@ L_80093288:
     ctx->r11 = ctx->r11 | ctx->r12;
     // 0x8009328C: sd          $t3, 0x8($t2)
     SD(ctx->r11, 0X8, ctx->r10);
-    // 0x80093290: cache       0x19, 0x0($t2)
+    // 0x80093290: nop
 
     // 0x80093294: addiu       $t8, $t8, -0x1
     ctx->r24 = ADD32(ctx->r24, -0X1);
@@ -9173,7 +9170,7 @@ RECOMP_FUNC void func_800932C4(uint8_t* rdram, recomp_context* ctx) {
     // 0x80093300: ori         $s5, $s5, 0x1790
     ctx->r21 = ctx->r21 | 0X1790;
 L_80093304:
-    // 0x80093304: cache       0x0D, 0x0($t2)
+    // 0x80093304: nop
 
     // 0x80093308: lbu         $t4, 0x0($t1)
     ctx->r12 = MEM_BU(ctx->r9, 0X0);
@@ -9427,7 +9424,7 @@ L_80093468:
     ctx->r11 = ctx->r11 | ctx->r12;
     // 0x8009346C: sd          $t3, 0x8($t2)
     SD(ctx->r11, 0X8, ctx->r10);
-    // 0x80093470: cache       0x19, 0x0($t2)
+    // 0x80093470: nop
 
     // 0x80093474: addiu       $t8, $t8, -0x1
     ctx->r24 = ADD32(ctx->r24, -0X1);

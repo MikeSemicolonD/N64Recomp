@@ -1,6 +1,5 @@
 #include "recomp.h"
 #include "funcs.h"
-#include <stdio.h>
 
 RECOMP_FUNC void func_800AE518(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
@@ -140,7 +139,7 @@ L_800AE590:
     // 0x800AE5FC: addiu       $a0, $a0, -0x1
     ctx->r4 = ADD32(ctx->r4, -0X1);
     // 0x800AE600: div         $zero, $a0, $v0
-    if (S32(ctx->r2) != 0) { lo = S32(S64(S32(ctx->r4)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r4)) % S64(S32(ctx->r2))); } else { lo = 0; hi = S32(ctx->r4); }
+    lo = S32(S64(S32(ctx->r4)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r4)) % S64(S32(ctx->r2)));
     // 0x800AE604: bne         $v0, $zero, L_800AE610
     if (ctx->r2 != 0) {
         // 0x800AE608: nop
@@ -190,7 +189,7 @@ L_800AE628:
     // 0x800AE644: addiu       $v0, $v0, -0x1
     ctx->r2 = ADD32(ctx->r2, -0X1);
     // 0x800AE648: div         $zero, $v0, $v1
-    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = S32(ctx->r2); }
+    lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3)));
     // 0x800AE64C: bne         $v1, $zero, L_800AE658
     if (ctx->r3 != 0) {
         // 0x800AE650: nop
@@ -394,7 +393,7 @@ L_800AE670:
     // 0x800AE780: lhu         $v0, 0x0($s3)
     ctx->r2 = MEM_HU(ctx->r19, 0X0);
     // 0x800AE784: div         $zero, $s2, $v0
-    if (S32(ctx->r2) != 0) { lo = S32(S64(S32(ctx->r18)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r18)) % S64(S32(ctx->r2))); } else { lo = 0; hi = S32(ctx->r18); }
+    lo = S32(S64(S32(ctx->r18)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r18)) % S64(S32(ctx->r2)));
     // 0x800AE788: bne         $v0, $zero, L_800AE794
     if (ctx->r2 != 0) {
         // 0x800AE78C: nop
@@ -434,7 +433,7 @@ L_800AE7AC:
     // 0x800AE7B4: lhu         $v0, 0x2($s3)
     ctx->r2 = MEM_HU(ctx->r19, 0X2);
     // 0x800AE7B8: div         $zero, $s1, $v0
-    if (S32(ctx->r2) != 0) { lo = S32(S64(S32(ctx->r17)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r17)) % S64(S32(ctx->r2))); } else { lo = 0; hi = S32(ctx->r17); }
+    lo = S32(S64(S32(ctx->r17)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r17)) % S64(S32(ctx->r2)));
     // 0x800AE7BC: bne         $v0, $zero, L_800AE7C8
     if (ctx->r2 != 0) {
         // 0x800AE7C0: nop

@@ -10337,7 +10337,7 @@ RECOMP_FUNC void func_800F3144(uint8_t* rdram, recomp_context* ctx) {
     // 0x800F3180: lbu         $a2, 0x0($a0)
     ctx->r6 = MEM_BU(ctx->r4, 0X0);
     // 0x800F3184: div         $zero, $v0, $v1
-    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = S32(ctx->r2); }
+    lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3)));
     // 0x800F3188: bne         $v1, $zero, L_800F3194
     if (ctx->r3 != 0) {
         // 0x800F318C: nop

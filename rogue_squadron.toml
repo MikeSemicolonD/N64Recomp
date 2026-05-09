@@ -21,6 +21,15 @@ stubs = [
     # Stub it here — a hand-written equivalent in librecomp/extensions.cpp
     # does the bzero portion that the game actually depends on.
     "func_8000040C",
+    # func_80018ED4 is a broken-looking cache-flush loop (resets t0/t1 every
+    # iteration → infinite loop on real hw if ever called with a1 != 16).
+    # Likely dead code or splat misidentification. Stubbing is safe.
+    # Has 1 'cache 0x0D' instruction at 0x80018EDC; stubbing avoids the
+    # unsupported-instruction error during regen.
+    "func_80018ED4",
+    # zmemcpy — has cache instruction at 0x80018F4C. Stub it; the runtime
+    # provides memcpy via librecomp's MEM_* helpers.
+    "zmemcpy",
     # RSP microcode blobs — not MIPS code, must not be recompiled
     "gspF3DEXTextStart",
     "gspF3DEXDataStart",
@@ -175,262 +184,206 @@ stubs = [
     "func_8008ED00",
 ]
 
-# Diagnostic hooks: trace whether the text-rendering pipeline is invoked
+# func_80018D80 (matrix-transform helper) has 4 'cache 0x0D' instructions at
+# 0x80018D88-0x80018D94 that flush 4 cachelines before doing FP math. On the
+# recompile we don't emulate caches, so the flushes are no-ops in spirit.
+# Replace each with NOP so N64Recomp can recompile the rest of the function
+# (which is real FP work we don't want to lose by stubbing the whole thing).
+[[patches.instruction]]
+func = "func_80018D80"
+vram = 0x80018D88
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80018D80"
+vram = 0x80018D8C
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80018D80"
+vram = 0x80018D90
+value = 0x00000000
+
+[[patches.instruction]]
+func = "func_80018D80"
+vram = 0x80018D94
+value = 0x00000000
+
+# NOTE: zmemcpy is stubbed above (libultra name, ELF function but runtime-
+# provided; stub keeps regen clean). osInvalDCache, osInvalICache,
+# osWritebackDCache, osWritebackDCacheAll likewise contain 'cache' instructions
+# but N64Recomp treats them as external imports — patches.instruction entries
+# for them fail with "function does not exist". The runtime provides them.
+
+# Game-side functions in the 0x80092*** cluster contain real logic alongside
+# 'cache' instructions (likely mesh/RSP setup code that flushes its writebacks).
+# NOP each cache individually so the function bodies stay recompilable.
+# Total: 23 patches across 8 functions. Cache ops have no semantics on a host
+# that doesn't emulate caches, so NOPing is correct.
+
+# func_8009264C — 5 cache instructions
+[[patches.instruction]]
+func = "func_8009264C"
+vram = 0x800926FC
+value = 0x00000000
+[[patches.instruction]]
+func = "func_8009264C"
+vram = 0x80092710
+value = 0x00000000
+[[patches.instruction]]
+func = "func_8009264C"
+vram = 0x80092780
+value = 0x00000000
+[[patches.instruction]]
+func = "func_8009264C"
+vram = 0x8009278C
+value = 0x00000000
+[[patches.instruction]]
+func = "func_8009264C"
+vram = 0x80092798
+value = 0x00000000
+
+# func_800928D4 — 5 cache instructions
+[[patches.instruction]]
+func = "func_800928D4"
+vram = 0x800929A0
+value = 0x00000000
+[[patches.instruction]]
+func = "func_800928D4"
+vram = 0x800929B4
+value = 0x00000000
+[[patches.instruction]]
+func = "func_800928D4"
+vram = 0x80092A24
+value = 0x00000000
+[[patches.instruction]]
+func = "func_800928D4"
+vram = 0x80092A30
+value = 0x00000000
+[[patches.instruction]]
+func = "func_800928D4"
+vram = 0x80092A3C
+value = 0x00000000
+
+# func_80092BA8 — 2 cache instructions
+[[patches.instruction]]
+func = "func_80092BA8"
+vram = 0x80092C1C
+value = 0x00000000
+[[patches.instruction]]
+func = "func_80092BA8"
+vram = 0x80092C30
+value = 0x00000000
+
+# func_80092E48 — 2 cache instructions
+[[patches.instruction]]
+func = "func_80092E48"
+vram = 0x80092EC0
+value = 0x00000000
+[[patches.instruction]]
+func = "func_80092E48"
+vram = 0x80092ED4
+value = 0x00000000
+
+# func_80092F10 — 3 cache instructions
+[[patches.instruction]]
+func = "func_80092F10"
+vram = 0x80092F64
+value = 0x00000000
+[[patches.instruction]]
+func = "func_80092F10"
+vram = 0x80092F70
+value = 0x00000000
+[[patches.instruction]]
+func = "func_80092F10"
+vram = 0x80092F7C
+value = 0x00000000
+
+# func_8009314C — 2 cache instructions
+[[patches.instruction]]
+func = "func_8009314C"
+vram = 0x80093184
+value = 0x00000000
+[[patches.instruction]]
+func = "func_8009314C"
+vram = 0x80093290
+value = 0x00000000
+
+# func_800932C4 — 2 cache instructions
+[[patches.instruction]]
+func = "func_800932C4"
+vram = 0x80093304
+value = 0x00000000
+[[patches.instruction]]
+func = "func_800932C4"
+vram = 0x80093470
+value = 0x00000000
+
+# func_800934A4 — 2 cache instructions
+[[patches.instruction]]
+func = "func_800934A4"
+vram = 0x800934AC
+value = 0x00000000
+[[patches.instruction]]
+func = "func_800934A4"
+vram = 0x800934BC
+value = 0x00000000
+
+# =============================================================================
+# KSEG0-guard migration (2026-05-09)
+# =============================================================================
+# These hooks replace the inline KSEG0 guards previously inlined into
+# RecompiledFuncs/funcs_*.c. By moving them here, regens stay clean.
+# Plan + tier classification at: docs/plan-kseg-guard-migration.md
+# (in the RogueSquadron64Recomp repo)
+
+# --- Tier 1: entry-bail (guard at function entry) ---
+
+# Was: funcs_15.c:550 — defensive lookup-array guard. r4 is a struct-pointer
+# that occasionally arrives non-canonical during cinematic.
 [[patches.hook]]
-func = "func_80016C44"
-text = '''{ static int n = 0; if (++n <= 5 || n % 100 == 0) {
-    uint32_t arg0 = (uint32_t)ctx->r4;
-    uint32_t ra   = (uint32_t)ctx->r31;
-    fprintf(stderr, "[trace] draw_string #%d arg=0x%08X ra=0x%08X\n", n, arg0, ra);
-    fflush(stderr);
-} }'''
+func = "func_800646AC"
+text = '''{ if (((uint64_t)ctx->r4 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) return; }'''
 
+# Was: funcs_4.c:27264 — defensive matrix-multiply guard. r4 + r5 are matrix
+# pointers (12 floats each); $a1 sometimes arrives non-KSEG0 → high-VA AV.
 [[patches.hook]]
-func = "func_800159B4"
-text = '''{ static int n = 0; if (++n <= 5 || n % 100 == 0) { fprintf(stderr, "[trace] draw_glyph func_800159B4 #%d\n", n); fflush(stderr); } }'''
+func = "func_800191C4"
+text = '''{ uint64_t a0h = (uint64_t)ctx->r4 & 0xFFFFFFFFE0000000ULL; uint64_t a1h = (uint64_t)ctx->r5 & 0xFFFFFFFFE0000000ULL; if (a0h != 0xFFFFFFFF80000000ULL || a1h != 0xFFFFFFFF80000000ULL) return; }'''
 
+# Skip func_80090A3C — leaf of the audio-frame compute chain
+# (func_8003DFA0 → func_80019868 → func_8009123C → func_80091034 → func_80090A3C).
+# Trips integer divide-by-zero because MusyX (Factor 5 audio ucode) is stubbed,
+# leaving sample-rate / buffer fields uninit. This is the surgical "no audio
+# yet" stub: the callers don't depend on a useful return value (audio mixing
+# output goes nowhere when MusyX is stubbed anyway), so returning early is
+# safe. Skipping the higher-up funcs stalls cinematic progression because
+# they're shared with non-audio code paths. Remove this hook once MusyX is
+# recompiled (project_audio_musyx.md).
 [[patches.hook]]
-func = "func_80015708"
-text = '''{ static int n = 0; if (++n <= 5 || n % 100 == 0) {
-    uint32_t wp = (uint32_t)MEM_W(0xFFFFFFFF8011DC58, 0);  /* D_8011DC58 = DL write ptr */
-    uint32_t end = (uint32_t)MEM_W(0xFFFFFFFF801163D4, 0); /* D_801163D4 = chunk end */
-    fprintf(stderr, "[trace] emit_TEXRECT func_80015708 #%d wp=0x%08X end=0x%08X\n", n, wp, end);
-    fflush(stderr);
-}
-/* On the 200th TEXRECT, dump 64KB of the chunk region for offline analysis. */
-if (n == 200) {
-    FILE *fp = fopen("texrect_chunks.bin", "wb");
-    if (fp) { fwrite(rdram + 0x720000, 1, 0x10000, fp); fclose(fp); }
-    fprintf(stderr, "[trace] dumped texrect_chunks.bin (rdram[0x720000..0x730000))\n");
-    fflush(stderr);
-} }'''
+func = "func_80090A3C"
+text = '''{ return; }'''
 
+# rs_malloc zero-init: real N64 boot zeroes RDRAM before the game runs, so
+# the original game's malloc returns zeroed pages (the heap pattern matches
+# whatever was already in RAM from boot, and the game checks `==0` to mean
+# "uninitialized link"). Our recompile heap holds whatever bytes happened
+# to be there from previous allocations → garbage pointers in linked-list
+# walks (find_manifest_entry → rs_strncpy), high-VA stores, asset crashes.
+#
+# Hook at rs_malloc's return-value setup (before `move v0, s2`): r18 holds
+# the allocated pointer, r16 holds the original requested size. memset zero
+# across that range so caller's first reads yield `==0` like the original.
 [[patches.hook]]
-func = "loadOverlay"
-text = '''{ fprintf(stderr, "[trace] loadOverlay arg=0x%08X\n", (uint32_t)ctx->r4); fflush(stderr); }'''
-
-[[patches.hook]]
-func = "func_800C58A0"
-text = '''{ fprintf(stderr, "[trace] menu_overlay_init func_800C58A0 ENTRY\n"); fflush(stderr); }'''
-
-# Probes spread through the function body
-[[patches.hook]]
-func = "func_800C58A0"
-before_vram = 0x800C5908
-text = '''{ static int n=0; if (++n<=3) { fprintf(stderr, "[trace] func_800C58A0 reached 0x800C5908 (after first zmemcpy)\n"); fflush(stderr); } }'''
-
-[[patches.hook]]
-func = "func_800C58A0"
-before_vram = 0x800C5928
-text = '''{ static int n=0; if (++n<=3) { fprintf(stderr, "[trace] func_800C58A0 reached 0x800C5928 (loop top)\n"); fflush(stderr); } }'''
-
-[[patches.hook]]
-func = "func_800C58A0"
-before_vram = 0x800C5930
-text = '''{ static int n=0; if (++n<=3) { fprintf(stderr, "[trace] func_800C58A0 reached 0x800C5930 (busy-wait)\n"); fflush(stderr); } }'''
-
-[[patches.hook]]
-func = "func_800C58A0"
-before_vram = 0x800C5944
-text = '''{ static int n=0; if (++n<=3) { fprintf(stderr, "[trace] func_800C58A0 reached 0x800C5944 (after busy-wait)\n"); fflush(stderr); } }'''
-
-[[patches.hook]]
-func = "func_800C58A0"
-before_vram = 0x800C5A14
-text = '''{ static int n=0; if (++n<=3) { fprintf(stderr, "[trace] func_800C58A0 reached 0x800C5A14 (after state-setup)\n"); fflush(stderr); } }'''
-
-[[patches.hook]]
-func = "func_800C58A0"
-before_vram = 0x800C5D5C
-text = '''{ static int n=0; if (++n<=3) { fprintf(stderr, "[trace] func_800C58A0 reached 0x800C5D5C (final zmemcpy)\n"); fflush(stderr); } }'''
-
-# Bisection: 7 sequential jal calls between 0x800C5A14 (last firing probe)
-# and 0x800C5A60 (dispatch read). The dispatch hooks above did NOT fire,
-# meaning one of these calls hangs. Probe right after each return.
-[[patches.hook]]
-func = "func_800C58A0"
-before_vram = 0x800C5A20
-text = '''{ static int n=0; if (++n<=3) { fprintf(stderr, "[trace] func_800C58A0 returned from func_80001354 @0x800C5A20\n"); fflush(stderr); } }'''
-
-# Bisect inside func_80001354. Asm calls: func_8008ED00 @0x80001388,
-# func_80000DD4 @0x800013F0, func_800022F8 @0x80001430, func_8001818C @0x800014F0,
-# func_8008EB5C @0x8000153C. Probe right after each return.
-[[patches.hook]]
-func = "func_80001354"
-text = '''{ fprintf(stderr, "[trace] func_80001354 ENTRY a0=0x%08X a1=0x%08X a2=0x%08X\n", (uint32_t)ctx->r4, (uint32_t)ctx->r5, (uint32_t)ctx->r6); fflush(stderr); }'''
-
-[[patches.hook]]
-func = "func_80001354"
-before_vram = 0x80001390
-text = '''{ fprintf(stderr, "[trace] func_80001354 returned from func_8008ED00\n"); fflush(stderr); }'''
-
-[[patches.hook]]
-func = "func_80001354"
-before_vram = 0x800013F8
-text = '''{ fprintf(stderr, "[trace] func_80001354 returned from func_80000DD4\n"); fflush(stderr); }'''
-
-[[patches.hook]]
-func = "func_80001354"
-before_vram = 0x80001438
-text = '''{ fprintf(stderr, "[trace] func_80001354 returned from func_800022F8\n"); fflush(stderr); }'''
-
-[[patches.hook]]
-func = "func_80001354"
-before_vram = 0x800014F8
-text = '''{ fprintf(stderr, "[trace] func_80001354 returned from func_8001818C v0=%u\n", (uint32_t)ctx->r2 & 0xFF); fflush(stderr); }'''
-
-[[patches.hook]]
-func = "func_80001354"
-before_vram = 0x80001544
-text = '''{ fprintf(stderr, "[trace] func_80001354 returned from func_8008EB5C\n"); fflush(stderr); }'''
-
-[[patches.hook]]
-func = "func_800C58A0"
-before_vram = 0x800C5A2C
-text = '''{ static int n=0; if (++n<=3) { fprintf(stderr, "[trace] func_800C58A0 returned from func_8003DF20 @0x800C5A2C\n"); fflush(stderr); } }'''
-
-[[patches.hook]]
-func = "func_800C58A0"
-before_vram = 0x800C5A38
-text = '''{ static int n=0; if (++n<=3) { fprintf(stderr, "[trace] func_800C58A0 returned from func_800047F4 @0x800C5A38\n"); fflush(stderr); } }'''
-
-[[patches.hook]]
-func = "func_800C58A0"
-before_vram = 0x800C5A44
-text = '''{ static int n=0; if (++n<=3) { fprintf(stderr, "[trace] func_800C58A0 returned from func_800663B0 @0x800C5A44\n"); fflush(stderr); } }'''
-
-[[patches.hook]]
-func = "func_800C58A0"
-before_vram = 0x800C5A4C
-text = '''{ static int n=0; if (++n<=3) { fprintf(stderr, "[trace] func_800C58A0 returned from loadGameOrFrontTxtFile @0x800C5A4C\n"); fflush(stderr); } }'''
-
-[[patches.hook]]
-func = "func_800C58A0"
-before_vram = 0x800C5A54
-text = '''{ static int n=0; if (++n<=3) { fprintf(stderr, "[trace] func_800C58A0 returned from func_8006EF98 @0x800C5A54\n"); fflush(stderr); } }'''
-
-[[patches.hook]]
-func = "func_800C58A0"
-before_vram = 0x800C5A5C
-text = '''{ static int n=0; if (++n<=3) { fprintf(stderr, "[trace] func_800C58A0 returned from func_800B4020 @0x800C5A5C\n"); fflush(stderr); } }'''
-
-[[patches.hook]]
-func = "func_8003DFA0"
-text = '''{ static int n=0; if (++n<=5) { uint32_t s4 = 0x80130B10; uint32_t off = s4 - 0x80000000; uint8_t flag = rdram[(off+0x20)^3]; fprintf(stderr, "[trace] func_8003DFA0 #%d flag@s4+0x20=0x%02X\n", n, flag); fflush(stderr); } }'''
-
-[[patches.hook]]
-func = "zmemcpy"
-text = '''{ static int n=0; if (++n<=5) { fprintf(stderr, "[trace] zmemcpy #%d dst=0x%08X src=0x%08X n=%d\n", n, (uint32_t)ctx->r4, (uint32_t)ctx->r5, (int32_t)ctx->r6); fflush(stderr); } }'''
-
-[[patches.hook]]
-func = "func_8006D900"
-text = '''{ fprintf(stderr, "[trace] func_8006D900 entry\n"); fflush(stderr); }'''
-
-[[patches.hook]]
-func = "func_8006D900"
-before_vram = 0x8006DABC
-text = '''{ uint32_t off = 0x130B30; uint8_t b = rdram[off^3]; fprintf(stderr, "[trace] func_8006D900 after SB 0x80130B30=0x%02X\n", b); fflush(stderr); }'''
-
-# GRAPH thread (entry func_8006F2CC) — heartbeat per loop iter to see if it's spinning
-[[patches.hook]]
-func = "func_8006F2CC"
-text = '''{ uint32_t id = (uint32_t)MEM_W(ctx->r4, 0); fprintf(stderr, "[trace] GRAPH thread ENTRY arg=0x%08X id=0x%08X\n", (uint32_t)ctx->r4, id); fflush(stderr); }'''
-
-# func_80007070(id) — sender that wakes a worker queue by ID. We need to know
-# whether anything ever calls this with the GRAPH thread's id.
-[[patches.hook]]
-func = "func_80007070"
-text = '''{ static int n=0; if (++n<=20 || (n%500)==0) { fprintf(stderr, "[trace] func_80007070(send) #%d id=0x%08X\n", n, (uint32_t)ctx->r4); fflush(stderr); } }'''
-
-# func_80006C28 is the worker-thread spawner. Logs every worker created so
-# we can see if the GRAPH worker (entry func_8006F2CC) is registered.
-# Args: ($a0=stack_size_word_count, $a1=stack_size_bytes, $a2=entry_func, $a3=arg)
-[[patches.hook]]
-func = "func_80006C28"
-text = '''{ fprintf(stderr, "[trace] worker_spawn a0=%u a1=%u entry=0x%08X arg=0x%08X\n", (uint32_t)ctx->r4, (uint32_t)ctx->r5, (uint32_t)ctx->r6, (uint32_t)ctx->r7); fflush(stderr); }'''
-
-# Vtable registration — sets D_801499D0 = func_8001A058 (submit-frame fp).
-# If this never fires, no submit-frame callback exists and the producer
-# side never wakes the graphics thread.
-[[patches.hook]]
-func = "func_8009189C"
-text = '''{ fprintf(stderr, "[trace] func_8009189C ENTRY (vtable register) a0=0x%08X\n", (uint32_t)ctx->r4); fflush(stderr); }'''
-
-[[patches.hook]]
-func = "func_80091B3C"
-text = '''{ fprintf(stderr, "[trace] func_80091B3C ENTRY\n"); fflush(stderr); }'''
-
-[[patches.hook]]
-func = "func_80091C88"
-text = '''{ fprintf(stderr, "[trace] func_80091C88 ENTRY (audio+gfx init)\n"); fflush(stderr); }'''
-
-# func_8001A058 = submit-AUDIO sender (msg type 2 to gfx scheduler thread).
-[[patches.hook]]
-func = "func_8001A058"
-text = '''{ static int n=0; if (++n<=10 || (n%100)==0) { fprintf(stderr, "[trace] func_8001A058(audio-submit) #%d dl=0x%08X\n", n, (uint32_t)ctx->r4); fflush(stderr); } }'''
-
-# func_8001C12C = submit-GRAPHICS sender (msg type 1 to gfx scheduler thread).
-# This is what we need firing for menu rendering. If it stops, no graphics frames.
-[[patches.hook]]
-func = "func_8001C12C"
-text = '''{ static int n=0; if (++n<=20 || (n%50)==0) { fprintf(stderr, "[trace] func_8001C12C(gfx-submit) #%d\n", n); fflush(stderr); } }'''
-
-# func_80019868 = the thread that calls func_8001C12C.
-[[patches.hook]]
-func = "func_80019868"
-text = '''{ fprintf(stderr, "[trace] func_80019868 thread ENTRY\n"); fflush(stderr); }'''
-
-# func_80019BF4 = the gfx scheduler thread (creates queue 0x8011A420 and recv-loops on it).
-# No static caller of this address exists in the binary — entry probe tells us whether
-# it's launched via osCreateThread from somewhere we haven't traced. If this never fires
-# in stderr, the scheduler is dead and that's the root cause of the GRAPH-worker stall.
-[[patches.hook]]
-func = "func_80019BF4"
-text = '''{ fprintf(stderr, "[trace] GFX_SCHED thread ENTRY (func_80019BF4)\n"); fflush(stderr); }'''
-
-# Heartbeat at the top of the scheduler's recv loop (just before osRecvMesg).
-[[patches.hook]]
-func = "func_80019BF4"
-before_vram = 0x80019CD0
-text = '''{ static int n=0; if (++n<=5 || (n%100)==0) { fprintf(stderr, "[trace] GFX_SCHED loop iter=%d (about to osRecvMesg)\n", n); fflush(stderr); } }'''
-
-# Right after recv unblocks — print the message-type byte to see what the scheduler dispatches on.
-[[patches.hook]]
-func = "func_80019BF4"
-before_vram = 0x80019CDC
-text = '''{ uint32_t msgPtr = (uint32_t)MEM_W(ctx->r29, 0X10); uint8_t mt = (msgPtr ? (uint8_t)MEM_BU(msgPtr, 0) : 0xFF); fprintf(stderr, "[trace] GFX_SCHED recv msg=0x%08X type=0x%02X\n", msgPtr, mt); fflush(stderr); }'''
-
-# Log the assigned ID right after osCreateThread completes inside func_80006C28.
-[[patches.hook]]
-func = "func_80006C28"
-before_vram = 0x80006D3C
-text = '''{ fprintf(stderr, "[trace] worker_spawn: osCreateThread done, struct@$s5 id=*(0)=will-be-logged-on-next-iteration\n"); fflush(stderr); }'''
-
-# func_80006F78(id_a, id_b, msg, flags) — registration sender. Same logging.
-[[patches.hook]]
-func = "func_80006F78"
-text = '''{ static int n=0; if (++n<=20 || (n%500)==0) { fprintf(stderr, "[trace] func_80006F78(reg) #%d id_a=0x%08X id_b=0x%08X msg=0x%08X flags=%u\n", n, (uint32_t)ctx->r4, (uint32_t)ctx->r5, (uint32_t)ctx->r6, (uint32_t)ctx->r7); fflush(stderr); } }'''
-
-[[patches.hook]]
-func = "func_8006F2CC"
-before_vram = 0x8006F318
-text = '''{ static int n=0; if (++n<=5 || (n%50)==0) { fprintf(stderr, "[trace] GRAPH loop iter=%d\n", n); fflush(stderr); } }'''
-
-[[patches.hook]]
-func = "func_8006F2CC"
-before_vram = 0x8006F324
-text = '''{ static int n=0; if (++n<=5 || (n%50)==0) { fprintf(stderr, "[trace] GRAPH after func_80006F24 iter=%d\n", n); fflush(stderr); } }'''
-
-[[patches.hook]]
-func = "func_8006F2CC"
-before_vram = 0x8006F344
-text = '''{ static int n=0; if (++n<=5 || (n%50)==0) { fprintf(stderr, "[trace] GRAPH after first func_80006798 iter=%d v0=%d\n", n, (int)(ctx->r2 & 0xFF)); fflush(stderr); } }'''
-
-[[patches.hook]]
-func = "func_8006F2CC"
-before_vram = 0x8006F378
-text = '''{ static int n=0; if (++n<=5 || (n%50)==0) { fprintf(stderr, "[trace] GRAPH after second func_80006798 iter=%d\n", n); fflush(stderr); } }'''
-
-# (older duplicate hook removed)
-
+func = "rs_malloc"
+before_vram = 0x80001C74
+text = '''{
+    gpr addr = ctx->r18;
+    gpr size = ctx->r16;
+    uint32_t addr32 = (uint32_t)addr;
+    uint32_t size32 = (uint32_t)size;
+    if ((addr32 & 0xE0000000u) == 0x80000000u && addr32 < 0x80800000u && size32 > 0 && size32 < 0x100000u && addr32 + size32 <= 0x80800000u) {
+        for (uint32_t i = 0; i < size32; ++i) MEM_B(i, addr) = 0;
+    }
+}'''
 

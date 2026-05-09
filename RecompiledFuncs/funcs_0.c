@@ -1,7 +1,5 @@
 #include "recomp.h"
 #include "funcs.h"
-#include <stdio.h>
-#include <string.h>
 
 RECOMP_FUNC void recomp_entrypoint(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
@@ -19,49 +17,10 @@ RECOMP_FUNC void recomp_entrypoint(uint8_t* rdram, recomp_context* ctx) {
 RECOMP_FUNC void func_8000040C(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    // 0x8000040C: beq         $a1, $zero, L_80000434
-    if (ctx->r5 == 0) {
-        // 0x80000410: addu        $t0, $a0, $zero
-        ctx->r8 = ADD32(ctx->r4, 0);
-            goto L_80000434;
-    }
-    // 0x80000410: addu        $t0, $a0, $zero
-    ctx->r8 = ADD32(ctx->r4, 0);
-    // 0x80000414: addiu       $t1, $a1, 0xF
-    ctx->r9 = ADD32(ctx->r5, 0XF);
-    // 0x80000418: srl         $t1, $t1, 4
-    ctx->r9 = S32(U32(ctx->r9) >> 4);
-L_8000041C:
-    // 0x8000041C: cache       0x0D, 0x0($t0)
-
-    // 0x80000420: sd          $zero, 0x0($t0)
-    SD(0, 0X0, ctx->r8);
-    // 0x80000424: sd          $zero, 0x8($t0)
-    SD(0, 0X8, ctx->r8);
-    // 0x80000428: addiu       $t1, $t1, -0x1
-    ctx->r9 = ADD32(ctx->r9, -0X1);
-    // 0x8000042C: bne         $t1, $zero, L_8000041C
-    if (ctx->r9 != 0) {
-        // 0x80000430: addiu       $t0, $t0, 0x10
-        ctx->r8 = ADD32(ctx->r8, 0X10);
-            goto L_8000041C;
-    }
-    // 0x80000430: addiu       $t0, $t0, 0x10
-    ctx->r8 = ADD32(ctx->r8, 0X10);
-L_80000434:
-    // 0x80000434: jr          $ra
-    // 0x80000438: nop
-
-    return;
-    // 0x80000438: nop
-
-    // 0x8000043C: nop
-
 ;}
 RECOMP_FUNC void loadOverlay(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { static int n=0; ++n; fprintf(stderr, "[trace] loadOverlay ENTRY #%d arg=0x%08X\n", n, (uint32_t)ctx->r4); fflush(stderr); }
     // 0x80000B20: lui         $v0, 0x8003
     ctx->r2 = S32(0X8003 << 16);
     // 0x80000B24: lw          $v0, 0x75B0($v0)
@@ -249,7 +208,6 @@ L_80000C34:
     // 0x80000C3C: jr          $ra
     // 0x80000C40: addiu       $sp, $sp, 0x88
     ctx->r29 = ADD32(ctx->r29, 0X88);
-    { static int n=0; ++n; if (n<=10 || (n%50)==0) { if(0) fprintf(stderr, "[trace] loadOverlay EXIT #%d\n", n); fflush(stderr); } }
     return;
     // 0x80000C40: addiu       $sp, $sp, 0x88
     ctx->r29 = ADD32(ctx->r29, 0X88);
@@ -1461,7 +1419,6 @@ L_80001324:
 RECOMP_FUNC void func_80001354(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { if(0) fprintf(stderr, "[trace] func_80001354 ENTRY a0=0x%08X a1=0x%08X a2=0x%08X\n", (uint32_t)ctx->r4, (uint32_t)ctx->r5, (uint32_t)ctx->r6); fflush(stderr); }
     // 0x80001354: addiu       $sp, $sp, -0x80
     ctx->r29 = ADD32(ctx->r29, -0X80);
     // 0x80001358: sw          $s3, 0x64($sp)
@@ -1496,7 +1453,6 @@ RECOMP_FUNC void func_80001354(uint8_t* rdram, recomp_context* ctx) {
     // 0x8000138C: sw          $s1, 0x5C($sp)
     MEM_W(0X5C, ctx->r29) = ctx->r17;
     after_0:
-    { if(0) fprintf(stderr, "[trace] func_80001354 returned from func_8008ED00\n"); fflush(stderr); }
     // 0x80001390: lhu         $s1, 0x6($s3)
     ctx->r17 = MEM_HU(ctx->r19, 0X6);
     // 0x80001394: lhu         $s5, 0x2($s3)
@@ -1560,7 +1516,6 @@ L_800013B4:
     // 0x800013F4: sw          $v0, 0x14($sp)
     MEM_W(0X14, ctx->r29) = ctx->r2;
     after_1:
-    { if(0) fprintf(stderr, "[trace] func_80001354 returned from func_80000DD4\n"); fflush(stderr); }
     // 0x800013F8: andi        $v0, $v0, 0xFF
     ctx->r2 = ctx->r2 & 0XFF;
     // 0x800013FC: beq         $v0, $zero, L_80001414
@@ -1605,7 +1560,6 @@ L_80001420:
     // 0x80001434: addu        $a2, $v0, $a2
     ctx->r6 = ADD32(ctx->r2, ctx->r6);
     after_2:
-    { if(0) fprintf(stderr, "[trace] func_80001354 returned from func_800022F8\n"); fflush(stderr); }
     // 0x80001438: lui         $a0, 0x8011
     ctx->r4 = S32(0X8011 << 16);
     // 0x8000143C: lw          $a0, 0x63E4($a0)
@@ -1706,7 +1660,6 @@ L_80001420:
     // 0x800014F4: sw          $v0, 0x44($sp)
     MEM_W(0X44, ctx->r29) = ctx->r2;
     after_3:
-    { if(0) fprintf(stderr, "[trace] func_80001354 returned from func_8001818C v0=%u\n", (uint32_t)ctx->r2 & 0xFF); fflush(stderr); }
     // 0x800014F8: andi        $v0, $v0, 0xFF
     ctx->r2 = ctx->r2 & 0XFF;
     // 0x800014FC: beq         $v0, $zero, L_800015E8
@@ -1761,7 +1714,6 @@ L_80001420:
     // 0x80001540: nop
 
     after_4:
-    { if(0) fprintf(stderr, "[trace] func_80001354 returned from func_8008EB5C\n"); fflush(stderr); }
     // 0x80001544: bnel        $v0, $zero, L_800015E8
     if (ctx->r2 != 0) {
         // 0x80001548: addu        $v0, $zero, $zero
@@ -2753,25 +2705,6 @@ L_80001AC4:
 RECOMP_FUNC void rs_malloc(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    /* RS64-DEBUG: leak tracking. Count alloc calls and total bytes requested.
-     * Compare with rs_free counter to spot drift. */
-    extern unsigned long long g_rs_malloc_calls;
-    extern unsigned long long g_rs_malloc_bytes;
-    extern unsigned long long g_rs_free_calls;
-    g_rs_malloc_calls++;
-    g_rs_malloc_bytes += (unsigned)(uint32_t)ctx->r4;
-    if ((g_rs_malloc_calls % 500) == 0) {
-        fprintf(stderr, "[mem] malloc=%llu (%llu bytes) free=%llu live=%lld\n",
-            g_rs_malloc_calls, g_rs_malloc_bytes, g_rs_free_calls,
-            (long long)(g_rs_malloc_calls - g_rs_free_calls));
-        fflush(stderr);
-    }
-    /* PATCH (2026-05-08): zero-initialize allocated memory. The original game
-     * tolerated some "uninitialized memory == 0" assumptions (likely because
-     * the N64's heap was previously-zeroed bytes from BSS clears). Our recomp
-     * heap leaves 0xFFFFFFFF, which trips list-walk code that only checks ==0.
-     * Capture original size for use at exit. */
-    uint32_t _rs_malloc_orig_size = (uint32_t)ctx->r4;
     // 0x80001ACC: addiu       $sp, $sp, -0x38
     ctx->r29 = ADD32(ctx->r29, -0X38);
     // 0x80001AD0: sw          $s0, 0x20($sp)
@@ -3078,31 +3011,17 @@ L_80001C60:
     ctx->r6 = ADD32(0, 0);
     after_2:
 L_80001C74:
+    {
+    gpr addr = ctx->r18;
+    gpr size = ctx->r16;
+    uint32_t addr32 = (uint32_t)addr;
+    uint32_t size32 = (uint32_t)size;
+    if ((addr32 & 0xE0000000u) == 0x80000000u && addr32 < 0x80800000u && size32 > 0 && size32 < 0x100000u && addr32 + size32 <= 0x80800000u) {
+        for (uint32_t i = 0; i < size32; ++i) MEM_B(i, addr) = 0;
+    }
+}
     // 0x80001C74: addu        $v0, $s2, $zero
     ctx->r2 = ADD32(ctx->r18, 0);
-    /* PATCH (2026-05-08): zero-init the allocated memory if non-null.
-     * Skip if pointer is non-canonical (some early init paths).
-     * Cap at 256 bytes — large allocations (stacks, asset buffers) get
-     * explicitly initialized by the game. Cap reduces blast radius of any
-     * unintended zero-clobbering. */
-    {
-        uint32_t _ret = (uint32_t)(uint64_t)ctx->r2;
-        if (_ret >= 0x80000000u && _ret < 0x80800000u && _rs_malloc_orig_size > 0 && _rs_malloc_orig_size <= 256) {
-            uint32_t _off = _ret & 0x7FFFFFu;
-            uint32_t _max = (_off + _rs_malloc_orig_size <= 0x800000u) ? _rs_malloc_orig_size : (0x800000u - _off);
-            memset(rdram + _off, 0, _max);
-        }
-    }
-    if(0) {
-        static int n=0; ++n;
-        uint64_t v = (uint64_t)ctx->r2;
-        uint32_t hi = (uint32_t)(v >> 32);
-        if (n<=20 || (hi != 0xFFFFFFFFu && hi != 0x00000000u)) {
-            fprintf(stderr, "[trace] rs_malloc EXIT #%d -> r2=0x%016llX\n",
-                n, (unsigned long long)v);
-            fflush(stderr);
-        }
-    }
     // 0x80001C78: lw          $ra, 0x30($sp)
     ctx->r31 = MEM_W(ctx->r29, 0X30);
     // 0x80001C7C: lw          $s3, 0x2C($sp)
@@ -3122,11 +3041,7 @@ L_80001C74:
     // 0x80001C94: nop
 
 ;}
-unsigned long long g_rs_malloc_calls = 0;
-unsigned long long g_rs_malloc_bytes = 0;
-unsigned long long g_rs_free_calls = 0;
 RECOMP_FUNC void rs_free(uint8_t* rdram, recomp_context* ctx) {
-    g_rs_free_calls++;
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80001C98: addiu       $sp, $sp, -0x18
@@ -3302,16 +3217,6 @@ L_80001D7C:
 L_80001D80:
     // 0x80001D80: addu        $a1, $a3, $zero
     ctx->r5 = ADD32(ctx->r7, 0);
-    /* PATCH (2026-05-08): allocation-tracker walker can fall off list when
-     * a block's size field is corrupt. Treat invalid r5 as end-of-list. */
-    if (((uint32_t)(uint64_t)ctx->r5 < 0x80000000u) || ((uint32_t)(uint64_t)ctx->r5 >= 0x80800000u)) {
-        static int s_warned = 0;
-        if (s_warned++ < 5) {
-            fprintf(stderr, "[guard] rs_free walker: a1=0x%08X invalid -> end-of-list\n", (uint32_t)(uint64_t)ctx->r5);
-            fflush(stderr);
-        }
-        goto L_80001D94;
-    }
     // 0x80001D84: lhu         $v1, 0x0($a1)
     ctx->r3 = MEM_HU(ctx->r5, 0X0);
     // 0x80001D88: andi        $v0, $v1, 0x8
@@ -4490,16 +4395,6 @@ L_8000242C:
     // 0x80002430: addu        $v0, $t0, $v0
     ctx->r2 = ADD32(ctx->r8, ctx->r2);
     // 0x80002434: lhu         $v1, 0x10($v0)
-    /* PATCH (2026-05-08): heap-block walker bounds check.
-     * Block size field can be garbage on first menu-init walk; treat as end. */
-    if (((uint32_t)(uint64_t)ctx->r2 < 0x80000000u) || ((uint32_t)(uint64_t)ctx->r2 >= 0x80800000u)) {
-        static int s_warned = 0;
-        if (s_warned++ < 5) {
-            fprintf(stderr, "[guard] func_800022F8 L_8000242C: blockEnd=0x%08X invalid -> exit walker\n", (uint32_t)(uint64_t)ctx->r2);
-            fflush(stderr);
-        }
-        goto L_80002474;
-    }
     ctx->r3 = MEM_HU(ctx->r2, 0X10);
     // 0x80002438: andi        $v1, $v1, 0x8
     ctx->r3 = ctx->r3 & 0X8;
@@ -4549,20 +4444,8 @@ L_80002474:
     ctx->r2 = MEM_W(ctx->r6, 0X4);
     // 0x80002478: addu        $v0, $a2, $v0
     ctx->r2 = ADD32(ctx->r6, ctx->r2);
-    /* PATCH (2026-05-08): same heap-walker bounds check as L_8000242C. */
-    if (((uint32_t)(uint64_t)ctx->r2 < 0x80000000u) || ((uint32_t)(uint64_t)ctx->r2 >= 0x80800000u)) {
-        static int s_warned = 0;
-        if (s_warned++ < 5) {
-            fprintf(stderr, "[guard] func_800022F8 L_80002474: blockEnd=0x%08X invalid -> exit walker\n", (uint32_t)(uint64_t)ctx->r2);
-            fflush(stderr);
-        }
-        ctx->r2 = (uint64_t)(int64_t)(int32_t)0x80000000;  /* land somewhere safe */
-        ctx->r3 = 0x8;  /* synthesize "this is end-of-list" flag */
-        goto skip_walker_deref;
-    }
     // 0x8000247C: lhu         $v1, 0x10($v0)
     ctx->r3 = MEM_HU(ctx->r2, 0X10);
-    skip_walker_deref:;
     // 0x80002480: addu        $a3, $a2, $zero
     ctx->r7 = ADD32(ctx->r6, 0);
     // 0x80002484: andi        $v1, $v1, 0x8
@@ -7127,22 +7010,6 @@ L_8000322C:
 RECOMP_FUNC void func_80003250(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    {
-        static int n = 0;
-        uint32_t mips_addr = 0x80110742u;
-        uint8_t gate = rdram[(mips_addr ^ 3) & 0x7FFFFFFFu];
-        if (++n <= 10 || (n % 60) == 0) {
-            if(0) fprintf(stderr, "[trace] func_80003250 #%d gate@0x80110742=0x%02X\n", n, gate);
-            fflush(stderr);
-        }
-    }
-    {
-        static uint32_t last = 0; static int init = 0;
-        uint32_t cur = *(uint32_t*)(rdram + 0x3CBC4);
-        static int n2 = 0; ++n2;
-        if (!init) { init = 1; last = cur; fprintf(stderr, "[wp@03250 #%d] enter rdram@0x3CBC4=0x%08X\n", n2, cur); fflush(stderr); }
-        else if (cur != last) { fprintf(stderr, "[wp@03250 #%d] enter rdram@0x3CBC4 CHANGED 0x%08X->0x%08X\n", n2, last, cur); fflush(stderr); last = cur; }
-    }
     // 0x80003250: lui         $v0, 0x8011
     ctx->r2 = S32(0X8011 << 16);
     // 0x80003254: lbu         $v0, 0x742($v0)

@@ -1,83 +1,5 @@
 #include "recomp.h"
 #include "funcs.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-
-/* RS64: cinematic loop needs explicit yield per iter so the GFX thread isn't
- * starved. Without this, the recompile's tight per-iter loop monopolizes the
- * CPU and the GFX thread can't drain display lists, deadlocking on osRecvMesg.
- * On real N64 the natural VI-blank wait provided this pacing implicitly. */
-/* I/O burst per iter to encourage thread scheduling. Empirically this is the
- * only mechanism that helps the GFX thread drain past iter~750. Sleep() alone
- * doesn't, but fprintf+fflush(stderr) with actual content does. The bursts go
- * to a sink file (not stderr) to avoid log pollution. */
-static FILE* g_cine_ysink = NULL;
-#define CINE_YIELD() do { \
-    if (!g_cine_ysink) { g_cine_ysink = fopen("logs/cine_yield_sink.log", "w"); } \
-    if (g_cine_ysink) { \
-        for (int _i = 0; _i < 4; ++_i) { \
-            fprintf(g_cine_ysink, "y%d\n", g_cine_iter); fflush(g_cine_ysink); \
-        } \
-    } \
-} while (0)
-
-/* Canary monitor for slot-dispatcher corruption hunt.
- * Watches a known-victim address (free-list head MEM[0x801163B0]) for
- * non-KSEG0 garbage values. Legitimate values: 0 or 0x80000000-0x807FFFFF.
- * Anything else means SOMETHING just wrote a bad pointer to that location. */
-#define CANARY_CHECK(call_num, tag_str) do { \
-    static int s_warned = 0; \
-    uint32_t _v = MEM_W((int64_t)(int32_t)0x80110000, 0X63B0); \
-    if (_v != 0 && ((uint32_t)_v < 0x80000000u || (uint32_t)_v >= 0x80800000u)) { \
-        if (s_warned++ < 30) { \
-            fprintf(stderr, "[canary] iter=%d call=%d (%s) slot_arg=0x%X MEM[0x801163B0]=0x%08X CORRUPT\n", \
-                g_cine_iter, (int)(call_num), (tag_str), (unsigned)ctx->r4, (unsigned)_v); \
-            fflush(stderr); \
-        } \
-    } \
-} while (0)
-static int g_cine_iter = 0;
-/* Loop-body checkpoints. Gated by env ROGUESQ_LOG_CINE_CP=1.
- * When enabled, prints every site once on first traversal AND every site
- * at iter >= ROGUESQ_LOG_CINE_CP_FROM (default 800). Last [cp] line before
- * silence identifies which call hangs. */
-#define CINE_BC(tag) do { \
-    static int s_check = -1; \
-    static int s_from = 800; \
-    if (s_check < 0) { \
-        const char* _e = getenv("ROGUESQ_LOG_CINE_CP"); \
-        s_check = (_e && _e[0]=='1') ? 1 : 0; \
-        const char* _f = getenv("ROGUESQ_LOG_CINE_CP_FROM"); \
-        if (_f) s_from = atoi(_f); \
-    } \
-    if (s_check) { \
-        static volatile int s_first = 0; \
-        if (g_cine_iter >= s_from || !s_first) { \
-            s_first = 1; \
-            fprintf(stderr, "[cp] iter=%d %s\n", g_cine_iter, (tag)); \
-            fflush(stderr); \
-        } \
-    } \
-} while (0)
-
-// Stash rdram for the main.cpp watchdog thread.
-extern volatile uint8_t* volatile g_recomp_rdram_for_wp_raw;
-
-// Shared watchpoint helper: log the FIRST tag that observes a change at MIPS 0x8003CBC4.
-static inline void wp_chk(uint8_t* rdram, const char* tag) {
-    if (!g_recomp_rdram_for_wp_raw) g_recomp_rdram_for_wp_raw = rdram;
-    static uint32_t last = 0xFFFFFFFFu;
-    static int init = 0;
-    uint32_t cur = *(uint32_t*)(rdram + 0x3CBC4);
-    if (!init) { init = 1; last = cur; }
-    else if (cur != last) {
-        fprintf(stderr, "[wp:%s] rdram@0x3CBC4 CHANGED 0x%08X->0x%08X\n", tag, last, cur);
-        fflush(stderr);
-        last = cur;
-    }
-}
 
 RECOMP_FUNC void loadSpeechFile(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
@@ -1243,7 +1165,7 @@ L_8009C0B4:
     // 0x8009C0C0: lw          $v0, 0x19C($s0)
     ctx->r2 = MEM_W(ctx->r16, 0X19C);
     // 0x8009C0C4: divu        $zero, $v1, $v0
-    if (U32(ctx->r2) != 0) { lo = S32(U32(ctx->r3) / U32(ctx->r2)); hi = S32(U32(ctx->r3) % U32(ctx->r2)); } else { lo = 0; hi = S32(ctx->r3); }
+    lo = S32(U32(ctx->r3) / U32(ctx->r2)); hi = S32(U32(ctx->r3) % U32(ctx->r2));
     // 0x8009C0C8: bne         $v0, $zero, L_8009C0D4
     if (ctx->r2 != 0) {
         // 0x8009C0CC: nop
@@ -1375,7 +1297,7 @@ L_8009C144:
 
 L_8009C18C:
     // 0x8009C18C: divu        $zero, $a0, $a1
-    if (U32(ctx->r5) != 0) { lo = S32(U32(ctx->r4) / U32(ctx->r5)); hi = S32(U32(ctx->r4) % U32(ctx->r5)); } else { lo = 0; hi = S32(ctx->r4); }
+    lo = S32(U32(ctx->r4) / U32(ctx->r5)); hi = S32(U32(ctx->r4) % U32(ctx->r5));
     // 0x8009C190: bne         $a1, $zero, L_8009C19C
     if (ctx->r5 != 0) {
         // 0x8009C194: nop
@@ -5862,9 +5784,6 @@ L_8009DDC8:
 RECOMP_FUNC void func_800A5D80(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { static uint32_t L=0; static int I=0; uint32_t C=*(uint32_t*)(rdram+0x3CBC4);
-      if(!I){I=1;L=C;fprintf(stderr,"[wp@A5D80:entry] 0x%08X\n",C);fflush(stderr);}
-      else if(C!=L){fprintf(stderr,"[wp@A5D80:entry] CHANGED 0x%08X->0x%08X\n",L,C);fflush(stderr);L=C;} }
     // 0x800A5D80: addiu       $sp, $sp, -0xD8
     ctx->r29 = ADD32(ctx->r29, -0XD8);
     // 0x800A5D84: sw          $s7, 0xB4($sp)
@@ -6130,9 +6049,6 @@ L_800A5ECC:
     // 0x800A5F30: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
     load_cutscene(rdram, ctx);
-    { static uint32_t L=0; static int I=0; uint32_t C=*(uint32_t*)(rdram+0x3CBC4);
-      if(!I){I=1;L=C;fprintf(stderr,"[wp@A5D80:after_load_cs] 0x%08X\n",C);fflush(stderr);}
-      else if(C!=L){fprintf(stderr,"[wp@A5D80:after_load_cs] CHANGED 0x%08X->0x%08X\n",L,C);fflush(stderr);L=C;} }
         goto after_5;
     // 0x800A5F30: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
@@ -6293,35 +6209,9 @@ L_800A5FA8:
     // 0x800A6020: addiu       $s6, $v0, -0x6AA0
     ctx->r22 = ADD32(ctx->r2, -0X6AA0);
 L_800A6024:
-    ++g_cine_iter;
-    CINE_YIELD();  /* per-iter yield — see top-of-file comment */
-    /* PATCH (2026-05-08): scrub free-list head if corrupt. The inlined dequeue
-     * pattern appears in 100+ places across the recompile and we can't guard
-     * them all individually. Cheap check at loop top prevents propagation. */
-    {
-        static int s_dumped = 0;
-        if (!s_dumped) {
-            s_dumped = 1;
-            uint32_t _m0 = MEM_W((int64_t)(int32_t)0x80000000, 0);
-            uint32_t _m4 = MEM_W((int64_t)(int32_t)0x80000000, 4);
-            uint32_t _m8 = MEM_W((int64_t)(int32_t)0x80000000, 8);
-            fprintf(stderr, "[scrub] MEM[0x80000000]=0x%08X MEM[+4]=0x%08X MEM[+8]=0x%08X\n", _m0, _m4, _m8);
-            fflush(stderr);
-        }
-        uint32_t _hd = MEM_W((int64_t)(int32_t)0x80110000, 0X63B0);
-        if (_hd != 0 && (_hd < 0x80000000u || _hd >= 0x80800000u)) {
-            static int s_warn = 0;
-            if (s_warn++ < 5) {
-                fprintf(stderr, "[scrub] free-list head was 0x%08X (corrupt) -> 0\n", _hd);
-                fflush(stderr);
-            }
-            MEM_W(0X63B0, (int64_t)(int32_t)0x80110000) = 0;
-        }
-    }
     // 0x800A6024: jal         0x800AF360
     // 0x800A6028: nop
 
-    CINE_BC("cp01-before-AF360");
     func_800AF360(rdram, ctx);
         goto after_10;
     // 0x800A6028: nop
@@ -6332,7 +6222,6 @@ L_800A6024:
     CHECK_FR(ctx, 20);
     CHECK_FR(ctx, 0);
     ctx->f20.fl = ctx->f0.fl;
-    CINE_BC("cp02-before-80002FF4");
     func_80002FF4(rdram, ctx);
         goto after_11;
     // 0x800A6030: mov.s       $f20, $f0
@@ -6343,7 +6232,6 @@ L_800A6024:
     // 0x800A6034: jal         0x80079CE0
     // 0x800A6038: nop
 
-    CINE_BC("cp03-before-setNewButtons");
     setNewAndPreviousButtonsPressed(rdram, ctx);
         goto after_12;
     // 0x800A6038: nop
@@ -6382,7 +6270,6 @@ L_800A6024:
     // 0x800A6068: jal         0x800AF550
     // 0x800A606C: swc1        $f0, 0xBA4($v0)
     MEM_W(0XBA4, ctx->r2) = ctx->f0.u32l;
-    CINE_BC("cp04-before-AF550");
     func_800AF550(rdram, ctx);
         goto after_13;
     // 0x800A606C: swc1        $f0, 0xBA4($v0)
@@ -6401,7 +6288,6 @@ L_800A6024:
     // 0x800A607C: jal         0x800AF668
     // 0x800A6080: nop
 
-    CINE_BC("cp05-before-AF668");
     func_800AF668(rdram, ctx);
         goto after_14;
     // 0x800A6080: nop
@@ -6430,7 +6316,6 @@ L_800A6024:
     CHECK_FR(ctx, 12);
     CHECK_FR(ctx, 0);
     ctx->f12.fl = ctx->f0.fl;
-    CINE_BC("cp06-before-66D8C");
     func_80066D8C(rdram, ctx);
         goto after_15;
     // 0x800A60A0: mov.s       $f12, $f0
@@ -6443,7 +6328,7 @@ L_800A60A4:
     CHECK_FR(ctx, 0);
     CHECK_FR(ctx, 20);
     CHECK_FR(ctx, 24);
-    NAN_CHECK(ctx->f20.fl); NAN_CHECK(ctx->f24.fl);
+    NAN_CHECK(ctx->f20.fl); NAN_CHECK(ctx->f24.fl); 
     ctx->f0.fl = MUL_S(ctx->f20.fl, ctx->f24.fl);
     // 0x800A60A8: lw          $v0, 0x1904($s4)
     ctx->r2 = MEM_W(ctx->r20, 0X1904);
@@ -6592,11 +6477,7 @@ L_800A614C:
     // 0x800A614C: jal         0x8006ED90
     // 0x800A6150: nop
 
-    CINE_BC("cp07-before-6ED90");
     func_8006ED90(rdram, ctx);
-    { static uint32_t L=0; static int I=0; uint32_t C=*(uint32_t*)(rdram+0x3CBC4);
-      if(!I){I=1;L=C;fprintf(stderr,"[wp@A5D80:after_6ED90] 0x%08X\n",C);fflush(stderr);}
-      else if(C!=L){fprintf(stderr,"[wp@A5D80:after_6ED90] CHANGED 0x%08X->0x%08X\n",L,C);fflush(stderr);L=C;} }
         goto after_16;
     // 0x800A6150: nop
 
@@ -6748,7 +6629,6 @@ L_800A61F0:
     // 0x800A6200: jal         0x80079F50
     // 0x800A6204: nop
 
-    CINE_BC("cp08-before-getCtrlBtns");
     getControllerNewButtonsPressed(rdram, ctx);
         goto after_17;
     // 0x800A6204: nop
@@ -6814,20 +6694,6 @@ L_800A6250:
 L_800A6254:
     // 0x800A6254: lw          $v0, 0x1904($s4)
     ctx->r2 = MEM_W(ctx->r20, 0X1904);
-    /* RS64-DEBUG: periodic trace incl. f24 to detect callee-save violations */
-    { static int n = 0; static time_t t0 = 0;
-      if (t0 == 0) t0 = time(NULL);
-      ++n;
-      if (n <= 4 || (n % 30) == 0) {
-        long wall_s = (long)(time(NULL) - t0);
-        uint32_t fc = MEM_W(ctx->r19, 0XB28);
-        uint32_t f22u = ctx->f22.u32l, f20u = ctx->f20.u32l, f24u = ctx->f24.u32l;
-        float f22f, f20f, f24f;
-        memcpy(&f22f, &f22u, 4); memcpy(&f20f, &f20u, 4); memcpy(&f24f, &f24u, 4);
-        fprintf(stderr, "[cine-tick] iter=%d wall_s=%ld | fc=%u f22=%.6f f20=%.6f f24=%.6f\n",
-          n, wall_s, fc, f22f, f20f, f24f);
-        fflush(stderr);
-      } }
     // 0x800A6258: addu        $a0, $v1, $zero
     ctx->r4 = ADD32(ctx->r3, 0);
     // 0x800A625C: lw          $v0, 0x44($v0)
@@ -6855,13 +6721,6 @@ L_800A6254:
     // 0x800A6278: nop
 
 L_800A627C:
-    /* RS64-DEBUG: log natural exit / init path arrival */
-    { static int seen = 0; if (!seen) { seen = 1;
-      uint32_t fc = MEM_W(ctx->r19, 0XB28);
-      uint32_t r4 = (uint32_t)ctx->r4;
-      fprintf(stderr, "[L_627C-FIRST] fc=%u r4=%u (skip-flag) — entering natural exit/init path\n", fc, r4);
-      fflush(stderr);
-    } }
     // 0x800A627C: jal         0x800AF540
     // 0x800A6280: nop
 
@@ -6949,7 +6808,6 @@ L_800A62D0:
     ctx->r6 = ADD32(0, 0XFE);
     after_21:
 L_800A62EC:
-    CINE_BC("cp13-L62EC-entry-before-A86C");
     // 0x800A62EC: jal         0x8000A86C
     // 0x800A62F0: nop
 
@@ -6969,7 +6827,6 @@ L_800A62EC:
     // 0x800A6304: jal         0x800A89B0
     // 0x800A6308: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
-    CINE_BC("cp14-before-A89B0");
     func_800A89B0(rdram, ctx);
         goto after_23;
     // 0x800A6308: sw          $zero, 0x10($sp)
@@ -6990,7 +6847,6 @@ L_800A62EC:
     // 0x800A6324: jal         0x800A73E4
     // 0x800A6328: swc1        $f22, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f22.u32l;
-    CINE_BC("cp15-before-A73E4");
     func_800A73E4(rdram, ctx);
         goto after_24;
     // 0x800A6328: swc1        $f22, 0x10($sp)
@@ -7007,7 +6863,6 @@ L_800A62EC:
     // 0x800A633C: jal         0x800A6FC0
     // 0x800A6340: sw          $v0, 0x1A08($v1)
     MEM_W(0X1A08, ctx->r3) = ctx->r2;
-    CINE_BC("cp16-before-A6FC0");
     func_800A6FC0(rdram, ctx);
         goto after_25;
     // 0x800A6340: sw          $v0, 0x1A08($v1)
@@ -7022,7 +6877,6 @@ L_800A62EC:
     // 0x800A6350: jal         0x800A8420
     // 0x800A6354: addiu       $a0, $sp, 0x18
     ctx->r4 = ADD32(ctx->r29, 0X18);
-    CINE_BC("cp17-before-A8420");
     func_800A8420(rdram, ctx);
         goto after_26;
     // 0x800A6354: addiu       $a0, $sp, 0x18
@@ -7033,7 +6887,6 @@ L_800A62EC:
     CHECK_FR(ctx, 12);
     CHECK_FR(ctx, 22);
     ctx->f12.fl = ctx->f22.fl;
-    CINE_BC("cp18-before-AA658");
     func_800AA658(rdram, ctx);
         goto after_27;
     // 0x800A635C: mov.s       $f12, $f22
@@ -7046,7 +6899,6 @@ L_800A62EC:
     // 0x800A6364: jal         0x800ABD0C
     // 0x800A6368: addiu       $a0, $sp, 0x18
     ctx->r4 = ADD32(ctx->r29, 0X18);
-    CINE_BC("cp19-before-ABD0C");
     func_800ABD0C(rdram, ctx);
         goto after_28;
     // 0x800A6368: addiu       $a0, $sp, 0x18
@@ -7059,16 +6911,11 @@ L_800A62EC:
     // 0x800A6374: jal         0x800AEE14
     // 0x800A6378: nop
 
-    CINE_BC("cp20-before-AEE14");
     func_800AEE14(rdram, ctx);
-    { static uint32_t L=0; static int I=0; uint32_t C=*(uint32_t*)(rdram+0x3CBC4);
-      if(!I){I=1;L=C;fprintf(stderr,"[wp@A5D80:after_AEE14] 0x%08X\n",C);fflush(stderr);}
-      else if(C!=L){fprintf(stderr,"[wp@A5D80:after_AEE14] CHANGED 0x%08X->0x%08X\n",L,C);fflush(stderr);L=C;} }
         goto after_29;
     // 0x800A6378: nop
 
     after_29:
-    CANARY_CHECK(0, "baseline pre-7x");
     // 0x800A637C: addiu       $a1, $zero, 0x3
     ctx->r5 = ADD32(0, 0X3);
     // 0x800A6380: lhu         $a0, 0xC($s6)
@@ -7083,7 +6930,6 @@ L_800A62EC:
     // 0x800A638C: swc1        $f20, 0x78($sp)
     MEM_W(0X78, ctx->r29) = ctx->f20.u32l;
     after_30:
-    CANARY_CHECK(1, "after slot s6+0xC");
     // 0x800A6390: addiu       $a1, $zero, 0x3
     ctx->r5 = ADD32(0, 0X3);
     // 0x800A6394: lhu         $a0, 0x10($s6)
@@ -7096,7 +6942,6 @@ L_800A62EC:
     // 0x800A639C: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
     after_31:
-    CANARY_CHECK(2, "after slot s6+0x10");
     // 0x800A63A0: addiu       $a1, $zero, 0x3
     ctx->r5 = ADD32(0, 0X3);
     // 0x800A63A4: lhu         $a0, 0x14($s6)
@@ -7109,7 +6954,6 @@ L_800A62EC:
     // 0x800A63AC: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
     after_32:
-    CANARY_CHECK(3, "after slot s6+0x14");
     // 0x800A63B0: addiu       $a1, $zero, 0x3
     ctx->r5 = ADD32(0, 0X3);
     // 0x800A63B4: lhu         $a0, 0x6($s6)
@@ -7122,7 +6966,6 @@ L_800A62EC:
     // 0x800A63BC: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
     after_33:
-    CANARY_CHECK(4, "after slot s6+0x6");
     // 0x800A63C0: addiu       $a1, $zero, 0x3
     ctx->r5 = ADD32(0, 0X3);
     // 0x800A63C4: lhu         $a0, 0x8($s6)
@@ -7135,7 +6978,6 @@ L_800A62EC:
     // 0x800A63CC: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
     after_34:
-    CANARY_CHECK(5, "after slot s6+0x8");
     // 0x800A63D0: addiu       $a1, $zero, 0x3
     ctx->r5 = ADD32(0, 0X3);
     // 0x800A63D4: lhu         $a0, 0xE($s6)
@@ -7148,7 +6990,6 @@ L_800A62EC:
     // 0x800A63DC: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
     after_35:
-    CANARY_CHECK(6, "after slot s6+0xE");
     // 0x800A63E0: addiu       $a1, $zero, 0x3
     ctx->r5 = ADD32(0, 0X3);
     // 0x800A63E4: lhu         $a0, 0x36($s6)
@@ -7161,8 +7002,6 @@ L_800A62EC:
     // 0x800A63EC: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
     after_36:
-    CANARY_CHECK(7, "after slot s6+0x36");
-    CINE_BC("cp21-after-7x-dispatch-before-45B60");
     // 0x800A63F0: jal         0x80045B60
     // 0x800A63F4: mov.s       $f12, $f20
     CHECK_FR(ctx, 12);
@@ -7180,7 +7019,6 @@ L_800A62EC:
     CHECK_FR(ctx, 12);
     CHECK_FR(ctx, 20);
     ctx->f12.fl = ctx->f20.fl;
-    CINE_BC("cp22-before-54650");
     func_80054650(rdram, ctx);
         goto after_38;
     // 0x800A63FC: mov.s       $f12, $f20
@@ -7193,7 +7031,6 @@ L_800A62EC:
     CHECK_FR(ctx, 12);
     CHECK_FR(ctx, 20);
     ctx->f12.fl = ctx->f20.fl;
-    CINE_BC("cp23-before-46484");
     func_80046484(rdram, ctx);
         goto after_39;
     // 0x800A6404: mov.s       $f12, $f20
@@ -7236,7 +7073,6 @@ L_800A62EC:
     // 0x800A6430: jal         0x800AD224
     // 0x800A6434: nop
 
-    CINE_BC("cp24-before-AD224-cond");
     func_800AD224(rdram, ctx);
         goto after_40;
     // 0x800A6434: nop
@@ -7260,7 +7096,6 @@ L_800A6440:
     // 0x800A6448: jal         0x800AD690
     // 0x800A644C: nop
 
-    CINE_BC("cp25-before-AD690-cond");
     func_800AD690(rdram, ctx);
         goto after_41;
     // 0x800A644C: nop
@@ -7275,13 +7110,11 @@ L_800A6454:
     // 0x800A6458: jal         0x80047368
     // 0x800A645C: andi        $s0, $s7, 0xFF
     ctx->r16 = ctx->r23 & 0XFF;
-    CINE_BC("cp26-before-47368");
     func_80047368(rdram, ctx);
         goto after_42;
     // 0x800A645C: andi        $s0, $s7, 0xFF
     ctx->r16 = ctx->r23 & 0XFF;
     after_42:
-    CINE_BC("cp27-before-A70E4");
     // 0x800A6460: addiu       $a0, $sp, 0x18
     ctx->r4 = ADD32(ctx->r29, 0X18);
     // 0x800A6464: jal         0x800A70E4
@@ -7292,17 +7125,12 @@ L_800A6454:
     // 0x800A6468: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
     after_43:
-    CINE_BC("cp28-before-67300");
     // 0x800A646C: jal         0x80067300
     // 0x800A6470: mov.s       $f12, $f20
     CHECK_FR(ctx, 12);
     CHECK_FR(ctx, 20);
     ctx->f12.fl = ctx->f20.fl;
     func_80067300(rdram, ctx);
-    { static uint32_t L=0; static int I=0; uint32_t C=*(uint32_t*)(rdram+0x3CBC4);
-      if(!I){I=1;L=C;fprintf(stderr,"[wp@A5D80:after_67300] 0x%08X\n",C);fflush(stderr);}
-      else if(C!=L){fprintf(stderr,"[wp@A5D80:after_67300] CHANGED 0x%08X->0x%08X\n",L,C);fflush(stderr);L=C;} }
-    CINE_BC("cp29-before-55CB0");
         goto after_44;
     // 0x800A6470: mov.s       $f12, $f20
     CHECK_FR(ctx, 12);
@@ -7314,7 +7142,7 @@ L_800A6454:
     CHECK_FR(ctx, 12);
     CHECK_FR(ctx, 20);
     ctx->f12.fl = ctx->f20.fl;
-    func_80055CB0(rdram, ctx); wp_chk(rdram,"after_55CB0");
+    func_80055CB0(rdram, ctx);
         goto after_45;
     // 0x800A6478: mov.s       $f12, $f20
     CHECK_FR(ctx, 12);
@@ -7330,8 +7158,7 @@ L_800A6454:
     // 0x800A6488: jal         0x800AA1BC
     // 0x800A648C: addiu       $a1, $t1, 0x1938
     ctx->r5 = ADD32(ctx->r9, 0X1938);
-    CINE_BC("cp30-before-AA1BC");
-    func_800AA1BC(rdram, ctx); wp_chk(rdram,"after_AA1BC");
+    func_800AA1BC(rdram, ctx);
         goto after_46;
     // 0x800A648C: addiu       $a1, $t1, 0x1938
     ctx->r5 = ADD32(ctx->r9, 0X1938);
@@ -7339,8 +7166,7 @@ L_800A6454:
     // 0x800A6490: jal         0x8000A6CC
     // 0x800A6494: nop
 
-    CINE_BC("cp31-before-0A6CC");
-    func_8000A6CC(rdram, ctx); wp_chk(rdram,"after_0A6CC");
+    func_8000A6CC(rdram, ctx);
         goto after_47;
     // 0x800A6494: nop
 
@@ -7350,9 +7176,7 @@ L_800A6454:
     // 0x800A649C: jal         0x800A71B8
     // 0x800A64A0: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
-    CINE_BC("cp32-before-A71B8");
-    func_800A71B8(rdram, ctx); wp_chk(rdram,"after_A71B8");
-    CINE_BC("cp32-after-A71B8");
+    func_800A71B8(rdram, ctx);
         goto after_48;
     // 0x800A64A0: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
@@ -7360,9 +7184,7 @@ L_800A6454:
     // 0x800A64A4: jal         0x8000B6F4
     // 0x800A64A8: nop
 
-    CINE_BC("cp33-before-0B6F4");
-    func_8000B6F4(rdram, ctx); wp_chk(rdram,"after_0B6F4");
-    CINE_BC("cp33-after-0B6F4");
+    func_8000B6F4(rdram, ctx);
         goto after_49;
     // 0x800A64A8: nop
 
@@ -7370,9 +7192,7 @@ L_800A6454:
     // 0x800A64AC: jal         0x8000C07C
     // 0x800A64B0: nop
 
-    CINE_BC("cp34-before-0C07C");
-    func_8000C07C(rdram, ctx); wp_chk(rdram,"after_0C07C");
-    CINE_BC("cp34-after-0C07C-loop-end");
+    func_8000C07C(rdram, ctx);
         goto after_50;
     // 0x800A64B0: nop
 
@@ -7387,7 +7207,7 @@ L_800A64BC:
     // 0x800A64BC: jal         0x8000BF60
     // 0x800A64C0: nop
 
-    func_8000BF60(rdram, ctx); wp_chk(rdram,"after_0BF60");
+    func_8000BF60(rdram, ctx);
         goto after_51;
     // 0x800A64C0: nop
 
@@ -7400,9 +7220,6 @@ L_800A64BC:
     // 0x800A64D0: addiu       $a1, $sp, 0x18
     ctx->r5 = ADD32(ctx->r29, 0X18);
     func_800AF60C(rdram, ctx);
-    { static uint32_t L=0; static int I=0; uint32_t C=*(uint32_t*)(rdram+0x3CBC4);
-      if(!I){I=1;L=C;fprintf(stderr,"[wp@A5D80:after_AF60C] 0x%08X\n",C);fflush(stderr);}
-      else if(C!=L){fprintf(stderr,"[wp@A5D80:after_AF60C] CHANGED 0x%08X->0x%08X\n",L,C);fflush(stderr);L=C;} }
         goto after_52;
     // 0x800A64D0: addiu       $a1, $sp, 0x18
     ctx->r5 = ADD32(ctx->r29, 0X18);
@@ -7410,7 +7227,7 @@ L_800A64BC:
     // 0x800A64D4: jal         0x800668B0
     // 0x800A64D8: nop
 
-    func_800668B0(rdram, ctx); wp_chk(rdram,"after_668B0");
+    func_800668B0(rdram, ctx);
         goto after_53;
     // 0x800A64D8: nop
 
@@ -7422,7 +7239,7 @@ L_800A64BC:
     // 0x800A64E4: jal         0x800AEB30
     // 0x800A64E8: nop
 
-    func_800AEB30(rdram, ctx); wp_chk(rdram,"after_AEB30");
+    func_800AEB30(rdram, ctx);
         goto after_54;
     // 0x800A64E8: nop
 
@@ -7430,7 +7247,7 @@ L_800A64BC:
     // 0x800A64EC: jal         0x800AF260
     // 0x800A64F0: nop
 
-    func_800AF260(rdram, ctx); wp_chk(rdram,"after_AF260");
+    func_800AF260(rdram, ctx);
         goto after_55;
     // 0x800A64F0: nop
 
@@ -7438,7 +7255,7 @@ L_800A64BC:
     // 0x800A64F4: jal         0x800AEB38
     // 0x800A64F8: nop
 
-    func_800AEB38(rdram, ctx); wp_chk(rdram,"after_AEB38");
+    func_800AEB38(rdram, ctx);
         goto after_56;
     // 0x800A64F8: nop
 
@@ -7485,7 +7302,7 @@ L_800A651C:
     // 0x800A6538: jal         0x8006E468
     // 0x800A653C: sb          $t0, 0x22($s0)
     MEM_B(0X22, ctx->r16) = ctx->r8;
-    func_8006E468(rdram, ctx); wp_chk(rdram,"after_6E468");
+    func_8006E468(rdram, ctx);
         goto after_57;
     // 0x800A653C: sb          $t0, 0x22($s0)
     MEM_B(0X22, ctx->r16) = ctx->r8;
@@ -7612,9 +7429,6 @@ L_800A65DC:
     // 0x800A65E0: nop
 
     func_8003DF78(rdram, ctx);
-    { static uint32_t L=0; static int I=0; uint32_t C=*(uint32_t*)(rdram+0x3CBC4);
-      if(!I){I=1;L=C;fprintf(stderr,"[wp@A5D80:after_3DF78] 0x%08X\n",C);fflush(stderr);}
-      else if(C!=L){fprintf(stderr,"[wp@A5D80:after_3DF78] CHANGED 0x%08X->0x%08X\n",L,C);fflush(stderr);L=C;} }
         goto after_60;
     // 0x800A65E0: nop
 
@@ -7649,9 +7463,6 @@ L_800A65E4:
     // 0x800A6614: ldc1        $f20, 0xC0($sp)
     CHECK_FR(ctx, 20);
     ctx->f20.u64 = LD(ctx->r29, 0XC0);
-    { static uint32_t L=0; static int I=0; uint32_t C=*(uint32_t*)(rdram+0x3CBC4);
-      if(!I){I=1;L=C;fprintf(stderr,"[wp@A5D80:exit] 0x%08X\n",C);fflush(stderr);}
-      else if(C!=L){fprintf(stderr,"[wp@A5D80:exit] CHANGED 0x%08X->0x%08X\n",L,C);fflush(stderr);L=C;} }
     // 0x800A6618: jr          $ra
     // 0x800A661C: addiu       $sp, $sp, 0xD8
     ctx->r29 = ADD32(ctx->r29, 0XD8);
@@ -7662,9 +7473,6 @@ L_800A65E4:
 RECOMP_FUNC void load_cutscene(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    { static uint32_t L=0; static int I=0; uint32_t C=*(uint32_t*)(rdram+0x3CBC4);
-      if(!I){I=1;L=C;fprintf(stderr,"[wp@load_cs:entry] 0x%08X\n",C);fflush(stderr);}
-      else if(C!=L){fprintf(stderr,"[wp@load_cs:entry] CHANGED 0x%08X->0x%08X\n",L,C);fflush(stderr);L=C;} }
     // 0x800A6620: addiu       $sp, $sp, -0x60
     ctx->r29 = ADD32(ctx->r29, -0X60);
     // 0x800A6624: sb          $a0, 0x30($sp)
@@ -8045,9 +7853,6 @@ L_800A684C:
     // 0x800A686C: nop
 
     func_80079A70(rdram, ctx);
-    { static uint32_t L=0; static int I=0; uint32_t C=*(uint32_t*)(rdram+0x3CBC4);
-      if(!I){I=1;L=C;fprintf(stderr,"[wp@A5D80:after_79A70] 0x%08X\n",C);fflush(stderr);}
-      else if(C!=L){fprintf(stderr,"[wp@A5D80:after_79A70] CHANGED 0x%08X->0x%08X\n",L,C);fflush(stderr);L=C;} }
         goto after_10;
     // 0x800A686C: nop
 
@@ -8144,9 +7949,6 @@ L_800A68B4:
     ctx->r17 = MEM_W(ctx->r29, 0X3C);
     // 0x800A68F8: lw          $s0, 0x38($sp)
     ctx->r16 = MEM_W(ctx->r29, 0X38);
-    { static uint32_t L=0; static int I=0; uint32_t C=*(uint32_t*)(rdram+0x3CBC4);
-      if(!I){I=1;L=C;fprintf(stderr,"[wp@load_cs:exit] 0x%08X\n",C);fflush(stderr);}
-      else if(C!=L){fprintf(stderr,"[wp@load_cs:exit] CHANGED 0x%08X->0x%08X\n",L,C);fflush(stderr);L=C;} }
     // 0x800A68FC: jr          $ra
     // 0x800A6900: addiu       $sp, $sp, 0x60
     ctx->r29 = ADD32(ctx->r29, 0X60);
@@ -9759,14 +9561,6 @@ L_800A6FEC:
 RECOMP_FUNC void func_800A70E4(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    // ROGUESQ: trace entry to cinematic phase=4 dispatcher. Iterates 7 slots
-    // (offsets 0x6, 0x8, 0xC, 0xE, 0x10, 0x14 of D_80139560 + D_80130BA2)
-    // with phase=4. If this fires often (per-frame), the dispatch system is
-    // running. If only once or twice, parent particle iteration is rare.
-    { static int n=0; if (++n<=20 || (n%500)==0) {
-        fprintf(stderr, "[trace] func_800A70E4 PHASE4-DISPATCH #%d\n", n);
-        fflush(stderr);
-    } }
     // 0x800A70E4: addiu       $sp, $sp, -0x20
     ctx->r29 = ADD32(ctx->r29, -0X20);
     // 0x800A70E8: sw          $s2, 0x18($sp)
@@ -9912,15 +9706,6 @@ L_800A7198:
 RECOMP_FUNC void func_800A71B8(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    {
-        static int n = 0;
-        ++n;
-        if (n <= 10 || (n % 60) == 0) {
-            uint8_t gate = rdram[((0x800B09B0u) ^ 3) & 0x7FFFFFFFu];
-            if(0) fprintf(stderr, "[trace] func_800A71B8 #%d gate@800B09B0=0x%02X\n", n, gate);
-            fflush(stderr);
-        }
-    }
     // 0x800A71B8: addiu       $sp, $sp, -0x30
     ctx->r29 = ADD32(ctx->r29, -0X30);
     // 0x800A71BC: sw          $s0, 0x10($sp)
@@ -13614,24 +13399,11 @@ L_800A8784:
     // 0x800A879C: lw          $v0, 0x50($a2)
     ctx->r2 = MEM_W(ctx->r6, 0X50);
     // 0x800A87A0: lw          $v0, 0x0($v0)
-    // PATCH (2026-05-08): chain-deref guard. If MEM[$a2+0x50] returned a
-    // non-canonical pointer during cinematic, skip the chained deref and
-    // its consumer (MEM[$v0+0x44]) to avoid high-VA AV.
-    if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) {
-        ctx->r2 = 0;
-        ctx->f0.u32l = MEM_W(ctx->r6, 0X64);
-        ctx->f2.u32l = 0;
-    } else {
-        ctx->r2 = MEM_W(ctx->r2, 0X0);
-        // 0x800A87A4: lwc1        $f0, 0x64($a2)
-        ctx->f0.u32l = MEM_W(ctx->r6, 0X64);
-        // 0x800A87A8: lwc1        $f2, 0x44($v0)
-        if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) {
-            ctx->f2.u32l = 0;
-        } else {
-            ctx->f2.u32l = MEM_W(ctx->r2, 0X44);
-        }
-    }
+    ctx->r2 = MEM_W(ctx->r2, 0X0);
+    // 0x800A87A4: lwc1        $f0, 0x64($a2)
+    ctx->f0.u32l = MEM_W(ctx->r6, 0X64);
+    // 0x800A87A8: lwc1        $f2, 0x44($v0)
+    ctx->f2.u32l = MEM_W(ctx->r2, 0X44);
     // 0x800A87AC: mul.s       $f2, $f2, $f0
     CHECK_FR(ctx, 2);
     CHECK_FR(ctx, 2);
@@ -21011,28 +20783,7 @@ L_800A9968:
     // 0x800A9970: sra         $v0, $v0, 14
     ctx->r2 = S32(SIGNED(ctx->r2) >> 14);
     // 0x800A9974: lw          $a1, 0x8($a1)
-    {
-        // PATCH (2026-05-08): list-walk guard + diagnostic. Capture source
-        // address of the corrupt pointer so we can trace back to the writer.
-        const uint64_t src_va = (uint64_t)ctx->r5 + 0x8ULL;
-        const uint32_t src_rdram_off = (uint32_t)(src_va & 0xFFFFFFFFULL); // KSEG0-relative
-        ctx->r5 = MEM_W(ctx->r5, 0X8);
-        if (((uint64_t)ctx->r5 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) {
-            // Log up to 16 distinct corrupt-pointer events with full context.
-            static int s_log_count = 0;
-            if (s_log_count++ < 16) {
-                extern int g_cine_current_slot;
-                fprintf(stderr,
-                    "[ptr-corrupt] func_800A98AC list-walk: src_addr=0x%08X corrupt_val=0x%016llX slot=%d\n",
-                    src_rdram_off,
-                    (unsigned long long)ctx->r5,
-                    g_cine_current_slot);
-                fflush(stderr);
-            }
-            ctx->r2 = 0;
-            goto L_800A9990;
-        }
-    }
+    ctx->r5 = MEM_W(ctx->r5, 0X8);
     // 0x800A9978: addu        $v0, $a2, $v0
     ctx->r2 = ADD32(ctx->r6, ctx->r2);
     // 0x800A997C: addiu       $v1, $a1, 0x1C

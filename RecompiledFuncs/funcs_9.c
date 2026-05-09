@@ -1,31 +1,9 @@
 #include "recomp.h"
 #include "funcs.h"
-#include <stdio.h>
-#include <string.h>
 
 RECOMP_FUNC void func_8003EC10(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    /* RS64-DEBUG: detect bad input node. If the caller passes a node whose next
-     * pointer (+0x48) is corrupt, log it before we deref. */
-    {
-        uint32_t _a1 = (uint32_t)(uint64_t)ctx->r5;
-        if ((_a1 & 0xE0000000u) == 0x80000000u && _a1 < 0x80800000u) {
-            uint32_t _next = MEM_W(ctx->r5, 0X48);
-            uint32_t _prev = MEM_W(ctx->r5, 0X44);
-            int next_bad = (_next != 0 && (_next < 0x80000000u || _next >= 0x80800000u));
-            int prev_bad = (_prev != 0 && (_prev < 0x80000000u || _prev >= 0x80800000u));
-            if (next_bad || prev_bad) {
-                static int s_n = 0;
-                if (s_n++ < 10) {
-                    fprintf(stderr, "[bad-node-entry] func_8003EC10 ra=0x%08X a0=0x%08X a1(node)=0x%08X next=0x%08X%s prev=0x%08X%s\n",
-                        (uint32_t)(uint64_t)ctx->r31, (uint32_t)(uint64_t)ctx->r4, _a1,
-                        _next, next_bad ? " CORRUPT" : "", _prev, prev_bad ? " CORRUPT" : "");
-                    fflush(stderr);
-                }
-            }
-        }
-    }
     // 0x8003EC10: addiu       $sp, $sp, -0x18
     ctx->r29 = ADD32(ctx->r29, -0X18);
     // 0x8003EC14: sw          $ra, 0x10($sp)
@@ -141,8 +119,6 @@ L_8003EC90:
     MEM_B(0X1, ctx->r2) = ctx->r3;
     // 0x8003ECB4: lw          $v0, 0x48($a1)
     ctx->r2 = MEM_W(ctx->r5, 0X48);
-    /* PATCH: treat 0xFFFFFFFF (-1) sentinel as "no link" (equivalent to 0). */
-    if ((uint32_t)(uint64_t)ctx->r2 == 0xFFFFFFFFu) ctx->r2 = 0;
     // 0x8003ECB8: bne         $v0, $zero, L_8003ECFC
     if (ctx->r2 != 0) {
         // 0x8003ECBC: nop
@@ -153,7 +129,6 @@ L_8003EC90:
 
     // 0x8003ECC0: lw          $v0, 0x44($a1)
     ctx->r2 = MEM_W(ctx->r5, 0X44);
-    if ((uint32_t)(uint64_t)ctx->r2 == 0xFFFFFFFFu) ctx->r2 = 0;
     // 0x8003ECC4: bne         $v0, $zero, L_8003ECF0
     if (ctx->r2 != 0) {
         // 0x8003ECC8: nop
@@ -208,15 +183,6 @@ L_8003ECFC:
     // 0x8003ED00: lb          $v1, 0x0($a1)
     ctx->r3 = MEM_B(ctx->r5, 0X0);
     // 0x8003ED04: lb          $v0, 0x0($a2)
-    // PATCH (2026-05-08): guard corrupt next pointer (linked list).
-    if (((uint64_t)ctx->r6 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) {
-        static int s_warned = 0;
-        if (s_warned++ < 5) {
-            fprintf(stderr, "[guard] func_8003EC10 L_8003ECFC: next=0x%08X invalid -> bypass to L_8003ED58\n", (uint32_t)(uint64_t)ctx->r6);
-            fflush(stderr);
-        }
-        goto L_8003ED58;
-    }
     ctx->r2 = MEM_B(ctx->r6, 0X0);
     // 0x8003ED08: slt         $v0, $v0, $v1
     ctx->r2 = SIGNED(ctx->r2) < SIGNED(ctx->r3) ? 1 : 0;
@@ -230,7 +196,6 @@ L_8003ECFC:
 
     // 0x8003ED14: lw          $v0, 0x44($a1)
     ctx->r2 = MEM_W(ctx->r5, 0X44);
-    if ((uint32_t)(uint64_t)ctx->r2 == 0xFFFFFFFFu) ctx->r2 = 0;
     // 0x8003ED18: beql        $v0, $zero, L_8003ED24
     if (ctx->r2 == 0) {
         // 0x8003ED1C: sw          $a2, 0x0($a3)
@@ -256,17 +221,8 @@ L_8003ED24:
     ctx->r2 = MEM_W(ctx->r2, 0X48);
     // 0x8003ED38: bnel        $v0, $zero, L_8003ED40
     if (ctx->r2 != 0) {
-        // PATCH (2026-05-08): guard corrupt next->next pointer (linked list).
-        if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) {
-            // 0x8003ED3C: sw          $a1, 0x44($v0)
-            MEM_W(0X44, ctx->r2) = ctx->r5;
-        } else {
-            static int s_warned = 0;
-            if (s_warned++ < 5) {
-                fprintf(stderr, "[guard] func_8003EC10 L_8003ED38: next->next=0x%08X invalid -> skip write\n", (uint32_t)(uint64_t)ctx->r2);
-                fflush(stderr);
-            }
-        }
+        // 0x8003ED3C: sw          $a1, 0x44($v0)
+        MEM_W(0X44, ctx->r2) = ctx->r5;
             goto L_8003ED40;
     }
     goto skip_1;
@@ -3595,15 +3551,6 @@ L_8003FF3C:
 RECOMP_FUNC void func_8003FFEC(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    // ROGUESQ: trace every particle-spawn-registry call. Logs a0 (callback ptr),
-    // a1 (struct), a2 (count), a3 (lifetime) — confirms whether cinematic
-    // explosion code is reaching the spawn code path. Always-on; throttled.
-    { static int n=0; if (++n<=20 || (n%500)==0) {
-        fprintf(stderr, "[trace] func_8003FFEC SPAWN #%d cb=0x%08X arg=0x%08X count=%d life=%d\n",
-            n, (uint32_t)(uint64_t)ctx->r4, (uint32_t)(uint64_t)ctx->r5,
-            (int)(int32_t)(uint64_t)ctx->r6, (int)(int32_t)(uint64_t)ctx->r7);
-        fflush(stderr);
-    } }
     // 0x8003FFEC: lui         $v0, 0x8013
     ctx->r2 = S32(0X8013 << 16);
     // 0x8003FFF0: lw          $v0, 0xBC8($v0)
@@ -3736,22 +3683,6 @@ L_8004008C:
     MEM_W(0XBC8, ctx->r5) = ctx->r3;
     // 0x800400AC: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    // PATCH (2026-05-08): defensive store-target guard. $s0 = MEM[$v0+0] is a
-    // pointer used for struct initialization throughout the rest of this
-    // function (stores at +4, +8, +C, +0, +10, +14, +1B, +1A, +19, +16, etc).
-    // During cinematic, $s0 occasionally arrives non-canonical. Bail with a
-    // proper epilogue (restore saved regs + $sp) — graceful "no-op spawn".
-    // Root cause tracked in project_cinematic_visibility.md.
-    if (((uint64_t)ctx->r16 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) {
-        ctx->r31 = MEM_W(ctx->r29, 0X24);
-        ctx->r20 = MEM_W(ctx->r29, 0X20);
-        ctx->r19 = MEM_W(ctx->r29, 0X1C);
-        ctx->r18 = MEM_W(ctx->r29, 0X18);
-        ctx->r17 = MEM_W(ctx->r29, 0X14);
-        ctx->r16 = MEM_W(ctx->r29, 0X10);
-        ctx->r29 = ADD32(ctx->r29, 0X28);
-        return;
-    }
     // 0x800400B0: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
     // 0x800400B4: sw          $zero, 0x8($s0)
@@ -3764,7 +3695,6 @@ L_8004008C:
     MEM_W(0X10, ctx->r16) = 0;
     // 0x800400C4: sh          $s3, 0x14($s0)
     MEM_H(0X14, ctx->r16) = ctx->r19;
-L_800400CC_after_init: ;
     // 0x800400C8: sb          $zero, 0x1B($s0)
     MEM_B(0X1B, ctx->r16) = 0;
     // 0x800400CC: sb          $zero, 0x1A($s0)
@@ -5896,7 +5826,7 @@ L_80040C1C:
     // 0x80040C3C: sra         $v1, $a3, 16
     ctx->r3 = S32(SIGNED(ctx->r7) >> 16);
     // 0x80040C40: div         $zero, $v0, $v1
-    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = S32(ctx->r2); }
+    lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3)));
     // 0x80040C44: bne         $v1, $zero, L_80040C50
     if (ctx->r3 != 0) {
         // 0x80040C48: nop
@@ -6006,7 +5936,7 @@ L_80040CB0:
     // 0x80040CD0: sra         $v1, $a3, 16
     ctx->r3 = S32(SIGNED(ctx->r7) >> 16);
     // 0x80040CD4: div         $zero, $v0, $v1
-    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = S32(ctx->r2); }
+    lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3)));
     // 0x80040CD8: bne         $v1, $zero, L_80040CE4
     if (ctx->r3 != 0) {
         // 0x80040CDC: nop
@@ -16971,24 +16901,6 @@ L_800446EC:
 RECOMP_FUNC void func_80044724(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
-    // ROGUESQ: trace cinematic explosion particle callback execution. If this
-    // fires N times per frame, particles are alive. If it never fires, the
-    // particles either died immediately or the per-frame dispatcher isn't
-    // running them.
-    // Also reads D_80136DD0 — the suspect "scale" variable. If it stays 0
-    // throughout cinematic, no writer initializes it → particles get scaled
-    // to zero → invisible. If non-zero, hypothesis is wrong.
-    { static int n=0; if (++n<=20 || (n%500)==0) {
-        // D_80136DD0 lives at MIPS 0x80136DD0 → rdram offset 0x136DD0 (XOR
-        // not needed for word read).
-        uint32_t scale_bits = *(uint32_t*)(rdram + 0x136DD0);
-        float scale_val;
-        memcpy(&scale_val, &scale_bits, 4);
-        fprintf(stderr, "[trace] func_80044724 EXPLOSION-CB #%d a0=0x%08X a1=0x%08X D_80136DD0=0x%08X(=%.6f)\n",
-            n, (uint32_t)(uint64_t)ctx->r4, (uint32_t)(uint64_t)ctx->r5,
-            scale_bits, scale_val);
-        fflush(stderr);
-    } }
     // 0x80044724: addiu       $sp, $sp, -0x50
     ctx->r29 = ADD32(ctx->r29, -0X50);
     // 0x80044728: sw          $s0, 0x38($sp)
@@ -17748,15 +17660,6 @@ L_80044B70:
 L_80044B94:
     // 0x80044B94: lhu         $a0, 0x104($s2)
     ctx->r4 = MEM_HU(ctx->r18, 0X104);
-    // ROGUESQ: trace when parent's per-frame path reaches sub-particle dispatch.
-    // If this fires but [trace] func_8005BCC4 SUB-CB a1=4 doesn't, the issue
-    // is INSIDE func_8003E8DC (iterator skipping the sub-particle).
-    // If this never fires, the parent's per-frame path doesn't reach here.
-    { static int n=0; if (++n<=20 || (n%500)==0) {
-        fprintf(stderr, "[trace] func_80044724 SUB-DISPATCH #%d slot=0x%04X\n",
-            n, (uint32_t)(uint64_t)ctx->r4 & 0xFFFF);
-        fflush(stderr);
-    } }
     // 0x80044B98: addiu       $a1, $zero, 0x4
     ctx->r5 = ADD32(0, 0X4);
     // 0x80044B9C: jal         0x8003E8DC

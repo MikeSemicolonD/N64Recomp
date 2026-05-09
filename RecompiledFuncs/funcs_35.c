@@ -5225,7 +5225,7 @@ L_800C70A0:
     // 0x800C70F0: lhu         $v1, 0x0($t0)
     ctx->r3 = MEM_HU(ctx->r8, 0X0);
     // 0x800C70F4: divu        $zero, $v0, $v1
-    if (U32(ctx->r3) != 0) { lo = S32(U32(ctx->r2) / U32(ctx->r3)); hi = S32(U32(ctx->r2) % U32(ctx->r3)); } else { lo = 0; hi = S32(ctx->r2); }
+    lo = S32(U32(ctx->r2) / U32(ctx->r3)); hi = S32(U32(ctx->r2) % U32(ctx->r3));
     // 0x800C70F8: bne         $v1, $zero, L_800C7104
     if (ctx->r3 != 0) {
         // 0x800C70FC: nop
@@ -5252,7 +5252,7 @@ L_800C7104:
     // 0x800C7114: lhu         $v1, 0x2($t0)
     ctx->r3 = MEM_HU(ctx->r8, 0X2);
     // 0x800C7118: divu        $zero, $v0, $v1
-    if (U32(ctx->r3) != 0) { lo = S32(U32(ctx->r2) / U32(ctx->r3)); hi = S32(U32(ctx->r2) % U32(ctx->r3)); } else { lo = 0; hi = S32(ctx->r2); }
+    lo = S32(U32(ctx->r2) / U32(ctx->r3)); hi = S32(U32(ctx->r2) % U32(ctx->r3));
     // 0x800C711C: bne         $v1, $zero, L_800C7128
     if (ctx->r3 != 0) {
         // 0x800C7120: nop
@@ -5511,7 +5511,7 @@ L_800C7288:
     // 0x800C7298: addu        $v0, $v1, $a0
     ctx->r2 = ADD32(ctx->r3, ctx->r4);
     // 0x800C729C: div         $zero, $v0, $a0
-    if (S32(ctx->r4) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r4))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r4))); } else { lo = 0; hi = S32(ctx->r2); }
+    lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r4))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r4)));
     // 0x800C72A0: bne         $a0, $zero, L_800C72AC
     if (ctx->r4 != 0) {
         // 0x800C72A4: nop
@@ -5551,7 +5551,7 @@ L_800C72C4:
     // 0x800C72CC: nop
 
     // 0x800C72D0: div         $zero, $v1, $v0
-    if (S32(ctx->r2) != 0) { lo = S32(S64(S32(ctx->r3)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r3)) % S64(S32(ctx->r2))); } else { lo = 0; hi = S32(ctx->r3); }
+    lo = S32(S64(S32(ctx->r3)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r3)) % S64(S32(ctx->r2)));
     // 0x800C72D4: bne         $v0, $zero, L_800C72E0
     if (ctx->r2 != 0) {
         // 0x800C72D8: nop
@@ -5630,7 +5630,7 @@ L_800C7310:
     // 0x800C7344: addu        $v0, $v0, $v1
     ctx->r2 = ADD32(ctx->r2, ctx->r3);
     // 0x800C7348: div         $zero, $v0, $v1
-    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = S32(ctx->r2); }
+    lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3)));
     // 0x800C734C: bne         $v1, $zero, L_800C7358
     if (ctx->r3 != 0) {
         // 0x800C7350: nop
@@ -5682,7 +5682,7 @@ L_800C7370:
     // 0x800C7390: addu        $v0, $v0, $v1
     ctx->r2 = ADD32(ctx->r2, ctx->r3);
     // 0x800C7394: div         $zero, $v0, $v1
-    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3))); } else { lo = 0; hi = S32(ctx->r2); }
+    lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r3)));
     // 0x800C7398: bne         $v1, $zero, L_800C73A4
     if (ctx->r3 != 0) {
         // 0x800C739C: nop
@@ -7474,7 +7474,7 @@ L_800C7708:
     // 0x800C77B0: nop
 
     // 0x800C77B4: div         $zero, $a2, $v1
-    if (S32(ctx->r3) != 0) { lo = S32(S64(S32(ctx->r6)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r6)) % S64(S32(ctx->r3))); } else { lo = 0; hi = S32(ctx->r6); }
+    lo = S32(S64(S32(ctx->r6)) / S64(S32(ctx->r3))); hi = S32(S64(S32(ctx->r6)) % S64(S32(ctx->r3)));
     // 0x800C77B8: bne         $v1, $zero, L_800C77C4
     if (ctx->r3 != 0) {
         // 0x800C77BC: nop
@@ -7522,7 +7522,7 @@ L_800C77DC:
     // 0x800C77F4: nop
 
     // 0x800C77F8: div         $zero, $a2, $v0
-    if (S32(ctx->r2) != 0) { lo = S32(S64(S32(ctx->r6)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r6)) % S64(S32(ctx->r2))); } else { lo = 0; hi = S32(ctx->r6); }
+    lo = S32(S64(S32(ctx->r6)) / S64(S32(ctx->r2))); hi = S32(S64(S32(ctx->r6)) % S64(S32(ctx->r2)));
     // 0x800C77FC: bne         $v0, $zero, L_800C7808
     if (ctx->r2 != 0) {
         // 0x800C7800: nop
@@ -7571,7 +7571,7 @@ L_800C782C:
     // 0x800C7838: addu        $v0, $v0, $a1
     ctx->r2 = ADD32(ctx->r2, ctx->r5);
     // 0x800C783C: div         $zero, $v0, $a1
-    if (S32(ctx->r5) != 0) { lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r5))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r5))); } else { lo = 0; hi = S32(ctx->r2); }
+    lo = S32(S64(S32(ctx->r2)) / S64(S32(ctx->r5))); hi = S32(S64(S32(ctx->r2)) % S64(S32(ctx->r5)));
     // 0x800C7840: bne         $a1, $zero, L_800C784C
     if (ctx->r5 != 0) {
         // 0x800C7844: nop
@@ -7611,7 +7611,7 @@ L_800C7864:
     // 0x800C786C: nop
 
     // 0x800C7870: divu        $zero, $a0, $a1
-    if (U32(ctx->r5) != 0) { lo = S32(U32(ctx->r4) / U32(ctx->r5)); hi = S32(U32(ctx->r4) % U32(ctx->r5)); } else { lo = 0; hi = S32(ctx->r4); }
+    lo = S32(U32(ctx->r4) / U32(ctx->r5)); hi = S32(U32(ctx->r4) % U32(ctx->r5));
     // 0x800C7874: bne         $a1, $zero, L_800C7880
     if (ctx->r5 != 0) {
         // 0x800C7878: nop

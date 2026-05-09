@@ -12393,7 +12393,7 @@ RECOMP_FUNC void compareStatstoMedalInfo(uint8_t* rdram, recomp_context* ctx) {
     // 0x800CC2D0: sll         $v0, $v0, 2
     ctx->r2 = S32(ctx->r2 << 2);
     // 0x800CC2D4: divu        $zero, $v0, $a2
-    if (U32(ctx->r6) != 0) { lo = S32(U32(ctx->r2) / U32(ctx->r6)); hi = S32(U32(ctx->r2) % U32(ctx->r6)); } else { lo = 0; hi = S32(ctx->r2); }
+    lo = S32(U32(ctx->r2) / U32(ctx->r6)); hi = S32(U32(ctx->r2) % U32(ctx->r6));
     // 0x800CC2D8: bne         $a2, $zero, L_800CC2E4
     if (ctx->r6 != 0) {
         // 0x800CC2DC: nop
@@ -12549,7 +12549,7 @@ RECOMP_FUNC void calculateShotAccuracy(uint8_t* rdram, recomp_context* ctx) {
     // 0x800CC394: sll         $v0, $v0, 2
     ctx->r2 = S32(ctx->r2 << 2);
     // 0x800CC398: divu        $zero, $v0, $a1
-    if (U32(ctx->r5) != 0) { lo = S32(U32(ctx->r2) / U32(ctx->r5)); hi = S32(U32(ctx->r2) % U32(ctx->r5)); } else { lo = 0; hi = S32(ctx->r2); }
+    lo = S32(U32(ctx->r2) / U32(ctx->r5)); hi = S32(U32(ctx->r2) % U32(ctx->r5));
     // 0x800CC39C: bne         $a1, $zero, L_800CC3A8
     if (ctx->r5 != 0) {
         // 0x800CC3A0: nop
