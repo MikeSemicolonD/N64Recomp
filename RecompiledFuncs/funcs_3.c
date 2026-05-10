@@ -177,6 +177,7 @@ RECOMP_FUNC void func_800079F0(uint8_t* rdram, recomp_context* ctx) {
 L_80007A1C:
     // 0x80007A1C: lw          $v1, 0x0($v1)
     ctx->r3 = MEM_W(ctx->r3, 0X0);
+    { if (((uint64_t)ctx->r3 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) { ctx->r2 = 0; goto L_80007A2C; } }
     // 0x80007A20: lw          $v0, 0x0($v1)
     ctx->r2 = MEM_W(ctx->r3, 0X0);
     // 0x80007A24: bne         $v0, $zero, L_80007A1C
@@ -203,6 +204,7 @@ L_80007A2C:
     // 0x80007A3C: sw          $v1, 0x4($v0)
     MEM_W(0X4, ctx->r2) = ctx->r3;
 L_80007A40:
+    { if (((uint64_t)ctx->r3 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) { ctx->r2 = 0; goto L_80007A4C; } }
     // 0x80007A40: lui         $at, 0x8011
     ctx->r1 = S32(0X8011 << 16);
     // 0x80007A44: sw          $a0, 0x63B0($at)
@@ -15795,8 +15797,9 @@ L_8000D31C:
     ctx->r2 = S32(0X8011 << 16);
     // 0x8000D320: lw          $v0, 0x63B0($v0)
     ctx->r2 = MEM_W(ctx->r2, 0X63B0);
-    // 0x8000D324: lw          $v0, 0x0($v0)
-    ctx->r2 = MEM_W(ctx->r2, 0X0);
+    { ctx->r2 = (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) ? MEM_W(ctx->r2, 0x0) : 0; }
+    // 0x8000D324: nop
+
     // 0x8000D328: lui         $at, 0x8011
     ctx->r1 = S32(0X8011 << 16);
     // 0x8000D32C: sw          $v0, 0x63B0($at)

@@ -3217,8 +3217,9 @@ L_80001D7C:
 L_80001D80:
     // 0x80001D80: addu        $a1, $a3, $zero
     ctx->r5 = ADD32(ctx->r7, 0);
-    // 0x80001D84: lhu         $v1, 0x0($a1)
-    ctx->r3 = MEM_HU(ctx->r5, 0X0);
+    { uint32_t a1 = (uint32_t)(uint64_t)ctx->r5; if (a1 < 0x80000000u || a1 >= 0x80800000u) goto L_80001D94; ctx->r3 = MEM_HU(ctx->r5, 0x0); }
+    // 0x80001D84: nop
+
     // 0x80001D88: andi        $v0, $v1, 0x8
     ctx->r2 = ctx->r3 & 0X8;
     // 0x80001D8C: beq         $v0, $zero, L_80001CE0
@@ -4394,8 +4395,9 @@ L_8000242C:
     ctx->r2 = MEM_W(ctx->r8, 0X4);
     // 0x80002430: addu        $v0, $t0, $v0
     ctx->r2 = ADD32(ctx->r8, ctx->r2);
-    // 0x80002434: lhu         $v1, 0x10($v0)
-    ctx->r3 = MEM_HU(ctx->r2, 0X10);
+    { uint32_t v0 = (uint32_t)(uint64_t)ctx->r2; if (v0 < 0x80000000u || v0 >= 0x80800000u) goto L_80002474; ctx->r3 = MEM_HU(ctx->r2, 0x10); }
+    // 0x80002434: nop
+
     // 0x80002438: andi        $v1, $v1, 0x8
     ctx->r3 = ctx->r3 & 0X8;
     // 0x8000243C: beq         $v1, $zero, L_80002358

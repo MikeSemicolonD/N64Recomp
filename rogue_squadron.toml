@@ -15,11 +15,11 @@ manual_funcs = [
 
 [patches]
 stubs = [
-    # NOTE: func_8000040C is bzero + cache-invalidate. The 'cache 0x0D' instruction
-    # is unsupported by N64Recomp. Older builds tolerated it; the rebuilt one
-    # (lib/N64ModernRuntime/N64Recomp) errors out and truncates funcs.h.
-    # Stub it here — a hand-written equivalent in librecomp/extensions.cpp
-    # does the bzero portion that the game actually depends on.
+    # NOTE: func_8000040C is bzero + cache-invalidate. Tried un-stubbing with
+    # NOP-the-cache patch (2026-05-09) but it caused boot hangs (something
+    # was relying on bzero being a no-op). Re-stubbed for now. The original
+    # comment claimed "hand-written equivalent in librecomp/extensions.cpp"
+    # but no such impl exists — bzeroes are silent no-ops.
     "func_8000040C",
     # func_80018ED4 is a broken-looking cache-flush loop (resets t0/t1 every
     # iteration → infinite loop on real hw if ever called with a1 != 16).
@@ -162,12 +162,15 @@ stubs = [
     "fake_func_80108B8C",
     "fake_func_80109428",
     "fake_func_80109618",
-    # Factor5 sync primitives + entity init (832A0.s) — TOML's prior labeling as
-    # "cache-flush / DMA copy routines" was wrong; these are msgq-mutex helpers and
-    # real game logic. Unstubbed func_80092128 (entity init, no inter-function
-    # branches) to see if it recompiles. The lock/unlock/post primitives are kept
-    # stubbed for now and will need C++ replacements in librecomp/extensions.cpp.
-    # Only the msgq-based mutex/sync primitives stay stubbed for now.
+    # Factor5 sync primitives (832A0.s) — counting-semaphore on D_800A1780
+    # (counter) + D_80149990 (msgq). Queue init verified: func_80091FC4
+    # is called from boot dispatch BEFORE first lock (correct order).
+    # However un-stubbing them causes boot to stall (timeout vs 5s crash).
+    # Hypothesis: func_80091FC4 is called TWICE during boot — second call
+    # re-creates queue, leaving counter and queue out of sync. RE-STUBBED
+    # for now; "bzero-only" config gets 2/3 runs to D3D12 (deeper).
+    # TODO: trace why func_80091FC4 fires twice; either guard re-init OR
+    # implement these as host C++ wrappers around std::mutex/condvar.
     "func_80092010",  # mutex_lock-like
     "func_8009205C",  # mutex_unlock-like
     "func_800920A4",  # try_lock
@@ -189,6 +192,11 @@ stubs = [
 # recompile we don't emulate caches, so the flushes are no-ops in spirit.
 # Replace each with NOP so N64Recomp can recompile the rest of the function
 # (which is real FP work we don't want to lose by stubbing the whole thing).
+# Additionally, the function uses the MIPS PIC return pattern
+# (`addu $t9, $ra, $zero` at 0x80018D84 + `jr $t9` at 0x80018E58) which
+# N64Recomp emits as LOOKUP_FUNC(ctx->r25) — failing because r25 holds the
+# caller's ra not a MIPS function address. Replace `jr $t9` with `jr $ra`
+# (0x03E00008) so the recompile treats it as a normal function exit.
 [[patches.instruction]]
 func = "func_80018D80"
 vram = 0x80018D88
@@ -208,6 +216,14 @@ value = 0x00000000
 func = "func_80018D80"
 vram = 0x80018D94
 value = 0x00000000
+
+# Patch `jr $t9` (0x03200008) -> `jr $ra` (0x03E00008) at 0x80018E58.
+# t9 was set to ra at function entry; both encodings have identical
+# effect, but only `jr $ra` is recognized by N64Recomp as a function exit.
+[[patches.instruction]]
+func = "func_80018D80"
+vram = 0x80018E58
+value = 0x03E00008
 
 # NOTE: zmemcpy is stubbed above (libultra name, ELF function but runtime-
 # provided; stub keeps regen clean). osInvalDCache, osInvalICache,
@@ -337,12 +353,140 @@ value = 0x00000000
 # Plan + tier classification at: docs/plan-kseg-guard-migration.md
 # (in the RogueSquadron64Recomp repo)
 
+# --- Diagnostic hooks for cinematic state-machine investigation ---
+# All gated by ROGUESQ_LOG_HOOKS=1 — silent in normal runs. Helper is
+# `rs64_dbg_log4` in src/main/upstream_compat.cpp. Re-enable when probing
+# why cinematic body doesn't enter.
+#
+# IMPORTANT: hook body is INLINED at function entry. `return` in the hook
+# returns from the WHOLE function (not just the hook block). Always wrap
+# logging logic in `if (s_log) { ... }` — never use early `return`.
+#
+# func_8003DFA0 = cinematic OUTER loop. Entry args: $a0..$a3 vary.
+# State fields gating body: B40+0x04 (state byte), B40+0x21 (flag byte),
+# B50 (word, bit 5 = inner advance gate), B58 (word, bit 25 = outer gate).
+#
+# func_800A5D80 = cinematic INNER loop. Entry args: $a0,$a1,$a2.
+# Inner body advances when $a1==2 OR bit 5 of B50.
+#
+# Captures first 4 entries + every 64th when env var enables logging.
+[[patches.hook]]
+func = "func_8003DFA0"
+text = '''{
+    static int s_log = -1;
+    if (s_log < 0) {
+        const char* e = getenv("ROGUESQ_LOG_HOOKS");
+        s_log = (e && *e && *e != '0') ? 1 : 0;
+    }
+    if (s_log) {
+        static int s_count = 0;
+        ++s_count;
+        if (s_count <= 4 || (s_count & 63) == 0) {
+            extern void rs64_dbg_log4(const char* tag, unsigned a, unsigned b, unsigned c, unsigned d);
+            uint32_t b04 = (uint32_t)MEM_BU(0xB44, (gpr)0xFFFFFFFF80130000ULL);
+            uint32_t b21 = (uint32_t)MEM_BU(0xB61, (gpr)0xFFFFFFFF80130000ULL);
+            uint32_t b50 = (uint32_t)MEM_W(0xB50, (gpr)0xFFFFFFFF80130000ULL);
+            uint32_t b58 = (uint32_t)MEM_W(0xB58, (gpr)0xFFFFFFFF80130000ULL);
+            rs64_dbg_log4("8003DFA0 b40+04 b40+21 B50 B58", b04, b21, b50, b58);
+        }
+    }
+}'''
+
+[[patches.hook]]
+func = "func_800A5D80"
+text = '''{
+    static int s_log = -1;
+    if (s_log < 0) {
+        const char* e = getenv("ROGUESQ_LOG_HOOKS");
+        s_log = (e && *e && *e != '0') ? 1 : 0;
+    }
+    if (s_log) {
+        static int s_count = 0;
+        ++s_count;
+        if (s_count <= 4 || (s_count & 63) == 0) {
+            extern void rs64_dbg_log4(const char* tag, unsigned a, unsigned b, unsigned c, unsigned d);
+            rs64_dbg_log4("800A5D80 a0 a1 a2 count", (unsigned)ctx->r4, (unsigned)ctx->r5, (unsigned)ctx->r6, (unsigned)s_count);
+        }
+    }
+}'''
+
 # --- Tier 1: entry-bail (guard at function entry) ---
+
+# Empty-pool sentinel for load_asset_with_malloc_flags. Original game's RAM
+# was uninitialized garbage; `func_80097518` (audio walker) treats the
+# first word of an empty pool as the -1 sentinel meaning "no entries".
+# rs_malloc zero-inits, so empty audio pools at boot have first-word=0
+# instead of -1, causing infinite walker loops. Stamp -1 right before
+# the function returns (after r2 has been set to the malloc'd buffer).
+# This is the load-bearing fix that unblocked the boot deadlock together
+# with the host zmemcpy implementation in upstream_compat.cpp.
+# See project_zmemcpy_root_cause.md.
+[[patches.hook]]
+func = "load_asset_with_malloc_flags"
+before_vram = 0x80064884   # the `jr $ra` instruction
+text = '''{
+    static int s_force = -1;
+    if (s_force < 0) {
+        const char* e = getenv("ROGUESQ_DISABLE_EMPTY_POOL_SENTINEL");
+        s_force = (e && *e && *e != '0') ? 0 : 1;
+    }
+    if (s_force) {
+        uint32_t buf_ptr = (uint32_t)ctx->r2;
+        if (buf_ptr >= 0x80000000u && buf_ptr < 0x80800000u) {
+            int32_t* word_ptr = (int32_t*)(rdram + (buf_ptr - 0x80000000u));
+            if (*word_ptr == 0) {
+                *word_ptr = -1;
+            }
+        }
+    }
+}'''
 
 # Was: funcs_15.c:550 — defensive lookup-array guard. r4 is a struct-pointer
 # that occasionally arrives non-canonical during cinematic.
 [[patches.hook]]
 func = "func_800646AC"
+text = '''{ if (((uint64_t)ctx->r4 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) return; }'''
+
+# Game thread per-frame loop iteration counter. The loop blocks on
+# osRecvMesg(VI retrace queue) at the top of every iteration. If VI events
+# aren't firing at 60Hz, the iteration rate is the actual game frame rate.
+# Logs first 4 + every 64th iteration so we can see the rate.
+[[patches.hook]]
+func = "func_80019868"
+before_vram = 0x800198E8   # L_800198E8 — top of per-frame loop
+text = '''{
+    static int s_count = 0;
+    int n = ++s_count;
+    if (n <= 4 || (n & 63) == 0) {
+        extern void rs64_dbg_log4(const char* tag, unsigned a, unsigned b, unsigned c, unsigned d);
+        rs64_dbg_log4("game_frame_iter", n, 0, 0, 0);
+    }
+}'''
+
+# Skip the entire mempak menu setup (action 9, func_800C28F0). The handler
+# tries to look up the "mempak" HOB which our asset loader hasn't populated
+# yet, then crashes / corrupts RT64 state by emitting bad RDP commands.
+# Action 9 is fire-and-forget from func_800C58A0 — caller doesn't check
+# the return value. Bail at entry to keep the state machine advancing
+# past mempak menu into the actual cinematic / attribution screen.
+[[patches.hook]]
+func = "func_800C28F0"
+text = '''{ return; }'''
+
+# Defensive guard for func_8001CB64 (struct-init helper called by mempak
+# menu init in func_800C28F0). r4 = HOB-lookup result + 0x28; if the HOB
+# lookup returned NULL, r4 = 0x28 (out of range) and the first MEM_W store
+# crashes. The HOB lookup race is timing-dependent — log delays mask it.
+# Skip the init when r4 isn't a valid KSEG0 pointer; downstream code may
+# still misbehave but at least we don't AV in the struct write.
+[[patches.hook]]
+func = "func_8001CB64"
+text = '''{ if (((uint64_t)ctx->r4 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) return; }'''
+
+# Same defensive guard for func_8001CB9C (next call in func_800C28F0,
+# operates on the same struct returned from the HOB lookup).
+[[patches.hook]]
+func = "func_8001CB9C"
 text = '''{ if (((uint64_t)ctx->r4 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) return; }'''
 
 # Was: funcs_4.c:27264 — defensive matrix-multiply guard. r4 + r5 are matrix
@@ -384,6 +528,212 @@ text = '''{
     uint32_t size32 = (uint32_t)size;
     if ((addr32 & 0xE0000000u) == 0x80000000u && addr32 < 0x80800000u && size32 > 0 && size32 < 0x100000u && addr32 + size32 <= 0x80800000u) {
         for (uint32_t i = 0; i < size32; ++i) MEM_B(i, addr) = 0;
+    }
+}'''
+
+# --- Tier 2: goto-existing-label (skip-block when pointer non-canonical) ---
+# Was funcs_3.c:184 — heap walker bails when next-pointer isn't KSEG0.
+[[patches.hook]]
+func = "func_800079F0"
+before_vram = 0x80007A20
+text = '''{ if (((uint64_t)ctx->r3 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) { ctx->r2 = 0; goto L_80007A2C; } }'''
+
+# Was funcs_3.c:205 — second guard in the same walker, after L_80007A2C.
+[[patches.hook]]
+func = "func_800079F0"
+before_vram = 0x80007A40
+text = '''{ if (((uint64_t)ctx->r3 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) { ctx->r2 = 0; goto L_80007A4C; } }'''
+
+# Was funcs_8.c:12139 — cinematic dispatcher (func_8003E8DC). Bails to
+# L_8003EA08 setting $s1 to a safe value when slot pointer non-canonical.
+[[patches.hook]]
+func = "func_8003E8DC"
+before_vram = 0x8003E9D8
+text = '''{ if (((uint64_t)ctx->r17 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) { ctx->r17 = 0; goto L_8003EA08; } }'''
+
+# Was funcs_8.c:12587 — cinematic dispatcher inner (func_8003EA4C). Same
+# pattern: skip dispatch on non-canonical slot.
+[[patches.hook]]
+func = "func_8003EA4C"
+before_vram = 0x8003EBA4
+text = '''{ if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) goto L_8003EBFC; }'''
+
+# --- Tier 3: replace-load-with-default (NOP the lw + conditional load) ---
+# Heap free-list head deref. If $v0 (head pointer) isn't KSEG0, treat as
+# null (return 0) instead of dereferencing → AV. Same pattern × 3 funcs.
+[[patches.instruction]]
+func = "func_8000CFD4"
+vram = 0x8000D324
+value = 0x00000000
+[[patches.hook]]
+func = "func_8000CFD4"
+before_vram = 0x8000D324
+text = '''{ ctx->r2 = (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) ? MEM_W(ctx->r2, 0x0) : 0; }'''
+
+[[patches.instruction]]
+func = "func_80010014"
+vram = 0x80010830
+value = 0x00000000
+[[patches.hook]]
+func = "func_80010014"
+before_vram = 0x80010830
+text = '''{ ctx->r2 = (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) ? MEM_W(ctx->r2, 0x0) : 0; }'''
+
+[[patches.instruction]]
+func = "func_80016C44"
+vram = 0x80016F18
+value = 0x00000000
+[[patches.hook]]
+func = "func_80016C44"
+before_vram = 0x80016F18
+text = '''{ ctx->r2 = (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) ? MEM_W(ctx->r2, 0x0) : 0; }'''
+
+# --- Tier 4: conditional-skip-store (NOP the sw + conditional store) ---
+[[patches.instruction]]
+func = "func_80010014"
+vram = 0x80010840
+value = 0x00000000
+[[patches.hook]]
+func = "func_80010014"
+before_vram = 0x80010840
+text = '''{ if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) MEM_W(0x4, ctx->r2) = 0; }'''
+
+[[patches.instruction]]
+func = "func_80016C44"
+vram = 0x80016F28
+value = 0x00000000
+[[patches.hook]]
+func = "func_80016C44"
+before_vram = 0x80016F28
+text = '''{ if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) MEM_W(0x4, ctx->r2) = 0; }'''
+
+# --- Cinematic linked-list guards (func_8003EC10): treat 0xFFFFFFFF as null ---
+# Original game's malloc returns zeroed memory; ours leaves 0xFFFFFFFF stale
+# bytes from previous allocations. The linked-list walker's `bne $v0, $zero`
+# treats 0xFFFFFFFF as a valid link → walks off into garbage. Normalize
+# 0xFFFFFFFF→0 right after each load so the bne behaves like the original.
+[[patches.hook]]
+func = "func_8003EC10"
+before_vram = 0x8003ECB8
+text = '''{ if ((uint32_t)(uint64_t)ctx->r2 == 0xFFFFFFFFu) ctx->r2 = 0; }'''
+
+[[patches.hook]]
+func = "func_8003EC10"
+before_vram = 0x8003ECC4
+text = '''{ if ((uint32_t)(uint64_t)ctx->r2 == 0xFFFFFFFFu) ctx->r2 = 0; }'''
+
+[[patches.hook]]
+func = "func_8003EC10"
+before_vram = 0x8003ED18
+text = '''{ if ((uint32_t)(uint64_t)ctx->r2 == 0xFFFFFFFFu) ctx->r2 = 0; }'''
+
+# func_8003EC10 L_8003ECFC: skip lb when next-pointer is non-canonical.
+# Replaces `lb $v0, 0x0($a2)` at 0x8003ED04. Bypass to L_8003ED58 (skip the
+# whole comparison block) when $a2 (next ptr) isn't a real KSEG0 pointer.
+[[patches.instruction]]
+func = "func_8003EC10"
+vram = 0x8003ED04
+value = 0x00000000
+[[patches.hook]]
+func = "func_8003EC10"
+before_vram = 0x8003ED04
+text = '''{ if (((uint64_t)ctx->r6 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) goto L_8003ED58; ctx->r2 = MEM_B(ctx->r6, 0x0); }'''
+
+# func_8003EC10 0x8003ED3C: skip `sw $a1, 0x44($v0)` when $v0 is non-canonical.
+[[patches.instruction]]
+func = "func_8003EC10"
+vram = 0x8003ED3C
+value = 0x00000000
+[[patches.hook]]
+func = "func_8003EC10"
+before_vram = 0x8003ED3C
+text = '''{ if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) MEM_W(0x44, ctx->r2) = ctx->r5; }'''
+
+# --- Cinematic inner-loop scrub (func_800A5D80) ---
+# At L_800A6024 (loop top), the inlined dequeue pattern in 100+ places reads
+# the global free-list head from 0x801163B0. If corrupt, every subsequent
+# iteration propagates the bad state. Cheap scrub at loop top: if head is
+# non-zero but not in valid heap range, reset to 0.
+[[patches.hook]]
+func = "func_800A5D80"
+before_vram = 0x800A6024
+text = '''{
+    uint32_t hd = MEM_W((int64_t)(int32_t)0x80110000, 0x63B0);
+    if (hd != 0 && (hd < 0x80000000u || hd >= 0x80800000u)) {
+        MEM_W(0x63B0, (int64_t)(int32_t)0x80110000) = 0;
+    }
+}'''
+
+# --- Heap walker bounds (rs_free, func_800022F8) ---
+# rs_free walker at 0x80001D84: bail to L_80001D94 if $a1 isn't in valid
+# heap range (avoids reading garbage halfword).
+[[patches.instruction]]
+func = "rs_free"
+vram = 0x80001D84
+value = 0x00000000
+[[patches.hook]]
+func = "rs_free"
+before_vram = 0x80001D84
+text = '''{ uint32_t a1 = (uint32_t)(uint64_t)ctx->r5; if (a1 < 0x80000000u || a1 >= 0x80800000u) goto L_80001D94; ctx->r3 = MEM_HU(ctx->r5, 0x0); }'''
+
+# func_800022F8 heap-walker at 0x80002434: same pattern; bail to L_80002474.
+[[patches.instruction]]
+func = "func_800022F8"
+vram = 0x80002434
+value = 0x00000000
+[[patches.hook]]
+func = "func_800022F8"
+before_vram = 0x80002434
+text = '''{ uint32_t v0 = (uint32_t)(uint64_t)ctx->r2; if (v0 < 0x80000000u || v0 >= 0x80800000u) goto L_80002474; ctx->r3 = MEM_HU(ctx->r2, 0x10); }'''
+
+# --- Chain-deref guard (func_800A8420) — cinematic effect dispatcher ---
+# Pattern: $v0 = MEM_W($a2+0x50); $v0 = MEM_W($v0); $f2 = MEM_W($v0+0x44).
+# When the loaded $v0 isn't KSEG0, treat it as null → f2 = 0 (no scaling).
+# Replaces 2 instructions (the chain deref and the f2 load).
+[[patches.instruction]]
+func = "func_800A8420"
+vram = 0x800A87A0
+value = 0x00000000
+[[patches.instruction]]
+func = "func_800A8420"
+vram = 0x800A87A8
+value = 0x00000000
+[[patches.hook]]
+func = "func_800A8420"
+before_vram = 0x800A87A0
+text = '''{ if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) { ctx->r2 = MEM_W(ctx->r2, 0x0); } else { ctx->r2 = 0; } }'''
+[[patches.hook]]
+func = "func_800A8420"
+before_vram = 0x800A87A8
+text = '''{ if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) { ctx->f2.u32l = MEM_W(ctx->r2, 0x44); } else { ctx->f2.u32l = 0; } }'''
+
+# --- Chain-deref guard (func_80047368) — struct-table walk ---
+# Replaces `lhu $s4, 0x0($a1)` at 0x80047538 with conditional halfword load.
+[[patches.instruction]]
+func = "func_80047368"
+vram = 0x80047538
+value = 0x00000000
+[[patches.hook]]
+func = "func_80047368"
+before_vram = 0x80047538
+text = '''{ if (((uint64_t)ctx->r5 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) { ctx->r20 = MEM_HU(ctx->r5, 0x0); } else { ctx->r20 = 0; } }'''
+
+# --- Bail-with-full-epilogue (func_8003FFEC) — defensive struct-init ---
+# $s0 is used for ~12 stores after this point; if non-canonical, return
+# early with full register restore (graceful "no-op spawn").
+[[patches.hook]]
+func = "func_8003FFEC"
+before_vram = 0x800400B0
+text = '''{
+    if (((uint64_t)ctx->r16 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) {
+        ctx->r31 = MEM_W(ctx->r29, 0x24);
+        ctx->r20 = MEM_W(ctx->r29, 0x20);
+        ctx->r19 = MEM_W(ctx->r29, 0x1C);
+        ctx->r18 = MEM_W(ctx->r29, 0x18);
+        ctx->r17 = MEM_W(ctx->r29, 0x14);
+        ctx->r16 = MEM_W(ctx->r29, 0x10);
+        ctx->r29 = ADD32(ctx->r29, 0x28);
+        return;
     }
 }'''
 

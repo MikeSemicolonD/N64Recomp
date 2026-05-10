@@ -873,6 +873,22 @@ RECOMP_FUNC void load_asset_with_malloc_flags(uint8_t* rdram, recomp_context* ct
     ctx->r17 = MEM_W(ctx->r29, 0X1C);
     // 0x80064880: lw          $s0, 0x18($sp)
     ctx->r16 = MEM_W(ctx->r29, 0X18);
+    {
+    static int s_force = -1;
+    if (s_force < 0) {
+        const char* e = getenv("ROGUESQ_DISABLE_EMPTY_POOL_SENTINEL");
+        s_force = (e && *e && *e != '0') ? 0 : 1;
+    }
+    if (s_force) {
+        uint32_t buf_ptr = (uint32_t)ctx->r2;
+        if (buf_ptr >= 0x80000000u && buf_ptr < 0x80800000u) {
+            int32_t* word_ptr = (int32_t*)(rdram + (buf_ptr - 0x80000000u));
+            if (*word_ptr == 0) {
+                *word_ptr = -1;
+            }
+        }
+    }
+}
     // 0x80064884: jr          $ra
     // 0x80064888: addiu       $sp, $sp, 0x30
     ctx->r29 = ADD32(ctx->r29, 0X30);

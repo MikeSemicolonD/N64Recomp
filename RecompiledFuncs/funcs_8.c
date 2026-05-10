@@ -10321,6 +10321,25 @@ RECOMP_FUNC void fake_func_8003DF98(uint8_t* rdram, recomp_context* ctx) {
 RECOMP_FUNC void func_8003DFA0(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    {
+    static int s_log = -1;
+    if (s_log < 0) {
+        const char* e = getenv("ROGUESQ_LOG_HOOKS");
+        s_log = (e && *e && *e != '0') ? 1 : 0;
+    }
+    if (s_log) {
+        static int s_count = 0;
+        ++s_count;
+        if (s_count <= 4 || (s_count & 63) == 0) {
+            extern void rs64_dbg_log4(const char* tag, unsigned a, unsigned b, unsigned c, unsigned d);
+            uint32_t b04 = (uint32_t)MEM_BU(0xB44, (gpr)0xFFFFFFFF80130000ULL);
+            uint32_t b21 = (uint32_t)MEM_BU(0xB61, (gpr)0xFFFFFFFF80130000ULL);
+            uint32_t b50 = (uint32_t)MEM_W(0xB50, (gpr)0xFFFFFFFF80130000ULL);
+            uint32_t b58 = (uint32_t)MEM_W(0xB58, (gpr)0xFFFFFFFF80130000ULL);
+            rs64_dbg_log4("8003DFA0 b40+04 b40+21 B50 B58", b04, b21, b50, b58);
+        }
+    }
+}
     // 0x8003DFA0: addiu       $sp, $sp, -0x38
     ctx->r29 = ADD32(ctx->r29, -0X38);
     // 0x8003DFA4: sw          $ra, 0x34($sp)
@@ -12211,6 +12230,7 @@ L_8003E9D0:
     ctx->r2 = MEM_BU(ctx->r17, 0X1A);
     // 0x8003E9D4: addiu       $v0, $v0, -0x1
     ctx->r2 = ADD32(ctx->r2, -0X1);
+    { if (((uint64_t)ctx->r17 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) { ctx->r17 = 0; goto L_8003EA08; } }
     // 0x8003E9D8: sb          $v0, 0x1A($s1)
     MEM_B(0X1A, ctx->r17) = ctx->r2;
     // 0x8003E9DC: andi        $v0, $v0, 0xFF
@@ -12537,6 +12557,7 @@ L_8003EB98:
     }
     // 0x8003EBA0: nop
 
+    { if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) goto L_8003EBFC; }
     // 0x8003EBA4: lb          $v0, 0x0($v1)
     ctx->r2 = MEM_B(ctx->r3, 0X0);
     // 0x8003EBA8: slt         $v0, $a1, $v0

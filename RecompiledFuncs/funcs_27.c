@@ -5784,6 +5784,21 @@ L_8009DDC8:
 RECOMP_FUNC void func_800A5D80(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    {
+    static int s_log = -1;
+    if (s_log < 0) {
+        const char* e = getenv("ROGUESQ_LOG_HOOKS");
+        s_log = (e && *e && *e != '0') ? 1 : 0;
+    }
+    if (s_log) {
+        static int s_count = 0;
+        ++s_count;
+        if (s_count <= 4 || (s_count & 63) == 0) {
+            extern void rs64_dbg_log4(const char* tag, unsigned a, unsigned b, unsigned c, unsigned d);
+            rs64_dbg_log4("800A5D80 a0 a1 a2 count", (unsigned)ctx->r4, (unsigned)ctx->r5, (unsigned)ctx->r6, (unsigned)s_count);
+        }
+    }
+}
     // 0x800A5D80: addiu       $sp, $sp, -0xD8
     ctx->r29 = ADD32(ctx->r29, -0XD8);
     // 0x800A5D84: sw          $s7, 0xB4($sp)
@@ -6209,6 +6224,12 @@ L_800A5FA8:
     // 0x800A6020: addiu       $s6, $v0, -0x6AA0
     ctx->r22 = ADD32(ctx->r2, -0X6AA0);
 L_800A6024:
+    {
+    uint32_t hd = MEM_W((int64_t)(int32_t)0x80110000, 0x63B0);
+    if (hd != 0 && (hd < 0x80000000u || hd >= 0x80800000u)) {
+        MEM_W(0x63B0, (int64_t)(int32_t)0x80110000) = 0;
+    }
+}
     // 0x800A6024: jal         0x800AF360
     // 0x800A6028: nop
 
@@ -13398,12 +13419,14 @@ L_800A8784:
     ctx->r6 = ADD32(ctx->r16, ctx->r6);
     // 0x800A879C: lw          $v0, 0x50($a2)
     ctx->r2 = MEM_W(ctx->r6, 0X50);
-    // 0x800A87A0: lw          $v0, 0x0($v0)
-    ctx->r2 = MEM_W(ctx->r2, 0X0);
+    { if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) { ctx->r2 = MEM_W(ctx->r2, 0x0); } else { ctx->r2 = 0; } }
+    // 0x800A87A0: nop
+
     // 0x800A87A4: lwc1        $f0, 0x64($a2)
     ctx->f0.u32l = MEM_W(ctx->r6, 0X64);
-    // 0x800A87A8: lwc1        $f2, 0x44($v0)
-    ctx->f2.u32l = MEM_W(ctx->r2, 0X44);
+    { if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) { ctx->f2.u32l = MEM_W(ctx->r2, 0x44); } else { ctx->f2.u32l = 0; } }
+    // 0x800A87A8: nop
+
     // 0x800A87AC: mul.s       $f2, $f2, $f0
     CHECK_FR(ctx, 2);
     CHECK_FR(ctx, 2);

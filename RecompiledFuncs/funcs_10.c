@@ -6265,8 +6265,9 @@ L_80047518:
     ctx->r5 = MEM_W(ctx->r3, 0X8);
     // 0x80047534: lbu         $v0, 0xB39($v0)
     ctx->r2 = MEM_BU(ctx->r2, 0XB39);
-    // 0x80047538: lhu         $s4, 0x0($a1)
-    ctx->r20 = MEM_HU(ctx->r5, 0X0);
+    { if (((uint64_t)ctx->r5 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) { ctx->r20 = MEM_HU(ctx->r5, 0x0); } else { ctx->r20 = 0; } }
+    // 0x80047538: nop
+
     // 0x8004753C: bne         $v0, $zero, L_80047580
     if (ctx->r2 != 0) {
         // 0x80047540: addiu       $a2, $zero, 0x3

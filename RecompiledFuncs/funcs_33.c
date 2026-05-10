@@ -24626,6 +24626,7 @@ L_800C28AC:
 RECOMP_FUNC void func_800C28F0(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    { return; }
     // 0x800C28F0: addiu       $sp, $sp, -0x70
     ctx->r29 = ADD32(ctx->r29, -0X70);
     // 0x800C28F4: sw          $ra, 0x38($sp)

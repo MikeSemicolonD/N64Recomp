@@ -8074,6 +8074,7 @@ RECOMP_FUNC void func_8001CB04(uint8_t* rdram, recomp_context* ctx) {
 RECOMP_FUNC void func_8001CB64(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    { if (((uint64_t)ctx->r4 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) return; }
     // 0x8001CB64: mtc1        $zero, $f0
     ctx->f0.u32l = 0;
     // 0x8001CB68: sw          $a1, 0x0($a0)
@@ -8108,6 +8109,7 @@ RECOMP_FUNC void func_8001CB64(uint8_t* rdram, recomp_context* ctx) {
 RECOMP_FUNC void func_8001CB9C(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    { if (((uint64_t)ctx->r4 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) return; }
     // 0x8001CB9C: lui         $at, 0x8000
     ctx->r1 = S32(0X8000 << 16);
     // 0x8001CBA0: lwc1        $f0, 0x884($at)
