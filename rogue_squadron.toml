@@ -162,19 +162,28 @@ stubs = [
     "fake_func_80108B8C",
     "fake_func_80109428",
     "fake_func_80109618",
-    # Factor5 sync primitives (832A0.s) — counting-semaphore on D_800A1780
-    # (counter) + D_80149990 (msgq). Queue init verified: func_80091FC4
-    # is called from boot dispatch BEFORE first lock (correct order).
-    # However un-stubbing them causes boot to stall (timeout vs 5s crash).
-    # Hypothesis: func_80091FC4 is called TWICE during boot — second call
-    # re-creates queue, leaving counter and queue out of sync. RE-STUBBED
-    # for now; "bzero-only" config gets 2/3 runs to D3D12 (deeper).
-    # TODO: trace why func_80091FC4 fires twice; either guard re-init OR
-    # implement these as host C++ wrappers around std::mutex/condvar.
-    "func_80092010",  # mutex_lock-like
-    "func_8009205C",  # mutex_unlock-like
-    "func_800920A4",  # try_lock
-    "func_800920D0",  # post/send variant
+    # Factor5 sync primitives (832A0.s) — RE'd 2026-05-11, un-stubbed
+    # 2026-05-13, RE-STUBBED 2026-05-13 same day.
+    # Recursive mutex on D_800A1780 (counter) + D_80149990 (msgq with 1-slot).
+    #   initFactor5Mutex (func_80091FC4): creates queue, posts initial token
+    #   factor5MutexAcquire (func_80092010): if counter>0, increment and
+    #     skip block; else osRecvMesg(D_80149990, BLOCK) then increment.
+    #   factor5MutexRelease (func_8009205C): decrement counter; if it
+    #     reaches 0, osSendMesg to wake one waiter.
+    #   factor5QueueBlock (func_800920A4): simple osRecvMesg(BLOCK), no
+    #     counter touch — low-level primitive.
+    #   factor5QueueSignal (func_800920D0): simple osSendMesg(NOBLOCK), no
+    #     counter touch.
+    # Un-stub attempt: caused boot-thread deadlock at iter=346 (game thread
+    # at factor5MutexAcquire→osRecvMesg(BLOCK on D_80149990), token gone,
+    # counter==0). The BSS-uninit counter creates a race where queue token
+    # and recursive counter desync. The proper fix is host-side
+    # std::recursive_mutex replacement or BSS-zero at boot — both more work
+    # than we want without iteration. Re-stubbed.
+    "factor5MutexAcquire",
+    "factor5MutexRelease",
+    "factor5QueueBlock",
+    "factor5QueueSignal",
     # These four genuinely have inter-function branches (recomp warned/errored).
     # Need symbol-table merging or manual split before they can be unstubbed.
     "func_800927B0",
@@ -182,8 +191,9 @@ stubs = [
     "func_80092CF0",
     "func_80092F10",
     # Audio teardown that hangs on MusyX worker decrement of D_8014998A.
-    # Our recomp has no MusyX RSP task, so the spin in func_80091EB0 is fatal.
-    # Stubbing func_8008ED00 makes the deinit a no-op; menu-init can progress.
+    # Our recomp has no MusyX RSP task, so the spin in waitForMusyXAudioTaskDone
+    # is fatal. Stubbing func_8008ED00 makes the deinit a no-op; menu-init
+    # can progress.
     "func_8008ED00",
 ]
 
@@ -198,22 +208,22 @@ stubs = [
 # caller's ra not a MIPS function address. Replace `jr $t9` with `jr $ra`
 # (0x03E00008) so the recompile treats it as a normal function exit.
 [[patches.instruction]]
-func = "func_80018D80"
+func = "convertMat3x4ToN64Mtx"
 vram = 0x80018D88
 value = 0x00000000
 
 [[patches.instruction]]
-func = "func_80018D80"
+func = "convertMat3x4ToN64Mtx"
 vram = 0x80018D8C
 value = 0x00000000
 
 [[patches.instruction]]
-func = "func_80018D80"
+func = "convertMat3x4ToN64Mtx"
 vram = 0x80018D90
 value = 0x00000000
 
 [[patches.instruction]]
-func = "func_80018D80"
+func = "convertMat3x4ToN64Mtx"
 vram = 0x80018D94
 value = 0x00000000
 
@@ -221,7 +231,7 @@ value = 0x00000000
 # t9 was set to ra at function entry; both encodings have identical
 # effect, but only `jr $ra` is recognized by N64Recomp as a function exit.
 [[patches.instruction]]
-func = "func_80018D80"
+func = "convertMat3x4ToN64Mtx"
 vram = 0x80018E58
 value = 0x03E00008
 
@@ -371,7 +381,7 @@ value = 0x00000000
 #
 # Captures first 4 entries + every 64th when env var enables logging.
 [[patches.hook]]
-func = "func_8003DFA0"
+func = "mainGameLoop"
 text = '''{
     static int s_log = -1;
     if (s_log < 0) {
@@ -393,8 +403,21 @@ text = '''{
 }'''
 
 [[patches.hook]]
-func = "func_800A5D80"
+func = "cinematicLoopBody"
 text = '''{
+    // Periodic thread yield to break the iter-810 cinematic stall (OS-level
+    // thread starvation — empirical: stderr writes unstick it, Sleep does
+    // not). SwitchToThread yields to any ready thread on this CPU; the
+    // stderr fflush call mimics the I/O-into-kernel path that's known to
+    // work. ROGUESQ_DISABLE_CINE_YIELD=1 to disable for A/B testing.
+    extern void rs64_cine_yield(void);
+    static int s_disable = -1;
+    if (s_disable < 0) {
+        const char* e = getenv("ROGUESQ_DISABLE_CINE_YIELD");
+        s_disable = (e && *e && *e != '0') ? 1 : 0;
+    }
+    if (!s_disable) rs64_cine_yield();
+
     static int s_log = -1;
     if (s_log < 0) {
         const char* e = getenv("ROGUESQ_LOG_HOOKS");
@@ -444,7 +467,7 @@ text = '''{
 # Was: funcs_15.c:550 — defensive lookup-array guard. r4 is a struct-pointer
 # that occasionally arrives non-canonical during cinematic.
 [[patches.hook]]
-func = "func_800646AC"
+func = "setLookupEntryField5ByKey"
 text = '''{ if (((uint64_t)ctx->r4 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) return; }'''
 
 # Game thread per-frame loop iteration counter. The loop blocks on
@@ -452,7 +475,7 @@ text = '''{ if (((uint64_t)ctx->r4 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF8000000
 # aren't firing at 60Hz, the iteration rate is the actual game frame rate.
 # Logs first 4 + every 64th iteration so we can see the rate.
 [[patches.hook]]
-func = "func_80019868"
+func = "viRetraceHandlerThread"
 before_vram = 0x800198E8   # L_800198E8 — top of per-frame loop
 text = '''{
     static int s_count = 0;
@@ -460,6 +483,205 @@ text = '''{
     if (n <= 4 || (n & 63) == 0) {
         extern void rs64_dbg_log4(const char* tag, unsigned a, unsigned b, unsigned c, unsigned d);
         rs64_dbg_log4("game_frame_iter", n, 0, 0, 0);
+    }
+}'''
+
+# RogueSquadron64Recomp: convert submitGfxFrame's per-frame osRecvMesg
+# (queue D_8011A7E8) from BLOCK to NOBLOCK. The dpInterruptHandlerThread
+# signals this queue when RDP completes, but the queue has size=1 and
+# dpHandler's send is NOBLOCK — under our HLE flow the game's submitGfxFrame
+# iter rate exceeds dpHandler's signal rate, the queue stays empty when game
+# tries to recv, and game blocks forever (verified at funcs_3.c:13184 via
+# the watchdog stack dump).
+#
+# The game discards the received msg (a1=NULL) and doesn't check the return
+# value of osRecvMesg — it just uses the recv as a "wait until ready" barrier.
+# Switching to NOBLOCK removes the barrier; on the host the gfx pipeline is
+# always ready because gfx_thread synchronously processes send_dl.
+#
+# Three osRecvMesg(D_8011A7E8, BLOCK) call sites — patch each delay-slot's
+# `addiu $a2, $zero, 0x1` to `addiu $a2, $zero, 0x0` (encoding 0x24060000).
+[[patches.instruction]]
+func = "submitGfxFrame"
+vram = 0x8000C4AC
+value = 0x24060000
+
+[[patches.instruction]]
+func = "submitGfxFrame"
+vram = 0x8000C2BC
+value = 0x24060000
+
+[[patches.instruction]]
+func = "bufferArbiterProducerScanWait"
+vram = 0x8000BFCC
+value = 0x24060000
+
+# Fourth osRecvMesg blocker found via watchdog after first three patches —
+# different queue (D_8011A818), still in submitGfxFrame. Same NOBLOCK fix.
+[[patches.instruction]]
+func = "submitGfxFrame"
+vram = 0x8000C0B8
+value = 0x24060000
+
+# Fifth blocker: func_8001C260 polling loop at 0x8001C29C waits for flag at
+# 0x8011A8C8 to clear. The clearer (func_8001C2F8) is invoked from func_8001818C,
+# which under HLE isn't reached (or its work was already done by gfx_thread).
+#
+# Patch the function's entry-check `lbu $v0, 0x0($v1)` at 0x8001C278 to
+# `addiu $v0, $zero, 0` (encoding 0x24020000) so $v0 is always 0 → the
+# subsequent beq jumps to L_8001C2E0 (function exit) immediately, skipping the
+# wait. Caller proceeds without the operation-complete sync.
+[[patches.instruction]]
+func = "waitForPostSwapAck"
+vram = 0x8001C278
+value = 0x24020000
+
+# Sixth blocker (found at iter 1160 — ~30 from natural transition):
+# func_8000BF60 has a SECOND blocking recv at 0x8000BF94 on queue D_8011A818.
+[[patches.instruction]]
+func = "bufferArbiterProducerScanWait"
+vram = 0x8000BF98
+value = 0x24060000
+
+# Eighth blocker: func_800668B0 has a busy-wait loop at L_800668C0 that
+# spins on func_8008E57C until it returns non-zero. func_8008E57C iterates
+# entries [0..N) calling func_800920FC(i) which checks
+# `MEM_BU(ptr_at_0x801487F8 + i*0x88, 0) != 0`. Under HLE with stubbed audio,
+# no entry ever becomes valid → infinite spin.
+[[patches.instruction]]
+func = "waitForAnyAudioSlot"
+vram = 0x800668CC
+value = 0x00000000
+
+# Ninth blocker (found at iter 1152 — POST-cinematic-transition, inside the
+# menu): menuOverlayInit has the SAME busy-wait pattern. Same fix — NOP the
+# beq that loops back to func_8008E57C call.
+[[patches.instruction]]
+func = "menuOverlayInit"
+vram = 0x800C593C
+value = 0x00000000
+
+# Tenth blocker: waitOnVideoQueue has yet another osRecvMesg(BLOCK) at
+# 0x8001BEA0. NOBLOCK conversion.
+[[patches.instruction]]
+func = "waitOnVideoQueue"
+vram = 0x8001BEA4
+value = 0x24060000
+
+# Eleventh blocker investigation (REVERTED — see project memory):
+# bufferArbiterProducerMark starts with osRecvMesg(D_80128D10, BLOCK).
+# Patching to NOBLOCK didn't help (iter still bounded at ~1176) and risks
+# breaking the slot-state-machine semantics (the wait probably gates which
+# state to transition). The right fix is host-side state-machine modeling,
+# not more instruction patches.
+
+# Seventh blocker (heapWalker infinite loop at L_80007A78). The walk follows
+# r3 = *r3 until finding a node whose first word is 0. Under corruption the
+# list can be cyclic. Use cycle detection: remember the initial r3 and bail
+# if we revisit it (with a per-call reset via the function entry hook).
+[[patches.instruction]]
+func = "heapWalker"
+vram = 0x80007A78
+value = 0x00000000
+
+[[patches.hook]]
+func = "heapWalker"
+text = '''{
+    // Reset cycle-detection state at function entry. Needs to be a global so
+    // the loop-top hook below can read it across iterations.
+    extern unsigned g_heapwalker_initial;
+    extern unsigned g_heapwalker_iter;
+    g_heapwalker_initial = 0;
+    g_heapwalker_iter = 0;
+}'''
+
+[[patches.hook]]
+func = "heapWalker"
+before_vram = 0x80007A78
+text = '''{
+    extern unsigned g_heapwalker_initial;
+    extern unsigned g_heapwalker_iter;
+    if (g_heapwalker_iter == 0) {
+        g_heapwalker_initial = (unsigned)(uint64_t)ctx->r3;
+        g_heapwalker_iter = 1;
+    } else {
+        g_heapwalker_iter++;
+    }
+    // Perform the lw (replaces the NOPed instruction).
+    ctx->r3 = MEM_W(ctx->r3, 0X0);
+    // Cycle check: after the second iter, if r3 returns to start, the list
+    // is cyclic — bail to function exit.
+    if (g_heapwalker_iter > 2 && (unsigned)(uint64_t)ctx->r3 == g_heapwalker_initial) {
+        goto L_80007A88;
+    }
+    // Safety upper bound (cycles not caught by start-revisit): bail at 1M
+    // iters. Normal free-lists are much smaller than this.
+    if (g_heapwalker_iter > 1000000u) {
+        goto L_80007A88;
+    }
+}'''
+# RogueSquadron64Recomp: unblock the cinematic-loop deadlock.
+#
+# submitGfxFrame's per-frame osRecvMesg blocks on queue D_8011A7E8 waiting for
+# dpInterruptHandlerThread to signal "RDP done". That thread receives the DP
+# event (queue D_8011A408 from osSetEventMesg(OS_EVENT_DP)), then checks flag
+# byte at 0x8011A89D — only forwards to the game queue if the flag is non-zero.
+# In our setup that flag never becomes 1 on the first iteration, so the game
+# thread blocks forever (verified via the iter-191 freeze watchdog dump at
+# funcs_3.c:13184 → funcs_27.c:7269 → funcs_8.c:10612).
+#
+# Patch the gate's `beq $v1, $zero, L_8001C3DC` (0x8001C3C4) to NOP. The
+# fall-through now always reaches the `osSendMesg` to D_8011A7E8, unblocking
+# the game thread once per DP-event. The delay-slot at 0x8001C3C8 is a benign
+# `addu $a1, $zero, $zero` (zeros a1 = msg arg) which is what the fall-through
+# path expects anyway.
+[[patches.instruction]]
+func = "dpInterruptHandlerThread"
+vram = 0x8001C3C4
+value = 0x00000000
+
+# Diagnostic: trace dpInterruptHandlerThread entry + loop iterations.
+# Tells us whether the DP handler thread is alive and processing DP events.
+# If never logs → thread isn't running; if logs once but doesn't tick → blocked
+# on its own osRecvMesg waiting for dp_complete from gfx_thread.
+[[patches.hook]]
+func = "dpInterruptHandlerThread"
+text = '''{
+    extern void rs64_dbg_log4(const char* tag, unsigned a, unsigned b, unsigned c, unsigned d);
+    rs64_dbg_log4("dpHandler ENTRY", 0, 0, 0, 0);
+}'''
+
+[[patches.hook]]
+func = "dpInterruptHandlerThread"
+before_vram = 0x8001C380
+text = '''{
+    static unsigned s_iters = 0;
+    extern void rs64_dbg_log4(const char* tag, unsigned a, unsigned b, unsigned c, unsigned d);
+    unsigned n = ++s_iters;
+    if (n <= 4 || (n & 31) == 0) {
+        rs64_dbg_log4("dpHandler iter", n, 0, 0, 0);
+    }
+}'''
+
+# Diagnostic: trace cinematicInitializer entry + initial cineState value.
+# If cineState (MEM_W at 0x800B0934) is non-zero, the init early-exits.
+# Gated by ROGUESQ_LOG_HOOKS=1.
+[[patches.hook]]
+func = "cinematicInitializer"
+text = '''{
+    static int s_log = -1;
+    if (s_log < 0) {
+        const char* e = getenv("ROGUESQ_LOG_HOOKS");
+        s_log = (e && *e && *e != '0') ? 1 : 0;
+    }
+    if (s_log) {
+        static int s_count = 0;
+        int n = ++s_count;
+        unsigned cineState_pre = (unsigned)MEM_W(0X934, S32(0X800B << 16));
+        if (n <= 4 || (n & 63) == 0) {
+            extern void rs64_dbg_log4(const char* tag, unsigned a, unsigned b, unsigned c, unsigned d);
+            rs64_dbg_log4("cineInit n cineState_pre a0 a1", n, cineState_pre, (unsigned)ctx->r4, (unsigned)ctx->r5);
+        }
     }
 }'''
 
@@ -473,26 +695,26 @@ text = '''{
 func = "func_800C28F0"
 text = '''{ return; }'''
 
-# Defensive guard for func_8001CB64 (struct-init helper called by mempak
-# menu init in func_800C28F0). r4 = HOB-lookup result + 0x28; if the HOB
-# lookup returned NULL, r4 = 0x28 (out of range) and the first MEM_W store
+# Defensive guard for initVec4TripletFromArgs (struct-init helper called by
+# mempak menu init in func_800C28F0). r4 = HOB-lookup result + 0x28; if the
+# HOB lookup returned NULL, r4 = 0x28 (out of range) and the first MEM_W store
 # crashes. The HOB lookup race is timing-dependent — log delays mask it.
 # Skip the init when r4 isn't a valid KSEG0 pointer; downstream code may
 # still misbehave but at least we don't AV in the struct write.
 [[patches.hook]]
-func = "func_8001CB64"
+func = "initVec4TripletFromArgs"
 text = '''{ if (((uint64_t)ctx->r4 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) return; }'''
 
-# Same defensive guard for func_8001CB9C (next call in func_800C28F0,
+# Same defensive guard for composeRotationMatrixSlot0 (next call in func_800C28F0,
 # operates on the same struct returned from the HOB lookup).
 [[patches.hook]]
-func = "func_8001CB9C"
+func = "composeRotationMatrixSlot0"
 text = '''{ if (((uint64_t)ctx->r4 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) return; }'''
 
 # Was: funcs_4.c:27264 — defensive matrix-multiply guard. r4 + r5 are matrix
 # pointers (12 floats each); $a1 sometimes arrives non-KSEG0 → high-VA AV.
 [[patches.hook]]
-func = "func_800191C4"
+func = "mat3x4Multiply"
 text = '''{ uint64_t a0h = (uint64_t)ctx->r4 & 0xFFFFFFFFE0000000ULL; uint64_t a1h = (uint64_t)ctx->r5 & 0xFFFFFFFFE0000000ULL; if (a0h != 0xFFFFFFFF80000000ULL || a1h != 0xFFFFFFFF80000000ULL) return; }'''
 
 # Skip func_80090A3C — leaf of the audio-frame compute chain
@@ -507,6 +729,59 @@ text = '''{ uint64_t a0h = (uint64_t)ctx->r4 & 0xFFFFFFFFE0000000ULL; uint64_t a
 [[patches.hook]]
 func = "func_80090A3C"
 text = '''{ return; }'''
+
+# func_800225F8 texture-material list walker: walks materialListHead[a1]
+# at MEM[0x80128F00 + a1*4] looking for a matching entry (tag bytes at
+# +0xC/+0xE, type at +0x10). Reached from text-rendering paths
+# (drawSubtitleText / func_8000E800 / func_80012FD0). AV during N64-logo
+# screen: list nodes accumulate stale entries (per-frame expiry walker
+# tickTextureMaterialExpiry is stubbed elsewhere in this toml), eventually
+# one has a non-KSEG0 next pointer → AV in the recompile's MEM_W when it
+# tries to translate the garbage address.
+# Single guard at the loop body's first load (L_80022660): if current
+# node ptr isn't KSEG0, set $s0=0 and goto exit L_800226B4 ("no match
+# found, fall through to allocate a new entry"). Subsequent body loads
+# and the next-ptr load at L_800226A4 are safe because they reuse the
+# just-validated $v1.
+[[patches.instruction]]
+func = "func_800225F8"
+vram = 0x80022660
+value = 0x00000000
+[[patches.hook]]
+func = "func_800225F8"
+before_vram = 0x80022660
+text = '''{ if (((uint64_t)ctx->r3 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) { ctx->r16 = 0; goto L_800226B4; } ctx->r2 = MEM_W(ctx->r3, 0x10); }'''
+
+# Pace the 32-iteration attribution-display loop in
+# runIdleFramesAndLoadSaveData. Per memory notes + investigation
+# (2026-05-13): the loop at L_8006D980 runs 32 frame iterations rendering
+# the attribution screen (Star Wars: Rogue Squadron + LucasArts text,
+# via the menu overlay). Each iter calls waitForPrevFrameDone which
+# we patched to NOBLOCK earlier — so all 32 iters flash by in
+# milliseconds, skipping the entire attribution display.
+# Sleep at the loop top so each iter is visible. ROGUESQ_ATTRIBUTION_SLEEP_MS=0
+# to disable.
+[[patches.hook]]
+func = "runIdleFramesAndLoadSaveData"
+before_vram = 0x8006D980
+text = '''{
+    extern void rs64_idle_pace(void);
+    rs64_idle_pace();
+}'''
+
+# initFactor5Mutex guard: boot calls this twice (initAudioSubsystem and
+# func_80091C88). The second call re-creates the mutex queue and posts
+# another initial token — racey when the first init's token is already
+# consumed. Skip the second call so the recursive mutex stays consistent.
+# Without this, un-stubbing factor5MutexAcquire/Release/etc. caused boot
+# stall.
+[[patches.hook]]
+func = "initFactor5Mutex"
+text = '''{
+    static int s_inited = 0;
+    if (s_inited) return;
+    s_inited = 1;
+}'''
 
 # rs_malloc zero-init: real N64 boot zeroes RDRAM before the game runs, so
 # the original game's malloc returns zeroed pages (the heap pattern matches
@@ -534,39 +809,159 @@ text = '''{
 # --- Tier 2: goto-existing-label (skip-block when pointer non-canonical) ---
 # Was funcs_3.c:184 — heap walker bails when next-pointer isn't KSEG0.
 [[patches.hook]]
-func = "func_800079F0"
+func = "heapWalker"
 before_vram = 0x80007A20
 text = '''{ if (((uint64_t)ctx->r3 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) { ctx->r2 = 0; goto L_80007A2C; } }'''
 
 # Was funcs_3.c:205 — second guard in the same walker, after L_80007A2C.
 [[patches.hook]]
-func = "func_800079F0"
+func = "heapWalker"
 before_vram = 0x80007A40
 text = '''{ if (((uint64_t)ctx->r3 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) { ctx->r2 = 0; goto L_80007A4C; } }'''
 
-# Was funcs_8.c:12139 — cinematic dispatcher (func_8003E8DC). Bails to
-# L_8003EA08 setting $s1 to a safe value when slot pointer non-canonical.
+# slotDispatcherIter (was func_8003E8DC) walks the 6-slot table at
+# MEM_W(0x80130BB0), 8B slot entries, jalr handler at slot+0x00. Active
+# slot indices at 0x80139560 (6 halfwords). Per LucasArts dump: 664/1024
+# slots populated globally, runs every frame everywhere — not cinematic-
+# only. r17 is the current slot pointer; bail to L_8003EA08 when it's
+# non-canonical.
 [[patches.hook]]
-func = "func_8003E8DC"
+func = "slotDispatcherIter"
 before_vram = 0x8003E9D8
 text = '''{ if (((uint64_t)ctx->r17 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) { ctx->r17 = 0; goto L_8003EA08; } }'''
 
-# Was funcs_8.c:12587 — cinematic dispatcher inner (func_8003EA4C). Same
-# pattern: skip dispatch on non-canonical slot.
+# slotDispatcherInner (was func_8003EA4C) is called from slotDispatcherIter's
+# per-slot path. Same guard pattern: r2 is the slot pointer being dispatched.
 [[patches.hook]]
-func = "func_8003EA4C"
+func = "slotDispatcherInner"
 before_vram = 0x8003EBA4
 text = '''{ if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) goto L_8003EBFC; }'''
+
+# NOTE 2026-05-13: tried zero-initing materialListHead[] (allocated but
+# never zeroed by initTextureLUTAndAllocBuffers) in the belief that heap
+# garbage was causing AVs in func_800225F8. Result: text stopped rendering
+# entirely AND new crashes appeared. Conclusion: the "garbage" was
+# actually load-bearing — code paths downstream of "walker found something"
+# work better than the "always allocate fresh" path. The KSEG0 guard on
+# func_800225F8 walker + on tickTextureMaterialExpiry walker is sufficient
+# defense. Leave materialListHead un-zeroed; the guards handle bad pointers.
+
+# tickTextureMaterialExpiry (was func_80022048, originally misnamed
+# "unidentifiedServiceWorker"). Per-frame texture-material-expiry walker
+# called from frameStartReset (funcs_3.c:8096) — NOT a service-worker
+# thread. Walks materialListHead at MEM_W[0x80128F00] per slot
+# (count at MEM_HU[0x80128EF0]), bumps each entry's +0x8 age halfword,
+# expires entries over threshold MEM_BU[0x80128EAD] via func_800079A4
+# cleanup + unlink + splice to free list at MEM_W[0x80128EF8].
+#
+# Re-enabled 2026-05-13 with KSEG0 guards at every vulnerable
+# pointer-dereference site. Required because text-rendering paths
+# (func_800225F8) hit AV on stale-pointer list entries when the expiry
+# walker doesn't run — see the func_800225F8 guard below. With this
+# function running, the list gets pruned per-frame.
+#
+# Function-entry hook: reset cycle-detection state for the inner walker.
+[[patches.hook]]
+func = "tickTextureMaterialExpiry"
+text = '''{
+    extern unsigned g_tick_walker_first;
+    extern unsigned g_tick_walker_iter;
+    g_tick_walker_first = 0;
+    g_tick_walker_iter = 0;
+}'''
+
+# Guard 1: inner-walk entry — KSEG0 check + cycle detection.
+#   - Bail if current entry ptr ($s0=r16) isn't KSEG0.
+#   - Track first node seen this call; if revisited later → cycle → bail.
+#   - Safety cap at 10K iters across all slots (the entry hook resets each
+#     call). Both bails goto L_80022128 (terminates current slot's walk).
+[[patches.instruction]]
+func = "tickTextureMaterialExpiry"
+vram = 0x80022094
+value = 0x00000000
+[[patches.hook]]
+func = "tickTextureMaterialExpiry"
+before_vram = 0x80022094
+text = '''{
+    extern unsigned g_tick_walker_first;
+    extern unsigned g_tick_walker_iter;
+    if (((uint64_t)ctx->r16 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) {
+        goto L_80022128;
+    }
+    unsigned cur = (unsigned)(uint64_t)ctx->r16;
+    if (g_tick_walker_iter == 0) {
+        g_tick_walker_first = cur;
+        g_tick_walker_iter = 1;
+    } else {
+        g_tick_walker_iter++;
+        if (g_tick_walker_iter > 2 && cur == g_tick_walker_first) {
+            goto L_80022128;  // cycle: revisited starting node
+        }
+        if (g_tick_walker_iter > 10000u) {
+            goto L_80022128;  // safety cap
+        }
+    }
+    ctx->r3 = MEM_HU(ctx->r16, 0x8);
+}'''
+
+# Guard 2: skip the prev→next pointer store if prev ($v1=r3) is non-KSEG0.
+[[patches.instruction]]
+func = "tickTextureMaterialExpiry"
+vram = 0x800220D0
+value = 0x00000000
+[[patches.hook]]
+func = "tickTextureMaterialExpiry"
+before_vram = 0x800220D0
+text = '''{ if (((uint64_t)ctx->r3 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) MEM_W(0x0, ctx->r3) = ctx->r2; }'''
+
+# Guard 3: skip the next→prev pointer store if next ($v1=r3) is non-KSEG0.
+[[patches.instruction]]
+func = "tickTextureMaterialExpiry"
+vram = 0x800220F8
+value = 0x00000000
+[[patches.hook]]
+func = "tickTextureMaterialExpiry"
+before_vram = 0x800220F8
+text = '''{ if (((uint64_t)ctx->r3 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) MEM_W(0x4, ctx->r3) = ctx->r2; }'''
+
+# Guard 4: skip the free-list-head→prev pointer store if head ($v0=r2)
+#   is non-KSEG0. Splice into free list at 0x80128EF8.
+[[patches.instruction]]
+func = "tickTextureMaterialExpiry"
+vram = 0x8002210C
+value = 0x00000000
+[[patches.hook]]
+func = "tickTextureMaterialExpiry"
+before_vram = 0x8002210C
+text = '''{ if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) MEM_W(0x4, ctx->r2) = ctx->r16; }'''
+
+# saveServiceWorker (was func_8006F2CC) is the save/account service-worker
+# thread. Registered by registerSaveService (func_8006EF98) with key=4. Calls
+# recvServiceMessage which walks the registry linked-list at 0x801128D0 →
+# wild-ptr AV when registry never gets populated. Stub via early-return
+# until the registration path is fixed. ROGUESQ_ENABLE_F8006F2CC=1 to
+# re-run the original body.
+[[patches.hook]]
+func = "saveServiceWorker"
+before_vram = 0x8006F2CC
+text = '''{
+    static int s_enable = -1;
+    if (s_enable < 0) {
+        const char* e = getenv("ROGUESQ_ENABLE_F8006F2CC");
+        s_enable = (e && *e && *e != '0') ? 1 : 0;
+    }
+    if (!s_enable) return;
+}'''
 
 # --- Tier 3: replace-load-with-default (NOP the lw + conditional load) ---
 # Heap free-list head deref. If $v0 (head pointer) isn't KSEG0, treat as
 # null (return 0) instead of dereferencing → AV. Same pattern × 3 funcs.
 [[patches.instruction]]
-func = "func_8000CFD4"
+func = "heapFreeListDequeue"
 vram = 0x8000D324
 value = 0x00000000
 [[patches.hook]]
-func = "func_8000CFD4"
+func = "heapFreeListDequeue"
 before_vram = 0x8000D324
 text = '''{ ctx->r2 = (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) ? MEM_W(ctx->r2, 0x0) : 0; }'''
 
@@ -580,11 +975,11 @@ before_vram = 0x80010830
 text = '''{ ctx->r2 = (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) ? MEM_W(ctx->r2, 0x0) : 0; }'''
 
 [[patches.instruction]]
-func = "func_80016C44"
+func = "setupCameraMatrices"
 vram = 0x80016F18
 value = 0x00000000
 [[patches.hook]]
-func = "func_80016C44"
+func = "setupCameraMatrices"
 before_vram = 0x80016F18
 text = '''{ ctx->r2 = (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) ? MEM_W(ctx->r2, 0x0) : 0; }'''
 
@@ -599,11 +994,11 @@ before_vram = 0x80010840
 text = '''{ if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) MEM_W(0x4, ctx->r2) = 0; }'''
 
 [[patches.instruction]]
-func = "func_80016C44"
+func = "setupCameraMatrices"
 vram = 0x80016F28
 value = 0x00000000
 [[patches.hook]]
-func = "func_80016C44"
+func = "setupCameraMatrices"
 before_vram = 0x80016F28
 text = '''{ if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) MEM_W(0x4, ctx->r2) = 0; }'''
 
@@ -655,12 +1050,52 @@ text = '''{ if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF8000000
 # iteration propagates the bad state. Cheap scrub at loop top: if head is
 # non-zero but not in valid heap range, reset to 0.
 [[patches.hook]]
-func = "func_800A5D80"
+func = "cinematicLoopBody"
 before_vram = 0x800A6024
 text = '''{
     uint32_t hd = MEM_W((int64_t)(int32_t)0x80110000, 0x63B0);
     if (hd != 0 && (hd < 0x80000000u || hd >= 0x80800000u)) {
         MEM_W(0x63B0, (int64_t)(int32_t)0x80110000) = 0;
+    }
+    // Always-on freeze watchdog: ticks update host's last-seen timestamp + tid.
+    // The host poll fires a stack dump if no tick for 2s.
+    {
+        extern void rs64_cine_iter_tick(unsigned iter);
+        static unsigned s_watchdog_count = 0;
+        rs64_cine_iter_tick(++s_watchdog_count);
+    }
+    // Pace each internal loop iteration to a target FPS (default 30 Hz).
+    // This is the actual hot loop body — entering cinematicLoopBody at
+    // function-entry wasn't enough because there's an internal loop here
+    // that iterates many times per call. ROGUESQ_CINE_TARGET_FPS=0 disables.
+    {
+        extern void rs64_cine_pace(void);
+        rs64_cine_pace();
+    }
+    // Diagnostic: count iterations + cineState/cineStage. Gated by ROGUESQ_LOG_HOOKS=1.
+    {
+        static int s_log = -1;
+        if (s_log < 0) {
+            const char* e = getenv("ROGUESQ_LOG_HOOKS");
+            s_log = (e && *e && *e != '0') ? 1 : 0;
+        }
+        if (s_log) {
+            static int s_count = 0;
+            int n = ++s_count;
+            if (n <= 4 || (n & 127) == 0) {
+                extern void rs64_dbg_log4(const char* tag, unsigned a, unsigned b, unsigned c, unsigned d);
+                // Gate at 0x800A6268 compares 0x800B0B28 < cutscene[0x44]-0xA.
+                // If gateCtr stays < threshold, init never fires.
+                unsigned gateCtr = (unsigned)MEM_W(0XB28, S32(0X800B << 16));
+                unsigned cutscene  = (unsigned)MEM_W(0X1904, S32(0X800B << 16));
+                unsigned cuts_44 = 0;
+                if (cutscene >= 0x80000000u && cutscene < 0x80800000u) {
+                    cuts_44 = (unsigned)MEM_W(0X44, (int64_t)(int32_t)cutscene);
+                }
+                unsigned cineState = (unsigned)MEM_W(0X934, S32(0X800B << 16));
+                rs64_dbg_log4("cineLoopIter n gateCtr cuts44 cineState", n, gateCtr, cuts_44, cineState);
+            }
+        }
     }
 }'''
 
@@ -686,43 +1121,43 @@ func = "func_800022F8"
 before_vram = 0x80002434
 text = '''{ uint32_t v0 = (uint32_t)(uint64_t)ctx->r2; if (v0 < 0x80000000u || v0 >= 0x80800000u) goto L_80002474; ctx->r3 = MEM_HU(ctx->r2, 0x10); }'''
 
-# --- Chain-deref guard (func_800A8420) — cinematic effect dispatcher ---
+# --- Chain-deref guard (cutsceneDispatchSlotsByFlag) — cinematic effect dispatcher ---
 # Pattern: $v0 = MEM_W($a2+0x50); $v0 = MEM_W($v0); $f2 = MEM_W($v0+0x44).
 # When the loaded $v0 isn't KSEG0, treat it as null → f2 = 0 (no scaling).
 # Replaces 2 instructions (the chain deref and the f2 load).
 [[patches.instruction]]
-func = "func_800A8420"
+func = "cutsceneDispatchSlotsByFlag"
 vram = 0x800A87A0
 value = 0x00000000
 [[patches.instruction]]
-func = "func_800A8420"
+func = "cutsceneDispatchSlotsByFlag"
 vram = 0x800A87A8
 value = 0x00000000
 [[patches.hook]]
-func = "func_800A8420"
+func = "cutsceneDispatchSlotsByFlag"
 before_vram = 0x800A87A0
 text = '''{ if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) { ctx->r2 = MEM_W(ctx->r2, 0x0); } else { ctx->r2 = 0; } }'''
 [[patches.hook]]
-func = "func_800A8420"
+func = "cutsceneDispatchSlotsByFlag"
 before_vram = 0x800A87A8
 text = '''{ if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) { ctx->f2.u32l = MEM_W(ctx->r2, 0x44); } else { ctx->f2.u32l = 0; } }'''
 
 # --- Chain-deref guard (func_80047368) — struct-table walk ---
 # Replaces `lhu $s4, 0x0($a1)` at 0x80047538 with conditional halfword load.
 [[patches.instruction]]
-func = "func_80047368"
+func = "updateActiveGridCellState"
 vram = 0x80047538
 value = 0x00000000
 [[patches.hook]]
-func = "func_80047368"
+func = "updateActiveGridCellState"
 before_vram = 0x80047538
 text = '''{ if (((uint64_t)ctx->r5 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) { ctx->r20 = MEM_HU(ctx->r5, 0x0); } else { ctx->r20 = 0; } }'''
 
-# --- Bail-with-full-epilogue (func_8003FFEC) — defensive struct-init ---
+# --- Bail-with-full-epilogue (spawnNpcOfType) — defensive struct-init ---
 # $s0 is used for ~12 stores after this point; if non-canonical, return
 # early with full register restore (graceful "no-op spawn").
 [[patches.hook]]
-func = "func_8003FFEC"
+func = "spawnNpcOfType"
 before_vram = 0x800400B0
 text = '''{
     if (((uint64_t)ctx->r16 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) {

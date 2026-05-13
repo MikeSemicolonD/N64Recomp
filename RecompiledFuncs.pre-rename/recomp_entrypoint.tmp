@@ -1,0 +1,30 @@
+#include "recomp.h"
+#include "disable_warnings.h"
+
+void recomp_entrypoint(uint8_t* rdram, recomp_context* ctx) {
+    uint64_t hi = 0, lo = 0, result = 0;
+    unsigned int rounding_mode = DEFAULT_ROUNDING_MODE;
+    int c1cs = 0; 
+    // lui         $sp, 0x803F
+    ctx->r29 = S32(0X803F << 16);
+    // j           L_8000161C
+    // ori         $sp, $sp, 0xFFF0
+    ctx->r29 = ctx->r29 | 0XFFF0;
+    main(rdram, ctx);
+    return;
+    // ori         $sp, $sp, 0xFFF0
+    ctx->r29 = ctx->r29 | 0XFFF0;
+    // beq         $a1, $zero, L_80000434
+    if (ctx->r5 == 0) {
+        // addu        $t0, $a0, $zero
+        ctx->r8 = ADD32(ctx->r4, 0);
+        goto L_80000434;
+    }
+    // addu        $t0, $a0, $zero
+    ctx->r8 = ADD32(ctx->r4, 0);
+    // addiu       $t1, $a1, 0xF
+    ctx->r9 = ADD32(ctx->r5, 0XF);
+    // srl         $t1, $t1, 4
+    ctx->r9 = S32(U32(ctx->r9) >> 4);
+L_8000041C:
+    // cache       0x0D, 0x0($t0)

@@ -221,7 +221,7 @@ L_80101FD4:
     // 0x80101FE8: jal         0x800C7738
     // 0x80101FEC: nop
 
-    func_800C7738(rdram, ctx);
+    setHudEnableBit4(rdram, ctx);
         goto after_13;
     // 0x80101FEC: nop
 
@@ -388,7 +388,7 @@ L_80102094:
     // 0x80102094: jal         0x800C7738
     // 0x80102098: nop
 
-    func_800C7738(rdram, ctx);
+    setHudEnableBit4(rdram, ctx);
         goto after_23;
     // 0x80102098: nop
 
@@ -415,7 +415,7 @@ L_8010209C:
     // 0x801020B0: jal         0x800C7738
     // 0x801020B4: nop
 
-    func_800C7738(rdram, ctx);
+    setHudEnableBit4(rdram, ctx);
         goto after_25;
     // 0x801020B4: nop
 
@@ -521,7 +521,7 @@ L_80102110:
     // 0x80102124: jal         0x800C7738
     // 0x80102128: nop
 
-    func_800C7738(rdram, ctx);
+    setHudEnableBit4(rdram, ctx);
         goto after_33;
     // 0x80102128: nop
 
@@ -1027,7 +1027,7 @@ L_80102310:
     // 0x80102350: jal         0x800C7884
     // 0x80102354: addiu       $a0, $a0, -0x6A34
     ctx->r4 = ADD32(ctx->r4, -0X6A34);
-    func_800C7884(rdram, ctx);
+    setHudFlagBit40AndStoreArg(rdram, ctx);
         goto after_69;
     // 0x80102354: addiu       $a0, $a0, -0x6A34
     ctx->r4 = ADD32(ctx->r4, -0X6A34);
@@ -1059,7 +1059,7 @@ L_80102310:
     // 0x80102378: jal         0x800C7D60
     // 0x8010237C: addu        $a1, $zero, $zero
     ctx->r5 = ADD32(0, 0);
-    func_800C7D60(rdram, ctx);
+    delegateToLevelStageTick(rdram, ctx);
         goto after_72;
     // 0x8010237C: addu        $a1, $zero, $zero
     ctx->r5 = ADD32(0, 0);
@@ -1120,7 +1120,7 @@ L_80102380:
     // 0x801023C0: jal         0x800C7884
     // 0x801023C4: addiu       $a0, $a0, -0x6A28
     ctx->r4 = ADD32(ctx->r4, -0X6A28);
-    func_800C7884(rdram, ctx);
+    setHudFlagBit40AndStoreArg(rdram, ctx);
         goto after_75;
     // 0x801023C4: addiu       $a0, $a0, -0x6A28
     ctx->r4 = ADD32(ctx->r4, -0X6A28);
@@ -1152,7 +1152,7 @@ L_80102380:
     // 0x801023E8: jal         0x800C7D60
     // 0x801023EC: addu        $a1, $zero, $zero
     ctx->r5 = ADD32(0, 0);
-    func_800C7D60(rdram, ctx);
+    delegateToLevelStageTick(rdram, ctx);
         goto after_78;
     // 0x801023EC: addu        $a1, $zero, $zero
     ctx->r5 = ADD32(0, 0);
@@ -1213,7 +1213,7 @@ L_801023F0:
     // 0x80102430: jal         0x800C7884
     // 0x80102434: addiu       $a0, $a0, -0x6A1C
     ctx->r4 = ADD32(ctx->r4, -0X6A1C);
-    func_800C7884(rdram, ctx);
+    setHudFlagBit40AndStoreArg(rdram, ctx);
         goto after_81;
     // 0x80102434: addiu       $a0, $a0, -0x6A1C
     ctx->r4 = ADD32(ctx->r4, -0X6A1C);
@@ -1245,7 +1245,7 @@ L_801023F0:
     // 0x80102458: jal         0x800C7D60
     // 0x8010245C: addu        $a1, $zero, $zero
     ctx->r5 = ADD32(0, 0);
-    func_800C7D60(rdram, ctx);
+    delegateToLevelStageTick(rdram, ctx);
         goto after_84;
     // 0x8010245C: addu        $a1, $zero, $zero
     ctx->r5 = ADD32(0, 0);
@@ -1788,7 +1788,7 @@ L_80102658:
     // 0x801026A8: jal         0x800C776C
     // 0x801026AC: nop
 
-    func_800C776C(rdram, ctx);
+    setHudEnableBit8(rdram, ctx);
         goto after_122;
     // 0x801026AC: nop
 
@@ -1812,7 +1812,7 @@ L_801026B4:
     // 0x801026C8: addiu       $sp, $sp, 0x28
     ctx->r29 = ADD32(ctx->r29, 0X28);
 ;}
-RECOMP_FUNC void func_801026CC(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void playVoice2_0xA4(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x801026CC: addiu       $sp, $sp, -0x18
@@ -1838,7 +1838,7 @@ RECOMP_FUNC void func_801026CC(uint8_t* rdram, recomp_context* ctx) {
     // 0x801026E8: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_801026EC(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void playVoice2_0x139(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x801026EC: addiu       $sp, $sp, -0x18
@@ -1864,7 +1864,7 @@ RECOMP_FUNC void func_801026EC(uint8_t* rdram, recomp_context* ctx) {
     // 0x80102708: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_8010270C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void playVoice2_0x139_v2(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8010270C: addiu       $sp, $sp, -0x18
@@ -1890,7 +1890,7 @@ RECOMP_FUNC void func_8010270C(uint8_t* rdram, recomp_context* ctx) {
     // 0x80102728: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_8010272C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void playVoice2_0x139_v3(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8010272C: addiu       $sp, $sp, -0x18
@@ -1916,7 +1916,7 @@ RECOMP_FUNC void func_8010272C(uint8_t* rdram, recomp_context* ctx) {
     // 0x80102748: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_8010274C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void playVoice2_0x139_v4(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8010274C: addiu       $sp, $sp, -0x18
@@ -1942,7 +1942,7 @@ RECOMP_FUNC void func_8010274C(uint8_t* rdram, recomp_context* ctx) {
     // 0x80102768: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_8010276C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void playVoice2_0x139_v5(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8010276C: addiu       $sp, $sp, -0x18
@@ -1968,7 +1968,7 @@ RECOMP_FUNC void func_8010276C(uint8_t* rdram, recomp_context* ctx) {
     // 0x80102788: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_8010278C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void playVoice2_0x139_v6(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8010278C: addiu       $sp, $sp, -0x18
@@ -1994,7 +1994,7 @@ RECOMP_FUNC void func_8010278C(uint8_t* rdram, recomp_context* ctx) {
     // 0x801027A8: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_801027AC(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void lv3_runDialogueSequenceB(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x801027AC: addiu       $sp, $sp, -0x20
@@ -2048,7 +2048,7 @@ RECOMP_FUNC void func_801027AC(uint8_t* rdram, recomp_context* ctx) {
     // 0x801027EC: addiu       $sp, $sp, 0x20
     ctx->r29 = ADD32(ctx->r29, 0X20);
 ;}
-RECOMP_FUNC void func_801027F0(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void lv3_runDialogueSequenceC(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x801027F0: addiu       $sp, $sp, -0x20
@@ -2102,7 +2102,7 @@ RECOMP_FUNC void func_801027F0(uint8_t* rdram, recomp_context* ctx) {
     // 0x80102830: addiu       $sp, $sp, 0x20
     ctx->r29 = ADD32(ctx->r29, 0X20);
 ;}
-RECOMP_FUNC void func_80102834(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void lv3_runDialogueSequenceD(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80102834: addiu       $sp, $sp, -0x20
@@ -2156,7 +2156,7 @@ RECOMP_FUNC void func_80102834(uint8_t* rdram, recomp_context* ctx) {
     // 0x80102874: addiu       $sp, $sp, 0x20
     ctx->r29 = ADD32(ctx->r29, 0X20);
 ;}
-RECOMP_FUNC void func_80102878(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void lv3_dialogueWithStateA(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80102878: addiu       $sp, $sp, -0x18
@@ -2202,7 +2202,7 @@ RECOMP_FUNC void func_80102878(uint8_t* rdram, recomp_context* ctx) {
     // 0x801028AC: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_801028B0(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void lv3_dialogueWithStateB(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x801028B0: addiu       $sp, $sp, -0x20
@@ -2256,7 +2256,7 @@ RECOMP_FUNC void func_801028B0(uint8_t* rdram, recomp_context* ctx) {
     // 0x801028F0: addiu       $sp, $sp, 0x20
     ctx->r29 = ADD32(ctx->r29, 0X20);
 ;}
-RECOMP_FUNC void func_801028F4(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void lv3_dialogueWithStateC(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x801028F4: addiu       $sp, $sp, -0x20
@@ -2310,7 +2310,7 @@ RECOMP_FUNC void func_801028F4(uint8_t* rdram, recomp_context* ctx) {
     // 0x80102934: addiu       $sp, $sp, 0x20
     ctx->r29 = ADD32(ctx->r29, 0X20);
 ;}
-RECOMP_FUNC void func_80102938(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void scheduleLv3DialogueWithHudA_1_5s(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80102938: addiu       $sp, $sp, -0x18
@@ -2338,7 +2338,7 @@ RECOMP_FUNC void func_80102938(uint8_t* rdram, recomp_context* ctx) {
     // 0x80102958: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_8010295C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void lv3_dialogueWithHudUpdateA(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8010295C: addiu       $sp, $sp, -0x18
@@ -2370,7 +2370,7 @@ RECOMP_FUNC void func_8010295C(uint8_t* rdram, recomp_context* ctx) {
     // 0x80102980: jal         0x800C7884
     // 0x80102984: addiu       $a0, $a0, -0x6A04
     ctx->r4 = ADD32(ctx->r4, -0X6A04);
-    func_800C7884(rdram, ctx);
+    setHudFlagBit40AndStoreArg(rdram, ctx);
         goto after_2;
     // 0x80102984: addiu       $a0, $a0, -0x6A04
     ctx->r4 = ADD32(ctx->r4, -0X6A04);
@@ -2378,7 +2378,7 @@ RECOMP_FUNC void func_8010295C(uint8_t* rdram, recomp_context* ctx) {
     // 0x80102988: jal         0x800C7D98
     // 0x8010298C: addiu       $a0, $zero, 0x3
     ctx->r4 = ADD32(0, 0X3);
-    func_800C7D98(rdram, ctx);
+    triggerSoundCueByType(rdram, ctx);
         goto after_3;
     // 0x8010298C: addiu       $a0, $zero, 0x3
     ctx->r4 = ADD32(0, 0X3);
@@ -2392,7 +2392,7 @@ RECOMP_FUNC void func_8010295C(uint8_t* rdram, recomp_context* ctx) {
     // 0x80102998: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_8010299C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void scheduleLv3DialogueWithHudB_1_5s(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8010299C: addiu       $sp, $sp, -0x18
@@ -2420,7 +2420,7 @@ RECOMP_FUNC void func_8010299C(uint8_t* rdram, recomp_context* ctx) {
     // 0x801029BC: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_801029C0(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void lv3_dialogueWithHudUpdateB(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x801029C0: addiu       $sp, $sp, -0x18
@@ -2452,7 +2452,7 @@ RECOMP_FUNC void func_801029C0(uint8_t* rdram, recomp_context* ctx) {
     // 0x801029E4: jal         0x800C7884
     // 0x801029E8: addiu       $a0, $a0, -0x69F8
     ctx->r4 = ADD32(ctx->r4, -0X69F8);
-    func_800C7884(rdram, ctx);
+    setHudFlagBit40AndStoreArg(rdram, ctx);
         goto after_2;
     // 0x801029E8: addiu       $a0, $a0, -0x69F8
     ctx->r4 = ADD32(ctx->r4, -0X69F8);
@@ -2460,7 +2460,7 @@ RECOMP_FUNC void func_801029C0(uint8_t* rdram, recomp_context* ctx) {
     // 0x801029EC: jal         0x800C7D98
     // 0x801029F0: addiu       $a0, $zero, 0x3
     ctx->r4 = ADD32(0, 0X3);
-    func_800C7D98(rdram, ctx);
+    triggerSoundCueByType(rdram, ctx);
         goto after_3;
     // 0x801029F0: addiu       $a0, $zero, 0x3
     ctx->r4 = ADD32(0, 0X3);
@@ -2474,7 +2474,7 @@ RECOMP_FUNC void func_801029C0(uint8_t* rdram, recomp_context* ctx) {
     // 0x801029FC: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_80102A00(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void scheduleLv3DialogueWithHudC_1_5s(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80102A00: addiu       $sp, $sp, -0x18
@@ -2502,7 +2502,7 @@ RECOMP_FUNC void func_80102A00(uint8_t* rdram, recomp_context* ctx) {
     // 0x80102A20: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_80102A24(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void lv3_dialogueWithHudUpdateC(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80102A24: addiu       $sp, $sp, -0x18
@@ -2534,7 +2534,7 @@ RECOMP_FUNC void func_80102A24(uint8_t* rdram, recomp_context* ctx) {
     // 0x80102A48: jal         0x800C7884
     // 0x80102A4C: addiu       $a0, $a0, -0x69EC
     ctx->r4 = ADD32(ctx->r4, -0X69EC);
-    func_800C7884(rdram, ctx);
+    setHudFlagBit40AndStoreArg(rdram, ctx);
         goto after_2;
     // 0x80102A4C: addiu       $a0, $a0, -0x69EC
     ctx->r4 = ADD32(ctx->r4, -0X69EC);
@@ -2542,7 +2542,7 @@ RECOMP_FUNC void func_80102A24(uint8_t* rdram, recomp_context* ctx) {
     // 0x80102A50: jal         0x800C7D98
     // 0x80102A54: addiu       $a0, $zero, 0x3
     ctx->r4 = ADD32(0, 0X3);
-    func_800C7D98(rdram, ctx);
+    triggerSoundCueByType(rdram, ctx);
         goto after_3;
     // 0x80102A54: addiu       $a0, $zero, 0x3
     ctx->r4 = ADD32(0, 0X3);
@@ -2556,7 +2556,7 @@ RECOMP_FUNC void func_80102A24(uint8_t* rdram, recomp_context* ctx) {
     // 0x80102A60: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void lv2_80102A64(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void lv2_objectiveSlot1(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80102A64: jr          $ra
@@ -2630,7 +2630,7 @@ RECOMP_FUNC void lv3_initializeObjectTracking(uint8_t* rdram, recomp_context* ct
     // 0x80102AC4: jal         0x800C7CEC
     // 0x80102AC8: sw          $zero, -0x2FAC($v0)
     MEM_W(-0X2FAC, ctx->r2) = 0;
-    func_800C7CEC(rdram, ctx);
+    setLevelObjectTrackingScalar(rdram, ctx);
         goto after_0;
     // 0x80102AC8: sw          $zero, -0x2FAC($v0)
     MEM_W(-0X2FAC, ctx->r2) = 0;
@@ -3047,7 +3047,7 @@ RECOMP_FUNC void lv3_checkComplexObjectives(uint8_t* rdram, recomp_context* ctx)
     // 0x80102D30: jal         0x800C7738
     // 0x80102D34: sw          $v0, -0x2FB0($v1)
     MEM_W(-0X2FB0, ctx->r3) = ctx->r2;
-    func_800C7738(rdram, ctx);
+    setHudEnableBit4(rdram, ctx);
         goto after_1;
     // 0x80102D34: sw          $v0, -0x2FB0($v1)
     MEM_W(-0X2FB0, ctx->r3) = ctx->r2;
@@ -3132,7 +3132,7 @@ L_80102D78:
     // 0x80102D98: jal         0x800C7738
     // 0x80102D9C: sw          $v0, -0x2FB0($v1)
     MEM_W(-0X2FB0, ctx->r3) = ctx->r2;
-    func_800C7738(rdram, ctx);
+    setHudEnableBit4(rdram, ctx);
         goto after_7;
     // 0x80102D9C: sw          $v0, -0x2FB0($v1)
     MEM_W(-0X2FB0, ctx->r3) = ctx->r2;
@@ -3211,7 +3211,7 @@ L_80102DC4:
     // 0x80102DEC: jal         0x800C776C
     // 0x80102DF0: nop
 
-    func_800C776C(rdram, ctx);
+    setHudEnableBit8(rdram, ctx);
         goto after_15;
     // 0x80102DF0: nop
 
@@ -3256,7 +3256,7 @@ L_80102E00:
     // 0x80102E1C: jal         0x800C7738
     // 0x80102E20: sw          $v0, -0x2FB0($v1)
     MEM_W(-0X2FB0, ctx->r3) = ctx->r2;
-    func_800C7738(rdram, ctx);
+    setHudEnableBit4(rdram, ctx);
         goto after_18;
     // 0x80102E20: sw          $v0, -0x2FB0($v1)
     MEM_W(-0X2FB0, ctx->r3) = ctx->r2;
@@ -3296,7 +3296,7 @@ L_80102E3C:
     // 0x80102E4C: addiu       $sp, $sp, 0x20
     ctx->r29 = ADD32(ctx->r29, 0X20);
 ;}
-RECOMP_FUNC void func_80102E50(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void lv3_startMissionAndBriefing(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80102E50: addiu       $sp, $sp, -0x20
@@ -3333,7 +3333,7 @@ RECOMP_FUNC void func_80102E50(uint8_t* rdram, recomp_context* ctx) {
     // 0x80102E7C: jal         0x800C7884
     // 0x80102E80: addiu       $a0, $a0, -0x6990
     ctx->r4 = ADD32(ctx->r4, -0X6990);
-    func_800C7884(rdram, ctx);
+    setHudFlagBit40AndStoreArg(rdram, ctx);
         goto after_2;
     // 0x80102E80: addiu       $a0, $a0, -0x6990
     ctx->r4 = ADD32(ctx->r4, -0X6990);
@@ -3478,7 +3478,7 @@ RECOMP_FUNC void func_80102E50(uint8_t* rdram, recomp_context* ctx) {
     // 0x80102F30: addiu       $sp, $sp, 0x20
     ctx->r29 = ADD32(ctx->r29, 0X20);
 ;}
-RECOMP_FUNC void func_80102F34(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void scheduleLv3TriggerProgressA_3s(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80102F34: addiu       $sp, $sp, -0x18
@@ -3506,7 +3506,7 @@ RECOMP_FUNC void func_80102F34(uint8_t* rdram, recomp_context* ctx) {
     // 0x80102F54: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_80102F58(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void lv3_triggerObjectiveProgressA(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80102F58: addiu       $sp, $sp, -0x18
@@ -3548,7 +3548,7 @@ RECOMP_FUNC void func_80102F58(uint8_t* rdram, recomp_context* ctx) {
     // 0x80102F88: jal         0x800C7884
     // 0x80102F8C: addiu       $a0, $a0, -0x69AC
     ctx->r4 = ADD32(ctx->r4, -0X69AC);
-    func_800C7884(rdram, ctx);
+    setHudFlagBit40AndStoreArg(rdram, ctx);
         goto after_3;
     // 0x80102F8C: addiu       $a0, $a0, -0x69AC
     ctx->r4 = ADD32(ctx->r4, -0X69AC);
@@ -3632,7 +3632,7 @@ RECOMP_FUNC void func_80102F58(uint8_t* rdram, recomp_context* ctx) {
     // 0x80102FEC: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_80102FF0(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void lv3_clearBoolean_0x6(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80102FF0: addiu       $sp, $sp, -0x18
@@ -3658,7 +3658,7 @@ RECOMP_FUNC void func_80102FF0(uint8_t* rdram, recomp_context* ctx) {
     // 0x8010300C: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_80103010(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void lv3_dialogueAndStateWithTimer(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80103010: addiu       $sp, $sp, -0x18
@@ -3706,7 +3706,7 @@ RECOMP_FUNC void func_80103010(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103048: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_8010304C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void lv3_runDialogueSequenceA(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8010304C: addiu       $sp, $sp, -0x20
@@ -3792,7 +3792,7 @@ RECOMP_FUNC void func_8010304C(uint8_t* rdram, recomp_context* ctx) {
     // 0x801030B4: addiu       $sp, $sp, 0x20
     ctx->r29 = ADD32(ctx->r29, 0X20);
 ;}
-RECOMP_FUNC void func_801030B8(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void lv3_playPairedDialogueA(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x801030B8: addiu       $sp, $sp, -0x20
@@ -3836,7 +3836,7 @@ RECOMP_FUNC void func_801030B8(uint8_t* rdram, recomp_context* ctx) {
     // 0x801030EC: addiu       $sp, $sp, 0x20
     ctx->r29 = ADD32(ctx->r29, 0X20);
 ;}
-RECOMP_FUNC void func_801030F0(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void playVoice2_0x233(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x801030F0: addiu       $sp, $sp, -0x18
@@ -3862,7 +3862,7 @@ RECOMP_FUNC void func_801030F0(uint8_t* rdram, recomp_context* ctx) {
     // 0x8010310C: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_80103110(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void playVoice2_0x13C(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80103110: addiu       $sp, $sp, -0x18
@@ -3898,7 +3898,7 @@ RECOMP_FUNC void func_80103110(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103138: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_8010313C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void scheduleLv3ObjectiveTimers_3s(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8010313C: addiu       $sp, $sp, -0x18
@@ -3926,7 +3926,7 @@ RECOMP_FUNC void func_8010313C(uint8_t* rdram, recomp_context* ctx) {
     // 0x8010315C: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_80103160(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void lv3_scheduleObjectiveTimers(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80103160: addiu       $sp, $sp, -0x20
@@ -4004,7 +4004,7 @@ RECOMP_FUNC void func_80103160(uint8_t* rdram, recomp_context* ctx) {
     // 0x801031C0: addiu       $sp, $sp, 0x20
     ctx->r29 = ADD32(ctx->r29, 0X20);
 ;}
-RECOMP_FUNC void func_801031C4(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void lv3_updateHudAndProgress(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x801031C4: addiu       $sp, $sp, -0x18
@@ -4016,7 +4016,7 @@ RECOMP_FUNC void func_801031C4(uint8_t* rdram, recomp_context* ctx) {
     // 0x801031D0: jal         0x800C7884
     // 0x801031D4: addiu       $a0, $a0, -0x699C
     ctx->r4 = ADD32(ctx->r4, -0X699C);
-    func_800C7884(rdram, ctx);
+    setHudFlagBit40AndStoreArg(rdram, ctx);
         goto after_0;
     // 0x801031D4: addiu       $a0, $a0, -0x699C
     ctx->r4 = ADD32(ctx->r4, -0X699C);
@@ -4076,7 +4076,7 @@ RECOMP_FUNC void func_801031C4(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103218: jal         0x800C7D98
     // 0x8010321C: addiu       $a0, $zero, 0x3
     ctx->r4 = ADD32(0, 0X3);
-    func_800C7D98(rdram, ctx);
+    triggerSoundCueByType(rdram, ctx);
         goto after_6;
     // 0x8010321C: addiu       $a0, $zero, 0x3
     ctx->r4 = ADD32(0, 0X3);
@@ -4090,7 +4090,7 @@ RECOMP_FUNC void func_801031C4(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103228: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_8010322C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void triggerSoundCue5(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8010322C: addiu       $sp, $sp, -0x18
@@ -4100,7 +4100,7 @@ RECOMP_FUNC void func_8010322C(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103234: jal         0x800C7D98
     // 0x80103238: addiu       $a0, $zero, 0x5
     ctx->r4 = ADD32(0, 0X5);
-    func_800C7D98(rdram, ctx);
+    triggerSoundCueByType(rdram, ctx);
         goto after_0;
     // 0x80103238: addiu       $a0, $zero, 0x5
     ctx->r4 = ADD32(0, 0X5);
@@ -4114,7 +4114,7 @@ RECOMP_FUNC void func_8010322C(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103244: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_80103248(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void setObjBoolTrue_0x1F(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80103248: addiu       $sp, $sp, -0x18
@@ -4140,7 +4140,7 @@ RECOMP_FUNC void func_80103248(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103264: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_80103268(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void lv3_setBoolean_0x10(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80103268: addiu       $sp, $sp, -0x18
@@ -4166,7 +4166,7 @@ RECOMP_FUNC void func_80103268(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103284: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_80103288(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void lv3_setDoubleBoolean(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80103288: addiu       $sp, $sp, -0x18
@@ -4202,7 +4202,7 @@ RECOMP_FUNC void func_80103288(uint8_t* rdram, recomp_context* ctx) {
     // 0x801032B0: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_801032B4(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void lv3_progressWithDialogueA(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x801032B4: addiu       $sp, $sp, -0x18
@@ -4250,7 +4250,7 @@ RECOMP_FUNC void func_801032B4(uint8_t* rdram, recomp_context* ctx) {
     // 0x801032EC: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_801032F0(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void lv3_playPairedDialogueB(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x801032F0: addiu       $sp, $sp, -0x20
@@ -4314,7 +4314,7 @@ RECOMP_FUNC void func_801032F0(uint8_t* rdram, recomp_context* ctx) {
     // 0x8010333C: addiu       $sp, $sp, 0x20
     ctx->r29 = ADD32(ctx->r29, 0X20);
 ;}
-RECOMP_FUNC void func_80103340(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void lv3_setBoolean_0x11(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80103340: addiu       $sp, $sp, -0x18
@@ -4340,7 +4340,7 @@ RECOMP_FUNC void func_80103340(uint8_t* rdram, recomp_context* ctx) {
     // 0x8010335C: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_80103360(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void scheduleLv3SetStateBooleans_3s(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80103360: addiu       $sp, $sp, -0x18
@@ -4368,7 +4368,7 @@ RECOMP_FUNC void func_80103360(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103380: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_80103384(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void lv3_setMissionStateBooleans(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80103384: addiu       $sp, $sp, -0x18
@@ -4410,7 +4410,7 @@ RECOMP_FUNC void func_80103384(uint8_t* rdram, recomp_context* ctx) {
     // 0x801033B4: jal         0x800C7884
     // 0x801033B8: addiu       $a0, $a0, -0x6980
     ctx->r4 = ADD32(ctx->r4, -0X6980);
-    func_800C7884(rdram, ctx);
+    setHudFlagBit40AndStoreArg(rdram, ctx);
         goto after_3;
     // 0x801033B8: addiu       $a0, $a0, -0x6980
     ctx->r4 = ADD32(ctx->r4, -0X6980);
@@ -4454,7 +4454,7 @@ RECOMP_FUNC void func_80103384(uint8_t* rdram, recomp_context* ctx) {
     // 0x801033E8: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_801033EC(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void lv3_progressWithDialogueB(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x801033EC: addiu       $sp, $sp, -0x18
@@ -4500,7 +4500,7 @@ RECOMP_FUNC void func_801033EC(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103420: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_80103424(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void playVoice2_0x2F3(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80103424: addiu       $sp, $sp, -0x18
@@ -4526,7 +4526,7 @@ RECOMP_FUNC void func_80103424(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103440: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_80103444(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void playVoice2_0x29F(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80103444: addiu       $sp, $sp, -0x18
@@ -4552,7 +4552,7 @@ RECOMP_FUNC void func_80103444(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103460: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_80103464(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void playVoice2_0x126(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80103464: addiu       $sp, $sp, -0x20

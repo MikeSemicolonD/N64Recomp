@@ -143,7 +143,7 @@ L_8008AD74:
     // 0x8008AD90: jal         0x80085F54
     // 0x8008AD94: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
-    func_80085F54(rdram, ctx);
+    compareHalfwordAtOffset4_v2(rdram, ctx);
         goto after_0;
     // 0x8008AD94: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
@@ -496,7 +496,7 @@ L_8008AF78:
     // 0x8008AF9C: jal         0x80085F54
     // 0x8008AFA0: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
-    func_80085F54(rdram, ctx);
+    compareHalfwordAtOffset4_v2(rdram, ctx);
         goto after_0;
     // 0x8008AFA0: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
@@ -1136,7 +1136,7 @@ L_8008B334:
     // 0x8008B338: nop
 
 ;}
-RECOMP_FUNC void func_8008B33C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void seqCmdHandler40(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8008B33C: addu        $a2, $a0, $zero
@@ -1307,7 +1307,7 @@ L_8008B424:
     // 0x8008B428: addu        $v0, $zero, $zero
     ctx->r2 = ADD32(0, 0);
 ;}
-RECOMP_FUNC void func_8008B42C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void seqCmdHandler41(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8008B42C: addu        $a2, $a0, $zero
@@ -1478,7 +1478,7 @@ L_8008B514:
     // 0x8008B518: addu        $v0, $zero, $zero
     ctx->r2 = ADD32(0, 0);
 ;}
-RECOMP_FUNC void func_8008B51C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void seqCmdHandler42(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8008B51C: addu        $a2, $a0, $zero
@@ -1649,7 +1649,7 @@ L_8008B604:
     // 0x8008B608: addu        $v0, $zero, $zero
     ctx->r2 = ADD32(0, 0);
 ;}
-RECOMP_FUNC void func_8008B60C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void seqCmdHandler43(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8008B60C: addu        $a2, $a0, $zero
@@ -1820,7 +1820,7 @@ L_8008B6F4:
     // 0x8008B6F8: addu        $v0, $zero, $zero
     ctx->r2 = ADD32(0, 0);
 ;}
-RECOMP_FUNC void func_8008B6FC(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void seqCmdHandler44(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8008B6FC: addu        $a2, $a0, $zero
@@ -1991,7 +1991,7 @@ L_8008B7E4:
     // 0x8008B7E8: addu        $v0, $zero, $zero
     ctx->r2 = ADD32(0, 0);
 ;}
-RECOMP_FUNC void func_8008B7EC(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void seqCmdHandler45(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8008B7EC: addu        $a2, $a0, $zero
@@ -2162,7 +2162,7 @@ L_8008B8D4:
     // 0x8008B8D8: addu        $v0, $zero, $zero
     ctx->r2 = ADD32(0, 0);
 ;}
-RECOMP_FUNC void func_8008B8DC(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void seqCmdHandler46(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8008B8DC: addu        $a2, $a0, $zero
@@ -2370,7 +2370,7 @@ L_8008B9F4:
     // 0x8008B9FC: jal         0x80093E80
     // 0x8008BA00: nop
 
-    func_80093E80(rdram, ctx);
+    musyxComputeNotePlaybackRate(rdram, ctx);
         goto after_0;
     // 0x8008BA00: nop
 
@@ -2659,7 +2659,7 @@ L_8008BB98:
     // 0x8008BBA0: jal         0x80093E80
     // 0x8008BBA4: nop
 
-    func_80093E80(rdram, ctx);
+    musyxComputeNotePlaybackRate(rdram, ctx);
         goto after_0;
     // 0x8008BBA4: nop
 
@@ -2734,7 +2734,7 @@ L_8008BBFC:
     // 0x8008BC0C: nop
 
 ;}
-RECOMP_FUNC void func_8008BC10(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void tickAudioChannel(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8008BC10: lui         $v0, 0x8014
@@ -4864,7 +4864,7 @@ L_8008C7F4:
     // 0x8008C7FC: jal         0x8008B33C
     // 0x8008C800: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_8008B33C(rdram, ctx);
+    seqCmdHandler40(rdram, ctx);
         goto after_25;
     // 0x8008C800: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -4883,7 +4883,7 @@ L_8008C80C:
     // 0x8008C814: jal         0x8008B42C
     // 0x8008C818: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_8008B42C(rdram, ctx);
+    seqCmdHandler41(rdram, ctx);
         goto after_26;
     // 0x8008C818: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -4902,7 +4902,7 @@ L_8008C824:
     // 0x8008C82C: jal         0x8008B51C
     // 0x8008C830: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_8008B51C(rdram, ctx);
+    seqCmdHandler42(rdram, ctx);
         goto after_27;
     // 0x8008C830: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -4921,7 +4921,7 @@ L_8008C83C:
     // 0x8008C844: jal         0x8008B60C
     // 0x8008C848: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_8008B60C(rdram, ctx);
+    seqCmdHandler43(rdram, ctx);
         goto after_28;
     // 0x8008C848: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -4940,7 +4940,7 @@ L_8008C854:
     // 0x8008C85C: jal         0x8008B6FC
     // 0x8008C860: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_8008B6FC(rdram, ctx);
+    seqCmdHandler44(rdram, ctx);
         goto after_29;
     // 0x8008C860: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -4959,7 +4959,7 @@ L_8008C86C:
     // 0x8008C874: jal         0x8008B7EC
     // 0x8008C878: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_8008B7EC(rdram, ctx);
+    seqCmdHandler45(rdram, ctx);
         goto after_30;
     // 0x8008C878: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -4978,7 +4978,7 @@ L_8008C884:
     // 0x8008C88C: jal         0x8008B8DC
     // 0x8008C890: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_8008B8DC(rdram, ctx);
+    seqCmdHandler46(rdram, ctx);
         goto after_31;
     // 0x8008C890: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -5110,7 +5110,7 @@ L_8008C92C:
     // 0x8008C944: jal         0x800920FC
     // 0x8008C948: nop
 
-    func_800920FC(rdram, ctx);
+    isAudioSlotActive(rdram, ctx);
         goto after_32;
     // 0x8008C948: nop
 
@@ -5180,7 +5180,7 @@ L_8008C994:
     // 0x8008C9A8: nop
 
 ;}
-RECOMP_FUNC void func_8008C9AC(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void tickAllAudioChannels(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8008C9AC: lui         $v0, 0x8014
@@ -5247,7 +5247,7 @@ L_8008CA00:
     // 0x8008CA14: jal         0x8008BC10
     // 0x8008CA18: addu        $a0, $s5, $zero
     ctx->r4 = ADD32(ctx->r21, 0);
-    func_8008BC10(rdram, ctx);
+    tickAudioChannel(rdram, ctx);
         goto after_0;
     // 0x8008CA18: addu        $a0, $s5, $zero
     ctx->r4 = ADD32(ctx->r21, 0);
@@ -5896,7 +5896,7 @@ L_8008CDDC:
     // 0x8008CDE4: jal         0x80093E80
     // 0x8008CDE8: nop
 
-    func_80093E80(rdram, ctx);
+    musyxComputeNotePlaybackRate(rdram, ctx);
         goto after_3;
     // 0x8008CDE8: nop
 
@@ -6098,7 +6098,7 @@ L_8008CEFC:
     // 0x8008CF1C: jal         0x80092388
     // 0x8008CF20: addu        $a0, $s6, $zero
     ctx->r4 = ADD32(ctx->r22, 0);
-    func_80092388(rdram, ctx);
+    noopHandler_80092388(rdram, ctx);
         goto after_6;
     // 0x8008CF20: addu        $a0, $s6, $zero
     ctx->r4 = ADD32(ctx->r22, 0);
@@ -7773,7 +7773,7 @@ L_8008D920:
     // 0x8008D95C: nop
 
 ;}
-RECOMP_FUNC void func_8008D960(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void tickAudioSequencerFrame(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8008D960: lui         $a0, 0x8014
@@ -7865,7 +7865,7 @@ L_8008D9D8:
     // 0x8008D9E8: jal         0x8008C9AC
     // 0x8008D9EC: nop
 
-    func_8008C9AC(rdram, ctx);
+    tickAllAudioChannels(rdram, ctx);
         goto after_0;
     // 0x8008D9EC: nop
 
@@ -7882,7 +7882,7 @@ L_8008D9F0:
     // 0x8008D9FC: nop
 
 ;}
-RECOMP_FUNC void func_8008DA00(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void tickMusyXIfActive(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8008DA00: lui         $v0, 0x800A
@@ -7902,7 +7902,7 @@ RECOMP_FUNC void func_8008DA00(uint8_t* rdram, recomp_context* ctx) {
     // 0x8008DA14: jal         0x80092010
     // 0x8008DA18: nop
 
-    func_80092010(rdram, ctx);
+    factor5MutexAcquire(rdram, ctx);
         goto after_0;
     // 0x8008DA18: nop
 
@@ -7934,7 +7934,7 @@ RECOMP_FUNC void func_8008DA00(uint8_t* rdram, recomp_context* ctx) {
     // 0x8008DA34: jal         0x8009205C
     // 0x8008DA38: nop
 
-    func_8009205C(rdram, ctx);
+    factor5MutexRelease(rdram, ctx);
         goto after_4;
     // 0x8008DA38: nop
 
@@ -9053,7 +9053,7 @@ L_8008E0A4:
     // 0x8008E0AC: nop
 
 ;}
-RECOMP_FUNC void func_8008E0B0(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void playSimpleAudioCmd(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8008E0B0: lui         $v0, 0x800A
@@ -9085,7 +9085,7 @@ RECOMP_FUNC void func_8008E0B0(uint8_t* rdram, recomp_context* ctx) {
     // 0x8008E0DC: jal         0x80092010
     // 0x8008E0E0: nop
 
-    func_80092010(rdram, ctx);
+    factor5MutexAcquire(rdram, ctx);
         goto after_0;
     // 0x8008E0E0: nop
 
@@ -9109,7 +9109,7 @@ RECOMP_FUNC void func_8008E0B0(uint8_t* rdram, recomp_context* ctx) {
     // 0x8008E0FC: jal         0x8009205C
     // 0x8008E100: nop
 
-    func_8009205C(rdram, ctx);
+    factor5MutexRelease(rdram, ctx);
         goto after_2;
     // 0x8008E100: nop
 
@@ -9132,7 +9132,7 @@ L_8008E104:
     // 0x8008E11C: nop
 
 ;}
-RECOMP_FUNC void func_8008E120(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void applyMusicOrSfxVolume(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8008E120: lui         $v0, 0x800A
@@ -9168,7 +9168,7 @@ RECOMP_FUNC void func_8008E120(uint8_t* rdram, recomp_context* ctx) {
     // 0x8008E154: jal         0x80092010
     // 0x8008E158: nop
 
-    func_80092010(rdram, ctx);
+    factor5MutexAcquire(rdram, ctx);
         goto after_0;
     // 0x8008E158: nop
 
@@ -9226,7 +9226,7 @@ L_8008E19C:
     // 0x8008E19C: jal         0x8009205C
     // 0x8008E1A0: nop
 
-    func_8009205C(rdram, ctx);
+    factor5MutexRelease(rdram, ctx);
         goto after_3;
     // 0x8008E1A0: nop
 
@@ -9825,7 +9825,7 @@ RECOMP_FUNC void func_8008E4E4(uint8_t* rdram, recomp_context* ctx) {
     // 0x8008E510: jal         0x80092010
     // 0x8008E514: nop
 
-    func_80092010(rdram, ctx);
+    factor5MutexAcquire(rdram, ctx);
         goto after_0;
     // 0x8008E514: nop
 
@@ -9845,7 +9845,7 @@ RECOMP_FUNC void func_8008E4E4(uint8_t* rdram, recomp_context* ctx) {
     // 0x8008E528: jal         0x8009205C
     // 0x8008E52C: nop
 
-    func_8009205C(rdram, ctx);
+    factor5MutexRelease(rdram, ctx);
         goto after_2;
     // 0x8008E52C: nop
 
@@ -9903,7 +9903,7 @@ L_8008E574:
     // 0x8008E578: nop
 
 ;}
-RECOMP_FUNC void func_8008E57C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void anyAudioSlotActive(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8008E57C: lui         $v0, 0x800A
@@ -9968,7 +9968,7 @@ L_8008E5CC:
     // 0x8008E5CC: jal         0x800920FC
     // 0x8008E5D0: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_800920FC(rdram, ctx);
+    isAudioSlotActive(rdram, ctx);
         goto after_1;
     // 0x8008E5D0: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -10475,7 +10475,7 @@ RECOMP_FUNC void func_8008E904(uint8_t* rdram, recomp_context* ctx) {
     // 0x8008E918: jal         0x80092010
     // 0x8008E91C: nop
 
-    func_80092010(rdram, ctx);
+    factor5MutexAcquire(rdram, ctx);
         goto after_0;
     // 0x8008E91C: nop
 
@@ -10491,7 +10491,7 @@ RECOMP_FUNC void func_8008E904(uint8_t* rdram, recomp_context* ctx) {
     // 0x8008E928: jal         0x8009205C
     // 0x8008E92C: nop
 
-    func_8009205C(rdram, ctx);
+    factor5MutexRelease(rdram, ctx);
         goto after_2;
     // 0x8008E92C: nop
 
@@ -10650,7 +10650,7 @@ L_8008E99C:
     // 0x8008EA10: nop
 
 ;}
-RECOMP_FUNC void func_8008EA14(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void setDisplayMode(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8008EA14: addiu       $sp, $sp, -0x18
@@ -10714,7 +10714,7 @@ L_8008EA58:
     // 0x8008EA78: jal         0x80091B3C
     // 0x8008EA7C: addu        $a2, $v1, $zero
     ctx->r6 = ADD32(ctx->r3, 0);
-    func_80091B3C(rdram, ctx);
+    initAudioSubsystem(rdram, ctx);
         goto after_0;
     // 0x8008EA7C: addu        $a2, $v1, $zero
     ctx->r6 = ADD32(ctx->r3, 0);
@@ -10869,7 +10869,7 @@ L_8008EB48:
     // 0x8008EB58: nop
 
 ;}
-RECOMP_FUNC void func_8008EB5C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void reapplyDisplayMode(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8008EB5C: addiu       $sp, $sp, -0x18
@@ -10933,7 +10933,7 @@ L_8008EBA0:
     // 0x8008EBC0: jal         0x80091C88
     // 0x8008EBC4: addu        $a2, $v1, $zero
     ctx->r6 = ADD32(ctx->r3, 0);
-    func_80091C88(rdram, ctx);
+    reapplyAudioConfig(rdram, ctx);
         goto after_0;
     // 0x8008EBC4: addu        $a2, $v1, $zero
     ctx->r6 = ADD32(ctx->r3, 0);
@@ -11141,7 +11141,7 @@ L_8008ECE0:
     // 0x8008ECE0: jal         0x80099C44
     // 0x8008ECE4: nop
 
-    func_80099C44(rdram, ctx);
+    noopHandler_80099C44(rdram, ctx);
         goto after_2;
     // 0x8008ECE4: nop
 
@@ -11166,7 +11166,7 @@ RECOMP_FUNC void func_8008ED00(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
 ;}
-RECOMP_FUNC void func_8008ED5C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void isMusyXActive(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8008ED5C: lui         $v0, 0x800A
@@ -11669,7 +11669,7 @@ L_8008F058:
     // 0x8008F060: jal         0x80092010
     // 0x8008F064: nop
 
-    func_80092010(rdram, ctx);
+    factor5MutexAcquire(rdram, ctx);
         goto after_4;
     // 0x8008F064: nop
 
@@ -11685,7 +11685,7 @@ L_8008F058:
     // 0x8008F078: jal         0x8009205C
     // 0x8008F07C: nop
 
-    func_8009205C(rdram, ctx);
+    factor5MutexRelease(rdram, ctx);
         goto after_5;
     // 0x8008F07C: nop
 

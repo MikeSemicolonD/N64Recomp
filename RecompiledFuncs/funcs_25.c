@@ -1596,7 +1596,7 @@ L_80093E2C:
     // 0x80093E50: addiu       $sp, $sp, 0x20
     ctx->r29 = ADD32(ctx->r29, 0X20);
 ;}
-RECOMP_FUNC void func_80093E54(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void truncDouble(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80093E54: trunc.w.d   $f0, $f12
@@ -1614,7 +1614,7 @@ RECOMP_FUNC void func_80093E54(uint8_t* rdram, recomp_context* ctx) {
     CHECK_FR(ctx, 0);
     ctx->f0.d = CVT_D_W(ctx->f0.u32l);
 ;}
-RECOMP_FUNC void func_80093E60(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void ceilDouble(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80093E60: ceil.w.d    $f0, $f12
@@ -1632,7 +1632,7 @@ RECOMP_FUNC void func_80093E60(uint8_t* rdram, recomp_context* ctx) {
     CHECK_FR(ctx, 0);
     ctx->f0.d = CVT_D_W(ctx->f0.u32l);
 ;}
-RECOMP_FUNC void func_80093E6C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void sqrtf_recomp(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80093E6C: jr          $ra
@@ -1652,7 +1652,7 @@ RECOMP_FUNC void fake_func_80093E74(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
 ;}
-RECOMP_FUNC void func_80093E80(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void musyxComputeNotePlaybackRate(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80093E80: addiu       $sp, $sp, -0xC
@@ -6477,7 +6477,7 @@ RECOMP_FUNC void func_80095A94(uint8_t* rdram, recomp_context* ctx) {
     // 0x80095AB0: jal         0x80092010
     // 0x80095AB4: nop
 
-    func_80092010(rdram, ctx);
+    factor5MutexAcquire(rdram, ctx);
         goto after_0;
     // 0x80095AB4: nop
 
@@ -6493,7 +6493,7 @@ RECOMP_FUNC void func_80095A94(uint8_t* rdram, recomp_context* ctx) {
     // 0x80095AC0: jal         0x8009205C
     // 0x80095AC4: nop
 
-    func_8009205C(rdram, ctx);
+    factor5MutexRelease(rdram, ctx);
         goto after_2;
     // 0x80095AC4: nop
 
@@ -6976,7 +6976,7 @@ RECOMP_FUNC void func_80095D58(uint8_t* rdram, recomp_context* ctx) {
     // 0x80095D74: jal         0x80092010
     // 0x80095D78: nop
 
-    func_80092010(rdram, ctx);
+    factor5MutexAcquire(rdram, ctx);
         goto after_0;
     // 0x80095D78: nop
 
@@ -6992,7 +6992,7 @@ RECOMP_FUNC void func_80095D58(uint8_t* rdram, recomp_context* ctx) {
     // 0x80095D84: jal         0x8009205C
     // 0x80095D88: nop
 
-    func_8009205C(rdram, ctx);
+    factor5MutexRelease(rdram, ctx);
         goto after_2;
     // 0x80095D88: nop
 
@@ -7386,7 +7386,7 @@ RECOMP_FUNC void func_80095F94(uint8_t* rdram, recomp_context* ctx) {
     // 0x80095FB8: jal         0x80092010
     // 0x80095FBC: nop
 
-    func_80092010(rdram, ctx);
+    factor5MutexAcquire(rdram, ctx);
         goto after_0;
     // 0x80095FBC: nop
 
@@ -7404,7 +7404,7 @@ RECOMP_FUNC void func_80095F94(uint8_t* rdram, recomp_context* ctx) {
     // 0x80095FCC: jal         0x8009205C
     // 0x80095FD0: nop
 
-    func_8009205C(rdram, ctx);
+    factor5MutexRelease(rdram, ctx);
         goto after_2;
     // 0x80095FD0: nop
 
@@ -7601,7 +7601,7 @@ RECOMP_FUNC void func_800960D0(uint8_t* rdram, recomp_context* ctx) {
     // 0x800960EC: jal         0x80092010
     // 0x800960F0: nop
 
-    func_80092010(rdram, ctx);
+    factor5MutexAcquire(rdram, ctx);
         goto after_0;
     // 0x800960F0: nop
 
@@ -7617,7 +7617,7 @@ RECOMP_FUNC void func_800960D0(uint8_t* rdram, recomp_context* ctx) {
     // 0x800960FC: jal         0x8009205C
     // 0x80096100: nop
 
-    func_8009205C(rdram, ctx);
+    factor5MutexRelease(rdram, ctx);
         goto after_2;
     // 0x80096100: nop
 
@@ -7836,7 +7836,7 @@ RECOMP_FUNC void func_8009621C(uint8_t* rdram, recomp_context* ctx) {
     // 0x80096248: jal         0x80092010
     // 0x8009624C: nop
 
-    func_80092010(rdram, ctx);
+    factor5MutexAcquire(rdram, ctx);
         goto after_0;
     // 0x8009624C: nop
 
@@ -7856,7 +7856,7 @@ RECOMP_FUNC void func_8009621C(uint8_t* rdram, recomp_context* ctx) {
     // 0x80096260: jal         0x8009205C
     // 0x80096264: nop
 
-    func_8009205C(rdram, ctx);
+    factor5MutexRelease(rdram, ctx);
         goto after_2;
     // 0x80096264: nop
 
@@ -8263,7 +8263,7 @@ L_800964A4:
     // 0x800964C4: nop
 
 ;}
-RECOMP_FUNC void func_800964C8(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void queueAudioVoiceCmd(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x800964C8: lui         $v0, 0x800A
@@ -8299,7 +8299,7 @@ RECOMP_FUNC void func_800964C8(uint8_t* rdram, recomp_context* ctx) {
     // 0x800964FC: jal         0x80092010
     // 0x80096500: nop
 
-    func_80092010(rdram, ctx);
+    factor5MutexAcquire(rdram, ctx);
         goto after_0;
     // 0x80096500: nop
 
@@ -8321,7 +8321,7 @@ RECOMP_FUNC void func_800964C8(uint8_t* rdram, recomp_context* ctx) {
     // 0x80096518: jal         0x8009205C
     // 0x8009651C: nop
 
-    func_8009205C(rdram, ctx);
+    factor5MutexRelease(rdram, ctx);
         goto after_2;
     // 0x8009651C: nop
 
@@ -8933,7 +8933,7 @@ L_80096870:
     // 0x80096890: jal         0x80092010
     // 0x80096894: nop
 
-    func_80092010(rdram, ctx);
+    factor5MutexAcquire(rdram, ctx);
         goto after_3;
     // 0x80096894: nop
 
@@ -8978,7 +8978,7 @@ L_800968AC:
     // 0x800968CC: jal         0x80092010
     // 0x800968D0: nop
 
-    func_80092010(rdram, ctx);
+    factor5MutexAcquire(rdram, ctx);
         goto after_4;
     // 0x800968D0: nop
 
@@ -9024,7 +9024,7 @@ L_800968F4:
     // 0x8009690C: jal         0x80092010
     // 0x80096910: nop
 
-    func_80092010(rdram, ctx);
+    factor5MutexAcquire(rdram, ctx);
         goto after_5;
     // 0x80096910: nop
 
@@ -9049,7 +9049,7 @@ L_80096924:
     // 0x8009692C: jal         0x8009205C
     // 0x80096930: nop
 
-    func_8009205C(rdram, ctx);
+    factor5MutexRelease(rdram, ctx);
         goto after_7;
     // 0x80096930: nop
 
@@ -9249,7 +9249,7 @@ L_80096A1C:
     // 0x80096A30: jal         0x80092010
     // 0x80096A34: nop
 
-    func_80092010(rdram, ctx);
+    factor5MutexAcquire(rdram, ctx);
         goto after_12;
     // 0x80096A34: nop
 
@@ -9265,7 +9265,7 @@ L_80096A1C:
     // 0x80096A40: jal         0x8009205C
     // 0x80096A44: nop
 
-    func_8009205C(rdram, ctx);
+    factor5MutexRelease(rdram, ctx);
         goto after_14;
     // 0x80096A44: nop
 
@@ -9292,7 +9292,7 @@ L_80096A48:
     // 0x80096A64: jal         0x80092010
     // 0x80096A68: nop
 
-    func_80092010(rdram, ctx);
+    factor5MutexAcquire(rdram, ctx);
         goto after_15;
     // 0x80096A68: nop
 
@@ -9314,7 +9314,7 @@ L_80096A48:
     // 0x80096A80: jal         0x8009205C
     // 0x80096A84: nop
 
-    func_8009205C(rdram, ctx);
+    factor5MutexRelease(rdram, ctx);
         goto after_17;
     // 0x80096A84: nop
 
@@ -9353,7 +9353,7 @@ L_80096A88:
     // 0x80096AB4: jal         0x80092010
     // 0x80096AB8: nop
 
-    func_80092010(rdram, ctx);
+    factor5MutexAcquire(rdram, ctx);
         goto after_18;
     // 0x80096AB8: nop
 
@@ -9373,7 +9373,7 @@ L_80096A88:
     // 0x80096ACC: jal         0x8009205C
     // 0x80096AD0: nop
 
-    func_8009205C(rdram, ctx);
+    factor5MutexRelease(rdram, ctx);
         goto after_20;
     // 0x80096AD0: nop
 
@@ -9410,7 +9410,7 @@ L_80096AD4:
     // 0x80096AFC: jal         0x80092010
     // 0x80096B00: nop
 
-    func_80092010(rdram, ctx);
+    factor5MutexAcquire(rdram, ctx);
         goto after_21;
     // 0x80096B00: nop
 
@@ -9428,7 +9428,7 @@ L_80096AD4:
     // 0x80096B10: jal         0x8009205C
     // 0x80096B14: nop
 
-    func_8009205C(rdram, ctx);
+    factor5MutexRelease(rdram, ctx);
         goto after_23;
     // 0x80096B14: nop
 
@@ -9647,7 +9647,7 @@ L_80096C00:
     // 0x80096C44: jal         0x80092010
     // 0x80096C48: nop
 
-    func_80092010(rdram, ctx);
+    factor5MutexAcquire(rdram, ctx);
         goto after_27;
     // 0x80096C48: nop
 
@@ -9667,7 +9667,7 @@ L_80096C00:
     // 0x80096C5C: jal         0x8009205C
     // 0x80096C60: nop
 
-    func_8009205C(rdram, ctx);
+    factor5MutexRelease(rdram, ctx);
         goto after_29;
     // 0x80096C60: nop
 
@@ -9722,7 +9722,7 @@ RECOMP_FUNC void func_80096C88(uint8_t* rdram, recomp_context* ctx) {
     // 0x80096CAC: jal         0x80092010
     // 0x80096CB0: nop
 
-    func_80092010(rdram, ctx);
+    factor5MutexAcquire(rdram, ctx);
         goto after_0;
     // 0x80096CB0: nop
 
@@ -9742,7 +9742,7 @@ RECOMP_FUNC void func_80096C88(uint8_t* rdram, recomp_context* ctx) {
     // 0x80096CC4: jal         0x8009205C
     // 0x80096CC8: nop
 
-    func_8009205C(rdram, ctx);
+    factor5MutexRelease(rdram, ctx);
         goto after_2;
     // 0x80096CC8: nop
 

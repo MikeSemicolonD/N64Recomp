@@ -15,7 +15,7 @@ RECOMP_FUNC void func_80003390(uint8_t* rdram, recomp_context* ctx) {
     // 0x8000339C: addiu       $v0, $zero, 0x1
     ctx->r2 = ADD32(0, 0X1);
 ;}
-RECOMP_FUNC void func_800033A0(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void processOverlayDmaStruct(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x800033A0: addiu       $sp, $sp, -0x20
@@ -52,7 +52,7 @@ L_800033C8:
     // 0x800033D4: jal         0x80005200
     // 0x800033D8: addiu       $s0, $s0, 0x4
     ctx->r16 = ADD32(ctx->r16, 0X4);
-    func_80005200(rdram, ctx);
+    synchronousDmaTransfer(rdram, ctx);
         goto after_0;
     // 0x800033D8: addiu       $s0, $s0, 0x4
     ctx->r16 = ADD32(ctx->r16, 0X4);
@@ -158,7 +158,7 @@ RECOMP_FUNC void setRngSeed(uint8_t* rdram, recomp_context* ctx) {
     // 0x8000346C: nop
 
 ;}
-RECOMP_FUNC void func_80003480(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void submitDmaSlot(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80003480: addiu       $sp, $sp, -0x40
@@ -299,7 +299,7 @@ L_8000356C:
     // 0x8000356C: jal         0x800058C0
     // 0x80003570: addu        $a0, $zero, $zero
     ctx->r4 = ADD32(0, 0);
-    func_800058C0(rdram, ctx);
+    dispatchPendingPiDmaToWorker(rdram, ctx);
         goto after_1;
     // 0x80003570: addu        $a0, $zero, $zero
     ctx->r4 = ADD32(0, 0);
@@ -319,7 +319,7 @@ L_8000356C:
     // 0x80003584: jal         0x800072AC
     // 0x80003588: nop
 
-    func_800072AC(rdram, ctx);
+    yieldThreadRet1(rdram, ctx);
         goto after_2;
     // 0x80003588: nop
 
@@ -428,7 +428,7 @@ L_80003594:
     // 0x80003634: addiu       $sp, $sp, 0x40
     ctx->r29 = ADD32(ctx->r29, 0X40);
 ;}
-RECOMP_FUNC void func_80003638(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void waitDmaSlotComplete(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80003638: addiu       $sp, $sp, -0x50
@@ -609,7 +609,7 @@ L_80003764:
     // 0x80003764: jal         0x800058C0
     // 0x80003768: addu        $a0, $zero, $zero
     ctx->r4 = ADD32(0, 0);
-    func_800058C0(rdram, ctx);
+    dispatchPendingPiDmaToWorker(rdram, ctx);
         goto after_3;
     // 0x80003768: addu        $a0, $zero, $zero
     ctx->r4 = ADD32(0, 0);
@@ -631,7 +631,7 @@ L_80003764:
     // 0x80003780: jal         0x800072AC
     // 0x80003784: nop
 
-    func_800072AC(rdram, ctx);
+    yieldThreadRet1(rdram, ctx);
         goto after_4;
     // 0x80003784: nop
 
@@ -705,7 +705,7 @@ L_800037DC:
     // 0x800037EC: jal         0x800058C0
     // 0x800037F0: sw          $v0, 0x9AC($v1)
     MEM_W(0X9AC, ctx->r3) = ctx->r2;
-    func_800058C0(rdram, ctx);
+    dispatchPendingPiDmaToWorker(rdram, ctx);
         goto after_7;
     // 0x800037F0: sw          $v0, 0x9AC($v1)
     MEM_W(0X9AC, ctx->r3) = ctx->r2;
@@ -737,7 +737,7 @@ L_800037DC:
     // 0x80003820: addiu       $sp, $sp, 0x50
     ctx->r29 = ADD32(ctx->r29, 0X50);
 ;}
-RECOMP_FUNC void func_80003824(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void pollDmaSlotStep(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80003824: addiu       $sp, $sp, -0x48
@@ -917,7 +917,7 @@ L_80003944:
     // 0x80003944: jal         0x800058C0
     // 0x80003948: addu        $a0, $zero, $zero
     ctx->r4 = ADD32(0, 0);
-    func_800058C0(rdram, ctx);
+    dispatchPendingPiDmaToWorker(rdram, ctx);
         goto after_3;
     // 0x80003948: addu        $a0, $zero, $zero
     ctx->r4 = ADD32(0, 0);
@@ -937,7 +937,7 @@ L_80003944:
     // 0x8000395C: jal         0x800072AC
     // 0x80003960: nop
 
-    func_800072AC(rdram, ctx);
+    yieldThreadRet1(rdram, ctx);
         goto after_4;
     // 0x80003960: nop
 
@@ -1015,7 +1015,7 @@ L_800039C8:
     // 0x800039D4: jal         0x800058C0
     // 0x800039D8: sw          $v0, 0x9AC($v1)
     MEM_W(0X9AC, ctx->r3) = ctx->r2;
-    func_800058C0(rdram, ctx);
+    dispatchPendingPiDmaToWorker(rdram, ctx);
         goto after_7;
     // 0x800039D8: sw          $v0, 0x9AC($v1)
     MEM_W(0X9AC, ctx->r3) = ctx->r2;
@@ -1357,7 +1357,7 @@ L_80003BA8:
     // 0x80003BC8: addiu       $sp, $sp, 0x148
     ctx->r29 = ADD32(ctx->r29, 0X148);
 ;}
-RECOMP_FUNC void func_80003BCC(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void pushEventToRingBuffer(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80003BCC: addu        $a3, $a0, $zero
@@ -1500,7 +1500,7 @@ L_80003C90:
     // 0x80003C94: nop
 
 ;}
-RECOMP_FUNC void func_80003C98(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void subscribeEventHandler(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80003C98: addu        $a3, $a0, $zero
@@ -1754,7 +1754,7 @@ L_80003DFC:
     // 0x80003E34: jal         0x80003824
     // 0x80003E38: nop
 
-    func_80003824(rdram, ctx);
+    pollDmaSlotStep(rdram, ctx);
         goto after_0;
     // 0x80003E38: nop
 
@@ -1969,7 +1969,7 @@ L_80003F54:
     // 0x80003F78: jal         0x80003480
     // 0x80003F7C: addu        $a0, $a0, $v1
     ctx->r4 = ADD32(ctx->r4, ctx->r3);
-    func_80003480(rdram, ctx);
+    submitDmaSlot(rdram, ctx);
         goto after_5;
     // 0x80003F7C: addu        $a0, $a0, $v1
     ctx->r4 = ADD32(ctx->r4, ctx->r3);
@@ -2536,7 +2536,7 @@ L_800042AC:
     // 0x800042BC: jal         0x80003480
     // 0x800042C0: addu        $a0, $v0, $a0
     ctx->r4 = ADD32(ctx->r2, ctx->r4);
-    func_80003480(rdram, ctx);
+    submitDmaSlot(rdram, ctx);
         goto after_11;
     // 0x800042C0: addu        $a0, $v0, $a0
     ctx->r4 = ADD32(ctx->r2, ctx->r4);
@@ -2598,7 +2598,7 @@ L_80004314:
     // 0x80004318: jal         0x80003824
     // 0x8000431C: nop
 
-    func_80003824(rdram, ctx);
+    pollDmaSlotStep(rdram, ctx);
         goto after_12;
     // 0x8000431C: nop
 
@@ -2645,7 +2645,7 @@ L_80004344:
     // 0x8000435C: addiu       $sp, $sp, 0x28
     ctx->r29 = ADD32(ctx->r29, 0X28);
 ;}
-RECOMP_FUNC void func_80004360(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void mainEventQueueWorker(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80004360: addiu       $sp, $sp, -0x40
@@ -2747,7 +2747,7 @@ L_80004400:
     // 0x8000440C: jal         0x80006F24
     // 0x80004410: addiu       $s2, $zero, 0x1
     ctx->r18 = ADD32(0, 0X1);
-    func_80006F24(rdram, ctx);
+    recvServiceMessage(rdram, ctx);
         goto after_0;
     // 0x80004410: addiu       $s2, $zero, 0x1
     ctx->r18 = ADD32(0, 0X1);
@@ -2755,7 +2755,7 @@ L_80004400:
     // 0x80004414: jal         0x80003BCC
     // 0x80004418: addu        $a0, $v0, $zero
     ctx->r4 = ADD32(ctx->r2, 0);
-    func_80003BCC(rdram, ctx);
+    pushEventToRingBuffer(rdram, ctx);
         goto after_1;
     // 0x80004418: addu        $a0, $v0, $zero
     ctx->r4 = ADD32(ctx->r2, 0);
@@ -2772,7 +2772,7 @@ L_80004424:
     // 0x80004428: jal         0x80006EC4
     // 0x8000442C: nop
 
-    func_80006EC4(rdram, ctx);
+    tryRecvServiceMessage(rdram, ctx);
         goto after_2;
     // 0x8000442C: nop
 
@@ -2788,7 +2788,7 @@ L_80004424:
     // 0x80004438: jal         0x80003BCC
     // 0x8000443C: addu        $a0, $v0, $zero
     ctx->r4 = ADD32(ctx->r2, 0);
-    func_80003BCC(rdram, ctx);
+    pushEventToRingBuffer(rdram, ctx);
         goto after_3;
     // 0x8000443C: addu        $a0, $v0, $zero
     ctx->r4 = ADD32(ctx->r2, 0);
@@ -2871,7 +2871,7 @@ L_800044A0:
     // 0x800044A0: jal         0x80003C98
     // 0x800044A4: addiu       $a0, $sp, 0x10
     ctx->r4 = ADD32(ctx->r29, 0X10);
-    func_80003C98(rdram, ctx);
+    subscribeEventHandler(rdram, ctx);
         goto after_4;
     // 0x800044A4: addiu       $a0, $sp, 0x10
     ctx->r4 = ADD32(ctx->r29, 0X10);
@@ -2983,7 +2983,7 @@ L_80004528:
     // 0x80004540: jal         0x80006F78
     // 0x80004544: addiu       $a3, $zero, 0x1
     ctx->r7 = ADD32(0, 0X1);
-    func_80006F78(rdram, ctx);
+    sendServiceMessage(rdram, ctx);
         goto after_7;
     // 0x80004544: addiu       $a3, $zero, 0x1
     ctx->r7 = ADD32(0, 0X1);
@@ -3076,7 +3076,7 @@ L_800045D4:
     // 0x800045D8: jal         0x800072AC
     // 0x800045DC: nop
 
-    func_800072AC(rdram, ctx);
+    yieldThreadRet1(rdram, ctx);
         goto after_8;
     // 0x800045DC: nop
 
@@ -3088,7 +3088,7 @@ L_800045D4:
     // 0x800045E4: andi        $v0, $s2, 0xFF
     ctx->r2 = ctx->r18 & 0XFF;
 ;}
-RECOMP_FUNC void func_800045E8(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void initDmaSlots(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x800045E8: addiu       $sp, $sp, -0x28
@@ -3305,7 +3305,7 @@ L_80004720:
     // 0x80004730: jal         0x80005380
     // 0x80004734: nop
 
-    func_80005380(rdram, ctx);
+    initRsMallocHeap(rdram, ctx);
         goto after_5;
     // 0x80004734: nop
 
@@ -3357,7 +3357,7 @@ L_80004720:
     // 0x80004788: jal         0x80003480
     // 0x8000478C: sw          $a1, 0xA74($v0)
     MEM_W(0XA74, ctx->r2) = ctx->r5;
-    func_80003480(rdram, ctx);
+    submitDmaSlot(rdram, ctx);
         goto after_7;
     // 0x8000478C: sw          $a1, 0xA74($v0)
     MEM_W(0XA74, ctx->r2) = ctx->r5;
@@ -3365,7 +3365,7 @@ L_80004720:
     // 0x80004790: jal         0x80003638
     // 0x80004794: addu        $a0, $v0, $zero
     ctx->r4 = ADD32(ctx->r2, 0);
-    func_80003638(rdram, ctx);
+    waitDmaSlotComplete(rdram, ctx);
         goto after_8;
     // 0x80004794: addu        $a0, $v0, $zero
     ctx->r4 = ADD32(ctx->r2, 0);
@@ -3379,7 +3379,7 @@ L_80004720:
     // 0x800047A4: jal         0x80005850
     // 0x800047A8: sw          $v0, 0xD44($v1)
     MEM_W(0XD44, ctx->r3) = ctx->r2;
-    func_80005850(rdram, ctx);
+    initPiDmaWorker(rdram, ctx);
         goto after_9;
     // 0x800047A8: sw          $v0, 0xD44($v1)
     MEM_W(0XD44, ctx->r3) = ctx->r2;
@@ -3395,7 +3395,7 @@ L_80004720:
     // 0x800047BC: jal         0x80006C28
     // 0x800047C0: addiu       $a3, $a3, 0x4360
     ctx->r7 = ADD32(ctx->r7, 0X4360);
-    func_80006C28(rdram, ctx);
+    registerServiceWorker(rdram, ctx);
         goto after_10;
     // 0x800047C0: addiu       $a3, $a3, 0x4360
     ctx->r7 = ADD32(ctx->r7, 0X4360);
@@ -3407,7 +3407,7 @@ L_80004720:
     // 0x800047CC: jal         0x80006D9C
     // 0x800047D0: sw          $a0, 0xD54($v0)
     MEM_W(0XD54, ctx->r2) = ctx->r4;
-    func_80006D9C(rdram, ctx);
+    startServiceWorker(rdram, ctx);
         goto after_11;
     // 0x800047D0: sw          $a0, 0xD54($v0)
     MEM_W(0XD54, ctx->r2) = ctx->r4;
@@ -3431,7 +3431,7 @@ L_80004720:
     // 0x800047F0: addiu       $sp, $sp, 0x28
     ctx->r29 = ADD32(ctx->r29, 0X28);
 ;}
-RECOMP_FUNC void func_800047F4(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void findManifestEntryByName(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x800047F4: lui         $v1, 0x8011
@@ -3598,7 +3598,7 @@ L_800048A4:
     // 0x800048E8: jal         0x80003480
     // 0x800048EC: addu        $a0, $a0, $s5
     ctx->r4 = ADD32(ctx->r4, ctx->r21);
-    func_80003480(rdram, ctx);
+    submitDmaSlot(rdram, ctx);
         goto after_2;
     // 0x800048EC: addu        $a0, $a0, $s5
     ctx->r4 = ADD32(ctx->r4, ctx->r21);
@@ -3606,7 +3606,7 @@ L_800048A4:
     // 0x800048F0: jal         0x80003638
     // 0x800048F4: addu        $a0, $v0, $zero
     ctx->r4 = ADD32(ctx->r2, 0);
-    func_80003638(rdram, ctx);
+    waitDmaSlotComplete(rdram, ctx);
         goto after_3;
     // 0x800048F4: addu        $a0, $v0, $zero
     ctx->r4 = ADD32(ctx->r2, 0);
@@ -3672,7 +3672,7 @@ L_800048A4:
     // 0x8000495C: jal         0x80003480
     // 0x80004960: sw          $v1, 0x44($s3)
     MEM_W(0X44, ctx->r19) = ctx->r3;
-    func_80003480(rdram, ctx);
+    submitDmaSlot(rdram, ctx);
         goto after_6;
     // 0x80004960: sw          $v1, 0x44($s3)
     MEM_W(0X44, ctx->r19) = ctx->r3;
@@ -3680,7 +3680,7 @@ L_800048A4:
     // 0x80004964: jal         0x80003638
     // 0x80004968: addu        $a0, $v0, $zero
     ctx->r4 = ADD32(ctx->r2, 0);
-    func_80003638(rdram, ctx);
+    waitDmaSlotComplete(rdram, ctx);
         goto after_7;
     // 0x80004968: addu        $a0, $v0, $zero
     ctx->r4 = ADD32(ctx->r2, 0);
@@ -3709,7 +3709,7 @@ L_8000496C:
     // 0x80004990: addiu       $sp, $sp, 0x30
     ctx->r29 = ADD32(ctx->r29, 0X30);
 ;}
-RECOMP_FUNC void func_80004994(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void freeManifestSegmentAssets(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80004994: addiu       $sp, $sp, -0x28
@@ -3921,7 +3921,7 @@ L_80004A8C:
     // 0x80004AA8: addiu       $sp, $sp, 0x28
     ctx->r29 = ADD32(ctx->r29, 0X28);
 ;}
-RECOMP_FUNC void func_80004AAC(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void findAssetAcrossSegments(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80004AAC: addiu       $sp, $sp, -0x48
@@ -4132,7 +4132,7 @@ L_80004B6C:
     // 0x80004BE4: jal         0x80006F78
     // 0x80004BE8: sh          $v0, 0x10($sp)
     MEM_H(0X10, ctx->r29) = ctx->r2;
-    func_80006F78(rdram, ctx);
+    sendServiceMessage(rdram, ctx);
         goto after_2;
     // 0x80004BE8: sh          $v0, 0x10($sp)
     MEM_H(0X10, ctx->r29) = ctx->r2;
@@ -4141,7 +4141,7 @@ L_80004BEC:
     // 0x80004BEC: jal         0x80006F24
     // 0x80004BF0: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
-    func_80006F24(rdram, ctx);
+    recvServiceMessage(rdram, ctx);
         goto after_3;
     // 0x80004BF0: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
@@ -4161,7 +4161,7 @@ L_80004BEC:
     // 0x80004C04: jal         0x80007070
     // 0x80004C08: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
-    func_80007070(rdram, ctx);
+    postMessageToServiceWorker(rdram, ctx);
         goto after_4;
     // 0x80004C08: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
@@ -4201,7 +4201,7 @@ L_80004C24:
     // 0x80004C3C: jal         0x80006F78
     // 0x80004C40: sw          $s5, 0x10($a2)
     MEM_W(0X10, ctx->r6) = ctx->r21;
-    func_80006F78(rdram, ctx);
+    sendServiceMessage(rdram, ctx);
         goto after_5;
     // 0x80004C40: sw          $s5, 0x10($a2)
     MEM_W(0X10, ctx->r6) = ctx->r21;
@@ -4232,7 +4232,7 @@ L_80004C48:
     // 0x80004C6C: addiu       $sp, $sp, 0x48
     ctx->r29 = ADD32(ctx->r29, 0X48);
 ;}
-RECOMP_FUNC void func_80004C70(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void teardownAssetDma(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80004C70: addiu       $sp, $sp, -0x38
@@ -4321,7 +4321,7 @@ L_80004CA4:
     // 0x80004D0C: jal         0x80006F78
     // 0x80004D10: addiu       $a3, $zero, 0x1
     ctx->r7 = ADD32(0, 0X1);
-    func_80006F78(rdram, ctx);
+    sendServiceMessage(rdram, ctx);
         goto after_0;
     // 0x80004D10: addiu       $a3, $zero, 0x1
     ctx->r7 = ADD32(0, 0X1);
@@ -4330,7 +4330,7 @@ L_80004D14:
     // 0x80004D14: jal         0x80006F24
     // 0x80004D18: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_80006F24(rdram, ctx);
+    recvServiceMessage(rdram, ctx);
         goto after_1;
     // 0x80004D18: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -4350,7 +4350,7 @@ L_80004D14:
     // 0x80004D2C: jal         0x80007070
     // 0x80004D30: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
-    func_80007070(rdram, ctx);
+    postMessageToServiceWorker(rdram, ctx);
         goto after_2;
     // 0x80004D30: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
@@ -4584,7 +4584,7 @@ L_80004E54:
     // 0x80004E6C: addiu       $sp, $sp, 0x28
     ctx->r29 = ADD32(ctx->r29, 0X28);
 ;}
-RECOMP_FUNC void func_80004E70(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void setupAssetDma(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80004E70: addiu       $sp, $sp, -0x38
@@ -4691,7 +4691,7 @@ L_80004EA8:
     // 0x80004F28: jal         0x80006F78
     // 0x80004F2C: sh          $v0, 0x10($sp)
     MEM_H(0X10, ctx->r29) = ctx->r2;
-    func_80006F78(rdram, ctx);
+    sendServiceMessage(rdram, ctx);
         goto after_0;
     // 0x80004F2C: sh          $v0, 0x10($sp)
     MEM_H(0X10, ctx->r29) = ctx->r2;
@@ -4700,7 +4700,7 @@ L_80004F30:
     // 0x80004F30: jal         0x80006F24
     // 0x80004F34: addu        $a0, $s2, $zero
     ctx->r4 = ADD32(ctx->r18, 0);
-    func_80006F24(rdram, ctx);
+    recvServiceMessage(rdram, ctx);
         goto after_1;
     // 0x80004F34: addu        $a0, $s2, $zero
     ctx->r4 = ADD32(ctx->r18, 0);
@@ -4720,7 +4720,7 @@ L_80004F30:
     // 0x80004F48: jal         0x80007070
     // 0x80004F4C: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
-    func_80007070(rdram, ctx);
+    postMessageToServiceWorker(rdram, ctx);
         goto after_2;
     // 0x80004F4C: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
@@ -4739,7 +4739,7 @@ L_80004F5C:
     // 0x80004F5C: jal         0x800072AC
     // 0x80004F60: addu        $a0, $s2, $zero
     ctx->r4 = ADD32(ctx->r18, 0);
-    func_800072AC(rdram, ctx);
+    yieldThreadRet1(rdram, ctx);
         goto after_3;
     // 0x80004F60: addu        $a0, $s2, $zero
     ctx->r4 = ADD32(ctx->r18, 0);
@@ -4774,7 +4774,7 @@ L_80004F74:
     // 0x80004F8C: jal         0x80006F78
     // 0x80004F90: sw          $t0, 0x10($a2)
     MEM_W(0X10, ctx->r6) = ctx->r8;
-    func_80006F78(rdram, ctx);
+    sendServiceMessage(rdram, ctx);
         goto after_5;
     // 0x80004F90: sw          $t0, 0x10($a2)
     MEM_W(0X10, ctx->r6) = ctx->r8;
@@ -4815,7 +4815,7 @@ RECOMP_FUNC void func_80004FB0(uint8_t* rdram, recomp_context* ctx) {
     // 0x80004FC4: nop
 
 ;}
-RECOMP_FUNC void func_80004FC8(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void noopHandler_80004FC8(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80004FC8: jr          $ra
@@ -4825,7 +4825,7 @@ RECOMP_FUNC void func_80004FC8(uint8_t* rdram, recomp_context* ctx) {
     // 0x80004FCC: nop
 
 ;}
-RECOMP_FUNC void func_80004FD0(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void noopHandler_80004FD0(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80004FD0: jr          $ra
@@ -4849,7 +4849,7 @@ RECOMP_FUNC void func_80004FD8(uint8_t* rdram, recomp_context* ctx) {
     // 0x80004FE8: jal         0x800070BC
     // 0x80004FEC: nop
 
-    func_800070BC(rdram, ctx);
+    unregisterServiceWorker(rdram, ctx);
         goto after_0;
     // 0x80004FEC: nop
 
@@ -5261,7 +5261,7 @@ RECOMP_FUNC void func_800051F8(uint8_t* rdram, recomp_context* ctx) {
     // 0x800051FC: addu        $v0, $zero, $zero
     ctx->r2 = ADD32(0, 0);
 ;}
-RECOMP_FUNC void func_80005200(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void synchronousDmaTransfer(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80005200: addiu       $sp, $sp, -0x18
@@ -5271,7 +5271,7 @@ RECOMP_FUNC void func_80005200(uint8_t* rdram, recomp_context* ctx) {
     // 0x80005208: jal         0x80003480
     // 0x8000520C: nop
 
-    func_80003480(rdram, ctx);
+    submitDmaSlot(rdram, ctx);
         goto after_0;
     // 0x8000520C: nop
 
@@ -5279,7 +5279,7 @@ RECOMP_FUNC void func_80005200(uint8_t* rdram, recomp_context* ctx) {
     // 0x80005210: jal         0x80003638
     // 0x80005214: addu        $a0, $v0, $zero
     ctx->r4 = ADD32(ctx->r2, 0);
-    func_80003638(rdram, ctx);
+    waitDmaSlotComplete(rdram, ctx);
         goto after_1;
     // 0x80005214: addu        $a0, $v0, $zero
     ctx->r4 = ADD32(ctx->r2, 0);
@@ -5513,7 +5513,7 @@ RECOMP_FUNC void func_800052F4(uint8_t* rdram, recomp_context* ctx) {
     // 0x80005338: addu        $v0, $a0, $v0
     ctx->r2 = ADD32(ctx->r4, ctx->r2);
 ;}
-RECOMP_FUNC void func_8000533C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void getDmaSlotMutex(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8000533C: lui         $v0, 0x8011
@@ -5527,7 +5527,7 @@ RECOMP_FUNC void func_8000533C(uint8_t* rdram, recomp_context* ctx) {
     // 0x80005348: nop
 
 ;}
-RECOMP_FUNC void func_8000534C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void setDmaWorkerPriority(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8000534C: addiu       $sp, $sp, -0x18
@@ -5552,7 +5552,7 @@ L_80005360:
     // 0x80005368: jal         0x8000725C
     // 0x8000536C: andi        $a1, $a1, 0xFF
     ctx->r5 = ctx->r5 & 0XFF;
-    func_8000725C(rdram, ctx);
+    setServiceWorkerPriority(rdram, ctx);
         goto after_0;
     // 0x8000536C: andi        $a1, $a1, 0xFF
     ctx->r5 = ctx->r5 & 0XFF;
@@ -5570,7 +5570,7 @@ RECOMP_FUNC void fake_func_8000537C(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
 ;}
-RECOMP_FUNC void func_80005380(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void initRsMallocHeap(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80005380: addu        $a3, $a0, $zero
@@ -5639,7 +5639,7 @@ L_8000539C:
     // 0x800053EC: sw          $zero, 0xC($a0)
     MEM_W(0XC, ctx->r4) = 0;
 ;}
-RECOMP_FUNC void func_800053F0(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void getRsHeapMaxAllocSize(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x800053F0: lui         $v0, 0x8011
@@ -5902,7 +5902,7 @@ L_80005558:
     // 0x8000555C: nop
 
 ;}
-RECOMP_FUNC void func_80005560(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void noopHandler_80005560(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80005560: jr          $ra
@@ -5916,7 +5916,7 @@ RECOMP_FUNC void fake_func_80005568(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
 ;}
-RECOMP_FUNC void func_80005570(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void piDmaWorker(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80005570: addiu       $sp, $sp, -0x40
@@ -5957,7 +5957,7 @@ L_800055B0:
     // 0x800055B4: jal         0x80006F24
     // 0x800055B8: nop
 
-    func_80006F24(rdram, ctx);
+    recvServiceMessage(rdram, ctx);
         goto after_0;
     // 0x800055B8: nop
 
@@ -6061,7 +6061,7 @@ L_800055F8:
     // 0x80005650: jal         0x800072AC
     // 0x80005654: nop
 
-    func_800072AC(rdram, ctx);
+    yieldThreadRet1(rdram, ctx);
         goto after_3;
     // 0x80005654: nop
 
@@ -6123,7 +6123,7 @@ L_80005690:
     // 0x80005698: nop
 
 ;}
-RECOMP_FUNC void func_8000569C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void submitDmaRequestBatch(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8000569C: addiu       $sp, $sp, -0x38
@@ -6185,7 +6185,7 @@ L_800056E0:
     // 0x800056F4: jal         0x8000533C
     // 0x800056F8: nop
 
-    func_8000533C(rdram, ctx);
+    getDmaSlotMutex(rdram, ctx);
         goto after_0;
     // 0x800056F8: nop
 
@@ -6335,7 +6335,7 @@ L_800057DC:
     // 0x800057E8: jal         0x8000533C
     // 0x800057EC: sw          $v0, 0x26B4($s0)
     MEM_W(0X26B4, ctx->r16) = ctx->r2;
-    func_8000533C(rdram, ctx);
+    getDmaSlotMutex(rdram, ctx);
         goto after_1;
     // 0x800057EC: sw          $v0, 0x26B4($s0)
     MEM_W(0X26B4, ctx->r16) = ctx->r2;
@@ -6385,7 +6385,7 @@ L_800057DC:
     // 0x8000582C: jal         0x80006F78
     // 0x80005830: addu        $a1, $a0, $zero
     ctx->r5 = ADD32(ctx->r4, 0);
-    func_80006F78(rdram, ctx);
+    sendServiceMessage(rdram, ctx);
         goto after_2;
     // 0x80005830: addu        $a1, $a0, $zero
     ctx->r5 = ADD32(ctx->r4, 0);
@@ -6409,7 +6409,7 @@ L_80005838:
     // 0x8000584C: addiu       $sp, $sp, 0x38
     ctx->r29 = ADD32(ctx->r29, 0X38);
 ;}
-RECOMP_FUNC void func_80005850(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void initPiDmaWorker(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80005850: addiu       $sp, $sp, -0x18
@@ -6455,7 +6455,7 @@ RECOMP_FUNC void func_80005850(uint8_t* rdram, recomp_context* ctx) {
     // 0x80005898: jal         0x80006C28
     // 0x8000589C: addiu       $a2, $zero, 0x78
     ctx->r6 = ADD32(0, 0X78);
-    func_80006C28(rdram, ctx);
+    registerServiceWorker(rdram, ctx);
         goto after_1;
     // 0x8000589C: addiu       $a2, $zero, 0x78
     ctx->r6 = ADD32(0, 0X78);
@@ -6467,7 +6467,7 @@ RECOMP_FUNC void func_80005850(uint8_t* rdram, recomp_context* ctx) {
     // 0x800058A8: jal         0x80006D9C
     // 0x800058AC: sw          $a0, 0x26BC($v0)
     MEM_W(0X26BC, ctx->r2) = ctx->r4;
-    func_80006D9C(rdram, ctx);
+    startServiceWorker(rdram, ctx);
         goto after_2;
     // 0x800058AC: sw          $a0, 0x26BC($v0)
     MEM_W(0X26BC, ctx->r2) = ctx->r4;
@@ -6483,7 +6483,7 @@ RECOMP_FUNC void func_80005850(uint8_t* rdram, recomp_context* ctx) {
     // 0x800058BC: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_800058C0(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void dispatchPendingPiDmaToWorker(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x800058C0: lui         $v0, 0x8011
@@ -6529,7 +6529,7 @@ RECOMP_FUNC void func_800058C0(uint8_t* rdram, recomp_context* ctx) {
     // 0x800058FC: jal         0x80006F78
     // 0x80005900: addu        $a1, $a0, $zero
     ctx->r5 = ADD32(ctx->r4, 0);
-    func_80006F78(rdram, ctx);
+    sendServiceMessage(rdram, ctx);
         goto after_0;
     // 0x80005900: addu        $a1, $a0, $zero
     ctx->r5 = ADD32(ctx->r4, 0);

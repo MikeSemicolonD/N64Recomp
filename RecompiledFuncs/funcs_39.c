@@ -30,7 +30,7 @@ RECOMP_FUNC void func_800DD930(uint8_t* rdram, recomp_context* ctx) {
     // 0x800DD95C: jal         0x80058360
     // 0x800DD960: addiu       $a3, $sp, 0x28
     ctx->r7 = ADD32(ctx->r29, 0X28);
-    func_80058360(rdram, ctx);
+    lookupHmtTextureByName(rdram, ctx);
         goto after_0;
     // 0x800DD960: addiu       $a3, $sp, 0x28
     ctx->r7 = ADD32(ctx->r29, 0X28);
@@ -80,7 +80,7 @@ RECOMP_FUNC void func_800DD930(uint8_t* rdram, recomp_context* ctx) {
     // 0x800DD9AC: jal         0x800F0F94
     // 0x800DD9B0: addiu       $a1, $sp, 0x28
     ctx->r5 = ADD32(ctx->r29, 0X28);
-    func_800F0F94(rdram, ctx);
+    resolveNpcAttachmentPos(rdram, ctx);
         goto after_1;
     // 0x800DD9B0: addiu       $a1, $sp, 0x28
     ctx->r5 = ADD32(ctx->r29, 0X28);
@@ -95,7 +95,7 @@ L_800DD9B4:
     // 0x800DD9C0: jal         0x800F1870
     // 0x800DD9C4: addiu       $a3, $sp, 0x58
     ctx->r7 = ADD32(ctx->r29, 0X58);
-    func_800F1870(rdram, ctx);
+    tickProgressChannel(rdram, ctx);
         goto after_2;
     // 0x800DD9C4: addiu       $a3, $sp, 0x58
     ctx->r7 = ADD32(ctx->r29, 0X58);
@@ -145,7 +145,7 @@ L_800DD9B4:
     // 0x800DDA14: jal         0x800F2FCC
     // 0x800DDA18: addu        $a3, $v1, $a3
     ctx->r7 = ADD32(ctx->r3, ctx->r7);
-    func_800F2FCC(rdram, ctx);
+    triggerCueWithSlotEffect(rdram, ctx);
         goto after_3;
     // 0x800DDA18: addu        $a3, $v1, $a3
     ctx->r7 = ADD32(ctx->r3, ctx->r7);
@@ -179,7 +179,7 @@ L_800DD9B4:
     // 0x800DDA50: jal         0x800989D8
     // 0x800DDA54: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_800989D8(rdram, ctx);
+    play3DSoundEvent(rdram, ctx);
         goto after_4;
     // 0x800DDA54: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -243,7 +243,7 @@ L_800DDAB0:
     // 0x800DDAB4: jal         0x800F06BC
     // 0x800DDAB8: nop
 
-    func_800F06BC(rdram, ctx);
+    isPendingChildNpcActive(rdram, ctx);
         goto after_0;
     // 0x800DDAB8: nop
 
@@ -296,7 +296,7 @@ L_800DDAD0:
     // 0x800DDB00: jal         0x8001CC3C
     // 0x800DDB04: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CC3C(rdram, ctx);
+    buildRotationMatrixSlot0(rdram, ctx);
         goto after_1;
     // 0x800DDB04: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -306,7 +306,7 @@ L_800DDAD0:
     // 0x800DDB0C: jal         0x8001CCCC
     // 0x800DDB10: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CCCC(rdram, ctx);
+    composeRotationMatrixSlot1(rdram, ctx);
         goto after_2;
     // 0x800DDB10: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -318,7 +318,7 @@ L_800DDAD0:
     // 0x800DDB1C: jal         0x800193E8
     // 0x800DDB20: addiu       $a2, $s0, 0xC
     ctx->r6 = ADD32(ctx->r16, 0XC);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_3;
     // 0x800DDB20: addiu       $a2, $s0, 0xC
     ctx->r6 = ADD32(ctx->r16, 0XC);
@@ -330,7 +330,7 @@ L_800DDAD0:
     // 0x800DDB2C: jal         0x800193E8
     // 0x800DDB30: addiu       $a2, $s0, 0x18
     ctx->r6 = ADD32(ctx->r16, 0X18);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_4;
     // 0x800DDB30: addiu       $a2, $s0, 0x18
     ctx->r6 = ADD32(ctx->r16, 0X18);
@@ -340,7 +340,7 @@ L_800DDAD0:
     // 0x800DDB38: jal         0x800F07AC
     // 0x800DDB3C: nop
 
-    func_800F07AC(rdram, ctx);
+    validateActorTargetLOS(rdram, ctx);
         goto after_5;
     // 0x800DDB3C: nop
 
@@ -397,7 +397,7 @@ L_800DDB7C:
     // 0x800DDB7C: jal         0x800F2D38
     // 0x800DDB80: nop
 
-    func_800F2D38(rdram, ctx);
+    applyToObjectSubstructByFlag(rdram, ctx);
         goto after_6;
     // 0x800DDB80: nop
 
@@ -560,7 +560,7 @@ L_800DDC84:
     // 0x800DDC88: jal         0x800F06BC
     // 0x800DDC8C: nop
 
-    func_800F06BC(rdram, ctx);
+    isPendingChildNpcActive(rdram, ctx);
         goto after_0;
     // 0x800DDC8C: nop
 
@@ -580,7 +580,7 @@ L_800DDC84:
     // 0x800DDCA0: jal         0x800F09A8
     // 0x800DDCA4: nop
 
-    func_800F09A8(rdram, ctx);
+    computeActorAnchorDeltaAfterLOS(rdram, ctx);
         goto after_1;
     // 0x800DDCA4: nop
 
@@ -600,7 +600,7 @@ L_800DDC84:
     // 0x800DDCB8: jal         0x800F2988
     // 0x800DDCBC: addiu       $a1, $sp, 0xA8
     ctx->r5 = ADD32(ctx->r29, 0XA8);
-    func_800F2988(rdram, ctx);
+    getObjectMeshTransformOrLocal(rdram, ctx);
         goto after_2;
     // 0x800DDCBC: addiu       $a1, $sp, 0xA8
     ctx->r5 = ADD32(ctx->r29, 0XA8);
@@ -614,7 +614,7 @@ L_800DDC84:
     // 0x800DDCCC: jal         0x80059B50
     // 0x800DDCD0: addu        $s1, $v0, $zero
     ctx->r17 = ADD32(ctx->r2, 0);
-    func_80059B50(rdram, ctx);
+    mat34CrossRowsAndCopyPos(rdram, ctx);
         goto after_3;
     // 0x800DDCD0: addu        $s1, $v0, $zero
     ctx->r17 = ADD32(ctx->r2, 0);
@@ -626,7 +626,7 @@ L_800DDC84:
     // 0x800DDCDC: jal         0x8001C774
     // 0x800DDCE0: addiu       $a1, $sp, 0x28
     ctx->r5 = ADD32(ctx->r29, 0X28);
-    func_8001C774(rdram, ctx);
+    mat3x3InverseInto(rdram, ctx);
         goto after_4;
     // 0x800DDCE0: addiu       $a1, $sp, 0x28
     ctx->r5 = ADD32(ctx->r29, 0X28);
@@ -638,7 +638,7 @@ L_800DDC84:
     // 0x800DDCEC: jal         0x800193E8
     // 0x800DDCF0: addu        $a2, $fp, $zero
     ctx->r6 = ADD32(ctx->r30, 0);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_5;
     // 0x800DDCF0: addu        $a2, $fp, $zero
     ctx->r6 = ADD32(ctx->r30, 0);
@@ -758,7 +758,7 @@ L_800DDC84:
     // 0x800DDDA4: jal         0x8001CFA0
     // 0x800DDDA8: swc1        $f0, 0xA0($sp)
     MEM_W(0XA0, ctx->r29) = ctx->f0.u32l;
-    func_8001CFA0(rdram, ctx);
+    vec3NormalizeInto(rdram, ctx);
         goto after_6;
     // 0x800DDDA8: swc1        $f0, 0xA0($sp)
     MEM_W(0XA0, ctx->r29) = ctx->f0.u32l;
@@ -768,7 +768,7 @@ L_800DDC84:
     // 0x800DDDB0: jal         0x8001CC3C
     // 0x800DDDB4: addiu       $a0, $sp, 0x28
     ctx->r4 = ADD32(ctx->r29, 0X28);
-    func_8001CC3C(rdram, ctx);
+    buildRotationMatrixSlot0(rdram, ctx);
         goto after_7;
     // 0x800DDDB4: addiu       $a0, $sp, 0x28
     ctx->r4 = ADD32(ctx->r29, 0X28);
@@ -778,7 +778,7 @@ L_800DDC84:
     // 0x800DDDBC: jal         0x8001CCCC
     // 0x800DDDC0: addiu       $a0, $sp, 0x28
     ctx->r4 = ADD32(ctx->r29, 0X28);
-    func_8001CCCC(rdram, ctx);
+    composeRotationMatrixSlot1(rdram, ctx);
         goto after_8;
     // 0x800DDDC0: addiu       $a0, $sp, 0x28
     ctx->r4 = ADD32(ctx->r29, 0X28);
@@ -790,7 +790,7 @@ L_800DDC84:
     // 0x800DDDCC: jal         0x800193E8
     // 0x800DDDD0: addu        $a2, $fp, $zero
     ctx->r6 = ADD32(ctx->r30, 0);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_9;
     // 0x800DDDD0: addu        $a2, $fp, $zero
     ctx->r6 = ADD32(ctx->r30, 0);
@@ -800,7 +800,7 @@ L_800DDC84:
     // 0x800DDDD8: jal         0x8001CFE8
     // 0x800DDDDC: addu        $a0, $fp, $zero
     ctx->r4 = ADD32(ctx->r30, 0);
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_10;
     // 0x800DDDDC: addu        $a0, $fp, $zero
     ctx->r4 = ADD32(ctx->r30, 0);
@@ -810,7 +810,7 @@ L_800DDC84:
     CHECK_FR(ctx, 12);
     CHECK_FR(ctx, 0);
     ctx->f12.fl = ctx->f0.fl;
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_11;
     // 0x800DDDE4: mov.s       $f12, $f0
     CHECK_FR(ctx, 12);
@@ -908,7 +908,7 @@ L_800DDE44:
     // 0x800DDE4C: jal         0x80019548
     // 0x800DDE50: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
-    func_80019548(rdram, ctx);
+    vec3Cross(rdram, ctx);
         goto after_12;
     // 0x800DDE50: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
@@ -930,7 +930,7 @@ L_800DDE44:
     // 0x800DDE68: jal         0x8001D240
     // 0x800DDE6C: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
-    func_8001D240(rdram, ctx);
+    quatFromAxisAngle(rdram, ctx);
         goto after_14;
     // 0x800DDE6C: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
@@ -942,7 +942,7 @@ L_800DDE44:
     // 0x800DDE78: jal         0x8001D3C4
     // 0x800DDE7C: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
-    func_8001D3C4(rdram, ctx);
+    rotateVec3ByQuat(rdram, ctx);
         goto after_15;
     // 0x800DDE7C: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
@@ -962,7 +962,7 @@ L_800DDE44:
     // 0x800DDE98: jal         0x8001CFE8
     // 0x800DDE9C: swc1        $f2, 0xE0($sp)
     MEM_W(0XE0, ctx->r29) = ctx->f2.u32l;
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_16;
     // 0x800DDE9C: swc1        $f2, 0xE0($sp)
     MEM_W(0XE0, ctx->r29) = ctx->f2.u32l;
@@ -974,7 +974,7 @@ L_800DDE44:
     CHECK_FR(ctx, 22);
     CHECK_FR(ctx, 0);
     ctx->f22.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_17;
     // 0x800DDEA8: mov.s       $f22, $f0
     CHECK_FR(ctx, 22);
@@ -988,7 +988,7 @@ L_800DDE44:
     CHECK_FR(ctx, 20);
     CHECK_FR(ctx, 0);
     ctx->f20.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_18;
     // 0x800DDEB4: mov.s       $f20, $f0
     CHECK_FR(ctx, 20);
@@ -1008,7 +1008,7 @@ L_800DDE44:
     CHECK_FR(ctx, 20);
     NAN_CHECK(ctx->f22.fl); NAN_CHECK(ctx->f20.fl); 
     ctx->f12.fl = DIV_S(ctx->f22.fl, ctx->f20.fl);
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_19;
     // 0x800DDEC0: div.s       $f12, $f22, $f20
     CHECK_FR(ctx, 12);
@@ -1062,7 +1062,7 @@ L_800DDE44:
     // 0x800DDF10: jal         0x80019548
     // 0x800DDF14: sw          $zero, 0x11C($sp)
     MEM_W(0X11C, ctx->r29) = 0;
-    func_80019548(rdram, ctx);
+    vec3Cross(rdram, ctx);
         goto after_20;
     // 0x800DDF14: sw          $zero, 0x11C($sp)
     MEM_W(0X11C, ctx->r29) = 0;
@@ -1104,7 +1104,7 @@ L_800DDF30:
     // 0x800DDF38: jal         0x8001CD6C
     // 0x800DDF3C: addiu       $a0, $sp, 0x28
     ctx->r4 = ADD32(ctx->r29, 0X28);
-    func_8001CD6C(rdram, ctx);
+    buildRotationMatrixSlot1(rdram, ctx);
         goto after_21;
     // 0x800DDF3C: addiu       $a0, $sp, 0x28
     ctx->r4 = ADD32(ctx->r29, 0X28);
@@ -1116,7 +1116,7 @@ L_800DDF30:
     // 0x800DDF48: jal         0x800193E8
     // 0x800DDF4C: addu        $a2, $s4, $zero
     ctx->r6 = ADD32(ctx->r20, 0);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_22;
     // 0x800DDF4C: addu        $a2, $s4, $zero
     ctx->r6 = ADD32(ctx->r20, 0);
@@ -1130,7 +1130,7 @@ L_800DDF30:
     // 0x800DDF5C: jal         0x8001CFE8
     // 0x800DDF60: swc1        $f20, 0x64($s3)
     MEM_W(0X64, ctx->r19) = ctx->f20.u32l;
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_23;
     // 0x800DDF60: swc1        $f20, 0x64($s3)
     MEM_W(0X64, ctx->r19) = ctx->f20.u32l;
@@ -1142,7 +1142,7 @@ L_800DDF30:
     CHECK_FR(ctx, 20);
     CHECK_FR(ctx, 0);
     ctx->f20.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_24;
     // 0x800DDF6C: mov.s       $f20, $f0
     CHECK_FR(ctx, 20);
@@ -1156,7 +1156,7 @@ L_800DDF30:
     CHECK_FR(ctx, 22);
     CHECK_FR(ctx, 0);
     ctx->f22.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_25;
     // 0x800DDF78: mov.s       $f22, $f0
     CHECK_FR(ctx, 22);
@@ -1176,7 +1176,7 @@ L_800DDF30:
     CHECK_FR(ctx, 22);
     NAN_CHECK(ctx->f20.fl); NAN_CHECK(ctx->f22.fl); 
     ctx->f12.fl = DIV_S(ctx->f20.fl, ctx->f22.fl);
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_26;
     // 0x800DDF84: div.s       $f12, $f20, $f22
     CHECK_FR(ctx, 12);
@@ -1445,7 +1445,7 @@ L_800DE0B4:
     // 0x800DE0E0: jal         0x80098BDC
     // 0x800DE0E4: sw          $t2, 0x24($sp)
     MEM_W(0X24, ctx->r29) = ctx->r10;
-    func_80098BDC(rdram, ctx);
+    play3DSoundEventVariant(rdram, ctx);
         goto after_27;
     // 0x800DE0E4: sw          $t2, 0x24($sp)
     MEM_W(0X24, ctx->r29) = ctx->r10;
@@ -1484,7 +1484,7 @@ L_800DE0F0:
     // 0x800DE120: jal         0x80098BDC
     // 0x800DE124: sw          $t1, 0x24($sp)
     MEM_W(0X24, ctx->r29) = ctx->r9;
-    func_80098BDC(rdram, ctx);
+    play3DSoundEventVariant(rdram, ctx);
         goto after_28;
     // 0x800DE124: sw          $t1, 0x24($sp)
     MEM_W(0X24, ctx->r29) = ctx->r9;
@@ -1521,7 +1521,7 @@ L_800DE130:
     // 0x800DE15C: jal         0x80098BDC
     // 0x800DE160: sw          $t0, 0x24($sp)
     MEM_W(0X24, ctx->r29) = ctx->r8;
-    func_80098BDC(rdram, ctx);
+    play3DSoundEventVariant(rdram, ctx);
         goto after_29;
     // 0x800DE160: sw          $t0, 0x24($sp)
     MEM_W(0X24, ctx->r29) = ctx->r8;
@@ -1538,7 +1538,7 @@ L_800DE16C:
     // 0x800DE170: jal         0x8001CC3C
     // 0x800DE174: addu        $a0, $s4, $zero
     ctx->r4 = ADD32(ctx->r20, 0);
-    func_8001CC3C(rdram, ctx);
+    buildRotationMatrixSlot0(rdram, ctx);
         goto after_30;
     // 0x800DE174: addu        $a0, $s4, $zero
     ctx->r4 = ADD32(ctx->r20, 0);
@@ -1548,7 +1548,7 @@ L_800DE16C:
     // 0x800DE17C: jal         0x8001CCCC
     // 0x800DE180: addu        $a0, $s4, $zero
     ctx->r4 = ADD32(ctx->r20, 0);
-    func_8001CCCC(rdram, ctx);
+    composeRotationMatrixSlot1(rdram, ctx);
         goto after_31;
     // 0x800DE180: addu        $a0, $s4, $zero
     ctx->r4 = ADD32(ctx->r20, 0);
@@ -1560,7 +1560,7 @@ L_800DE16C:
     // 0x800DE18C: jal         0x800193E8
     // 0x800DE190: addu        $a1, $s7, $zero
     ctx->r5 = ADD32(ctx->r23, 0);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_32;
     // 0x800DE190: addu        $a1, $s7, $zero
     ctx->r5 = ADD32(ctx->r23, 0);
@@ -1570,7 +1570,7 @@ L_800DE16C:
     // 0x800DE198: jal         0x8001CFE8
     // 0x800DE19C: addu        $a0, $s7, $zero
     ctx->r4 = ADD32(ctx->r23, 0);
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_33;
     // 0x800DE19C: addu        $a0, $s7, $zero
     ctx->r4 = ADD32(ctx->r23, 0);
@@ -1580,7 +1580,7 @@ L_800DE16C:
     CHECK_FR(ctx, 12);
     CHECK_FR(ctx, 0);
     ctx->f12.fl = ctx->f0.fl;
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_34;
     // 0x800DE1A4: mov.s       $f12, $f0
     CHECK_FR(ctx, 12);
@@ -1785,7 +1785,7 @@ L_800DE2C8:
     // 0x800DE2C8: jal         0x80098BDC
     // 0x800DE2CC: nop
 
-    func_80098BDC(rdram, ctx);
+    play3DSoundEventVariant(rdram, ctx);
         goto after_35;
     // 0x800DE2CC: nop
 
@@ -1837,7 +1837,7 @@ L_800DE2F4:
     // 0x800DE2FC: jal         0x80019548
     // 0x800DE300: addu        $a2, $s7, $zero
     ctx->r6 = ADD32(ctx->r23, 0);
-    func_80019548(rdram, ctx);
+    vec3Cross(rdram, ctx);
         goto after_36;
     // 0x800DE300: addu        $a2, $s7, $zero
     ctx->r6 = ADD32(ctx->r23, 0);
@@ -1859,7 +1859,7 @@ L_800DE2F4:
     // 0x800DE318: jal         0x8001D240
     // 0x800DE31C: addu        $a1, $s5, $zero
     ctx->r5 = ADD32(ctx->r21, 0);
-    func_8001D240(rdram, ctx);
+    quatFromAxisAngle(rdram, ctx);
         goto after_38;
     // 0x800DE31C: addu        $a1, $s5, $zero
     ctx->r5 = ADD32(ctx->r21, 0);
@@ -1871,7 +1871,7 @@ L_800DE2F4:
     // 0x800DE328: jal         0x8001D3C4
     // 0x800DE32C: addiu       $a2, $sp, 0x108
     ctx->r6 = ADD32(ctx->r29, 0X108);
-    func_8001D3C4(rdram, ctx);
+    rotateVec3ByQuat(rdram, ctx);
         goto after_39;
     // 0x800DE32C: addiu       $a2, $sp, 0x108
     ctx->r6 = ADD32(ctx->r29, 0X108);
@@ -1891,7 +1891,7 @@ L_800DE2F4:
     // 0x800DE348: jal         0x8001CFE8
     // 0x800DE34C: swc1        $f2, 0x130($sp)
     MEM_W(0X130, ctx->r29) = ctx->f2.u32l;
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_40;
     // 0x800DE34C: swc1        $f2, 0x130($sp)
     MEM_W(0X130, ctx->r29) = ctx->f2.u32l;
@@ -1903,7 +1903,7 @@ L_800DE2F4:
     CHECK_FR(ctx, 22);
     CHECK_FR(ctx, 0);
     ctx->f22.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_41;
     // 0x800DE358: mov.s       $f22, $f0
     CHECK_FR(ctx, 22);
@@ -1917,7 +1917,7 @@ L_800DE2F4:
     CHECK_FR(ctx, 20);
     CHECK_FR(ctx, 0);
     ctx->f20.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_42;
     // 0x800DE364: mov.s       $f20, $f0
     CHECK_FR(ctx, 20);
@@ -1937,7 +1937,7 @@ L_800DE2F4:
     CHECK_FR(ctx, 20);
     NAN_CHECK(ctx->f22.fl); NAN_CHECK(ctx->f20.fl); 
     ctx->f12.fl = DIV_S(ctx->f22.fl, ctx->f20.fl);
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_43;
     // 0x800DE370: div.s       $f12, $f22, $f20
     CHECK_FR(ctx, 12);
@@ -1991,7 +1991,7 @@ L_800DE2F4:
     // 0x800DE3C0: jal         0x80019548
     // 0x800DE3C4: sw          $zero, 0x16C($sp)
     MEM_W(0X16C, ctx->r29) = 0;
-    func_80019548(rdram, ctx);
+    vec3Cross(rdram, ctx);
         goto after_44;
     // 0x800DE3C4: sw          $zero, 0x16C($sp)
     MEM_W(0X16C, ctx->r29) = 0;
@@ -2033,7 +2033,7 @@ L_800DE3E0:
     // 0x800DE3E8: jal         0x8001CD6C
     // 0x800DE3EC: addu        $a0, $s4, $zero
     ctx->r4 = ADD32(ctx->r20, 0);
-    func_8001CD6C(rdram, ctx);
+    buildRotationMatrixSlot1(rdram, ctx);
         goto after_45;
     // 0x800DE3EC: addu        $a0, $s4, $zero
     ctx->r4 = ADD32(ctx->r20, 0);
@@ -2045,7 +2045,7 @@ L_800DE3E0:
     // 0x800DE3F8: jal         0x800193E8
     // 0x800DE3FC: addu        $a2, $s5, $zero
     ctx->r6 = ADD32(ctx->r21, 0);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_46;
     // 0x800DE3FC: addu        $a2, $s5, $zero
     ctx->r6 = ADD32(ctx->r21, 0);
@@ -2059,7 +2059,7 @@ L_800DE3E0:
     // 0x800DE40C: jal         0x8001CFE8
     // 0x800DE410: swc1        $f20, 0x64($s3)
     MEM_W(0X64, ctx->r19) = ctx->f20.u32l;
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_47;
     // 0x800DE410: swc1        $f20, 0x64($s3)
     MEM_W(0X64, ctx->r19) = ctx->f20.u32l;
@@ -2071,7 +2071,7 @@ L_800DE3E0:
     CHECK_FR(ctx, 20);
     CHECK_FR(ctx, 0);
     ctx->f20.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_48;
     // 0x800DE41C: mov.s       $f20, $f0
     CHECK_FR(ctx, 20);
@@ -2085,7 +2085,7 @@ L_800DE3E0:
     CHECK_FR(ctx, 22);
     CHECK_FR(ctx, 0);
     ctx->f22.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_49;
     // 0x800DE428: mov.s       $f22, $f0
     CHECK_FR(ctx, 22);
@@ -2105,7 +2105,7 @@ L_800DE3E0:
     CHECK_FR(ctx, 22);
     NAN_CHECK(ctx->f20.fl); NAN_CHECK(ctx->f22.fl); 
     ctx->f12.fl = DIV_S(ctx->f20.fl, ctx->f22.fl);
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_50;
     // 0x800DE434: div.s       $f12, $f20, $f22
     CHECK_FR(ctx, 12);
@@ -2171,7 +2171,7 @@ L_800DE458:
     // 0x800DE46C: jal         0x80098DE0
     // 0x800DE470: sb          $zero, 0x46($a0)
     MEM_B(0X46, ctx->r4) = 0;
-    func_80098DE0(rdram, ctx);
+    factor5RemoveListNode(rdram, ctx);
         goto after_51;
     // 0x800DE470: sb          $zero, 0x46($a0)
     MEM_B(0X46, ctx->r4) = 0;
@@ -2311,7 +2311,7 @@ L_800DE538:
     // 0x800DE54C: jal         0x8001CA50
     // 0x800DE550: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA50(rdram, ctx);
+    clearVec4QuadStruct(rdram, ctx);
         goto after_0;
     // 0x800DE550: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -2358,7 +2358,7 @@ L_800DE538:
     // 0x800DE588: jal         0x8001CA90
     // 0x800DE58C: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA90(rdram, ctx);
+    addVec3At0x24(rdram, ctx);
         goto after_1;
     // 0x800DE58C: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -2385,7 +2385,7 @@ L_800DE590:
     // 0x800DE5AC: jal         0x8001CB04
     // 0x800DE5B0: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CB04(rdram, ctx);
+    applyScaleToMat3x4(rdram, ctx);
         goto after_2;
     // 0x800DE5B0: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -2406,7 +2406,7 @@ L_800DE5B4:
     // 0x800DE5C4: jal         0x8001DAEC
     // 0x800DE5C8: addiu       $a1, $s0, 0x68
     ctx->r5 = ADD32(ctx->r16, 0X68);
-    func_8001DAEC(rdram, ctx);
+    composeQuatToMat3x4(rdram, ctx);
         goto after_3;
     // 0x800DE5C8: addiu       $a1, $s0, 0x68
     ctx->r5 = ADD32(ctx->r16, 0X68);
@@ -2417,7 +2417,7 @@ L_800DE5CC:
     // 0x800DE5D0: jal         0x8001CCCC
     // 0x800DE5D4: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CCCC(rdram, ctx);
+    composeRotationMatrixSlot1(rdram, ctx);
         goto after_4;
     // 0x800DE5D4: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -2516,7 +2516,7 @@ L_800DE650:
     // 0x800DE650: jal         0x8001CA90
     // 0x800DE654: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA90(rdram, ctx);
+    addVec3At0x24(rdram, ctx);
         goto after_5;
     // 0x800DE654: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -2541,7 +2541,7 @@ L_800DE658:
     // 0x800DE66C: jal         0x8001CA50
     // 0x800DE670: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA50(rdram, ctx);
+    clearVec4QuadStruct(rdram, ctx);
         goto after_6;
     // 0x800DE670: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -2588,7 +2588,7 @@ L_800DE658:
     // 0x800DE6A8: jal         0x8001CA90
     // 0x800DE6AC: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA90(rdram, ctx);
+    addVec3At0x24(rdram, ctx);
         goto after_7;
     // 0x800DE6AC: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -2615,7 +2615,7 @@ L_800DE6B0:
     // 0x800DE6CC: jal         0x8001CB04
     // 0x800DE6D0: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CB04(rdram, ctx);
+    applyScaleToMat3x4(rdram, ctx);
         goto after_8;
     // 0x800DE6D0: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -2636,7 +2636,7 @@ L_800DE6D4:
     // 0x800DE6E4: jal         0x8001DAEC
     // 0x800DE6E8: addiu       $a1, $s0, 0x68
     ctx->r5 = ADD32(ctx->r16, 0X68);
-    func_8001DAEC(rdram, ctx);
+    composeQuatToMat3x4(rdram, ctx);
         goto after_9;
     // 0x800DE6E8: addiu       $a1, $s0, 0x68
     ctx->r5 = ADD32(ctx->r16, 0X68);
@@ -2678,7 +2678,7 @@ L_800DE6EC:
     // 0x800DE720: jal         0x8001CA90
     // 0x800DE724: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA90(rdram, ctx);
+    addVec3At0x24(rdram, ctx);
         goto after_10;
     // 0x800DE724: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -2688,7 +2688,7 @@ L_800DE6EC:
     // 0x800DE72C: jal         0x8001CB9C
     // 0x800DE730: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CB9C(rdram, ctx);
+    composeRotationMatrixSlot0(rdram, ctx);
         goto after_11;
     // 0x800DE730: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -2789,7 +2789,7 @@ L_800DE7AC:
     // 0x800DE7AC: jal         0x8001CA90
     // 0x800DE7B0: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA90(rdram, ctx);
+    addVec3At0x24(rdram, ctx);
         goto after_12;
     // 0x800DE7B0: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -2818,7 +2818,7 @@ L_800DE7B8:
     // 0x800DE7D4: jal         0x80059B50
     // 0x800DE7D8: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_80059B50(rdram, ctx);
+    mat34CrossRowsAndCopyPos(rdram, ctx);
         goto after_13;
     // 0x800DE7D8: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -3033,7 +3033,7 @@ L_800DE8FC:
     // 0x800DE8FC: jal         0x80056EB0
     // 0x800DE900: nop
 
-    func_80056EB0(rdram, ctx);
+    walkMeshdef0List(rdram, ctx);
         goto after_0;
     // 0x800DE900: nop
 
@@ -3067,7 +3067,7 @@ L_800DE8FC:
     // 0x800DE938: jal         0x80059D78
     // 0x800DE93C: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_80059D78(rdram, ctx);
+    composeEulerRotationXYZ(rdram, ctx);
         goto after_1;
     // 0x800DE93C: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -3141,7 +3141,7 @@ L_800DE8FC:
     // 0x800DE99C: jal         0x8001CB64
     // 0x800DE9A0: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_8001CB64(rdram, ctx);
+    initVec4TripletFromArgs(rdram, ctx);
         goto after_2;
     // 0x800DE9A0: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -3153,7 +3153,7 @@ L_800DE8FC:
     // 0x800DE9AC: jal         0x8001CB9C
     // 0x800DE9B0: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_8001CB9C(rdram, ctx);
+    composeRotationMatrixSlot0(rdram, ctx);
         goto after_3;
     // 0x800DE9B0: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -3165,7 +3165,7 @@ L_800DE8FC:
     // 0x800DE9BC: jal         0x8001CCCC
     // 0x800DE9C0: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_8001CCCC(rdram, ctx);
+    composeRotationMatrixSlot1(rdram, ctx);
         goto after_4;
     // 0x800DE9C0: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -3177,7 +3177,7 @@ L_800DE8FC:
     // 0x800DE9CC: jal         0x8001CDFC
     // 0x800DE9D0: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_8001CDFC(rdram, ctx);
+    composeRotationMatrixSlot2(rdram, ctx);
         goto after_5;
     // 0x800DE9D0: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -3193,7 +3193,7 @@ L_800DE8FC:
     // 0x800DE9E4: jal         0x8001CA90
     // 0x800DE9E8: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_8001CA90(rdram, ctx);
+    addVec3At0x24(rdram, ctx);
         goto after_6;
     // 0x800DE9E8: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -3229,7 +3229,7 @@ L_800DE8FC:
     // 0x800DEA1C: jal         0x8003E684
     // 0x800DEA20: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_7;
     // 0x800DEA20: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
@@ -3268,7 +3268,7 @@ L_800DEA3C:
     // 0x800DEA58: jal         0x8003E684
     // 0x800DEA5C: addiu       $s4, $zero, 0x4C
     ctx->r20 = ADD32(0, 0X4C);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_8;
     // 0x800DEA5C: addiu       $s4, $zero, 0x4C
     ctx->r20 = ADD32(0, 0X4C);
@@ -3349,7 +3349,7 @@ L_800DEAA0:
     // 0x800DEAC8: jal         0x80059434
     // 0x800DEACC: addu        $a2, $s1, $s4
     ctx->r6 = ADD32(ctx->r17, ctx->r20);
-    func_80059434(rdram, ctx);
+    lookupHmtMaterialByName(rdram, ctx);
         goto after_10;
     // 0x800DEACC: addu        $a2, $s1, $s4
     ctx->r6 = ADD32(ctx->r17, ctx->r20);
@@ -3384,7 +3384,7 @@ L_800DEAD4:
     // 0x800DEAFC: jal         0x80059434
     // 0x800DEB00: addu        $a2, $s1, $s5
     ctx->r6 = ADD32(ctx->r17, ctx->r21);
-    func_80059434(rdram, ctx);
+    lookupHmtMaterialByName(rdram, ctx);
         goto after_11;
     // 0x800DEB00: addu        $a2, $s1, $s5
     ctx->r6 = ADD32(ctx->r17, ctx->r21);
@@ -3445,7 +3445,7 @@ L_800DEB4C:
     // 0x800DEB54: jal         0x8003E684
     // 0x800DEB58: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_12;
     // 0x800DEB58: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
@@ -3482,7 +3482,7 @@ L_800DEB7C:
     // 0x800DEB84: jal         0x8003E684
     // 0x800DEB88: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_13;
     // 0x800DEB88: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
@@ -3510,7 +3510,7 @@ L_800DEB98:
     // 0x800DEBAC: jal         0x800EC588
     // 0x800DEBB0: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
-    func_800EC588(rdram, ctx);
+    createAndInitObject(rdram, ctx);
         goto after_14;
     // 0x800DEBB0: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
@@ -3570,7 +3570,7 @@ L_800DEB98:
     // 0x800DEC0C: jal         0x800F947C
     // 0x800DEC10: addu        $a1, $v0, $zero
     ctx->r5 = ADD32(ctx->r2, 0);
-    func_800F947C(rdram, ctx);
+    initActorAsType1(rdram, ctx);
         goto after_16;
     // 0x800DEC10: addu        $a1, $v0, $zero
     ctx->r5 = ADD32(ctx->r2, 0);
@@ -3584,7 +3584,7 @@ L_800DEB98:
     // 0x800DEC20: jal         0x800F97F4
     // 0x800DEC24: nop
 
-    func_800F97F4(rdram, ctx);
+    setType1ActorField40(rdram, ctx);
         goto after_17;
     // 0x800DEC24: nop
 
@@ -3596,7 +3596,7 @@ L_800DEB98:
     // 0x800DEC30: jal         0x800F9AF4
     // 0x800DEC34: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
-    func_800F9AF4(rdram, ctx);
+    updateObjectFlags110(rdram, ctx);
         goto after_18;
     // 0x800DEC34: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
@@ -3747,7 +3747,7 @@ L_800DED0C:
     // 0x800DED18: jal         0x80098BDC
     // 0x800DED1C: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_80098BDC(rdram, ctx);
+    play3DSoundEventVariant(rdram, ctx);
         goto after_19;
     // 0x800DED1C: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -3791,7 +3791,7 @@ L_800DED28:
     // 0x800DED54: jal         0x8006BD18
     // 0x800DED58: nop
 
-    func_8006BD18(rdram, ctx);
+    allocateAndInitCraftNpcContext(rdram, ctx);
         goto after_20;
     // 0x800DED58: nop
 
@@ -3873,7 +3873,7 @@ L_800DED28:
     // 0x800DEDE8: jal         0x80071308
     // 0x800DEDEC: addiu       $a0, $s2, 0x48
     ctx->r4 = ADD32(ctx->r18, 0X48);
-    func_80071308(rdram, ctx);
+    dispatchDatSubtypeByRandomIndex(rdram, ctx);
         goto after_21;
     // 0x800DEDEC: addiu       $a0, $s2, 0x48
     ctx->r4 = ADD32(ctx->r18, 0X48);
@@ -3906,7 +3906,7 @@ L_800DEDF8:
     // 0x800DEE14: jal         0x80098DE0
     // 0x800DEE18: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_80098DE0(rdram, ctx);
+    factor5RemoveListNode(rdram, ctx);
         goto after_22;
     // 0x800DEE18: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -3927,7 +3927,7 @@ L_800DEE1C:
     // 0x800DEE2C: jal         0x80098DE0
     // 0x800DEE30: addiu       $a0, $s1, 0x88
     ctx->r4 = ADD32(ctx->r17, 0X88);
-    func_80098DE0(rdram, ctx);
+    factor5RemoveListNode(rdram, ctx);
         goto after_23;
     // 0x800DEE30: addiu       $a0, $s1, 0x88
     ctx->r4 = ADD32(ctx->r17, 0X88);
@@ -3938,7 +3938,7 @@ L_800DEE34:
     // 0x800DEE38: jal         0x80072AF8
     // 0x800DEE3C: addiu       $a0, $s0, 0x48
     ctx->r4 = ADD32(ctx->r16, 0X48);
-    func_80072AF8(rdram, ctx);
+    walkDatTreeAndCollectSubtypes(rdram, ctx);
         goto after_24;
     // 0x800DEE3C: addiu       $a0, $s0, 0x48
     ctx->r4 = ADD32(ctx->r16, 0X48);
@@ -3987,7 +3987,7 @@ L_800DEE54:
     // 0x800DEE78: jal         0x800F1E7C
     // 0x800DEE7C: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
-    func_800F1E7C(rdram, ctx);
+    initActorRenderDescriptorIfUninit(rdram, ctx);
         goto after_27;
     // 0x800DEE7C: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
@@ -3995,7 +3995,7 @@ L_800DEE54:
     // 0x800DEE80: jal         0x800EC684
     // 0x800DEE84: addiu       $a0, $s1, 0x38
     ctx->r4 = ADD32(ctx->r17, 0X38);
-    func_800EC684(rdram, ctx);
+    clearPendingAndDestroyChildNpc(rdram, ctx);
         goto after_28;
     // 0x800DEE84: addiu       $a0, $s1, 0x38
     ctx->r4 = ADD32(ctx->r17, 0X38);
@@ -4005,7 +4005,7 @@ L_800DEE54:
     // 0x800DEE8C: jal         0x8005779C
     // 0x800DEE90: nop
 
-    func_8005779C(rdram, ctx);
+    releaseMeshAsset(rdram, ctx);
         goto after_29;
     // 0x800DEE90: nop
 
@@ -4227,7 +4227,7 @@ L_800DEF80:
     // 0x800DEF8C: jal         0x800AA6D0
     // 0x800DEF90: addiu       $a2, $a2, 0x34
     ctx->r6 = ADD32(ctx->r6, 0X34);
-    func_800AA6D0(rdram, ctx);
+    npcPredictedRangeCheck(rdram, ctx);
         goto after_30;
     // 0x800DEF90: addiu       $a2, $a2, 0x34
     ctx->r6 = ADD32(ctx->r6, 0X34);
@@ -4239,7 +4239,7 @@ L_800DEF80:
     // 0x800DEF9C: jal         0x800F9A14
     // 0x800DEFA0: nop
 
-    func_800F9A14(rdram, ctx);
+    dispatchEffectByActorType(rdram, ctx);
         goto after_31;
     // 0x800DEFA0: nop
 
@@ -4298,7 +4298,7 @@ L_800DEFDC:
     // 0x800DEFE4: jal         0x80059B50
     // 0x800DEFE8: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
-    func_80059B50(rdram, ctx);
+    mat34CrossRowsAndCopyPos(rdram, ctx);
         goto after_32;
     // 0x800DEFE8: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
@@ -4362,7 +4362,7 @@ L_800DEFDC:
     // 0x800DF03C: jal         0x800193E8
     // 0x800DF040: swc1        $f0, 0x5C($sp)
     MEM_W(0X5C, ctx->r29) = ctx->f0.u32l;
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_34;
     // 0x800DF040: swc1        $f0, 0x5C($sp)
     MEM_W(0X5C, ctx->r29) = ctx->f0.u32l;
@@ -4426,7 +4426,7 @@ L_800DEFDC:
     // 0x800DF094: jal         0x800EFDE0
     // 0x800DF098: nop
 
-    func_800EFDE0(rdram, ctx);
+    updateNpcEventTimer(rdram, ctx);
         goto after_36;
     // 0x800DF098: nop
 
@@ -4560,7 +4560,7 @@ L_800DF12C:
     // 0x800DF150: jal         0x8007202C
     // 0x800DF154: sw          $zero, 0x14($sp)
     MEM_W(0X14, ctx->r29) = 0;
-    func_8007202C(rdram, ctx);
+    composeRandomRotationMatrix(rdram, ctx);
         goto after_41;
     // 0x800DF154: sw          $zero, 0x14($sp)
     MEM_W(0X14, ctx->r29) = 0;
@@ -4674,7 +4674,7 @@ L_800DF12C:
     // 0x800DF1CC: jal         0x80072300
     // 0x800DF1D0: swc1        $f2, 0x30($sp)
     MEM_W(0X30, ctx->r29) = ctx->f2.u32l;
-    func_80072300(rdram, ctx);
+    scaleVec3ByRandomRange(rdram, ctx);
         goto after_42;
     // 0x800DF1D0: swc1        $f2, 0x30($sp)
     MEM_W(0X30, ctx->r29) = ctx->f2.u32l;
@@ -4690,7 +4690,7 @@ L_800DF12C:
     // 0x800DF1E4: jal         0x80072384
     // 0x800DF1E8: swc1        $f22, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f22.u32l;
-    func_80072384(rdram, ctx);
+    spawnDebris1Npc(rdram, ctx);
         goto after_43;
     // 0x800DF1E8: swc1        $f22, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f22.u32l;
@@ -4720,7 +4720,7 @@ L_800DF12C:
     // 0x800DF210: jal         0x8007202C
     // 0x800DF214: sw          $zero, 0x14($sp)
     MEM_W(0X14, ctx->r29) = 0;
-    func_8007202C(rdram, ctx);
+    composeRandomRotationMatrix(rdram, ctx);
         goto after_44;
     // 0x800DF214: sw          $zero, 0x14($sp)
     MEM_W(0X14, ctx->r29) = 0;
@@ -4836,7 +4836,7 @@ L_800DF12C:
     // 0x800DF290: jal         0x80072300
     // 0x800DF294: swc1        $f2, 0x30($sp)
     MEM_W(0X30, ctx->r29) = ctx->f2.u32l;
-    func_80072300(rdram, ctx);
+    scaleVec3ByRandomRange(rdram, ctx);
         goto after_45;
     // 0x800DF294: swc1        $f2, 0x30($sp)
     MEM_W(0X30, ctx->r29) = ctx->f2.u32l;
@@ -4852,7 +4852,7 @@ L_800DF12C:
     // 0x800DF2A8: jal         0x80072384
     // 0x800DF2AC: swc1        $f22, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f22.u32l;
-    func_80072384(rdram, ctx);
+    spawnDebris1Npc(rdram, ctx);
         goto after_46;
     // 0x800DF2AC: swc1        $f22, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f22.u32l;
@@ -4889,7 +4889,7 @@ L_800DF2BC:
     // 0x800DF2E0: jal         0x80073750
     // 0x800DF2E4: swc1        $f2, 0x14($sp)
     MEM_W(0X14, ctx->r29) = ctx->f2.u32l;
-    func_80073750(rdram, ctx);
+    spawnDestructionEffectBurst(rdram, ctx);
         goto after_47;
     // 0x800DF2E4: swc1        $f2, 0x14($sp)
     MEM_W(0X14, ctx->r29) = ctx->f2.u32l;
@@ -4975,7 +4975,7 @@ L_800DF2BC:
     // 0x800DF35C: jal         0x800727C0
     // 0x800DF360: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
-    func_800727C0(rdram, ctx);
+    gameStateByteGatedNpcHelper(rdram, ctx);
         goto after_49;
     // 0x800DF360: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
@@ -5091,7 +5091,7 @@ L_800DF3F8:
     // 0x800DF414: jal         0x8007202C
     // 0x800DF418: sw          $zero, 0x14($sp)
     MEM_W(0X14, ctx->r29) = 0;
-    func_8007202C(rdram, ctx);
+    composeRandomRotationMatrix(rdram, ctx);
         goto after_51;
     // 0x800DF418: sw          $zero, 0x14($sp)
     MEM_W(0X14, ctx->r29) = 0;
@@ -5141,7 +5141,7 @@ L_800DF3F8:
     // 0x800DF458: jal         0x80072300
     // 0x800DF45C: swc1        $f0, 0x30($sp)
     MEM_W(0X30, ctx->r29) = ctx->f0.u32l;
-    func_80072300(rdram, ctx);
+    scaleVec3ByRandomRange(rdram, ctx);
         goto after_52;
     // 0x800DF45C: swc1        $f0, 0x30($sp)
     MEM_W(0X30, ctx->r29) = ctx->f0.u32l;
@@ -5159,7 +5159,7 @@ L_800DF3F8:
     // 0x800DF474: jal         0x80072384
     // 0x800DF478: swc1        $f20, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f20.u32l;
-    func_80072384(rdram, ctx);
+    spawnDebris1Npc(rdram, ctx);
         goto after_53;
     // 0x800DF478: swc1        $f20, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f20.u32l;
@@ -5196,7 +5196,7 @@ L_800DF488:
     // 0x800DF4AC: jal         0x80073750
     // 0x800DF4B0: swc1        $f2, 0x14($sp)
     MEM_W(0X14, ctx->r29) = ctx->f2.u32l;
-    func_80073750(rdram, ctx);
+    spawnDestructionEffectBurst(rdram, ctx);
         goto after_54;
     // 0x800DF4B0: swc1        $f2, 0x14($sp)
     MEM_W(0X14, ctx->r29) = ctx->f2.u32l;
@@ -5282,7 +5282,7 @@ L_800DF488:
     // 0x800DF528: jal         0x800727C0
     // 0x800DF52C: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
-    func_800727C0(rdram, ctx);
+    gameStateByteGatedNpcHelper(rdram, ctx);
         goto after_56;
     // 0x800DF52C: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
@@ -5347,7 +5347,7 @@ L_800DF560:
     // 0x800DF580: jal         0x8006C6FC
     // 0x800DF584: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8006C6FC(rdram, ctx);
+    spawnSplineWalkerCraft(rdram, ctx);
         goto after_57;
     // 0x800DF584: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -5369,7 +5369,7 @@ L_800DF560:
     // 0x800DF59C: jal         0x800612A4
     // 0x800DF5A0: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_800612A4(rdram, ctx);
+    spawnNpcType0xAFromTemplate(rdram, ctx);
         goto after_58;
     // 0x800DF5A0: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -5488,7 +5488,7 @@ L_800DF630:
     // 0x800DF648: jal         0x800989D8
     // 0x800DF64C: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_800989D8(rdram, ctx);
+    play3DSoundEvent(rdram, ctx);
         goto after_59;
     // 0x800DF64C: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -5499,7 +5499,7 @@ L_800DF650:
     // 0x800DF654: jal         0x8003ED74
     // 0x800DF658: nop
 
-    func_8003ED74(rdram, ctx);
+    destroyNpcSlotByIndex(rdram, ctx);
         goto after_60;
     // 0x800DF658: nop
 
@@ -5514,7 +5514,7 @@ L_800DF664:
     // 0x800DF664: jal         0x80047D40
     // 0x800DF668: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_80047D40(rdram, ctx);
+    isNpcWithinActiveReferenceRange(rdram, ctx);
         goto after_61;
     // 0x800DF668: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -5574,7 +5574,7 @@ L_800DF6AC:
     // 0x800DF6B0: jal         0x800EC6C0
     // 0x800DF6B4: nop
 
-    func_800EC6C0(rdram, ctx);
+    destroyObjectOwnedNpcSlot(rdram, ctx);
         goto after_62;
     // 0x800DF6B4: nop
 
@@ -5598,7 +5598,7 @@ L_800DF6AC:
     // 0x800DF6D0: jal         0x80072BE0
     // 0x800DF6D4: addiu       $a0, $s0, 0x48
     ctx->r4 = ADD32(ctx->r16, 0X48);
-    func_80072BE0(rdram, ctx);
+    walkDatTreeAndScaleLeafByFloat(rdram, ctx);
         goto after_63;
     // 0x800DF6D4: addiu       $a0, $s0, 0x48
     ctx->r4 = ADD32(ctx->r16, 0X48);
@@ -5633,7 +5633,7 @@ L_800DF6E0:
     // 0x800DF700: jal         0x800988E8
     // 0x800DF704: addiu       $a3, $zero, 0x7F
     ctx->r7 = ADD32(0, 0X7F);
-    func_800988E8(rdram, ctx);
+    updateActive3DAudioSource(rdram, ctx);
         goto after_64;
     // 0x800DF704: addiu       $a3, $zero, 0x7F
     ctx->r7 = ADD32(0, 0X7F);
@@ -5656,7 +5656,7 @@ L_800DF708:
     // 0x800DF71C: jal         0x800988E8
     // 0x800DF720: addiu       $a3, $zero, 0x7F
     ctx->r7 = ADD32(0, 0X7F);
-    func_800988E8(rdram, ctx);
+    updateActive3DAudioSource(rdram, ctx);
         goto after_65;
     // 0x800DF720: addiu       $a3, $zero, 0x7F
     ctx->r7 = ADD32(0, 0X7F);
@@ -5671,7 +5671,7 @@ L_800DF724:
     // 0x800DF730: jal         0x80057C8C
     // 0x800DF734: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
-    func_80057C8C(rdram, ctx);
+    addNpcToVisibilityBucket(rdram, ctx);
         goto after_66;
     // 0x800DF734: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
@@ -5699,7 +5699,7 @@ L_800DF724:
     // 0x800DF750: jal         0x80071928
     // 0x800DF754: addu        $a2, $s2, $zero
     ctx->r6 = ADD32(ctx->r18, 0);
-    func_80071928(rdram, ctx);
+    walkDatTreeAndVisitChildren(rdram, ctx);
         goto after_67;
     // 0x800DF754: addu        $a2, $s2, $zero
     ctx->r6 = ADD32(ctx->r18, 0);
@@ -5722,7 +5722,7 @@ L_800DF758:
     // 0x800DF76C: jal         0x8006BEC8
     // 0x800DF770: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
-    func_8006BEC8(rdram, ctx);
+    advanceNpcOnCurvedPath(rdram, ctx);
         goto after_68;
     // 0x800DF770: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
@@ -5755,7 +5755,7 @@ L_800DF77C:
     // 0x800DF790: jal         0x80076250
     // 0x800DF794: addu        $a0, $s2, $zero
     ctx->r4 = ADD32(ctx->r18, 0);
-    func_80076250(rdram, ctx);
+    extrapolateNpcPositionForCurrentMode(rdram, ctx);
         goto after_70;
     // 0x800DF794: addu        $a0, $s2, $zero
     ctx->r4 = ADD32(ctx->r18, 0);
@@ -5834,7 +5834,7 @@ L_800DF7CC:
     // 0x800DF7FC: jal         0x800989D8
     // 0x800DF800: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_800989D8(rdram, ctx);
+    play3DSoundEvent(rdram, ctx);
         goto after_71;
     // 0x800DF800: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -5845,7 +5845,7 @@ L_800DF804:
     // 0x800DF808: jal         0x800F287C
     // 0x800DF80C: nop
 
-    func_800F287C(rdram, ctx);
+    getObjectDetailLevel(rdram, ctx);
         goto after_72;
     // 0x800DF80C: nop
 
@@ -5873,7 +5873,7 @@ L_800DF804:
     // 0x800DF828: jal         0x800EFD6C
     // 0x800DF82C: addiu       $a0, $zero, 0x1F4
     ctx->r4 = ADD32(0, 0X1F4);
-    func_800EFD6C(rdram, ctx);
+    noopHandler(rdram, ctx);
         goto after_73;
     // 0x800DF82C: addiu       $a0, $zero, 0x1F4
     ctx->r4 = ADD32(0, 0X1F4);
@@ -5908,7 +5908,7 @@ L_800DF830:
     // 0x800DF854: jal         0x8003E7D0
     // 0x800DF858: sb          $v0, 0xD1($s1)
     MEM_B(0XD1, ctx->r17) = ctx->r2;
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_75;
     // 0x800DF858: sb          $v0, 0xD1($s1)
     MEM_B(0XD1, ctx->r17) = ctx->r2;
@@ -5918,7 +5918,7 @@ L_800DF830:
     // 0x800DF860: jal         0x8003E7D0
     // 0x800DF864: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_76;
     // 0x800DF864: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
@@ -5928,7 +5928,7 @@ L_800DF830:
     // 0x800DF86C: jal         0x8003E7D0
     // 0x800DF870: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_77;
     // 0x800DF870: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
@@ -5950,7 +5950,7 @@ L_800DF830:
     // 0x800DF888: jal         0x8003E7D0
     // 0x800DF88C: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_78;
     // 0x800DF88C: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
@@ -5963,7 +5963,7 @@ L_800DF894:
     // 0x800DF898: jal         0x8003E684
     // 0x800DF89C: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_79;
     // 0x800DF89C: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
@@ -5999,7 +5999,7 @@ L_800DF894:
     // 0x800DF8D0: jal         0x800F3260
     // 0x800DF8D4: addu        $a0, $fp, $zero
     ctx->r4 = ADD32(ctx->r30, 0);
-    func_800F3260(rdram, ctx);
+    tallyMidDetailObject(rdram, ctx);
         goto after_81;
     // 0x800DF8D4: addu        $a0, $fp, $zero
     ctx->r4 = ADD32(ctx->r30, 0);
@@ -6009,7 +6009,7 @@ L_800DF894:
     // 0x800DF8DC: jal         0x800F2A24
     // 0x800DF8E0: nop
 
-    func_800F2A24(rdram, ctx);
+    clearPendingChildNpc(rdram, ctx);
         goto after_82;
     // 0x800DF8E0: nop
 
@@ -6017,7 +6017,7 @@ L_800DF894:
     // 0x800DF8E4: jal         0x800F2AA4
     // 0x800DF8E8: addu        $a0, $fp, $zero
     ctx->r4 = ADD32(ctx->r30, 0);
-    func_800F2AA4(rdram, ctx);
+    setObjectFlagBit4(rdram, ctx);
         goto after_83;
     // 0x800DF8E8: addu        $a0, $fp, $zero
     ctx->r4 = ADD32(ctx->r30, 0);
@@ -6039,7 +6039,7 @@ L_800DF894:
     // 0x800DF900: jal         0x80098DE0
     // 0x800DF904: sb          $zero, 0x46($a0)
     MEM_B(0X46, ctx->r4) = 0;
-    func_80098DE0(rdram, ctx);
+    factor5RemoveListNode(rdram, ctx);
         goto after_84;
     // 0x800DF904: sb          $zero, 0x46($a0)
     MEM_B(0X46, ctx->r4) = 0;
@@ -6060,7 +6060,7 @@ L_800DF908:
     // 0x800DF918: jal         0x80098DE0
     // 0x800DF91C: addiu       $a0, $s1, 0x88
     ctx->r4 = ADD32(ctx->r17, 0X88);
-    func_80098DE0(rdram, ctx);
+    factor5RemoveListNode(rdram, ctx);
         goto after_85;
     // 0x800DF91C: addiu       $a0, $s1, 0x88
     ctx->r4 = ADD32(ctx->r17, 0X88);
@@ -6099,7 +6099,7 @@ L_800DF928:
     // 0x800DF948: jal         0x800F287C
     // 0x800DF94C: nop
 
-    func_800F287C(rdram, ctx);
+    getObjectDetailLevel(rdram, ctx);
         goto after_86;
     // 0x800DF94C: nop
 
@@ -6115,7 +6115,7 @@ L_800DF928:
     // 0x800DF958: jal         0x8006C994
     // 0x800DF95C: addu        $a0, $zero, $zero
     ctx->r4 = ADD32(0, 0);
-    func_8006C994(rdram, ctx);
+    getPlayerField2(rdram, ctx);
         goto after_87;
     // 0x800DF95C: addu        $a0, $zero, $zero
     ctx->r4 = ADD32(0, 0);
@@ -6171,7 +6171,7 @@ L_800DF928:
     // 0x800DF9A4: jal         0x80066EE4
     // 0x800DF9A8: swc1        $f0, -0x3F60($v1)
     MEM_W(-0X3F60, ctx->r3) = ctx->f0.u32l;
-    func_80066EE4(rdram, ctx);
+    playSpeechClip(rdram, ctx);
         goto after_88;
     // 0x800DF9A8: swc1        $f0, -0x3F60($v1)
     MEM_W(-0X3F60, ctx->r3) = ctx->f0.u32l;
@@ -6192,7 +6192,7 @@ L_800DF9AC:
     // 0x800DF9BC: jal         0x8003ED74
     // 0x800DF9C0: addu        $a0, $v1, $zero
     ctx->r4 = ADD32(ctx->r3, 0);
-    func_8003ED74(rdram, ctx);
+    destroyNpcSlotByIndex(rdram, ctx);
         goto after_89;
     // 0x800DF9C0: addu        $a0, $v1, $zero
     ctx->r4 = ADD32(ctx->r3, 0);
@@ -6279,7 +6279,7 @@ L_800DFA10:
     // 0x800DFA30: jal         0x800F9AB8
     // 0x800DFA34: nop
 
-    func_800F9AB8(rdram, ctx);
+    setType1ActorParams(rdram, ctx);
         goto after_90;
     // 0x800DFA34: nop
 
@@ -6312,7 +6312,7 @@ L_800DFA40:
     // 0x800DFA54: jal         0x8003E7D0
     // 0x800DFA58: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_92;
     // 0x800DFA58: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
@@ -6343,7 +6343,7 @@ L_800DFA78:
     // 0x800DFA80: jal         0x8003E684
     // 0x800DFA84: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_93;
     // 0x800DFA84: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
@@ -6355,7 +6355,7 @@ L_800DFA78:
     // 0x800DFA90: jal         0x8003E7D0
     // 0x800DFA94: sh          $v0, 0x76($s1)
     MEM_H(0X76, ctx->r17) = ctx->r2;
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_94;
     // 0x800DFA94: sh          $v0, 0x76($s1)
     MEM_H(0X76, ctx->r17) = ctx->r2;
@@ -6380,7 +6380,7 @@ L_800DFAA8:
     // 0x800DFAB0: jal         0x8003E684
     // 0x800DFAB4: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_95;
     // 0x800DFAB4: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
@@ -6402,7 +6402,7 @@ L_800DFAA8:
     // 0x800DFACC: jal         0x8003E7D0
     // 0x800DFAD0: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_96;
     // 0x800DFAD0: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
@@ -6439,7 +6439,7 @@ L_800DFAF4:
     // 0x800DFAFC: jal         0x8003E684
     // 0x800DFB00: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_97;
     // 0x800DFB00: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
@@ -6454,7 +6454,7 @@ L_800DFB08:
     // 0x800DFB10: jal         0x800F2830
     // 0x800DFB14: nop
 
-    func_800F2830(rdram, ctx);
+    setObjectDetailLevel(rdram, ctx);
         goto after_98;
     // 0x800DFB14: nop
 
@@ -6471,7 +6471,7 @@ L_800DFB20:
     // 0x800DFB24: jal         0x800EFD80
     // 0x800DFB28: addu        $a1, $s2, $zero
     ctx->r5 = ADD32(ctx->r18, 0);
-    func_800EFD80(rdram, ctx);
+    dispatchSlotAction5IfActive(rdram, ctx);
         goto after_99;
     // 0x800DFB28: addu        $a1, $s2, $zero
     ctx->r5 = ADD32(ctx->r18, 0);
@@ -6537,7 +6537,7 @@ RECOMP_FUNC void func_800DFB78(uint8_t* rdram, recomp_context* ctx) {
     // 0x800DFB80: sw          $zero, -0x3F60($v0)
     MEM_W(-0X3F60, ctx->r2) = 0;
 ;}
-RECOMP_FUNC void func_800DFB84(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void noopHandler_800DFB84(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x800DFB84: jr          $ra
@@ -6647,7 +6647,7 @@ L_800DFBD4:
     // 0x800DFC30: jal         0x800F2830
     // 0x800DFC34: addiu       $s5, $zero, 0x1
     ctx->r21 = ADD32(0, 0X1);
-    func_800F2830(rdram, ctx);
+    setObjectDetailLevel(rdram, ctx);
         goto after_1;
     // 0x800DFC34: addiu       $s5, $zero, 0x1
     ctx->r21 = ADD32(0, 0X1);
@@ -6733,7 +6733,7 @@ L_800DFC6C:
     // 0x800DFCA4: jal         0x800F2888
     // 0x800DFCA8: lui         $s0, 0x8011
     ctx->r16 = S32(0X8011 << 16);
-    func_800F2888(rdram, ctx);
+    initActorMotionParams(rdram, ctx);
         goto after_2;
     // 0x800DFCA8: lui         $s0, 0x8011
     ctx->r16 = S32(0X8011 << 16);
@@ -6785,7 +6785,7 @@ L_800DFC6C:
     // 0x800DFD04: jal         0x800F2B88
     // 0x800DFD08: nop
 
-    func_800F2B88(rdram, ctx);
+    initObjectAnimSubstruct(rdram, ctx);
         goto after_3;
     // 0x800DFD08: nop
 
@@ -6831,7 +6831,7 @@ L_800DFC6C:
     // 0x800DFD58: jal         0x800F2B88
     // 0x800DFD5C: nop
 
-    func_800F2B88(rdram, ctx);
+    initObjectAnimSubstruct(rdram, ctx);
         goto after_4;
     // 0x800DFD5C: nop
 
@@ -6930,7 +6930,7 @@ L_800DFDCC:
     // 0x800DFE08: jal         0x800F2888
     // 0x800DFE0C: lui         $s0, 0x8011
     ctx->r16 = S32(0X8011 << 16);
-    func_800F2888(rdram, ctx);
+    initActorMotionParams(rdram, ctx);
         goto after_6;
     // 0x800DFE0C: lui         $s0, 0x8011
     ctx->r16 = S32(0X8011 << 16);
@@ -6982,7 +6982,7 @@ L_800DFDCC:
     // 0x800DFE68: jal         0x800F2B88
     // 0x800DFE6C: nop
 
-    func_800F2B88(rdram, ctx);
+    initObjectAnimSubstruct(rdram, ctx);
         goto after_7;
     // 0x800DFE6C: nop
 
@@ -7028,7 +7028,7 @@ L_800DFDCC:
     // 0x800DFEBC: jal         0x800F2B88
     // 0x800DFEC0: nop
 
-    func_800F2B88(rdram, ctx);
+    initObjectAnimSubstruct(rdram, ctx);
         goto after_8;
     // 0x800DFEC0: nop
 
@@ -7153,7 +7153,7 @@ RECOMP_FUNC void func_800DFF54(uint8_t* rdram, recomp_context* ctx) {
     // 0x800DFF90: jal         0x80058360
     // 0x800DFF94: addiu       $a3, $sp, 0x28
     ctx->r7 = ADD32(ctx->r29, 0X28);
-    func_80058360(rdram, ctx);
+    lookupHmtTextureByName(rdram, ctx);
         goto after_0;
     // 0x800DFF94: addiu       $a3, $sp, 0x28
     ctx->r7 = ADD32(ctx->r29, 0X28);
@@ -7177,7 +7177,7 @@ RECOMP_FUNC void func_800DFF54(uint8_t* rdram, recomp_context* ctx) {
     // 0x800DFFB0: jal         0x800F2D74
     // 0x800DFFB4: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
-    func_800F2D74(rdram, ctx);
+    setObjectSubstructF10IfReady(rdram, ctx);
         goto after_1;
     // 0x800DFFB4: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
@@ -7243,7 +7243,7 @@ L_800DFFC4:
     // 0x800E0010: jal         0x800F0F94
     // 0x800E0014: addiu       $a1, $sp, 0x28
     ctx->r5 = ADD32(ctx->r29, 0X28);
-    func_800F0F94(rdram, ctx);
+    resolveNpcAttachmentPos(rdram, ctx);
         goto after_2;
     // 0x800E0014: addiu       $a1, $sp, 0x28
     ctx->r5 = ADD32(ctx->r29, 0X28);
@@ -7258,7 +7258,7 @@ L_800E0018:
     // 0x800E0024: jal         0x800F1870
     // 0x800E0028: addiu       $a3, $sp, 0x58
     ctx->r7 = ADD32(ctx->r29, 0X58);
-    func_800F1870(rdram, ctx);
+    tickProgressChannel(rdram, ctx);
         goto after_3;
     // 0x800E0028: addiu       $a3, $sp, 0x58
     ctx->r7 = ADD32(ctx->r29, 0X58);
@@ -7314,7 +7314,7 @@ L_800E0018:
     // 0x800E0084: jal         0x800F2FCC
     // 0x800E0088: addu        $a3, $a3, $t0
     ctx->r7 = ADD32(ctx->r7, ctx->r8);
-    func_800F2FCC(rdram, ctx);
+    triggerCueWithSlotEffect(rdram, ctx);
         goto after_4;
     // 0x800E0088: addu        $a3, $a3, $t0
     ctx->r7 = ADD32(ctx->r7, ctx->r8);
@@ -7348,7 +7348,7 @@ L_800E0018:
     // 0x800E00C0: jal         0x800989D8
     // 0x800E00C4: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_800989D8(rdram, ctx);
+    play3DSoundEvent(rdram, ctx);
         goto after_5;
     // 0x800E00C4: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -7407,7 +7407,7 @@ RECOMP_FUNC void func_800E00E4(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E0120: jal         0x80058360
     // 0x800E0124: addiu       $a3, $sp, 0x28
     ctx->r7 = ADD32(ctx->r29, 0X28);
-    func_80058360(rdram, ctx);
+    lookupHmtTextureByName(rdram, ctx);
         goto after_0;
     // 0x800E0124: addiu       $a3, $sp, 0x28
     ctx->r7 = ADD32(ctx->r29, 0X28);
@@ -7429,7 +7429,7 @@ RECOMP_FUNC void func_800E00E4(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E013C: jal         0x800F2D74
     // 0x800E0140: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
-    func_800F2D74(rdram, ctx);
+    setObjectSubstructF10IfReady(rdram, ctx);
         goto after_1;
     // 0x800E0140: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
@@ -7486,7 +7486,7 @@ L_800E014C:
     // 0x800E0198: jal         0x800F0F94
     // 0x800E019C: addiu       $a1, $sp, 0x28
     ctx->r5 = ADD32(ctx->r29, 0X28);
-    func_800F0F94(rdram, ctx);
+    resolveNpcAttachmentPos(rdram, ctx);
         goto after_2;
     // 0x800E019C: addiu       $a1, $sp, 0x28
     ctx->r5 = ADD32(ctx->r29, 0X28);
@@ -7501,7 +7501,7 @@ L_800E01A0:
     // 0x800E01AC: jal         0x800F1870
     // 0x800E01B0: addiu       $a3, $sp, 0x58
     ctx->r7 = ADD32(ctx->r29, 0X58);
-    func_800F1870(rdram, ctx);
+    tickProgressChannel(rdram, ctx);
         goto after_3;
     // 0x800E01B0: addiu       $a3, $sp, 0x58
     ctx->r7 = ADD32(ctx->r29, 0X58);
@@ -7557,7 +7557,7 @@ L_800E01A0:
     // 0x800E020C: jal         0x800F2FCC
     // 0x800E0210: addu        $a3, $a3, $t0
     ctx->r7 = ADD32(ctx->r7, ctx->r8);
-    func_800F2FCC(rdram, ctx);
+    triggerCueWithSlotEffect(rdram, ctx);
         goto after_4;
     // 0x800E0210: addu        $a3, $a3, $t0
     ctx->r7 = ADD32(ctx->r7, ctx->r8);
@@ -7591,7 +7591,7 @@ L_800E01A0:
     // 0x800E0248: jal         0x800989D8
     // 0x800E024C: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_800989D8(rdram, ctx);
+    play3DSoundEvent(rdram, ctx);
         goto after_5;
     // 0x800E024C: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -7646,7 +7646,7 @@ RECOMP_FUNC void func_800E026C(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E02A0: jal         0x80058360
     // 0x800E02A4: addiu       $a3, $sp, 0x28
     ctx->r7 = ADD32(ctx->r29, 0X28);
-    func_80058360(rdram, ctx);
+    lookupHmtTextureByName(rdram, ctx);
         goto after_0;
     // 0x800E02A4: addiu       $a3, $sp, 0x28
     ctx->r7 = ADD32(ctx->r29, 0X28);
@@ -7686,7 +7686,7 @@ RECOMP_FUNC void func_800E026C(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E02E8: jal         0x800F1870
     // 0x800E02EC: sh          $t0, 0xB6($s1)
     MEM_H(0XB6, ctx->r17) = ctx->r8;
-    func_800F1870(rdram, ctx);
+    tickProgressChannel(rdram, ctx);
         goto after_1;
     // 0x800E02EC: sh          $t0, 0xB6($s1)
     MEM_H(0XB6, ctx->r17) = ctx->r8;
@@ -7710,7 +7710,7 @@ RECOMP_FUNC void func_800E026C(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E0308: jal         0x800F2A00
     // 0x800E030C: nop
 
-    func_800F2A00(rdram, ctx);
+    getObjectNpcTypeId(rdram, ctx);
         goto after_2;
     // 0x800E030C: nop
 
@@ -7776,7 +7776,7 @@ RECOMP_FUNC void func_800E026C(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E0384: jal         0x800F2FCC
     // 0x800E0388: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
-    func_800F2FCC(rdram, ctx);
+    triggerCueWithSlotEffect(rdram, ctx);
         goto after_3;
     // 0x800E0388: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
@@ -7796,7 +7796,7 @@ RECOMP_FUNC void func_800E026C(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E039C: jal         0x8003E8DC
     // 0x800E03A0: addiu       $a2, $sp, 0x58
     ctx->r6 = ADD32(ctx->r29, 0X58);
-    func_8003E8DC(rdram, ctx);
+    slotDispatcherIter(rdram, ctx);
         goto after_4;
     // 0x800E03A0: addiu       $a2, $sp, 0x58
     ctx->r6 = ADD32(ctx->r29, 0X58);
@@ -7831,7 +7831,7 @@ L_800E03A4:
     // 0x800E03D8: jal         0x800989D8
     // 0x800E03DC: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_800989D8(rdram, ctx);
+    play3DSoundEvent(rdram, ctx);
         goto after_5;
     // 0x800E03DC: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -7917,7 +7917,7 @@ L_800E0448:
     // 0x800E045C: jal         0x80058360
     // 0x800E0460: addiu       $a3, $sp, 0x28
     ctx->r7 = ADD32(ctx->r29, 0X28);
-    func_80058360(rdram, ctx);
+    lookupHmtTextureByName(rdram, ctx);
         goto after_0;
     // 0x800E0460: addiu       $a3, $sp, 0x28
     ctx->r7 = ADD32(ctx->r29, 0X28);
@@ -7959,7 +7959,7 @@ L_800E047C:
     // 0x800E0498: jal         0x80058360
     // 0x800E049C: addu        $a3, $s2, $zero
     ctx->r7 = ADD32(ctx->r18, 0);
-    func_80058360(rdram, ctx);
+    lookupHmtTextureByName(rdram, ctx);
         goto after_1;
     // 0x800E049C: addu        $a3, $s2, $zero
     ctx->r7 = ADD32(ctx->r18, 0);
@@ -8017,7 +8017,7 @@ L_800E047C:
     // 0x800E04F8: jal         0x800F0F94
     // 0x800E04FC: addiu       $a1, $sp, 0x28
     ctx->r5 = ADD32(ctx->r29, 0X28);
-    func_800F0F94(rdram, ctx);
+    resolveNpcAttachmentPos(rdram, ctx);
         goto after_2;
     // 0x800E04FC: addiu       $a1, $sp, 0x28
     ctx->r5 = ADD32(ctx->r29, 0X28);
@@ -8043,7 +8043,7 @@ L_800E047C:
     // 0x800E0524: jal         0x800F0F94
     // 0x800E0528: addu        $a1, $s2, $zero
     ctx->r5 = ADD32(ctx->r18, 0);
-    func_800F0F94(rdram, ctx);
+    resolveNpcAttachmentPos(rdram, ctx);
         goto after_3;
     // 0x800E0528: addu        $a1, $s2, $zero
     ctx->r5 = ADD32(ctx->r18, 0);
@@ -8066,7 +8066,7 @@ L_800E052C:
     // 0x800E0540: jal         0x800F1870
     // 0x800E0544: addiu       $a3, $sp, 0xC8
     ctx->r7 = ADD32(ctx->r29, 0XC8);
-    func_800F1870(rdram, ctx);
+    tickProgressChannel(rdram, ctx);
         goto after_4;
     // 0x800E0544: addiu       $a3, $sp, 0xC8
     ctx->r7 = ADD32(ctx->r29, 0XC8);
@@ -8090,7 +8090,7 @@ L_800E052C:
     // 0x800E0560: jal         0x800F1870
     // 0x800E0564: addiu       $a3, $sp, 0xCC
     ctx->r7 = ADD32(ctx->r29, 0XCC);
-    func_800F1870(rdram, ctx);
+    tickProgressChannel(rdram, ctx);
         goto after_5;
     // 0x800E0564: addiu       $a3, $sp, 0xCC
     ctx->r7 = ADD32(ctx->r29, 0XCC);
@@ -8156,7 +8156,7 @@ L_800E057C:
     // 0x800E05C4: jal         0x800F1870
     // 0x800E05C8: swc1        $f0, 0x10($s3)
     MEM_W(0X10, ctx->r19) = ctx->f0.u32l;
-    func_800F1870(rdram, ctx);
+    tickProgressChannel(rdram, ctx);
         goto after_6;
     // 0x800E05C8: swc1        $f0, 0x10($s3)
     MEM_W(0X10, ctx->r19) = ctx->f0.u32l;
@@ -8178,7 +8178,7 @@ L_800E057C:
     // 0x800E05E0: jal         0x800F1870
     // 0x800E05E4: addiu       $a3, $sp, 0xCC
     ctx->r7 = ADD32(ctx->r29, 0XCC);
-    func_800F1870(rdram, ctx);
+    tickProgressChannel(rdram, ctx);
         goto after_7;
     // 0x800E05E4: addiu       $a3, $sp, 0xCC
     ctx->r7 = ADD32(ctx->r29, 0XCC);
@@ -8271,7 +8271,7 @@ L_800E0614:
     // 0x800E0684: jal         0x800F2FCC
     // 0x800E0688: addu        $a3, $a3, $s0
     ctx->r7 = ADD32(ctx->r7, ctx->r16);
-    func_800F2FCC(rdram, ctx);
+    triggerCueWithSlotEffect(rdram, ctx);
         goto after_8;
     // 0x800E0688: addu        $a3, $a3, $s0
     ctx->r7 = ADD32(ctx->r7, ctx->r16);
@@ -8315,7 +8315,7 @@ L_800E0614:
     // 0x800E06D4: jal         0x800F2FCC
     // 0x800E06D8: addu        $a3, $a3, $s0
     ctx->r7 = ADD32(ctx->r7, ctx->r16);
-    func_800F2FCC(rdram, ctx);
+    triggerCueWithSlotEffect(rdram, ctx);
         goto after_9;
     // 0x800E06D8: addu        $a3, $a3, $s0
     ctx->r7 = ADD32(ctx->r7, ctx->r16);
@@ -8349,7 +8349,7 @@ L_800E0614:
     // 0x800E0710: jal         0x800989D8
     // 0x800E0714: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_800989D8(rdram, ctx);
+    play3DSoundEvent(rdram, ctx);
         goto after_10;
     // 0x800E0714: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -8454,7 +8454,7 @@ RECOMP_FUNC void func_800E0748(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E07B8: jal         0x80058360
     // 0x800E07BC: addiu       $a3, $sp, 0x28
     ctx->r7 = ADD32(ctx->r29, 0X28);
-    func_80058360(rdram, ctx);
+    lookupHmtTextureByName(rdram, ctx);
         goto after_0;
     // 0x800E07BC: addiu       $a3, $sp, 0x28
     ctx->r7 = ADD32(ctx->r29, 0X28);
@@ -8512,7 +8512,7 @@ RECOMP_FUNC void func_800E0748(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E0814: jal         0x800F0F94
     // 0x800E0818: addiu       $a1, $sp, 0x28
     ctx->r5 = ADD32(ctx->r29, 0X28);
-    func_800F0F94(rdram, ctx);
+    resolveNpcAttachmentPos(rdram, ctx);
         goto after_1;
     // 0x800E0818: addiu       $a1, $sp, 0x28
     ctx->r5 = ADD32(ctx->r29, 0X28);
@@ -8527,7 +8527,7 @@ L_800E0820:
     // 0x800E0828: jal         0x800F1870
     // 0x800E082C: addiu       $a3, $sp, 0x68
     ctx->r7 = ADD32(ctx->r29, 0X68);
-    func_800F1870(rdram, ctx);
+    tickProgressChannel(rdram, ctx);
         goto after_2;
     // 0x800E082C: addiu       $a3, $sp, 0x68
     ctx->r7 = ADD32(ctx->r29, 0X68);
@@ -8593,7 +8593,7 @@ L_800E0820:
     // 0x800E089C: jal         0x800F2FCC
     // 0x800E08A0: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
-    func_800F2FCC(rdram, ctx);
+    triggerCueWithSlotEffect(rdram, ctx);
         goto after_3;
     // 0x800E08A0: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
@@ -8627,7 +8627,7 @@ L_800E0820:
     // 0x800E08D8: jal         0x800989D8
     // 0x800E08DC: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_800989D8(rdram, ctx);
+    play3DSoundEvent(rdram, ctx);
         goto after_4;
     // 0x800E08DC: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -8724,7 +8724,7 @@ L_800E0958:
     // 0x800E095C: jal         0x800F06BC
     // 0x800E0960: nop
 
-    func_800F06BC(rdram, ctx);
+    isPendingChildNpcActive(rdram, ctx);
         goto after_0;
     // 0x800E0960: nop
 
@@ -8785,7 +8785,7 @@ L_800E0980:
     // 0x800E09BC: jal         0x8001CC3C
     // 0x800E09C0: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CC3C(rdram, ctx);
+    buildRotationMatrixSlot0(rdram, ctx);
         goto after_1;
     // 0x800E09C0: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -8795,7 +8795,7 @@ L_800E0980:
     // 0x800E09C8: jal         0x8001CCCC
     // 0x800E09CC: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CCCC(rdram, ctx);
+    composeRotationMatrixSlot1(rdram, ctx);
         goto after_2;
     // 0x800E09CC: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -8807,7 +8807,7 @@ L_800E0980:
     // 0x800E09D8: jal         0x800193E8
     // 0x800E09DC: addiu       $a2, $s2, 0xC
     ctx->r6 = ADD32(ctx->r18, 0XC);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_3;
     // 0x800E09DC: addiu       $a2, $s2, 0xC
     ctx->r6 = ADD32(ctx->r18, 0XC);
@@ -8819,7 +8819,7 @@ L_800E0980:
     // 0x800E09E8: jal         0x800193E8
     // 0x800E09EC: addiu       $a2, $s2, 0x18
     ctx->r6 = ADD32(ctx->r18, 0X18);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_4;
     // 0x800E09EC: addiu       $a2, $s2, 0x18
     ctx->r6 = ADD32(ctx->r18, 0X18);
@@ -8910,7 +8910,7 @@ L_800E0A54:
     // 0x800E0A58: jal         0x800F07AC
     // 0x800E0A5C: nop
 
-    func_800F07AC(rdram, ctx);
+    validateActorTargetLOS(rdram, ctx);
         goto after_6;
     // 0x800E0A5C: nop
 
@@ -9066,7 +9066,7 @@ L_800E0B24:
     // 0x800E0B2C: jal         0x800F2D38
     // 0x800E0B30: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
-    func_800F2D38(rdram, ctx);
+    applyToObjectSubstructByFlag(rdram, ctx);
         goto after_8;
     // 0x800E0B30: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
@@ -9087,7 +9087,7 @@ L_800E0B3C:
     // 0x800E0B48: jal         0x800F2D38
     // 0x800E0B4C: addiu       $a3, $zero, 0x1
     ctx->r7 = ADD32(0, 0X1);
-    func_800F2D38(rdram, ctx);
+    applyToObjectSubstructByFlag(rdram, ctx);
         goto after_9;
     // 0x800E0B4C: addiu       $a3, $zero, 0x1
     ctx->r7 = ADD32(0, 0X1);
@@ -9274,7 +9274,7 @@ L_800E0C18:
     // 0x800E0C54: jal         0x800F2888
     // 0x800E0C58: nop
 
-    func_800F2888(rdram, ctx);
+    initActorMotionParams(rdram, ctx);
         goto after_11;
     // 0x800E0C58: nop
 
@@ -9460,7 +9460,7 @@ L_800E0D54:
     // 0x800E0D58: jal         0x80059B50
     // 0x800E0D5C: addu        $a1, $s6, $zero
     ctx->r5 = ADD32(ctx->r22, 0);
-    func_80059B50(rdram, ctx);
+    mat34CrossRowsAndCopyPos(rdram, ctx);
         goto after_0;
     // 0x800E0D5C: addu        $a1, $s6, $zero
     ctx->r5 = ADD32(ctx->r22, 0);
@@ -9472,7 +9472,7 @@ L_800E0D54:
     // 0x800E0D68: jal         0x8001C774
     // 0x800E0D6C: addiu       $a1, $sp, 0x28
     ctx->r5 = ADD32(ctx->r29, 0X28);
-    func_8001C774(rdram, ctx);
+    mat3x3InverseInto(rdram, ctx);
         goto after_1;
     // 0x800E0D6C: addiu       $a1, $sp, 0x28
     ctx->r5 = ADD32(ctx->r29, 0X28);
@@ -9482,7 +9482,7 @@ L_800E0D54:
     // 0x800E0D74: jal         0x800F06BC
     // 0x800E0D78: nop
 
-    func_800F06BC(rdram, ctx);
+    isPendingChildNpcActive(rdram, ctx);
         goto after_2;
     // 0x800E0D78: nop
 
@@ -9506,7 +9506,7 @@ L_800E0D54:
     // 0x800E0D90: jal         0x800F09A8
     // 0x800E0D94: nop
 
-    func_800F09A8(rdram, ctx);
+    computeActorAnchorDeltaAfterLOS(rdram, ctx);
         goto after_3;
     // 0x800E0D94: nop
 
@@ -9528,7 +9528,7 @@ L_800E0D54:
     // 0x800E0DA8: jal         0x800F2988
     // 0x800E0DAC: addiu       $a1, $sp, 0xA8
     ctx->r5 = ADD32(ctx->r29, 0XA8);
-    func_800F2988(rdram, ctx);
+    getObjectMeshTransformOrLocal(rdram, ctx);
         goto after_4;
     // 0x800E0DAC: addiu       $a1, $sp, 0xA8
     ctx->r5 = ADD32(ctx->r29, 0XA8);
@@ -9542,7 +9542,7 @@ L_800E0D54:
     // 0x800E0DBC: jal         0x800193E8
     // 0x800E0DC0: addu        $a2, $s3, $zero
     ctx->r6 = ADD32(ctx->r19, 0);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_5;
     // 0x800E0DC0: addu        $a2, $s3, $zero
     ctx->r6 = ADD32(ctx->r19, 0);
@@ -9634,7 +9634,7 @@ L_800E0D54:
     // 0x800E0E4C: jal         0x8001CFA0
     // 0x800E0E50: swc1        $f0, 0xA0($sp)
     MEM_W(0XA0, ctx->r29) = ctx->f0.u32l;
-    func_8001CFA0(rdram, ctx);
+    vec3NormalizeInto(rdram, ctx);
         goto after_6;
     // 0x800E0E50: swc1        $f0, 0xA0($sp)
     MEM_W(0XA0, ctx->r29) = ctx->f0.u32l;
@@ -9650,7 +9650,7 @@ L_800E0D54:
     // 0x800E0E64: jal         0x8001CC3C
     // 0x800E0E68: addiu       $a0, $sp, 0x28
     ctx->r4 = ADD32(ctx->r29, 0X28);
-    func_8001CC3C(rdram, ctx);
+    buildRotationMatrixSlot0(rdram, ctx);
         goto after_7;
     // 0x800E0E68: addiu       $a0, $sp, 0x28
     ctx->r4 = ADD32(ctx->r29, 0X28);
@@ -9660,7 +9660,7 @@ L_800E0D54:
     // 0x800E0E70: jal         0x8001CCCC
     // 0x800E0E74: addiu       $a0, $sp, 0x28
     ctx->r4 = ADD32(ctx->r29, 0X28);
-    func_8001CCCC(rdram, ctx);
+    composeRotationMatrixSlot1(rdram, ctx);
         goto after_8;
     // 0x800E0E74: addiu       $a0, $sp, 0x28
     ctx->r4 = ADD32(ctx->r29, 0X28);
@@ -9676,7 +9676,7 @@ L_800E0D54:
     // 0x800E0E88: jal         0x800193E8
     // 0x800E0E8C: addu        $a2, $s3, $zero
     ctx->r6 = ADD32(ctx->r19, 0);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_9;
     // 0x800E0E8C: addu        $a2, $s3, $zero
     ctx->r6 = ADD32(ctx->r19, 0);
@@ -9686,7 +9686,7 @@ L_800E0D54:
     // 0x800E0E94: jal         0x8001CFE8
     // 0x800E0E98: addu        $a1, $s2, $zero
     ctx->r5 = ADD32(ctx->r18, 0);
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_10;
     // 0x800E0E98: addu        $a1, $s2, $zero
     ctx->r5 = ADD32(ctx->r18, 0);
@@ -9700,7 +9700,7 @@ L_800E0D54:
     CHECK_FR(ctx, 12);
     CHECK_FR(ctx, 0);
     ctx->f12.fl = ctx->f0.fl;
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_11;
     // 0x800E0EA8: mov.s       $f12, $f0
     CHECK_FR(ctx, 12);
@@ -9802,7 +9802,7 @@ L_800E0F0C:
     // 0x800E0F18: jal         0x80019548
     // 0x800E0F1C: addu        $a2, $s2, $zero
     ctx->r6 = ADD32(ctx->r18, 0);
-    func_80019548(rdram, ctx);
+    vec3Cross(rdram, ctx);
         goto after_12;
     // 0x800E0F1C: addu        $a2, $s2, $zero
     ctx->r6 = ADD32(ctx->r18, 0);
@@ -9824,7 +9824,7 @@ L_800E0F0C:
     // 0x800E0F34: jal         0x8001D240
     // 0x800E0F38: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
-    func_8001D240(rdram, ctx);
+    quatFromAxisAngle(rdram, ctx);
         goto after_14;
     // 0x800E0F38: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
@@ -9836,7 +9836,7 @@ L_800E0F0C:
     // 0x800E0F44: jal         0x8001D3C4
     // 0x800E0F48: addu        $a2, $s2, $zero
     ctx->r6 = ADD32(ctx->r18, 0);
-    func_8001D3C4(rdram, ctx);
+    rotateVec3ByQuat(rdram, ctx);
         goto after_15;
     // 0x800E0F48: addu        $a2, $s2, $zero
     ctx->r6 = ADD32(ctx->r18, 0);
@@ -9848,7 +9848,7 @@ L_800E0F0C:
     // 0x800E0F54: jal         0x8001CFE8
     // 0x800E0F58: sw          $zero, 0x8C($s5)
     MEM_W(0X8C, ctx->r21) = 0;
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_16;
     // 0x800E0F58: sw          $zero, 0x8C($s5)
     MEM_W(0X8C, ctx->r21) = 0;
@@ -9860,7 +9860,7 @@ L_800E0F0C:
     CHECK_FR(ctx, 22);
     CHECK_FR(ctx, 0);
     ctx->f22.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_17;
     // 0x800E0F64: mov.s       $f22, $f0
     CHECK_FR(ctx, 22);
@@ -9874,7 +9874,7 @@ L_800E0F0C:
     CHECK_FR(ctx, 20);
     CHECK_FR(ctx, 0);
     ctx->f20.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_18;
     // 0x800E0F70: mov.s       $f20, $f0
     CHECK_FR(ctx, 20);
@@ -9894,7 +9894,7 @@ L_800E0F0C:
     CHECK_FR(ctx, 20);
     NAN_CHECK(ctx->f22.fl); NAN_CHECK(ctx->f20.fl); 
     ctx->f12.fl = DIV_S(ctx->f22.fl, ctx->f20.fl);
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_19;
     // 0x800E0F7C: div.s       $f12, $f22, $f20
     CHECK_FR(ctx, 12);
@@ -10064,7 +10064,7 @@ L_800E1004:
     // 0x800E1064: jal         0x80098BDC
     // 0x800E1068: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_80098BDC(rdram, ctx);
+    play3DSoundEventVariant(rdram, ctx);
         goto after_20;
     // 0x800E1068: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -10106,7 +10106,7 @@ L_800E1090:
     // 0x800E109C: jal         0x8001CC3C
     // 0x800E10A0: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CC3C(rdram, ctx);
+    buildRotationMatrixSlot0(rdram, ctx);
         goto after_21;
     // 0x800E10A0: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -10116,7 +10116,7 @@ L_800E1090:
     // 0x800E10A8: jal         0x8001CCCC
     // 0x800E10AC: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CCCC(rdram, ctx);
+    composeRotationMatrixSlot1(rdram, ctx);
         goto after_22;
     // 0x800E10AC: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -10134,7 +10134,7 @@ L_800E1090:
     // 0x800E10C4: jal         0x800193E8
     // 0x800E10C8: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_23;
     // 0x800E10C8: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
@@ -10144,7 +10144,7 @@ L_800E1090:
     // 0x800E10D0: jal         0x8001CFE8
     // 0x800E10D4: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_24;
     // 0x800E10D4: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
@@ -10154,7 +10154,7 @@ L_800E1090:
     CHECK_FR(ctx, 12);
     CHECK_FR(ctx, 0);
     ctx->f12.fl = ctx->f0.fl;
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_25;
     // 0x800E10DC: mov.s       $f12, $f0
     CHECK_FR(ctx, 12);
@@ -10258,7 +10258,7 @@ L_800E1090:
     // 0x800E1174: jal         0x80098BDC
     // 0x800E1178: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_80098BDC(rdram, ctx);
+    play3DSoundEventVariant(rdram, ctx);
         goto after_26;
     // 0x800E1178: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -10320,7 +10320,7 @@ L_800E11A4:
     // 0x800E11BC: jal         0x80019548
     // 0x800E11C0: addu        $a2, $s4, $zero
     ctx->r6 = ADD32(ctx->r20, 0);
-    func_80019548(rdram, ctx);
+    vec3Cross(rdram, ctx);
         goto after_27;
     // 0x800E11C0: addu        $a2, $s4, $zero
     ctx->r6 = ADD32(ctx->r20, 0);
@@ -10342,7 +10342,7 @@ L_800E11A4:
     // 0x800E11D8: jal         0x8001D240
     // 0x800E11DC: addu        $a1, $s3, $zero
     ctx->r5 = ADD32(ctx->r19, 0);
-    func_8001D240(rdram, ctx);
+    quatFromAxisAngle(rdram, ctx);
         goto after_29;
     // 0x800E11DC: addu        $a1, $s3, $zero
     ctx->r5 = ADD32(ctx->r19, 0);
@@ -10356,7 +10356,7 @@ L_800E11A4:
     // 0x800E11EC: jal         0x8001D3C4
     // 0x800E11F0: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
-    func_8001D3C4(rdram, ctx);
+    rotateVec3ByQuat(rdram, ctx);
         goto after_30;
     // 0x800E11F0: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
@@ -10376,7 +10376,7 @@ L_800E11A4:
     // 0x800E120C: jal         0x8001CFE8
     // 0x800E1210: swc1        $f2, 0x130($sp)
     MEM_W(0X130, ctx->r29) = ctx->f2.u32l;
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_31;
     // 0x800E1210: swc1        $f2, 0x130($sp)
     MEM_W(0X130, ctx->r29) = ctx->f2.u32l;
@@ -10388,7 +10388,7 @@ L_800E11A4:
     CHECK_FR(ctx, 22);
     CHECK_FR(ctx, 0);
     ctx->f22.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_32;
     // 0x800E121C: mov.s       $f22, $f0
     CHECK_FR(ctx, 22);
@@ -10402,7 +10402,7 @@ L_800E11A4:
     CHECK_FR(ctx, 20);
     CHECK_FR(ctx, 0);
     ctx->f20.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_33;
     // 0x800E1228: mov.s       $f20, $f0
     CHECK_FR(ctx, 20);
@@ -10422,7 +10422,7 @@ L_800E11A4:
     CHECK_FR(ctx, 20);
     NAN_CHECK(ctx->f22.fl); NAN_CHECK(ctx->f20.fl); 
     ctx->f12.fl = DIV_S(ctx->f22.fl, ctx->f20.fl);
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_34;
     // 0x800E1234: div.s       $f12, $f22, $f20
     CHECK_FR(ctx, 12);
@@ -10478,7 +10478,7 @@ L_800E11A4:
     // 0x800E1288: jal         0x80019548
     // 0x800E128C: sw          $zero, 0x16C($sp)
     MEM_W(0X16C, ctx->r29) = 0;
-    func_80019548(rdram, ctx);
+    vec3Cross(rdram, ctx);
         goto after_35;
     // 0x800E128C: sw          $zero, 0x16C($sp)
     MEM_W(0X16C, ctx->r29) = 0;
@@ -10522,7 +10522,7 @@ L_800E12A8:
     // 0x800E12B4: jal         0x8001CD6C
     // 0x800E12B8: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_8001CD6C(rdram, ctx);
+    buildRotationMatrixSlot1(rdram, ctx);
         goto after_36;
     // 0x800E12B8: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -10534,7 +10534,7 @@ L_800E12A8:
     // 0x800E12C4: jal         0x800193E8
     // 0x800E12C8: addu        $a2, $s3, $zero
     ctx->r6 = ADD32(ctx->r19, 0);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_37;
     // 0x800E12C8: addu        $a2, $s3, $zero
     ctx->r6 = ADD32(ctx->r19, 0);
@@ -10552,7 +10552,7 @@ L_800E12A8:
     // 0x800E12E0: jal         0x8001CFE8
     // 0x800E12E4: swc1        $f20, 0x8C($s0)
     MEM_W(0X8C, ctx->r16) = ctx->f20.u32l;
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_38;
     // 0x800E12E4: swc1        $f20, 0x8C($s0)
     MEM_W(0X8C, ctx->r16) = ctx->f20.u32l;
@@ -10564,7 +10564,7 @@ L_800E12A8:
     CHECK_FR(ctx, 22);
     CHECK_FR(ctx, 0);
     ctx->f22.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_39;
     // 0x800E12F0: mov.s       $f22, $f0
     CHECK_FR(ctx, 22);
@@ -10578,7 +10578,7 @@ L_800E12A8:
     CHECK_FR(ctx, 20);
     CHECK_FR(ctx, 0);
     ctx->f20.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_40;
     // 0x800E12FC: mov.s       $f20, $f0
     CHECK_FR(ctx, 20);
@@ -10598,7 +10598,7 @@ L_800E12A8:
     CHECK_FR(ctx, 20);
     NAN_CHECK(ctx->f22.fl); NAN_CHECK(ctx->f20.fl); 
     ctx->f12.fl = DIV_S(ctx->f22.fl, ctx->f20.fl);
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_41;
     // 0x800E1308: div.s       $f12, $f22, $f20
     CHECK_FR(ctx, 12);
@@ -10667,7 +10667,7 @@ L_800E1348:
     // 0x800E1348: jal         0x80098DE0
     // 0x800E134C: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_80098DE0(rdram, ctx);
+    factor5RemoveListNode(rdram, ctx);
         goto after_42;
     // 0x800E134C: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -10885,7 +10885,7 @@ L_800E1488:
     // 0x800E1490: jal         0x80059B50
     // 0x800E1494: addu        $a1, $s2, $zero
     ctx->r5 = ADD32(ctx->r18, 0);
-    func_80059B50(rdram, ctx);
+    mat34CrossRowsAndCopyPos(rdram, ctx);
         goto after_1;
     // 0x800E1494: addu        $a1, $s2, $zero
     ctx->r5 = ADD32(ctx->r18, 0);
@@ -10895,7 +10895,7 @@ L_800E1488:
     // 0x800E149C: jal         0x8001C774
     // 0x800E14A0: addiu       $a1, $sp, 0x28
     ctx->r5 = ADD32(ctx->r29, 0X28);
-    func_8001C774(rdram, ctx);
+    mat3x3InverseInto(rdram, ctx);
         goto after_2;
     // 0x800E14A0: addiu       $a1, $sp, 0x28
     ctx->r5 = ADD32(ctx->r29, 0X28);
@@ -10927,7 +10927,7 @@ L_800E1488:
     // 0x800E14C4: jal         0x800F06BC
     // 0x800E14C8: addu        $s0, $zero, $zero
     ctx->r16 = ADD32(0, 0);
-    func_800F06BC(rdram, ctx);
+    isPendingChildNpcActive(rdram, ctx);
         goto after_3;
     // 0x800E14C8: addu        $s0, $zero, $zero
     ctx->r16 = ADD32(0, 0);
@@ -10949,7 +10949,7 @@ L_800E1488:
     // 0x800E14E0: jal         0x800F09A8
     // 0x800E14E4: nop
 
-    func_800F09A8(rdram, ctx);
+    computeActorAnchorDeltaAfterLOS(rdram, ctx);
         goto after_4;
     // 0x800E14E4: nop
 
@@ -11035,7 +11035,7 @@ L_800E14FC:
     // 0x800E1554: jal         0x800F06BC
     // 0x800E1558: swc1        $f0, 0x10($s2)
     MEM_W(0X10, ctx->r18) = ctx->f0.u32l;
-    func_800F06BC(rdram, ctx);
+    isPendingChildNpcActive(rdram, ctx);
         goto after_5;
     // 0x800E1558: swc1        $f0, 0x10($s2)
     MEM_W(0X10, ctx->r18) = ctx->f0.u32l;
@@ -11112,7 +11112,7 @@ L_800E15BC:
     // 0x800E15C8: jal         0x800F2988
     // 0x800E15CC: addiu       $a1, $sp, 0xA8
     ctx->r5 = ADD32(ctx->r29, 0XA8);
-    func_800F2988(rdram, ctx);
+    getObjectMeshTransformOrLocal(rdram, ctx);
         goto after_7;
     // 0x800E15CC: addiu       $a1, $sp, 0xA8
     ctx->r5 = ADD32(ctx->r29, 0XA8);
@@ -11124,7 +11124,7 @@ L_800E15BC:
     // 0x800E15D8: jal         0x800193E8
     // 0x800E15DC: addu        $a1, $v0, $zero
     ctx->r5 = ADD32(ctx->r2, 0);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_8;
     // 0x800E15DC: addu        $a1, $v0, $zero
     ctx->r5 = ADD32(ctx->r2, 0);
@@ -11232,7 +11232,7 @@ L_800E15BC:
     // 0x800E1678: jal         0x8001CFA0
     // 0x800E167C: swc1        $f0, 0xA0($sp)
     MEM_W(0XA0, ctx->r29) = ctx->f0.u32l;
-    func_8001CFA0(rdram, ctx);
+    vec3NormalizeInto(rdram, ctx);
         goto after_9;
     // 0x800E167C: swc1        $f0, 0xA0($sp)
     MEM_W(0XA0, ctx->r29) = ctx->f0.u32l;
@@ -11264,7 +11264,7 @@ L_800E15BC:
     // 0x800E16A8: jal         0x8001CC3C
     // 0x800E16AC: addiu       $a0, $sp, 0x28
     ctx->r4 = ADD32(ctx->r29, 0X28);
-    func_8001CC3C(rdram, ctx);
+    buildRotationMatrixSlot0(rdram, ctx);
         goto after_10;
     // 0x800E16AC: addiu       $a0, $sp, 0x28
     ctx->r4 = ADD32(ctx->r29, 0X28);
@@ -11274,7 +11274,7 @@ L_800E15BC:
     // 0x800E16B4: jal         0x8001CCCC
     // 0x800E16B8: addiu       $a0, $sp, 0x28
     ctx->r4 = ADD32(ctx->r29, 0X28);
-    func_8001CCCC(rdram, ctx);
+    composeRotationMatrixSlot1(rdram, ctx);
         goto after_11;
     // 0x800E16B8: addiu       $a0, $sp, 0x28
     ctx->r4 = ADD32(ctx->r29, 0X28);
@@ -11286,7 +11286,7 @@ L_800E15BC:
     // 0x800E16C4: jal         0x800193E8
     // 0x800E16C8: addu        $a1, $s7, $zero
     ctx->r5 = ADD32(ctx->r23, 0);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_12;
     // 0x800E16C8: addu        $a1, $s7, $zero
     ctx->r5 = ADD32(ctx->r23, 0);
@@ -11298,7 +11298,7 @@ L_800E15BC:
     // 0x800E16D4: jal         0x8001CFE8
     // 0x800E16D8: nop
 
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_13;
     // 0x800E16D8: nop
 
@@ -11308,7 +11308,7 @@ L_800E15BC:
     CHECK_FR(ctx, 12);
     CHECK_FR(ctx, 0);
     ctx->f12.fl = ctx->f0.fl;
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_14;
     // 0x800E16E0: mov.s       $f12, $f0
     CHECK_FR(ctx, 12);
@@ -11408,7 +11408,7 @@ L_800E1744:
     // 0x800E174C: jal         0x80019548
     // 0x800E1750: addu        $a0, $s4, $zero
     ctx->r4 = ADD32(ctx->r20, 0);
-    func_80019548(rdram, ctx);
+    vec3Cross(rdram, ctx);
         goto after_15;
     // 0x800E1750: addu        $a0, $s4, $zero
     ctx->r4 = ADD32(ctx->r20, 0);
@@ -11430,7 +11430,7 @@ L_800E1744:
     // 0x800E1768: jal         0x8001D240
     // 0x800E176C: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
-    func_8001D240(rdram, ctx);
+    quatFromAxisAngle(rdram, ctx);
         goto after_17;
     // 0x800E176C: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
@@ -11442,7 +11442,7 @@ L_800E1744:
     // 0x800E1778: jal         0x8001D3C4
     // 0x800E177C: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_8001D3C4(rdram, ctx);
+    rotateVec3ByQuat(rdram, ctx);
         goto after_18;
     // 0x800E177C: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -11462,7 +11462,7 @@ L_800E1744:
     // 0x800E1798: jal         0x8001CFE8
     // 0x800E179C: swc1        $f2, 0xE0($sp)
     MEM_W(0XE0, ctx->r29) = ctx->f2.u32l;
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_19;
     // 0x800E179C: swc1        $f2, 0xE0($sp)
     MEM_W(0XE0, ctx->r29) = ctx->f2.u32l;
@@ -11474,7 +11474,7 @@ L_800E1744:
     CHECK_FR(ctx, 22);
     CHECK_FR(ctx, 0);
     ctx->f22.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_20;
     // 0x800E17A8: mov.s       $f22, $f0
     CHECK_FR(ctx, 22);
@@ -11488,7 +11488,7 @@ L_800E1744:
     CHECK_FR(ctx, 20);
     CHECK_FR(ctx, 0);
     ctx->f20.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_21;
     // 0x800E17B4: mov.s       $f20, $f0
     CHECK_FR(ctx, 20);
@@ -11508,7 +11508,7 @@ L_800E1744:
     CHECK_FR(ctx, 20);
     NAN_CHECK(ctx->f22.fl); NAN_CHECK(ctx->f20.fl); 
     ctx->f12.fl = DIV_S(ctx->f22.fl, ctx->f20.fl);
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_22;
     // 0x800E17C0: div.s       $f12, $f22, $f20
     CHECK_FR(ctx, 12);
@@ -11562,7 +11562,7 @@ L_800E1744:
     // 0x800E1810: jal         0x80019548
     // 0x800E1814: sw          $zero, 0x11C($sp)
     MEM_W(0X11C, ctx->r29) = 0;
-    func_80019548(rdram, ctx);
+    vec3Cross(rdram, ctx);
         goto after_23;
     // 0x800E1814: sw          $zero, 0x11C($sp)
     MEM_W(0X11C, ctx->r29) = 0;
@@ -11622,7 +11622,7 @@ L_800E182C:
     // 0x800E1854: jal         0x8001CD6C
     // 0x800E1858: addiu       $a0, $sp, 0x28
     ctx->r4 = ADD32(ctx->r29, 0X28);
-    func_8001CD6C(rdram, ctx);
+    buildRotationMatrixSlot1(rdram, ctx);
         goto after_24;
     // 0x800E1858: addiu       $a0, $sp, 0x28
     ctx->r4 = ADD32(ctx->r29, 0X28);
@@ -11634,7 +11634,7 @@ L_800E182C:
     // 0x800E1864: jal         0x800193E8
     // 0x800E1868: addu        $a2, $s4, $zero
     ctx->r6 = ADD32(ctx->r20, 0);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_25;
     // 0x800E1868: addu        $a2, $s4, $zero
     ctx->r6 = ADD32(ctx->r20, 0);
@@ -11668,7 +11668,7 @@ L_800E182C:
     // 0x800E1898: jal         0x8001CFE8
     // 0x800E189C: swc1        $f0, 0x8C($s3)
     MEM_W(0X8C, ctx->r19) = ctx->f0.u32l;
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_26;
     // 0x800E189C: swc1        $f0, 0x8C($s3)
     MEM_W(0X8C, ctx->r19) = ctx->f0.u32l;
@@ -11680,7 +11680,7 @@ L_800E182C:
     CHECK_FR(ctx, 22);
     CHECK_FR(ctx, 0);
     ctx->f22.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_27;
     // 0x800E18A8: mov.s       $f22, $f0
     CHECK_FR(ctx, 22);
@@ -11694,7 +11694,7 @@ L_800E182C:
     CHECK_FR(ctx, 20);
     CHECK_FR(ctx, 0);
     ctx->f20.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_28;
     // 0x800E18B4: mov.s       $f20, $f0
     CHECK_FR(ctx, 20);
@@ -11714,7 +11714,7 @@ L_800E182C:
     CHECK_FR(ctx, 20);
     NAN_CHECK(ctx->f22.fl); NAN_CHECK(ctx->f20.fl); 
     ctx->f12.fl = DIV_S(ctx->f22.fl, ctx->f20.fl);
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_29;
     // 0x800E18C0: div.s       $f12, $f22, $f20
     CHECK_FR(ctx, 12);
@@ -12163,7 +12163,7 @@ L_800E1AA4:
     // 0x800E1B08: jal         0x80098BDC
     // 0x800E1B0C: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_80098BDC(rdram, ctx);
+    play3DSoundEventVariant(rdram, ctx);
         goto after_30;
     // 0x800E1B0C: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -12203,7 +12203,7 @@ L_800E1B34:
     // 0x800E1B38: jal         0x8001CC3C
     // 0x800E1B3C: addu        $a0, $s4, $zero
     ctx->r4 = ADD32(ctx->r20, 0);
-    func_8001CC3C(rdram, ctx);
+    buildRotationMatrixSlot0(rdram, ctx);
         goto after_31;
     // 0x800E1B3C: addu        $a0, $s4, $zero
     ctx->r4 = ADD32(ctx->r20, 0);
@@ -12213,7 +12213,7 @@ L_800E1B34:
     // 0x800E1B44: jal         0x8001CCCC
     // 0x800E1B48: addu        $a0, $s4, $zero
     ctx->r4 = ADD32(ctx->r20, 0);
-    func_8001CCCC(rdram, ctx);
+    composeRotationMatrixSlot1(rdram, ctx);
         goto after_32;
     // 0x800E1B48: addu        $a0, $s4, $zero
     ctx->r4 = ADD32(ctx->r20, 0);
@@ -12225,7 +12225,7 @@ L_800E1B34:
     // 0x800E1B54: jal         0x800193E8
     // 0x800E1B58: addu        $a1, $s7, $zero
     ctx->r5 = ADD32(ctx->r23, 0);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_33;
     // 0x800E1B58: addu        $a1, $s7, $zero
     ctx->r5 = ADD32(ctx->r23, 0);
@@ -12235,7 +12235,7 @@ L_800E1B34:
     // 0x800E1B60: jal         0x8001CFE8
     // 0x800E1B64: addu        $a0, $s7, $zero
     ctx->r4 = ADD32(ctx->r23, 0);
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_34;
     // 0x800E1B64: addu        $a0, $s7, $zero
     ctx->r4 = ADD32(ctx->r23, 0);
@@ -12245,7 +12245,7 @@ L_800E1B34:
     CHECK_FR(ctx, 12);
     CHECK_FR(ctx, 0);
     ctx->f12.fl = ctx->f0.fl;
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_35;
     // 0x800E1B6C: mov.s       $f12, $f0
     CHECK_FR(ctx, 12);
@@ -12345,7 +12345,7 @@ L_800E1B34:
     // 0x800E1BFC: jal         0x80098BDC
     // 0x800E1C00: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_80098BDC(rdram, ctx);
+    play3DSoundEventVariant(rdram, ctx);
         goto after_36;
     // 0x800E1C00: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -12399,7 +12399,7 @@ L_800E1C2C:
     // 0x800E1C34: jal         0x80019548
     // 0x800E1C38: addu        $a2, $s7, $zero
     ctx->r6 = ADD32(ctx->r23, 0);
-    func_80019548(rdram, ctx);
+    vec3Cross(rdram, ctx);
         goto after_37;
     // 0x800E1C38: addu        $a2, $s7, $zero
     ctx->r6 = ADD32(ctx->r23, 0);
@@ -12421,7 +12421,7 @@ L_800E1C2C:
     // 0x800E1C50: jal         0x8001D240
     // 0x800E1C54: addu        $a1, $s6, $zero
     ctx->r5 = ADD32(ctx->r22, 0);
-    func_8001D240(rdram, ctx);
+    quatFromAxisAngle(rdram, ctx);
         goto after_39;
     // 0x800E1C54: addu        $a1, $s6, $zero
     ctx->r5 = ADD32(ctx->r22, 0);
@@ -12433,7 +12433,7 @@ L_800E1C2C:
     // 0x800E1C60: jal         0x8001D3C4
     // 0x800E1C64: addiu       $a2, $sp, 0x108
     ctx->r6 = ADD32(ctx->r29, 0X108);
-    func_8001D3C4(rdram, ctx);
+    rotateVec3ByQuat(rdram, ctx);
         goto after_40;
     // 0x800E1C64: addiu       $a2, $sp, 0x108
     ctx->r6 = ADD32(ctx->r29, 0X108);
@@ -12453,7 +12453,7 @@ L_800E1C2C:
     // 0x800E1C80: jal         0x8001CFE8
     // 0x800E1C84: swc1        $f2, 0x130($sp)
     MEM_W(0X130, ctx->r29) = ctx->f2.u32l;
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_41;
     // 0x800E1C84: swc1        $f2, 0x130($sp)
     MEM_W(0X130, ctx->r29) = ctx->f2.u32l;
@@ -12465,7 +12465,7 @@ L_800E1C2C:
     CHECK_FR(ctx, 22);
     CHECK_FR(ctx, 0);
     ctx->f22.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_42;
     // 0x800E1C90: mov.s       $f22, $f0
     CHECK_FR(ctx, 22);
@@ -12479,7 +12479,7 @@ L_800E1C2C:
     CHECK_FR(ctx, 20);
     CHECK_FR(ctx, 0);
     ctx->f20.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_43;
     // 0x800E1C9C: mov.s       $f20, $f0
     CHECK_FR(ctx, 20);
@@ -12499,7 +12499,7 @@ L_800E1C2C:
     CHECK_FR(ctx, 20);
     NAN_CHECK(ctx->f22.fl); NAN_CHECK(ctx->f20.fl); 
     ctx->f12.fl = DIV_S(ctx->f22.fl, ctx->f20.fl);
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_44;
     // 0x800E1CA8: div.s       $f12, $f22, $f20
     CHECK_FR(ctx, 12);
@@ -12553,7 +12553,7 @@ L_800E1C2C:
     // 0x800E1CF8: jal         0x80019548
     // 0x800E1CFC: sw          $zero, 0x16C($sp)
     MEM_W(0X16C, ctx->r29) = 0;
-    func_80019548(rdram, ctx);
+    vec3Cross(rdram, ctx);
         goto after_45;
     // 0x800E1CFC: sw          $zero, 0x16C($sp)
     MEM_W(0X16C, ctx->r29) = 0;
@@ -12593,7 +12593,7 @@ L_800E1D14:
     // 0x800E1D1C: jal         0x8001CD6C
     // 0x800E1D20: addu        $a0, $s4, $zero
     ctx->r4 = ADD32(ctx->r20, 0);
-    func_8001CD6C(rdram, ctx);
+    buildRotationMatrixSlot1(rdram, ctx);
         goto after_46;
     // 0x800E1D20: addu        $a0, $s4, $zero
     ctx->r4 = ADD32(ctx->r20, 0);
@@ -12605,7 +12605,7 @@ L_800E1D14:
     // 0x800E1D2C: jal         0x800193E8
     // 0x800E1D30: addu        $a2, $s6, $zero
     ctx->r6 = ADD32(ctx->r22, 0);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_47;
     // 0x800E1D30: addu        $a2, $s6, $zero
     ctx->r6 = ADD32(ctx->r22, 0);
@@ -12619,7 +12619,7 @@ L_800E1D14:
     // 0x800E1D40: jal         0x8001CFE8
     // 0x800E1D44: swc1        $f20, 0x8C($s3)
     MEM_W(0X8C, ctx->r19) = ctx->f20.u32l;
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_48;
     // 0x800E1D44: swc1        $f20, 0x8C($s3)
     MEM_W(0X8C, ctx->r19) = ctx->f20.u32l;
@@ -12631,7 +12631,7 @@ L_800E1D14:
     CHECK_FR(ctx, 20);
     CHECK_FR(ctx, 0);
     ctx->f20.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_49;
     // 0x800E1D50: mov.s       $f20, $f0
     CHECK_FR(ctx, 20);
@@ -12645,7 +12645,7 @@ L_800E1D14:
     CHECK_FR(ctx, 22);
     CHECK_FR(ctx, 0);
     ctx->f22.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_50;
     // 0x800E1D5C: mov.s       $f22, $f0
     CHECK_FR(ctx, 22);
@@ -12665,7 +12665,7 @@ L_800E1D14:
     CHECK_FR(ctx, 22);
     NAN_CHECK(ctx->f20.fl); NAN_CHECK(ctx->f22.fl); 
     ctx->f12.fl = DIV_S(ctx->f20.fl, ctx->f22.fl);
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_51;
     // 0x800E1D68: div.s       $f12, $f20, $f22
     CHECK_FR(ctx, 12);
@@ -12734,7 +12734,7 @@ L_800E1DA4:
     // 0x800E1DA4: jal         0x80098DE0
     // 0x800E1DA8: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_80098DE0(rdram, ctx);
+    factor5RemoveListNode(rdram, ctx);
         goto after_52;
     // 0x800E1DA8: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -12811,7 +12811,7 @@ L_800E1DD4:
     // 0x800E1E18: addiu       $sp, $sp, 0x1E8
     ctx->r29 = ADD32(ctx->r29, 0X1E8);
 ;}
-RECOMP_FUNC void func_800E1E1C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void tickTrainCarStateMachine(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x800E1E1C: lbu         $v0, 0xFD($a0)
@@ -13128,7 +13128,7 @@ L_800E1FC0:
     // 0x800E1FD4: jal         0x8001CA50
     // 0x800E1FD8: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA50(rdram, ctx);
+    clearVec4QuadStruct(rdram, ctx);
         goto after_1;
     // 0x800E1FD8: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -13175,7 +13175,7 @@ L_800E1FC0:
     // 0x800E2010: jal         0x8001CA90
     // 0x800E2014: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA90(rdram, ctx);
+    addVec3At0x24(rdram, ctx);
         goto after_2;
     // 0x800E2014: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -13202,7 +13202,7 @@ L_800E2018:
     // 0x800E2034: jal         0x8001CB04
     // 0x800E2038: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CB04(rdram, ctx);
+    applyScaleToMat3x4(rdram, ctx);
         goto after_3;
     // 0x800E2038: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -13223,7 +13223,7 @@ L_800E203C:
     // 0x800E204C: jal         0x8001DAEC
     // 0x800E2050: addiu       $a1, $s0, 0x68
     ctx->r5 = ADD32(ctx->r16, 0X68);
-    func_8001DAEC(rdram, ctx);
+    composeQuatToMat3x4(rdram, ctx);
         goto after_4;
     // 0x800E2050: addiu       $a1, $s0, 0x68
     ctx->r5 = ADD32(ctx->r16, 0X68);
@@ -13234,7 +13234,7 @@ L_800E2054:
     // 0x800E2058: jal         0x8001CCCC
     // 0x800E205C: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CCCC(rdram, ctx);
+    composeRotationMatrixSlot1(rdram, ctx);
         goto after_5;
     // 0x800E205C: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -13333,7 +13333,7 @@ L_800E20D8:
     // 0x800E20D8: jal         0x8001CA90
     // 0x800E20DC: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA90(rdram, ctx);
+    addVec3At0x24(rdram, ctx);
         goto after_6;
     // 0x800E20DC: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -13356,7 +13356,7 @@ L_800E20E0:
     // 0x800E20F4: jal         0x8001CA50
     // 0x800E20F8: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA50(rdram, ctx);
+    clearVec4QuadStruct(rdram, ctx);
         goto after_7;
     // 0x800E20F8: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -13403,7 +13403,7 @@ L_800E20E0:
     // 0x800E2130: jal         0x8001CA90
     // 0x800E2134: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA90(rdram, ctx);
+    addVec3At0x24(rdram, ctx);
         goto after_8;
     // 0x800E2134: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -13430,7 +13430,7 @@ L_800E2138:
     // 0x800E2154: jal         0x8001CB04
     // 0x800E2158: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CB04(rdram, ctx);
+    applyScaleToMat3x4(rdram, ctx);
         goto after_9;
     // 0x800E2158: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -13451,7 +13451,7 @@ L_800E215C:
     // 0x800E216C: jal         0x8001DAEC
     // 0x800E2170: addiu       $a1, $s0, 0x68
     ctx->r5 = ADD32(ctx->r16, 0X68);
-    func_8001DAEC(rdram, ctx);
+    composeQuatToMat3x4(rdram, ctx);
         goto after_10;
     // 0x800E2170: addiu       $a1, $s0, 0x68
     ctx->r5 = ADD32(ctx->r16, 0X68);
@@ -13503,7 +13503,7 @@ L_800E2174:
     // 0x800E21B4: jal         0x8001CA90
     // 0x800E21B8: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA90(rdram, ctx);
+    addVec3At0x24(rdram, ctx);
         goto after_11;
     // 0x800E21B8: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -13514,7 +13514,7 @@ L_800E21BC:
     // 0x800E21C0: jal         0x8001CB9C
     // 0x800E21C4: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CB9C(rdram, ctx);
+    composeRotationMatrixSlot0(rdram, ctx);
         goto after_12;
     // 0x800E21C4: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -13613,7 +13613,7 @@ L_800E2240:
     // 0x800E2240: jal         0x8001CA90
     // 0x800E2244: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA90(rdram, ctx);
+    addVec3At0x24(rdram, ctx);
         goto after_13;
     // 0x800E2244: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -13638,7 +13638,7 @@ L_800E2248:
     // 0x800E225C: jal         0x8001CA50
     // 0x800E2260: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA50(rdram, ctx);
+    clearVec4QuadStruct(rdram, ctx);
         goto after_14;
     // 0x800E2260: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -13685,7 +13685,7 @@ L_800E2248:
     // 0x800E2298: jal         0x8001CA90
     // 0x800E229C: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA90(rdram, ctx);
+    addVec3At0x24(rdram, ctx);
         goto after_15;
     // 0x800E229C: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -13712,7 +13712,7 @@ L_800E22A0:
     // 0x800E22BC: jal         0x8001CB04
     // 0x800E22C0: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CB04(rdram, ctx);
+    applyScaleToMat3x4(rdram, ctx);
         goto after_16;
     // 0x800E22C0: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -13737,7 +13737,7 @@ L_800E22C4:
     // 0x800E22D8: jal         0x8001DAEC
     // 0x800E22DC: addiu       $a1, $s0, 0x68
     ctx->r5 = ADD32(ctx->r16, 0X68);
-    func_8001DAEC(rdram, ctx);
+    composeQuatToMat3x4(rdram, ctx);
         goto after_17;
     // 0x800E22DC: addiu       $a1, $s0, 0x68
     ctx->r5 = ADD32(ctx->r16, 0X68);
@@ -13781,7 +13781,7 @@ L_800E22E4:
     // 0x800E2318: jal         0x8001CA90
     // 0x800E231C: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA90(rdram, ctx);
+    addVec3At0x24(rdram, ctx);
         goto after_18;
     // 0x800E231C: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -13882,7 +13882,7 @@ L_800E2398:
     // 0x800E2398: jal         0x8001CA90
     // 0x800E239C: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA90(rdram, ctx);
+    addVec3At0x24(rdram, ctx);
         goto after_19;
     // 0x800E239C: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -13912,7 +13912,7 @@ L_800E23B4:
     // 0x800E23C0: jal         0x80059B50
     // 0x800E23C4: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_80059B50(rdram, ctx);
+    mat34CrossRowsAndCopyPos(rdram, ctx);
         goto after_20;
     // 0x800E23C4: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -13997,7 +13997,7 @@ RECOMP_FUNC void func_800E23FC(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E2450: jal         0x8001CFE8
     // 0x800E2454: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_0;
     // 0x800E2454: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
@@ -14007,7 +14007,7 @@ RECOMP_FUNC void func_800E23FC(uint8_t* rdram, recomp_context* ctx) {
     CHECK_FR(ctx, 12);
     CHECK_FR(ctx, 0);
     ctx->f12.fl = ctx->f0.fl;
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_1;
     // 0x800E245C: mov.s       $f12, $f0
     CHECK_FR(ctx, 12);
@@ -14054,7 +14054,7 @@ RECOMP_FUNC void func_800E23FC(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E2490: jal         0x80019548
     // 0x800E2494: addu        $a2, $s3, $zero
     ctx->r6 = ADD32(ctx->r19, 0);
-    func_80019548(rdram, ctx);
+    vec3Cross(rdram, ctx);
         goto after_2;
     // 0x800E2494: addu        $a2, $s3, $zero
     ctx->r6 = ADD32(ctx->r19, 0);
@@ -14062,7 +14062,7 @@ RECOMP_FUNC void func_800E23FC(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E2498: jal         0x8001CF2C
     // 0x800E249C: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_3;
     // 0x800E249C: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -14171,7 +14171,7 @@ L_800E2510:
     // 0x800E2514: jal         0x8001D240
     // 0x800E2518: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
-    func_8001D240(rdram, ctx);
+    quatFromAxisAngle(rdram, ctx);
         goto after_4;
     // 0x800E2518: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
@@ -14186,7 +14186,7 @@ L_800E251C:
     // 0x800E2528: jal         0x8001D038
     // 0x800E252C: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_8001D038(rdram, ctx);
+    quatFromCardinalAxis(rdram, ctx);
         goto after_5;
     // 0x800E252C: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -14220,7 +14220,7 @@ L_800E251C:
     // 0x800E2554: jal         0x8001D2C0
     // 0x800E2558: swc1        $f2, 0xBC($s2)
     MEM_W(0XBC, ctx->r18) = ctx->f2.u32l;
-    func_8001D2C0(rdram, ctx);
+    quatMultiply(rdram, ctx);
         goto after_6;
     // 0x800E2558: swc1        $f2, 0xBC($s2)
     MEM_W(0XBC, ctx->r18) = ctx->f2.u32l;
@@ -14234,7 +14234,7 @@ L_800E251C:
     // 0x800E2568: jal         0x8001D3C4
     // 0x800E256C: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
-    func_8001D3C4(rdram, ctx);
+    rotateVec3ByQuat(rdram, ctx);
         goto after_7;
     // 0x800E256C: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
@@ -14258,7 +14258,7 @@ L_800E251C:
     // 0x800E2590: jal         0x8001D3C4
     // 0x800E2594: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
-    func_8001D3C4(rdram, ctx);
+    rotateVec3ByQuat(rdram, ctx);
         goto after_8;
     // 0x800E2594: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
@@ -14278,7 +14278,7 @@ L_800E251C:
     // 0x800E25B0: jal         0x80059F10
     // 0x800E25B4: addu        $a0, $s2, $zero
     ctx->r4 = ADD32(ctx->r18, 0);
-    func_80059F10(rdram, ctx);
+    orthonormalizeFrame(rdram, ctx);
         goto after_9;
     // 0x800E25B4: addu        $a0, $s2, $zero
     ctx->r4 = ADD32(ctx->r18, 0);
@@ -14379,7 +14379,7 @@ L_800E25B8:
     // 0x800E2624: jal         0x80067D90
     // 0x800E2628: swc1        $f0, 0x4($s2)
     MEM_W(0X4, ctx->r18) = ctx->f0.u32l;
-    func_80067D90(rdram, ctx);
+    wrapAngleToCyclicRange(rdram, ctx);
         goto after_10;
     // 0x800E2628: swc1        $f0, 0x4($s2)
     MEM_W(0X4, ctx->r18) = ctx->f0.u32l;
@@ -14562,7 +14562,7 @@ RECOMP_FUNC void func_800E2674(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E2750: jal         0x80041CBC
     // 0x800E2754: sw          $v0, 0x88($sp)
     MEM_W(0X88, ctx->r29) = ctx->r2;
-    func_80041CBC(rdram, ctx);
+    spawnRandomBurstNpcVariantWrapper(rdram, ctx);
         goto after_1;
     // 0x800E2754: sw          $v0, 0x88($sp)
     MEM_W(0X88, ctx->r29) = ctx->r2;
@@ -14602,7 +14602,7 @@ RECOMP_FUNC void func_800E2674(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E2790: jal         0x80041CBC
     // 0x800E2794: addiu       $a0, $sp, 0x10
     ctx->r4 = ADD32(ctx->r29, 0X10);
-    func_80041CBC(rdram, ctx);
+    spawnRandomBurstNpcVariantWrapper(rdram, ctx);
         goto after_3;
     // 0x800E2794: addiu       $a0, $sp, 0x10
     ctx->r4 = ADD32(ctx->r29, 0X10);
@@ -14636,7 +14636,7 @@ RECOMP_FUNC void func_800E2674(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E27C4: jal         0x80041CBC
     // 0x800E27C8: addiu       $a0, $sp, 0x10
     ctx->r4 = ADD32(ctx->r29, 0X10);
-    func_80041CBC(rdram, ctx);
+    spawnRandomBurstNpcVariantWrapper(rdram, ctx);
         goto after_5;
     // 0x800E27C8: addiu       $a0, $sp, 0x10
     ctx->r4 = ADD32(ctx->r29, 0X10);
@@ -14875,7 +14875,7 @@ L_800E2918:
     // 0x800E2918: jal         0x80056EB0
     // 0x800E291C: nop
 
-    func_80056EB0(rdram, ctx);
+    walkMeshdef0List(rdram, ctx);
         goto after_0;
     // 0x800E291C: nop
 
@@ -14905,7 +14905,7 @@ L_800E2918:
     // 0x800E2944: jal         0x800547C0
     // 0x800E2948: addiu       $a1, $a1, -0x7EF0
     ctx->r5 = ADD32(ctx->r5, -0X7EF0);
-    func_800547C0(rdram, ctx);
+    loadAssetIntoNewSlot(rdram, ctx);
         goto after_1;
     // 0x800E2948: addiu       $a1, $a1, -0x7EF0
     ctx->r5 = ADD32(ctx->r5, -0X7EF0);
@@ -14934,7 +14934,7 @@ L_800E2950:
     // 0x800E2974: jal         0x80059D78
     // 0x800E2978: addu        $a0, $s2, $zero
     ctx->r4 = ADD32(ctx->r18, 0);
-    func_80059D78(rdram, ctx);
+    composeEulerRotationXYZ(rdram, ctx);
         goto after_2;
     // 0x800E2978: addu        $a0, $s2, $zero
     ctx->r4 = ADD32(ctx->r18, 0);
@@ -15008,7 +15008,7 @@ L_800E2950:
     // 0x800E29D8: jal         0x8001CB64
     // 0x800E29DC: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_8001CB64(rdram, ctx);
+    initVec4TripletFromArgs(rdram, ctx);
         goto after_3;
     // 0x800E29DC: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -15020,7 +15020,7 @@ L_800E2950:
     // 0x800E29E8: jal         0x8001CB9C
     // 0x800E29EC: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_8001CB9C(rdram, ctx);
+    composeRotationMatrixSlot0(rdram, ctx);
         goto after_4;
     // 0x800E29EC: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -15032,7 +15032,7 @@ L_800E2950:
     // 0x800E29F8: jal         0x8001CCCC
     // 0x800E29FC: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_8001CCCC(rdram, ctx);
+    composeRotationMatrixSlot1(rdram, ctx);
         goto after_5;
     // 0x800E29FC: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -15044,7 +15044,7 @@ L_800E2950:
     // 0x800E2A08: jal         0x8001CDFC
     // 0x800E2A0C: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_8001CDFC(rdram, ctx);
+    composeRotationMatrixSlot2(rdram, ctx);
         goto after_6;
     // 0x800E2A0C: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -15060,7 +15060,7 @@ L_800E2950:
     // 0x800E2A20: jal         0x8001CA90
     // 0x800E2A24: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_8001CA90(rdram, ctx);
+    addVec3At0x24(rdram, ctx);
         goto after_7;
     // 0x800E2A24: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -15137,7 +15137,7 @@ L_800E2A74:
     // 0x800E2A9C: jal         0x80059434
     // 0x800E2AA0: addu        $a2, $s2, $s4
     ctx->r6 = ADD32(ctx->r18, ctx->r20);
-    func_80059434(rdram, ctx);
+    lookupHmtMaterialByName(rdram, ctx);
         goto after_8;
     // 0x800E2AA0: addu        $a2, $s2, $s4
     ctx->r6 = ADD32(ctx->r18, ctx->r20);
@@ -15172,7 +15172,7 @@ L_800E2AA8:
     // 0x800E2AD0: jal         0x80059434
     // 0x800E2AD4: addu        $a2, $s2, $s5
     ctx->r6 = ADD32(ctx->r18, ctx->r21);
-    func_80059434(rdram, ctx);
+    lookupHmtMaterialByName(rdram, ctx);
         goto after_9;
     // 0x800E2AD4: addu        $a2, $s2, $s5
     ctx->r6 = ADD32(ctx->r18, ctx->r21);
@@ -15214,7 +15214,7 @@ L_800E2AE4:
     // 0x800E2B0C: jal         0x80059434
     // 0x800E2B10: addu        $a2, $s2, $s6
     ctx->r6 = ADD32(ctx->r18, ctx->r22);
-    func_80059434(rdram, ctx);
+    lookupHmtMaterialByName(rdram, ctx);
         goto after_10;
     // 0x800E2B10: addu        $a2, $s2, $s6
     ctx->r6 = ADD32(ctx->r18, ctx->r22);
@@ -15260,7 +15260,7 @@ L_800E2B20:
     // 0x800E2B50: jal         0x8003E684
     // 0x800E2B54: addiu       $s0, $zero, 0x1
     ctx->r16 = ADD32(0, 0X1);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_11;
     // 0x800E2B54: addiu       $s0, $zero, 0x1
     ctx->r16 = ADD32(0, 0X1);
@@ -15289,7 +15289,7 @@ L_800E2B6C:
     // 0x800E2B78: jal         0x8003E684
     // 0x800E2B7C: nop
 
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_12;
     // 0x800E2B7C: nop
 
@@ -15318,7 +15318,7 @@ L_800E2B94:
     // 0x800E2BA0: jal         0x8003E684
     // 0x800E2BA4: nop
 
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_13;
     // 0x800E2BA4: nop
 
@@ -15357,7 +15357,7 @@ L_800E2BC8:
     // 0x800E2BD4: jal         0x8003E684
     // 0x800E2BD8: nop
 
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_14;
     // 0x800E2BD8: nop
 
@@ -15385,7 +15385,7 @@ L_800E2BE8:
     // 0x800E2BFC: jal         0x800EC588
     // 0x800E2C00: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
-    func_800EC588(rdram, ctx);
+    createAndInitObject(rdram, ctx);
         goto after_15;
     // 0x800E2C00: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
@@ -15496,7 +15496,7 @@ L_800E2BE8:
     // 0x800E2C9C: jal         0x800F947C
     // 0x800E2CA0: addu        $a1, $v0, $zero
     ctx->r5 = ADD32(ctx->r2, 0);
-    func_800F947C(rdram, ctx);
+    initActorAsType1(rdram, ctx);
         goto after_18;
     // 0x800E2CA0: addu        $a1, $v0, $zero
     ctx->r5 = ADD32(ctx->r2, 0);
@@ -15508,7 +15508,7 @@ L_800E2BE8:
     // 0x800E2CAC: jal         0x800F9AF4
     // 0x800E2CB0: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
-    func_800F9AF4(rdram, ctx);
+    updateObjectFlags110(rdram, ctx);
         goto after_19;
     // 0x800E2CB0: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
@@ -15577,7 +15577,7 @@ L_800E2CD0:
     // 0x800E2D1C: jal         0x80098BDC
     // 0x800E2D20: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_80098BDC(rdram, ctx);
+    play3DSoundEventVariant(rdram, ctx);
         goto after_20;
     // 0x800E2D20: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -15620,7 +15620,7 @@ L_800E2D28:
     // 0x800E2D58: jal         0x8006BD18
     // 0x800E2D5C: nop
 
-    func_8006BD18(rdram, ctx);
+    allocateAndInitCraftNpcContext(rdram, ctx);
         goto after_21;
     // 0x800E2D5C: nop
 
@@ -15723,7 +15723,7 @@ L_800E2DEC:
     // 0x800E2E08: jal         0x80098DE0
     // 0x800E2E0C: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_80098DE0(rdram, ctx);
+    factor5RemoveListNode(rdram, ctx);
         goto after_22;
     // 0x800E2E0C: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -15748,7 +15748,7 @@ L_800E2E10:
     // 0x800E2E28: jal         0x80098DE0
     // 0x800E2E2C: addiu       $a0, $a0, 0x6C
     ctx->r4 = ADD32(ctx->r4, 0X6C);
-    func_80098DE0(rdram, ctx);
+    factor5RemoveListNode(rdram, ctx);
         goto after_23;
     // 0x800E2E2C: addiu       $a0, $a0, 0x6C
     ctx->r4 = ADD32(ctx->r4, 0X6C);
@@ -15798,7 +15798,7 @@ L_800E2E44:
     // 0x800E2E68: jal         0x800F1E7C
     // 0x800E2E6C: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
-    func_800F1E7C(rdram, ctx);
+    initActorRenderDescriptorIfUninit(rdram, ctx);
         goto after_26;
     // 0x800E2E6C: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
@@ -15806,7 +15806,7 @@ L_800E2E44:
     // 0x800E2E70: jal         0x800EC684
     // 0x800E2E74: addiu       $a0, $s2, 0x38
     ctx->r4 = ADD32(ctx->r18, 0X38);
-    func_800EC684(rdram, ctx);
+    clearPendingAndDestroyChildNpc(rdram, ctx);
         goto after_27;
     // 0x800E2E74: addiu       $a0, $s2, 0x38
     ctx->r4 = ADD32(ctx->r18, 0X38);
@@ -15816,7 +15816,7 @@ L_800E2E44:
     // 0x800E2E7C: jal         0x8005779C
     // 0x800E2E80: nop
 
-    func_8005779C(rdram, ctx);
+    releaseMeshAsset(rdram, ctx);
         goto after_28;
     // 0x800E2E80: nop
 
@@ -16024,7 +16024,7 @@ L_800E2F64:
     // 0x800E2F70: jal         0x800AA6D0
     // 0x800E2F74: addiu       $a2, $a2, 0x34
     ctx->r6 = ADD32(ctx->r6, 0X34);
-    func_800AA6D0(rdram, ctx);
+    npcPredictedRangeCheck(rdram, ctx);
         goto after_29;
     // 0x800E2F74: addiu       $a2, $a2, 0x34
     ctx->r6 = ADD32(ctx->r6, 0X34);
@@ -16036,7 +16036,7 @@ L_800E2F64:
     // 0x800E2F80: jal         0x800F9A14
     // 0x800E2F84: nop
 
-    func_800F9A14(rdram, ctx);
+    dispatchEffectByActorType(rdram, ctx);
         goto after_30;
     // 0x800E2F84: nop
 
@@ -16196,7 +16196,7 @@ L_800E3034:
     // 0x800E303C: jal         0x800E1E1C
     // 0x800E3040: addu        $a0, $s2, $zero
     ctx->r4 = ADD32(ctx->r18, 0);
-    func_800E1E1C(rdram, ctx);
+    tickTrainCarStateMachine(rdram, ctx);
         goto after_33;
     // 0x800E3040: addu        $a0, $s2, $zero
     ctx->r4 = ADD32(ctx->r18, 0);
@@ -16268,7 +16268,7 @@ L_800E3080:
     // 0x800E3094: jal         0x8004013C
     // 0x800E3098: nop
 
-    func_8004013C(rdram, ctx);
+    getNpcContextByIndex(rdram, ctx);
         goto after_34;
     // 0x800E3098: nop
 
@@ -16300,7 +16300,7 @@ L_800E3080:
     // 0x800E30BC: jal         0x8003E8DC
     // 0x800E30C0: addiu       $a2, $sp, 0x28
     ctx->r6 = ADD32(ctx->r29, 0X28);
-    func_8003E8DC(rdram, ctx);
+    slotDispatcherIter(rdram, ctx);
         goto after_36;
     // 0x800E30C0: addiu       $a2, $sp, 0x28
     ctx->r6 = ADD32(ctx->r29, 0X28);
@@ -16326,7 +16326,7 @@ L_800E30D8:
     // 0x800E30D8: jal         0x800E1E1C
     // 0x800E30DC: addu        $a0, $s2, $zero
     ctx->r4 = ADD32(ctx->r18, 0);
-    func_800E1E1C(rdram, ctx);
+    tickTrainCarStateMachine(rdram, ctx);
         goto after_37;
     // 0x800E30DC: addu        $a0, $s2, $zero
     ctx->r4 = ADD32(ctx->r18, 0);
@@ -16400,7 +16400,7 @@ L_800E3120:
     // 0x800E3134: jal         0x8004013C
     // 0x800E3138: nop
 
-    func_8004013C(rdram, ctx);
+    getNpcContextByIndex(rdram, ctx);
         goto after_38;
     // 0x800E3138: nop
 
@@ -16432,7 +16432,7 @@ L_800E3120:
     // 0x800E315C: jal         0x8003E8DC
     // 0x800E3160: addiu       $a2, $sp, 0x28
     ctx->r6 = ADD32(ctx->r29, 0X28);
-    func_8003E8DC(rdram, ctx);
+    slotDispatcherIter(rdram, ctx);
         goto after_40;
     // 0x800E3160: addiu       $a2, $sp, 0x28
     ctx->r6 = ADD32(ctx->r29, 0X28);
@@ -16472,7 +16472,7 @@ L_800E3170:
     // 0x800E3190: jal         0x800EFDE0
     // 0x800E3194: nop
 
-    func_800EFDE0(rdram, ctx);
+    updateNpcEventTimer(rdram, ctx);
         goto after_41;
     // 0x800E3194: nop
 
@@ -16511,7 +16511,7 @@ L_800E31B8:
     // 0x800E31C0: jal         0x800F9A14
     // 0x800E31C4: nop
 
-    func_800F9A14(rdram, ctx);
+    dispatchEffectByActorType(rdram, ctx);
         goto after_44;
     // 0x800E31C4: nop
 
@@ -16885,7 +16885,7 @@ L_800E32A8:
     // 0x800E3384: jal         0x800612A4
     // 0x800E3388: addiu       $a0, $sp, 0x28
     ctx->r4 = ADD32(ctx->r29, 0X28);
-    func_800612A4(rdram, ctx);
+    spawnNpcType0xAFromTemplate(rdram, ctx);
         goto after_52;
     // 0x800E3388: addiu       $a0, $sp, 0x28
     ctx->r4 = ADD32(ctx->r29, 0X28);
@@ -16919,7 +16919,7 @@ L_800E32A8:
     // 0x800E33C0: jal         0x800989D8
     // 0x800E33C4: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_800989D8(rdram, ctx);
+    play3DSoundEvent(rdram, ctx);
         goto after_53;
     // 0x800E33C4: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -16948,7 +16948,7 @@ L_800E33D0:
     // 0x800E33E4: jal         0x800612A4
     // 0x800E33E8: addu        $a0, $s2, $zero
     ctx->r4 = ADD32(ctx->r18, 0);
-    func_800612A4(rdram, ctx);
+    spawnNpcType0xAFromTemplate(rdram, ctx);
         goto after_54;
     // 0x800E33E8: addu        $a0, $s2, $zero
     ctx->r4 = ADD32(ctx->r18, 0);
@@ -16982,7 +16982,7 @@ L_800E33D0:
     // 0x800E3420: jal         0x800989D8
     // 0x800E3424: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_800989D8(rdram, ctx);
+    play3DSoundEvent(rdram, ctx);
         goto after_55;
     // 0x800E3424: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -17020,7 +17020,7 @@ L_800E3448:
     // 0x800E344C: jal         0x8005779C
     // 0x800E3450: nop
 
-    func_8005779C(rdram, ctx);
+    releaseMeshAsset(rdram, ctx);
         goto after_56;
     // 0x800E3450: nop
 
@@ -17056,7 +17056,7 @@ L_800E3478:
     // 0x800E3478: jal         0x80056EB0
     // 0x800E347C: nop
 
-    func_80056EB0(rdram, ctx);
+    walkMeshdef0List(rdram, ctx);
         goto after_57;
     // 0x800E347C: nop
 
@@ -17070,7 +17070,7 @@ L_800E3478:
     // 0x800E348C: jal         0x8004013C
     // 0x800E3490: nop
 
-    func_8004013C(rdram, ctx);
+    getNpcContextByIndex(rdram, ctx);
         goto after_58;
     // 0x800E3490: nop
 
@@ -17088,7 +17088,7 @@ L_800E3478:
     // 0x800E34A8: jal         0x80059B50
     // 0x800E34AC: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_80059B50(rdram, ctx);
+    mat34CrossRowsAndCopyPos(rdram, ctx);
         goto after_59;
     // 0x800E34AC: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -17249,7 +17249,7 @@ L_800E3568:
     // 0x800E358C: jal         0x8007202C
     // 0x800E3590: sw          $zero, 0x14($sp)
     MEM_W(0X14, ctx->r29) = 0;
-    func_8007202C(rdram, ctx);
+    composeRandomRotationMatrix(rdram, ctx);
         goto after_64;
     // 0x800E3590: sw          $zero, 0x14($sp)
     MEM_W(0X14, ctx->r29) = 0;
@@ -17297,7 +17297,7 @@ L_800E3568:
     // 0x800E35CC: jal         0x80072300
     // 0x800E35D0: swc1        $f0, 0x30($sp)
     MEM_W(0X30, ctx->r29) = ctx->f0.u32l;
-    func_80072300(rdram, ctx);
+    scaleVec3ByRandomRange(rdram, ctx);
         goto after_65;
     // 0x800E35D0: swc1        $f0, 0x30($sp)
     MEM_W(0X30, ctx->r29) = ctx->f0.u32l;
@@ -17470,7 +17470,7 @@ L_800E3568:
     // 0x800E3688: jal         0x80072384
     // 0x800E368C: swc1        $f2, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f2.u32l;
-    func_80072384(rdram, ctx);
+    spawnDebris1Npc(rdram, ctx);
         goto after_69;
     // 0x800E368C: swc1        $f2, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f2.u32l;
@@ -17507,7 +17507,7 @@ L_800E369C:
     // 0x800E36C0: jal         0x80073750
     // 0x800E36C4: swc1        $f2, 0x14($sp)
     MEM_W(0X14, ctx->r29) = ctx->f2.u32l;
-    func_80073750(rdram, ctx);
+    spawnDestructionEffectBurst(rdram, ctx);
         goto after_70;
     // 0x800E36C4: swc1        $f2, 0x14($sp)
     MEM_W(0X14, ctx->r29) = ctx->f2.u32l;
@@ -17535,7 +17535,7 @@ L_800E369C:
     // 0x800E36E8: jal         0x80074B74
     // 0x800E36EC: addiu       $a2, $sp, 0x28
     ctx->r6 = ADD32(ctx->r29, 0X28);
-    func_80074B74(rdram, ctx);
+    transformLimbStrideAnchorsLocal(rdram, ctx);
         goto after_72;
     // 0x800E36EC: addiu       $a2, $sp, 0x28
     ctx->r6 = ADD32(ctx->r29, 0X28);
@@ -17615,7 +17615,7 @@ L_800E369C:
     // 0x800E3758: jal         0x800727C0
     // 0x800E375C: swc1        $f2, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f2.u32l;
-    func_800727C0(rdram, ctx);
+    gameStateByteGatedNpcHelper(rdram, ctx);
         goto after_73;
     // 0x800E375C: swc1        $f2, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f2.u32l;
@@ -17637,7 +17637,7 @@ L_800E369C:
     // 0x800E3774: jal         0x800612A4
     // 0x800E3778: addu        $a0, $s2, $zero
     ctx->r4 = ADD32(ctx->r18, 0);
-    func_800612A4(rdram, ctx);
+    spawnNpcType0xAFromTemplate(rdram, ctx);
         goto after_74;
     // 0x800E3778: addu        $a0, $s2, $zero
     ctx->r4 = ADD32(ctx->r18, 0);
@@ -17667,7 +17667,7 @@ L_800E369C:
     // 0x800E37A8: jal         0x800989D8
     // 0x800E37AC: sw          $v0, 0x20($sp)
     MEM_W(0X20, ctx->r29) = ctx->r2;
-    func_800989D8(rdram, ctx);
+    play3DSoundEvent(rdram, ctx);
         goto after_75;
     // 0x800E37AC: sw          $v0, 0x20($sp)
     MEM_W(0X20, ctx->r29) = ctx->r2;
@@ -17680,7 +17680,7 @@ L_800E37B0:
     // 0x800E37B8: jal         0x8003ED74
     // 0x800E37BC: nop
 
-    func_8003ED74(rdram, ctx);
+    destroyNpcSlotByIndex(rdram, ctx);
         goto after_76;
     // 0x800E37BC: nop
 
@@ -17699,7 +17699,7 @@ L_800E37C8:
     // 0x800E37D0: jal         0x800F9A14
     // 0x800E37D4: nop
 
-    func_800F9A14(rdram, ctx);
+    dispatchEffectByActorType(rdram, ctx);
         goto after_77;
     // 0x800E37D4: nop
 
@@ -17845,7 +17845,7 @@ L_800E3870:
     // 0x800E3880: jal         0x80047D40
     // 0x800E3884: addu        $a0, $s2, $zero
     ctx->r4 = ADD32(ctx->r18, 0);
-    func_80047D40(rdram, ctx);
+    isNpcWithinActiveReferenceRange(rdram, ctx);
         goto after_80;
     // 0x800E3884: addu        $a0, $s2, $zero
     ctx->r4 = ADD32(ctx->r18, 0);
@@ -17891,7 +17891,7 @@ L_800E38B8:
     // 0x800E38BC: jal         0x800EC6C0
     // 0x800E38C0: nop
 
-    func_800EC6C0(rdram, ctx);
+    destroyObjectOwnedNpcSlot(rdram, ctx);
         goto after_81;
     // 0x800E38C0: nop
 
@@ -17924,7 +17924,7 @@ L_800E38CC:
     // 0x800E38E8: jal         0x800988E8
     // 0x800E38EC: addiu       $a3, $zero, 0x6E
     ctx->r7 = ADD32(0, 0X6E);
-    func_800988E8(rdram, ctx);
+    updateActive3DAudioSource(rdram, ctx);
         goto after_82;
     // 0x800E38EC: addiu       $a3, $zero, 0x6E
     ctx->r7 = ADD32(0, 0X6E);
@@ -17947,7 +17947,7 @@ L_800E38F0:
     // 0x800E3904: jal         0x800988E8
     // 0x800E3908: addiu       $a2, $s2, 0x24
     ctx->r6 = ADD32(ctx->r18, 0X24);
-    func_800988E8(rdram, ctx);
+    updateActive3DAudioSource(rdram, ctx);
         goto after_83;
     // 0x800E3908: addiu       $a2, $s2, 0x24
     ctx->r6 = ADD32(ctx->r18, 0X24);
@@ -17962,7 +17962,7 @@ L_800E390C:
     // 0x800E3918: jal         0x80057C8C
     // 0x800E391C: addu        $a2, $s2, $zero
     ctx->r6 = ADD32(ctx->r18, 0);
-    func_80057C8C(rdram, ctx);
+    addNpcToVisibilityBucket(rdram, ctx);
         goto after_84;
     // 0x800E391C: addu        $a2, $s2, $zero
     ctx->r6 = ADD32(ctx->r18, 0);
@@ -17984,7 +17984,7 @@ L_800E390C:
     // 0x800E3934: jal         0x8006BEC8
     // 0x800E3938: addu        $a2, $s2, $zero
     ctx->r6 = ADD32(ctx->r18, 0);
-    func_8006BEC8(rdram, ctx);
+    advanceNpcOnCurvedPath(rdram, ctx);
         goto after_85;
     // 0x800E3938: addu        $a2, $s2, $zero
     ctx->r6 = ADD32(ctx->r18, 0);
@@ -18043,7 +18043,7 @@ L_800E3944:
     // 0x800E397C: jal         0x8006C994
     // 0x800E3980: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_8006C994(rdram, ctx);
+    getPlayerField2(rdram, ctx);
         goto after_86;
     // 0x800E3980: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -18084,7 +18084,7 @@ L_800E39A4:
     // 0x800E39B0: jal         0x8006C994
     // 0x800E39B4: addu        $a0, $zero, $zero
     ctx->r4 = ADD32(0, 0);
-    func_8006C994(rdram, ctx);
+    getPlayerField2(rdram, ctx);
         goto after_87;
     // 0x800E39B4: addu        $a0, $zero, $zero
     ctx->r4 = ADD32(0, 0);
@@ -18175,7 +18175,7 @@ L_800E39E8:
     // 0x800E3A20: jal         0x80066EE4
     // 0x800E3A24: addiu       $a3, $zero, 0x2
     ctx->r7 = ADD32(0, 0X2);
-    func_80066EE4(rdram, ctx);
+    playSpeechClip(rdram, ctx);
         goto after_89;
     // 0x800E3A24: addiu       $a3, $zero, 0x2
     ctx->r7 = ADD32(0, 0X2);
@@ -18218,7 +18218,7 @@ L_800E3A28:
     // 0x800E3A54: jal         0x80077784
     // 0x800E3A58: addiu       $a2, $sp, 0x28
     ctx->r6 = ADD32(ctx->r29, 0X28);
-    func_80077784(rdram, ctx);
+    vec3ExtrapolateFirstOrder(rdram, ctx);
         goto after_90;
     // 0x800E3A58: addiu       $a2, $sp, 0x28
     ctx->r6 = ADD32(ctx->r29, 0X28);
@@ -18230,7 +18230,7 @@ L_800E3A28:
     // 0x800E3A64: jal         0x800612E0
     // 0x800E3A68: addiu       $a0, $sp, 0x28
     ctx->r4 = ADD32(ctx->r29, 0X28);
-    func_800612E0(rdram, ctx);
+    spawnRandomScaleColoredEffectAltVariant(rdram, ctx);
         goto after_91;
     // 0x800E3A68: addiu       $a0, $sp, 0x28
     ctx->r4 = ADD32(ctx->r29, 0X28);
@@ -18265,7 +18265,7 @@ L_800E3A6C:
     // 0x800E3AA0: jal         0x800989D8
     // 0x800E3AA4: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_800989D8(rdram, ctx);
+    play3DSoundEvent(rdram, ctx);
         goto after_92;
     // 0x800E3AA4: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -18275,7 +18275,7 @@ L_800E3A6C:
     // 0x800E3AAC: jal         0x800F287C
     // 0x800E3AB0: nop
 
-    func_800F287C(rdram, ctx);
+    getObjectDetailLevel(rdram, ctx);
         goto after_93;
     // 0x800E3AB0: nop
 
@@ -18303,7 +18303,7 @@ L_800E3A6C:
     // 0x800E3ACC: jal         0x800EFD6C
     // 0x800E3AD0: addiu       $a0, $zero, 0x1F4
     ctx->r4 = ADD32(0, 0X1F4);
-    func_800EFD6C(rdram, ctx);
+    noopHandler(rdram, ctx);
         goto after_94;
     // 0x800E3AD0: addiu       $a0, $zero, 0x1F4
     ctx->r4 = ADD32(0, 0X1F4);
@@ -18391,7 +18391,7 @@ L_800E3B44:
     // 0x800E3B58: jal         0x80077570
     // 0x800E3B5C: addu        $s0, $s0, $a3
     ctx->r16 = ADD32(ctx->r16, ctx->r7);
-    func_80077570(rdram, ctx);
+    spawnRandomParticleWithParent(rdram, ctx);
         goto after_96;
     // 0x800E3B5C: addu        $s0, $s0, $a3
     ctx->r16 = ADD32(ctx->r16, ctx->r7);
@@ -18449,7 +18449,7 @@ L_800E3B88:
     // 0x800E3B9C: jal         0x80076250
     // 0x800E3BA0: addu        $a0, $s4, $zero
     ctx->r4 = ADD32(ctx->r20, 0);
-    func_80076250(rdram, ctx);
+    extrapolateNpcPositionForCurrentMode(rdram, ctx);
         goto after_98;
     // 0x800E3BA0: addu        $a0, $s4, $zero
     ctx->r4 = ADD32(ctx->r20, 0);
@@ -18483,7 +18483,7 @@ L_800E3B88:
     // 0x800E3BD8: jal         0x800989D8
     // 0x800E3BDC: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_800989D8(rdram, ctx);
+    play3DSoundEvent(rdram, ctx);
         goto after_99;
     // 0x800E3BDC: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -18635,7 +18635,7 @@ L_800E3CA4:
     // 0x800E3CA8: jal         0x800F287C
     // 0x800E3CAC: nop
 
-    func_800F287C(rdram, ctx);
+    getObjectDetailLevel(rdram, ctx);
         goto after_100;
     // 0x800E3CAC: nop
 
@@ -18663,7 +18663,7 @@ L_800E3CA4:
     // 0x800E3CC8: jal         0x800EFD6C
     // 0x800E3CCC: addiu       $a0, $zero, 0x1F4
     ctx->r4 = ADD32(0, 0X1F4);
-    func_800EFD6C(rdram, ctx);
+    noopHandler(rdram, ctx);
         goto after_101;
     // 0x800E3CCC: addiu       $a0, $zero, 0x1F4
     ctx->r4 = ADD32(0, 0X1F4);
@@ -18731,7 +18731,7 @@ L_800E3D04:
     // 0x800E3D24: jal         0x8003E7D0
     // 0x800E3D28: sw          $zero, 0xC0($s2)
     MEM_W(0XC0, ctx->r18) = 0;
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_104;
     // 0x800E3D28: sw          $zero, 0xC0($s2)
     MEM_W(0XC0, ctx->r18) = 0;
@@ -18753,7 +18753,7 @@ L_800E3D04:
     // 0x800E3D40: jal         0x8003E7D0
     // 0x800E3D44: addu        $a0, $v1, $zero
     ctx->r4 = ADD32(ctx->r3, 0);
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_105;
     // 0x800E3D44: addu        $a0, $v1, $zero
     ctx->r4 = ADD32(ctx->r3, 0);
@@ -18792,7 +18792,7 @@ L_800E3D48:
     // 0x800E3D7C: jal         0x800F3260
     // 0x800E3D80: nop
 
-    func_800F3260(rdram, ctx);
+    tallyMidDetailObject(rdram, ctx);
         goto after_107;
     // 0x800E3D80: nop
 
@@ -18802,7 +18802,7 @@ L_800E3D48:
     // 0x800E3D88: jal         0x800F2A24
     // 0x800E3D8C: nop
 
-    func_800F2A24(rdram, ctx);
+    clearPendingChildNpc(rdram, ctx);
         goto after_108;
     // 0x800E3D8C: nop
 
@@ -18812,7 +18812,7 @@ L_800E3D48:
     // 0x800E3D94: jal         0x800F2AA4
     // 0x800E3D98: nop
 
-    func_800F2AA4(rdram, ctx);
+    setObjectFlagBit4(rdram, ctx);
         goto after_109;
     // 0x800E3D98: nop
 
@@ -18836,7 +18836,7 @@ L_800E3D48:
     // 0x800E3DB4: jal         0x80098DE0
     // 0x800E3DB8: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_80098DE0(rdram, ctx);
+    factor5RemoveListNode(rdram, ctx);
         goto after_110;
     // 0x800E3DB8: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -18861,7 +18861,7 @@ L_800E3DBC:
     // 0x800E3DD4: jal         0x80098DE0
     // 0x800E3DD8: addiu       $a0, $a0, 0x6C
     ctx->r4 = ADD32(ctx->r4, 0X6C);
-    func_80098DE0(rdram, ctx);
+    factor5RemoveListNode(rdram, ctx);
         goto after_111;
     // 0x800E3DD8: addiu       $a0, $a0, 0x6C
     ctx->r4 = ADD32(ctx->r4, 0X6C);
@@ -18882,7 +18882,7 @@ L_800E3DDC:
     // 0x800E3DEC: jal         0x8003ED74
     // 0x800E3DF0: addu        $a0, $v1, $zero
     ctx->r4 = ADD32(ctx->r3, 0);
-    func_8003ED74(rdram, ctx);
+    destroyNpcSlotByIndex(rdram, ctx);
         goto after_112;
     // 0x800E3DF0: addu        $a0, $v1, $zero
     ctx->r4 = ADD32(ctx->r3, 0);
@@ -18957,7 +18957,7 @@ L_800E3E2C:
     // 0x800E3E4C: jal         0x800F9AB8
     // 0x800E3E50: nop
 
-    func_800F9AB8(rdram, ctx);
+    setType1ActorParams(rdram, ctx);
         goto after_113;
     // 0x800E3E50: nop
 
@@ -19039,7 +19039,7 @@ L_800E3E9C:
     // 0x800E3EB0: jal         0x8003E8DC
     // 0x800E3EB4: addu        $a2, $s3, $zero
     ctx->r6 = ADD32(ctx->r19, 0);
-    func_8003E8DC(rdram, ctx);
+    slotDispatcherIter(rdram, ctx);
         goto after_114;
     // 0x800E3EB4: addu        $a2, $s3, $zero
     ctx->r6 = ADD32(ctx->r19, 0);
@@ -19075,7 +19075,7 @@ L_800E3ECC:
     // 0x800E3EE4: jal         0x800F9B34
     // 0x800E3EE8: nop
 
-    func_800F9B34(rdram, ctx);
+    updateType1AnimRamp(rdram, ctx);
         goto after_115;
     // 0x800E3EE8: nop
 
@@ -19112,7 +19112,7 @@ L_800E3EF4:
     // 0x800E3F10: jal         0x8003E7D0
     // 0x800E3F14: addiu       $s0, $zero, 0x1
     ctx->r16 = ADD32(0, 0X1);
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_117;
     // 0x800E3F14: addiu       $s0, $zero, 0x1
     ctx->r16 = ADD32(0, 0X1);
@@ -19143,7 +19143,7 @@ L_800E3F30:
     // 0x800E3F3C: jal         0x8003E684
     // 0x800E3F40: nop
 
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_118;
     // 0x800E3F40: nop
 
@@ -19155,7 +19155,7 @@ L_800E3F30:
     // 0x800E3F4C: jal         0x8003E7D0
     // 0x800E3F50: sh          $v0, 0xAA($s2)
     MEM_H(0XAA, ctx->r18) = ctx->r2;
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_119;
     // 0x800E3F50: sh          $v0, 0xAA($s2)
     MEM_H(0XAA, ctx->r18) = ctx->r2;
@@ -19182,7 +19182,7 @@ L_800E3F64:
     // 0x800E3F70: jal         0x8003E684
     // 0x800E3F74: nop
 
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_120;
     // 0x800E3F74: nop
 
@@ -19206,7 +19206,7 @@ L_800E3F64:
     // 0x800E3F90: jal         0x8003E7D0
     // 0x800E3F94: addu        $a0, $v1, $zero
     ctx->r4 = ADD32(ctx->r3, 0);
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_121;
     // 0x800E3F94: addu        $a0, $v1, $zero
     ctx->r4 = ADD32(ctx->r3, 0);
@@ -19245,7 +19245,7 @@ L_800E3FB8:
     // 0x800E3FC4: jal         0x8003E684
     // 0x800E3FC8: nop
 
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_122;
     // 0x800E3FC8: nop
 
@@ -19260,7 +19260,7 @@ L_800E3FD0:
     // 0x800E3FD8: jal         0x800F2830
     // 0x800E3FDC: nop
 
-    func_800F2830(rdram, ctx);
+    setObjectDetailLevel(rdram, ctx);
         goto after_123;
     // 0x800E3FDC: nop
 
@@ -19277,7 +19277,7 @@ L_800E3FE8:
     // 0x800E3FEC: jal         0x800EFD80
     // 0x800E3FF0: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
-    func_800EFD80(rdram, ctx);
+    dispatchSlotAction5IfActive(rdram, ctx);
         goto after_124;
     // 0x800E3FF0: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
@@ -19445,7 +19445,7 @@ L_800E40C0:
     // 0x800E40D4: jal         0x80059D78
     // 0x800E40D8: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_80059D78(rdram, ctx);
+    composeEulerRotationXYZ(rdram, ctx);
         goto after_0;
     // 0x800E40D8: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -19479,7 +19479,7 @@ L_800E40C0:
     // 0x800E4110: jal         0x80056EB0
     // 0x800E4114: nop
 
-    func_80056EB0(rdram, ctx);
+    walkMeshdef0List(rdram, ctx);
         goto after_1;
     // 0x800E4114: nop
 
@@ -19501,7 +19501,7 @@ L_800E40C0:
     // 0x800E4134: jal         0x80059C24
     // 0x800E4138: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_80059C24(rdram, ctx);
+    mat34CrossRowsAndCopyPosPtr(rdram, ctx);
         goto after_2;
     // 0x800E4138: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -19618,7 +19618,7 @@ L_800E41C0:
     // 0x800E41E0: jal         0x8003E684
     // 0x800E41E4: addu        $a1, $s3, $zero
     ctx->r5 = ADD32(ctx->r19, 0);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_3;
     // 0x800E41E4: addu        $a1, $s3, $zero
     ctx->r5 = ADD32(ctx->r19, 0);
@@ -19658,7 +19658,7 @@ L_800E41C0:
     // 0x800E4218: jal         0x8003E684
     // 0x800E421C: addu        $a1, $s3, $zero
     ctx->r5 = ADD32(ctx->r19, 0);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_4;
     // 0x800E421C: addu        $a1, $s3, $zero
     ctx->r5 = ADD32(ctx->r19, 0);
@@ -19690,7 +19690,7 @@ L_800E422C:
     // 0x800E4240: jal         0x8003E684
     // 0x800E4244: addu        $a1, $s3, $zero
     ctx->r5 = ADD32(ctx->r19, 0);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_5;
     // 0x800E4244: addu        $a1, $s3, $zero
     ctx->r5 = ADD32(ctx->r19, 0);
@@ -19702,7 +19702,7 @@ L_800E424C:
     // 0x800E424C: jal         0x8003E684
     // 0x800E4250: addu        $a1, $s3, $zero
     ctx->r5 = ADD32(ctx->r19, 0);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_6;
     // 0x800E4250: addu        $a1, $s3, $zero
     ctx->r5 = ADD32(ctx->r19, 0);
@@ -19712,7 +19712,7 @@ L_800E424C:
     // 0x800E4258: jal         0x80071308
     // 0x800E425C: addiu       $a0, $s1, 0x40
     ctx->r4 = ADD32(ctx->r17, 0X40);
-    func_80071308(rdram, ctx);
+    dispatchDatSubtypeByRandomIndex(rdram, ctx);
         goto after_7;
     // 0x800E425C: addiu       $a0, $s1, 0x40
     ctx->r4 = ADD32(ctx->r17, 0X40);
@@ -19739,7 +19739,7 @@ L_800E4270:
     // 0x800E4280: jal         0x80046620
     // 0x800E4284: addiu       $a1, $s1, 0x4
     ctx->r5 = ADD32(ctx->r17, 0X4);
-    func_80046620(rdram, ctx);
+    parseDatItemCommon(rdram, ctx);
         goto after_8;
     // 0x800E4284: addiu       $a1, $s1, 0x4
     ctx->r5 = ADD32(ctx->r17, 0X4);
@@ -19749,7 +19749,7 @@ L_800E4270:
     // 0x800E428C: jal         0x80072AF8
     // 0x800E4290: addiu       $a0, $s1, 0x40
     ctx->r4 = ADD32(ctx->r17, 0X40);
-    func_80072AF8(rdram, ctx);
+    walkDatTreeAndCollectSubtypes(rdram, ctx);
         goto after_9;
     // 0x800E4290: addiu       $a0, $s1, 0x40
     ctx->r4 = ADD32(ctx->r17, 0X40);
@@ -19759,7 +19759,7 @@ L_800E4270:
     // 0x800E4298: jal         0x8005779C
     // 0x800E429C: nop
 
-    func_8005779C(rdram, ctx);
+    releaseMeshAsset(rdram, ctx);
         goto after_10;
     // 0x800E429C: nop
 
@@ -19774,7 +19774,7 @@ L_800E42A8:
     // 0x800E42A8: jal         0x80047D40
     // 0x800E42AC: addiu       $a0, $s1, 0x4
     ctx->r4 = ADD32(ctx->r17, 0X4);
-    func_80047D40(rdram, ctx);
+    isNpcWithinActiveReferenceRange(rdram, ctx);
         goto after_11;
     // 0x800E42AC: addiu       $a0, $s1, 0x4
     ctx->r4 = ADD32(ctx->r17, 0X4);
@@ -19843,7 +19843,7 @@ L_800E42E0:
     // 0x800E4300: jal         0x80072BE0
     // 0x800E4304: addiu       $a0, $s1, 0x40
     ctx->r4 = ADD32(ctx->r17, 0X40);
-    func_80072BE0(rdram, ctx);
+    walkDatTreeAndScaleLeafByFloat(rdram, ctx);
         goto after_12;
     // 0x800E4304: addiu       $a0, $s1, 0x40
     ctx->r4 = ADD32(ctx->r17, 0X40);
@@ -19864,7 +19864,7 @@ L_800E4310:
     // 0x800E431C: jal         0x80057C8C
     // 0x800E4320: addiu       $a2, $s1, 0x4
     ctx->r6 = ADD32(ctx->r17, 0X4);
-    func_80057C8C(rdram, ctx);
+    addNpcToVisibilityBucket(rdram, ctx);
         goto after_13;
     // 0x800E4320: addiu       $a2, $s1, 0x4
     ctx->r6 = ADD32(ctx->r17, 0X4);
@@ -19896,7 +19896,7 @@ L_800E4310:
     // 0x800E4344: jal         0x80071928
     // 0x800E4348: addu        $a2, $s2, $zero
     ctx->r6 = ADD32(ctx->r18, 0);
-    func_80071928(rdram, ctx);
+    walkDatTreeAndVisitChildren(rdram, ctx);
         goto after_14;
     // 0x800E4348: addu        $a2, $s2, $zero
     ctx->r6 = ADD32(ctx->r18, 0);
@@ -19976,7 +19976,7 @@ L_800E43B0:
     // 0x800E43B0: jal         0x80076250
     // 0x800E43B4: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_80076250(rdram, ctx);
+    extrapolateNpcPositionForCurrentMode(rdram, ctx);
         goto after_16;
     // 0x800E43B4: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -20010,7 +20010,7 @@ L_800E43B0:
     // 0x800E43EC: jal         0x800989D8
     // 0x800E43F0: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_800989D8(rdram, ctx);
+    play3DSoundEvent(rdram, ctx);
         goto after_17;
     // 0x800E43F0: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -20032,7 +20032,7 @@ L_800E43B0:
     // 0x800E4408: jal         0x8006C994
     // 0x800E440C: addu        $a0, $zero, $zero
     ctx->r4 = ADD32(0, 0);
-    func_8006C994(rdram, ctx);
+    getPlayerField2(rdram, ctx);
         goto after_18;
     // 0x800E440C: addu        $a0, $zero, $zero
     ctx->r4 = ADD32(0, 0);
@@ -20070,7 +20070,7 @@ L_800E43B0:
     // 0x800E443C: jal         0x80066EE4
     // 0x800E4440: addiu       $a3, $zero, 0x8
     ctx->r7 = ADD32(0, 0X8);
-    func_80066EE4(rdram, ctx);
+    playSpeechClip(rdram, ctx);
         goto after_19;
     // 0x800E4440: addiu       $a3, $zero, 0x8
     ctx->r7 = ADD32(0, 0X8);
@@ -20092,7 +20092,7 @@ L_800E4454:
     // 0x800E4454: jal         0x8003ED74
     // 0x800E4458: nop
 
-    func_8003ED74(rdram, ctx);
+    destroyNpcSlotByIndex(rdram, ctx);
         goto after_20;
     // 0x800E4458: nop
 
@@ -20202,7 +20202,7 @@ L_800E44B4:
     // 0x800E4500: jal         0x800F2830
     // 0x800E4504: nop
 
-    func_800F2830(rdram, ctx);
+    setObjectDetailLevel(rdram, ctx);
         goto after_1;
     // 0x800E4504: nop
 
@@ -20240,7 +20240,7 @@ L_800E44B4:
     // 0x800E4544: jal         0x800F2888
     // 0x800E4548: nop
 
-    func_800F2888(rdram, ctx);
+    initActorMotionParams(rdram, ctx);
         goto after_2;
     // 0x800E4548: nop
 
@@ -20315,7 +20315,7 @@ L_800E4568:
     // 0x800E45BC: jal         0x800F2B88
     // 0x800E45C0: nop
 
-    func_800F2B88(rdram, ctx);
+    initObjectAnimSubstruct(rdram, ctx);
         goto after_3;
     // 0x800E45C0: nop
 
@@ -20397,7 +20397,7 @@ L_800E4640:
     // 0x800E4650: jal         0x800F2B88
     // 0x800E4654: nop
 
-    func_800F2B88(rdram, ctx);
+    initObjectAnimSubstruct(rdram, ctx);
         goto after_4;
     // 0x800E4654: nop
 
@@ -20463,7 +20463,7 @@ RECOMP_FUNC void func_800E4674(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E46B8: jal         0x80058360
     // 0x800E46BC: addiu       $a3, $sp, 0x28
     ctx->r7 = ADD32(ctx->r29, 0X28);
-    func_80058360(rdram, ctx);
+    lookupHmtTextureByName(rdram, ctx);
         goto after_0;
     // 0x800E46BC: addiu       $a3, $sp, 0x28
     ctx->r7 = ADD32(ctx->r29, 0X28);
@@ -20485,7 +20485,7 @@ RECOMP_FUNC void func_800E4674(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E46DC: jal         0x80058360
     // 0x800E46E0: addu        $a3, $s1, $zero
     ctx->r7 = ADD32(ctx->r17, 0);
-    func_80058360(rdram, ctx);
+    lookupHmtTextureByName(rdram, ctx);
         goto after_1;
     // 0x800E46E0: addu        $a3, $s1, $zero
     ctx->r7 = ADD32(ctx->r17, 0);
@@ -20535,7 +20535,7 @@ RECOMP_FUNC void func_800E4674(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E472C: jal         0x800F0F94
     // 0x800E4730: addiu       $a1, $sp, 0x28
     ctx->r5 = ADD32(ctx->r29, 0X28);
-    func_800F0F94(rdram, ctx);
+    resolveNpcAttachmentPos(rdram, ctx);
         goto after_2;
     // 0x800E4730: addiu       $a1, $sp, 0x28
     ctx->r5 = ADD32(ctx->r29, 0X28);
@@ -20555,7 +20555,7 @@ RECOMP_FUNC void func_800E4674(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E474C: jal         0x800F0F94
     // 0x800E4750: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
-    func_800F0F94(rdram, ctx);
+    resolveNpcAttachmentPos(rdram, ctx);
         goto after_3;
     // 0x800E4750: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
@@ -20570,7 +20570,7 @@ L_800E4754:
     // 0x800E4760: jal         0x800F1870
     // 0x800E4764: addiu       $a3, $sp, 0xB8
     ctx->r7 = ADD32(ctx->r29, 0XB8);
-    func_800F1870(rdram, ctx);
+    tickProgressChannel(rdram, ctx);
         goto after_4;
     // 0x800E4764: addiu       $a3, $sp, 0xB8
     ctx->r7 = ADD32(ctx->r29, 0XB8);
@@ -20592,7 +20592,7 @@ L_800E4754:
     // 0x800E477C: jal         0x800F1870
     // 0x800E4780: addiu       $a3, $sp, 0xBC
     ctx->r7 = ADD32(ctx->r29, 0XBC);
-    func_800F1870(rdram, ctx);
+    tickProgressChannel(rdram, ctx);
         goto after_5;
     // 0x800E4780: addiu       $a3, $sp, 0xBC
     ctx->r7 = ADD32(ctx->r29, 0XBC);
@@ -20640,7 +20640,7 @@ L_800E4754:
     // 0x800E47CC: jal         0x800F2FCC
     // 0x800E47D0: addu        $a3, $a3, $s0
     ctx->r7 = ADD32(ctx->r7, ctx->r16);
-    func_800F2FCC(rdram, ctx);
+    triggerCueWithSlotEffect(rdram, ctx);
         goto after_6;
     // 0x800E47D0: addu        $a3, $a3, $s0
     ctx->r7 = ADD32(ctx->r7, ctx->r16);
@@ -20674,7 +20674,7 @@ L_800E4754:
     // 0x800E4808: jal         0x800F2FCC
     // 0x800E480C: addu        $a3, $a3, $s0
     ctx->r7 = ADD32(ctx->r7, ctx->r16);
-    func_800F2FCC(rdram, ctx);
+    triggerCueWithSlotEffect(rdram, ctx);
         goto after_7;
     // 0x800E480C: addu        $a3, $a3, $s0
     ctx->r7 = ADD32(ctx->r7, ctx->r16);
@@ -20708,7 +20708,7 @@ L_800E4754:
     // 0x800E4844: jal         0x800989D8
     // 0x800E4848: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_800989D8(rdram, ctx);
+    play3DSoundEvent(rdram, ctx);
         goto after_8;
     // 0x800E4848: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -20768,7 +20768,7 @@ RECOMP_FUNC void func_800E4874(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E48A0: jal         0x80058360
     // 0x800E48A4: addiu       $a3, $sp, 0x28
     ctx->r7 = ADD32(ctx->r29, 0X28);
-    func_80058360(rdram, ctx);
+    lookupHmtTextureByName(rdram, ctx);
         goto after_0;
     // 0x800E48A4: addiu       $a3, $sp, 0x28
     ctx->r7 = ADD32(ctx->r29, 0X28);
@@ -20818,7 +20818,7 @@ RECOMP_FUNC void func_800E4874(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E48F0: jal         0x800F0F94
     // 0x800E48F4: addiu       $a1, $sp, 0x28
     ctx->r5 = ADD32(ctx->r29, 0X28);
-    func_800F0F94(rdram, ctx);
+    resolveNpcAttachmentPos(rdram, ctx);
         goto after_1;
     // 0x800E48F4: addiu       $a1, $sp, 0x28
     ctx->r5 = ADD32(ctx->r29, 0X28);
@@ -20833,7 +20833,7 @@ L_800E48F8:
     // 0x800E4904: jal         0x800F1870
     // 0x800E4908: addiu       $a3, $sp, 0x58
     ctx->r7 = ADD32(ctx->r29, 0X58);
-    func_800F1870(rdram, ctx);
+    tickProgressChannel(rdram, ctx);
         goto after_2;
     // 0x800E4908: addiu       $a3, $sp, 0x58
     ctx->r7 = ADD32(ctx->r29, 0X58);
@@ -20883,7 +20883,7 @@ L_800E48F8:
     // 0x800E4958: jal         0x800F2FCC
     // 0x800E495C: addu        $a3, $v1, $a3
     ctx->r7 = ADD32(ctx->r3, ctx->r7);
-    func_800F2FCC(rdram, ctx);
+    triggerCueWithSlotEffect(rdram, ctx);
         goto after_3;
     // 0x800E495C: addu        $a3, $v1, $a3
     ctx->r7 = ADD32(ctx->r3, ctx->r7);
@@ -20917,7 +20917,7 @@ L_800E48F8:
     // 0x800E4994: jal         0x800989D8
     // 0x800E4998: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_800989D8(rdram, ctx);
+    play3DSoundEvent(rdram, ctx);
         goto after_4;
     // 0x800E4998: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -20975,7 +20975,7 @@ RECOMP_FUNC void func_800E49B4(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E49EC: jal         0x80058360
     // 0x800E49F0: addiu       $a3, $sp, 0x28
     ctx->r7 = ADD32(ctx->r29, 0X28);
-    func_80058360(rdram, ctx);
+    lookupHmtTextureByName(rdram, ctx);
         goto after_0;
     // 0x800E49F0: addiu       $a3, $sp, 0x28
     ctx->r7 = ADD32(ctx->r29, 0X28);
@@ -20997,7 +20997,7 @@ RECOMP_FUNC void func_800E49B4(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E4A10: jal         0x80058360
     // 0x800E4A14: addu        $a3, $s2, $zero
     ctx->r7 = ADD32(ctx->r18, 0);
-    func_80058360(rdram, ctx);
+    lookupHmtTextureByName(rdram, ctx);
         goto after_1;
     // 0x800E4A14: addu        $a3, $s2, $zero
     ctx->r7 = ADD32(ctx->r18, 0);
@@ -21047,7 +21047,7 @@ RECOMP_FUNC void func_800E49B4(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E4A60: jal         0x800F0F94
     // 0x800E4A64: addiu       $a1, $sp, 0x28
     ctx->r5 = ADD32(ctx->r29, 0X28);
-    func_800F0F94(rdram, ctx);
+    resolveNpcAttachmentPos(rdram, ctx);
         goto after_2;
     // 0x800E4A64: addiu       $a1, $sp, 0x28
     ctx->r5 = ADD32(ctx->r29, 0X28);
@@ -21067,7 +21067,7 @@ RECOMP_FUNC void func_800E49B4(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E4A80: jal         0x800F0F94
     // 0x800E4A84: addu        $a1, $s2, $zero
     ctx->r5 = ADD32(ctx->r18, 0);
-    func_800F0F94(rdram, ctx);
+    resolveNpcAttachmentPos(rdram, ctx);
         goto after_3;
     // 0x800E4A84: addu        $a1, $s2, $zero
     ctx->r5 = ADD32(ctx->r18, 0);
@@ -21082,7 +21082,7 @@ L_800E4A88:
     // 0x800E4A94: jal         0x800F1870
     // 0x800E4A98: addiu       $a3, $sp, 0x88
     ctx->r7 = ADD32(ctx->r29, 0X88);
-    func_800F1870(rdram, ctx);
+    tickProgressChannel(rdram, ctx);
         goto after_4;
     // 0x800E4A98: addiu       $a3, $sp, 0x88
     ctx->r7 = ADD32(ctx->r29, 0X88);
@@ -21106,7 +21106,7 @@ L_800E4A88:
     // 0x800E4AB4: jal         0x800F1870
     // 0x800E4AB8: addiu       $a3, $sp, 0x8C
     ctx->r7 = ADD32(ctx->r29, 0X8C);
-    func_800F1870(rdram, ctx);
+    tickProgressChannel(rdram, ctx);
         goto after_5;
     // 0x800E4AB8: addiu       $a3, $sp, 0x8C
     ctx->r7 = ADD32(ctx->r29, 0X8C);
@@ -21156,7 +21156,7 @@ L_800E4A88:
     // 0x800E4B08: jal         0x800F2FCC
     // 0x800E4B0C: addu        $a3, $a3, $s0
     ctx->r7 = ADD32(ctx->r7, ctx->r16);
-    func_800F2FCC(rdram, ctx);
+    triggerCueWithSlotEffect(rdram, ctx);
         goto after_6;
     // 0x800E4B0C: addu        $a3, $a3, $s0
     ctx->r7 = ADD32(ctx->r7, ctx->r16);
@@ -21192,7 +21192,7 @@ L_800E4A88:
     // 0x800E4B48: jal         0x800F2FCC
     // 0x800E4B4C: addu        $a3, $a3, $s0
     ctx->r7 = ADD32(ctx->r7, ctx->r16);
-    func_800F2FCC(rdram, ctx);
+    triggerCueWithSlotEffect(rdram, ctx);
         goto after_7;
     // 0x800E4B4C: addu        $a3, $a3, $s0
     ctx->r7 = ADD32(ctx->r7, ctx->r16);
@@ -21226,7 +21226,7 @@ L_800E4A88:
     // 0x800E4B84: jal         0x800989D8
     // 0x800E4B88: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_800989D8(rdram, ctx);
+    play3DSoundEvent(rdram, ctx);
         goto after_8;
     // 0x800E4B88: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -21303,7 +21303,7 @@ L_800E4BFC:
     // 0x800E4C00: jal         0x800F06BC
     // 0x800E4C04: nop
 
-    func_800F06BC(rdram, ctx);
+    isPendingChildNpcActive(rdram, ctx);
         goto after_0;
     // 0x800E4C04: nop
 
@@ -21380,7 +21380,7 @@ L_800E4C1C:
     // 0x800E4C74: jal         0x8001CC3C
     // 0x800E4C78: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CC3C(rdram, ctx);
+    buildRotationMatrixSlot0(rdram, ctx);
         goto after_1;
     // 0x800E4C78: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -21390,7 +21390,7 @@ L_800E4C1C:
     // 0x800E4C80: jal         0x8001CCCC
     // 0x800E4C84: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CCCC(rdram, ctx);
+    composeRotationMatrixSlot1(rdram, ctx);
         goto after_2;
     // 0x800E4C84: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -21402,7 +21402,7 @@ L_800E4C1C:
     // 0x800E4C90: jal         0x800193E8
     // 0x800E4C94: addiu       $a2, $s0, 0xC
     ctx->r6 = ADD32(ctx->r16, 0XC);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_3;
     // 0x800E4C94: addiu       $a2, $s0, 0xC
     ctx->r6 = ADD32(ctx->r16, 0XC);
@@ -21414,7 +21414,7 @@ L_800E4C1C:
     // 0x800E4CA0: jal         0x800193E8
     // 0x800E4CA4: addiu       $a2, $s0, 0x18
     ctx->r6 = ADD32(ctx->r16, 0X18);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_4;
     // 0x800E4CA4: addiu       $a2, $s0, 0x18
     ctx->r6 = ADD32(ctx->r16, 0X18);
@@ -21446,7 +21446,7 @@ L_800E4C1C:
     // 0x800E4CC4: jal         0x800F07AC
     // 0x800E4CC8: nop
 
-    func_800F07AC(rdram, ctx);
+    validateActorTargetLOS(rdram, ctx);
         goto after_5;
     // 0x800E4CC8: nop
 
@@ -21544,7 +21544,7 @@ L_800E4D44:
     // 0x800E4D44: jal         0x800F2D38
     // 0x800E4D48: nop
 
-    func_800F2D38(rdram, ctx);
+    applyToObjectSubstructByFlag(rdram, ctx);
         goto after_6;
     // 0x800E4D48: nop
 
@@ -21717,7 +21717,7 @@ L_800E4E5C:
     // 0x800E4E64: jal         0x80059B50
     // 0x800E4E68: addu        $a1, $s2, $zero
     ctx->r5 = ADD32(ctx->r18, 0);
-    func_80059B50(rdram, ctx);
+    mat34CrossRowsAndCopyPos(rdram, ctx);
         goto after_0;
     // 0x800E4E68: addu        $a1, $s2, $zero
     ctx->r5 = ADD32(ctx->r18, 0);
@@ -21727,7 +21727,7 @@ L_800E4E5C:
     // 0x800E4E70: jal         0x8001C774
     // 0x800E4E74: addiu       $a1, $sp, 0x10
     ctx->r5 = ADD32(ctx->r29, 0X10);
-    func_8001C774(rdram, ctx);
+    mat3x3InverseInto(rdram, ctx);
         goto after_1;
     // 0x800E4E74: addiu       $a1, $sp, 0x10
     ctx->r5 = ADD32(ctx->r29, 0X10);
@@ -21747,7 +21747,7 @@ L_800E4E5C:
     // 0x800E4E88: jal         0x800F06BC
     // 0x800E4E8C: addu        $s0, $zero, $zero
     ctx->r16 = ADD32(0, 0);
-    func_800F06BC(rdram, ctx);
+    isPendingChildNpcActive(rdram, ctx);
         goto after_2;
     // 0x800E4E8C: addu        $s0, $zero, $zero
     ctx->r16 = ADD32(0, 0);
@@ -21801,7 +21801,7 @@ L_800E4EC4:
     // 0x800E4EC8: jal         0x800F06BC
     // 0x800E4ECC: addu        $s0, $zero, $zero
     ctx->r16 = ADD32(0, 0);
-    func_800F06BC(rdram, ctx);
+    isPendingChildNpcActive(rdram, ctx);
         goto after_3;
     // 0x800E4ECC: addu        $s0, $zero, $zero
     ctx->r16 = ADD32(0, 0);
@@ -21824,7 +21824,7 @@ L_800E4EE0:
     // 0x800E4EE4: jal         0x800F09A8
     // 0x800E4EE8: nop
 
-    func_800F09A8(rdram, ctx);
+    computeActorAnchorDeltaAfterLOS(rdram, ctx);
         goto after_4;
     // 0x800E4EE8: nop
 
@@ -21884,7 +21884,7 @@ L_800E4F00:
     // 0x800E4F3C: jal         0x800F06BC
     // 0x800E4F40: swc1        $f0, 0x10($s2)
     MEM_W(0X10, ctx->r18) = ctx->f0.u32l;
-    func_800F06BC(rdram, ctx);
+    isPendingChildNpcActive(rdram, ctx);
         goto after_5;
     // 0x800E4F40: swc1        $f0, 0x10($s2)
     MEM_W(0X10, ctx->r18) = ctx->f0.u32l;
@@ -21906,7 +21906,7 @@ L_800E4F00:
     // 0x800E4F58: jal         0x800F09A8
     // 0x800E4F5C: nop
 
-    func_800F09A8(rdram, ctx);
+    computeActorAnchorDeltaAfterLOS(rdram, ctx);
         goto after_6;
     // 0x800E4F5C: nop
 
@@ -21949,7 +21949,7 @@ L_800E4F8C:
     // 0x800E4F98: jal         0x800F2988
     // 0x800E4F9C: addiu       $a1, $sp, 0xA0
     ctx->r5 = ADD32(ctx->r29, 0XA0);
-    func_800F2988(rdram, ctx);
+    getObjectMeshTransformOrLocal(rdram, ctx);
         goto after_7;
     // 0x800E4F9C: addiu       $a1, $sp, 0xA0
     ctx->r5 = ADD32(ctx->r29, 0XA0);
@@ -21989,7 +21989,7 @@ L_800E4F8C:
     // 0x800E4FD8: jal         0x800193E8
     // 0x800E4FDC: addu        $a2, $fp, $zero
     ctx->r6 = ADD32(ctx->r30, 0);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_9;
     // 0x800E4FDC: addu        $a2, $fp, $zero
     ctx->r6 = ADD32(ctx->r30, 0);
@@ -22097,7 +22097,7 @@ L_800E4F8C:
     // 0x800E5078: jal         0x8001CFA0
     // 0x800E507C: swc1        $f0, 0x88($sp)
     MEM_W(0X88, ctx->r29) = ctx->f0.u32l;
-    func_8001CFA0(rdram, ctx);
+    vec3NormalizeInto(rdram, ctx);
         goto after_10;
     // 0x800E507C: swc1        $f0, 0x88($sp)
     MEM_W(0X88, ctx->r29) = ctx->f0.u32l;
@@ -22129,7 +22129,7 @@ L_800E4F8C:
     // 0x800E50A8: jal         0x8001CC3C
     // 0x800E50AC: addiu       $a0, $sp, 0x10
     ctx->r4 = ADD32(ctx->r29, 0X10);
-    func_8001CC3C(rdram, ctx);
+    buildRotationMatrixSlot0(rdram, ctx);
         goto after_11;
     // 0x800E50AC: addiu       $a0, $sp, 0x10
     ctx->r4 = ADD32(ctx->r29, 0X10);
@@ -22139,7 +22139,7 @@ L_800E4F8C:
     // 0x800E50B4: jal         0x8001CCCC
     // 0x800E50B8: addiu       $a0, $sp, 0x10
     ctx->r4 = ADD32(ctx->r29, 0X10);
-    func_8001CCCC(rdram, ctx);
+    composeRotationMatrixSlot1(rdram, ctx);
         goto after_12;
     // 0x800E50B8: addiu       $a0, $sp, 0x10
     ctx->r4 = ADD32(ctx->r29, 0X10);
@@ -22151,7 +22151,7 @@ L_800E4F8C:
     // 0x800E50C4: jal         0x800193E8
     // 0x800E50C8: addu        $a2, $fp, $zero
     ctx->r6 = ADD32(ctx->r30, 0);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_13;
     // 0x800E50C8: addu        $a2, $fp, $zero
     ctx->r6 = ADD32(ctx->r30, 0);
@@ -22161,7 +22161,7 @@ L_800E4F8C:
     // 0x800E50D0: jal         0x8001CFE8
     // 0x800E50D4: addu        $a0, $fp, $zero
     ctx->r4 = ADD32(ctx->r30, 0);
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_14;
     // 0x800E50D4: addu        $a0, $fp, $zero
     ctx->r4 = ADD32(ctx->r30, 0);
@@ -22171,7 +22171,7 @@ L_800E4F8C:
     CHECK_FR(ctx, 12);
     CHECK_FR(ctx, 0);
     ctx->f12.fl = ctx->f0.fl;
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_15;
     // 0x800E50DC: mov.s       $f12, $f0
     CHECK_FR(ctx, 12);
@@ -22250,7 +22250,7 @@ L_800E5120:
     // 0x800E5128: jal         0x80019548
     // 0x800E512C: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
-    func_80019548(rdram, ctx);
+    vec3Cross(rdram, ctx);
         goto after_16;
     // 0x800E512C: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
@@ -22272,7 +22272,7 @@ L_800E5120:
     // 0x800E5144: jal         0x8001D240
     // 0x800E5148: addu        $a1, $s3, $zero
     ctx->r5 = ADD32(ctx->r19, 0);
-    func_8001D240(rdram, ctx);
+    quatFromAxisAngle(rdram, ctx);
         goto after_18;
     // 0x800E5148: addu        $a1, $s3, $zero
     ctx->r5 = ADD32(ctx->r19, 0);
@@ -22284,7 +22284,7 @@ L_800E5120:
     // 0x800E5154: jal         0x8001D3C4
     // 0x800E5158: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
-    func_8001D3C4(rdram, ctx);
+    rotateVec3ByQuat(rdram, ctx);
         goto after_19;
     // 0x800E5158: addu        $a1, $fp, $zero
     ctx->r5 = ADD32(ctx->r30, 0);
@@ -22304,7 +22304,7 @@ L_800E5120:
     // 0x800E5174: jal         0x8001CFE8
     // 0x800E5178: swc1        $f2, 0xD8($sp)
     MEM_W(0XD8, ctx->r29) = ctx->f2.u32l;
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_20;
     // 0x800E5178: swc1        $f2, 0xD8($sp)
     MEM_W(0XD8, ctx->r29) = ctx->f2.u32l;
@@ -22316,7 +22316,7 @@ L_800E5120:
     CHECK_FR(ctx, 22);
     CHECK_FR(ctx, 0);
     ctx->f22.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_21;
     // 0x800E5184: mov.s       $f22, $f0
     CHECK_FR(ctx, 22);
@@ -22330,7 +22330,7 @@ L_800E5120:
     CHECK_FR(ctx, 20);
     CHECK_FR(ctx, 0);
     ctx->f20.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_22;
     // 0x800E5190: mov.s       $f20, $f0
     CHECK_FR(ctx, 20);
@@ -22350,7 +22350,7 @@ L_800E5120:
     CHECK_FR(ctx, 20);
     NAN_CHECK(ctx->f22.fl); NAN_CHECK(ctx->f20.fl); 
     ctx->f12.fl = DIV_S(ctx->f22.fl, ctx->f20.fl);
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_23;
     // 0x800E519C: div.s       $f12, $f22, $f20
     CHECK_FR(ctx, 12);
@@ -22404,7 +22404,7 @@ L_800E5120:
     // 0x800E51EC: jal         0x80019548
     // 0x800E51F0: sw          $zero, 0x114($sp)
     MEM_W(0X114, ctx->r29) = 0;
-    func_80019548(rdram, ctx);
+    vec3Cross(rdram, ctx);
         goto after_24;
     // 0x800E51F0: sw          $zero, 0x114($sp)
     MEM_W(0X114, ctx->r29) = 0;
@@ -22464,7 +22464,7 @@ L_800E5208:
     // 0x800E5230: jal         0x8001CD6C
     // 0x800E5234: addiu       $a0, $sp, 0x10
     ctx->r4 = ADD32(ctx->r29, 0X10);
-    func_8001CD6C(rdram, ctx);
+    buildRotationMatrixSlot1(rdram, ctx);
         goto after_25;
     // 0x800E5234: addiu       $a0, $sp, 0x10
     ctx->r4 = ADD32(ctx->r29, 0X10);
@@ -22476,7 +22476,7 @@ L_800E5208:
     // 0x800E5240: jal         0x800193E8
     // 0x800E5244: addu        $a2, $s3, $zero
     ctx->r6 = ADD32(ctx->r19, 0);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_26;
     // 0x800E5244: addu        $a2, $s3, $zero
     ctx->r6 = ADD32(ctx->r19, 0);
@@ -22510,7 +22510,7 @@ L_800E5208:
     // 0x800E5274: jal         0x8001CFE8
     // 0x800E5278: swc1        $f0, 0x74($s1)
     MEM_W(0X74, ctx->r17) = ctx->f0.u32l;
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_27;
     // 0x800E5278: swc1        $f0, 0x74($s1)
     MEM_W(0X74, ctx->r17) = ctx->f0.u32l;
@@ -22522,7 +22522,7 @@ L_800E5208:
     CHECK_FR(ctx, 22);
     CHECK_FR(ctx, 0);
     ctx->f22.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_28;
     // 0x800E5284: mov.s       $f22, $f0
     CHECK_FR(ctx, 22);
@@ -22536,7 +22536,7 @@ L_800E5208:
     CHECK_FR(ctx, 20);
     CHECK_FR(ctx, 0);
     ctx->f20.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_29;
     // 0x800E5290: mov.s       $f20, $f0
     CHECK_FR(ctx, 20);
@@ -22556,7 +22556,7 @@ L_800E5208:
     CHECK_FR(ctx, 20);
     NAN_CHECK(ctx->f22.fl); NAN_CHECK(ctx->f20.fl); 
     ctx->f12.fl = DIV_S(ctx->f22.fl, ctx->f20.fl);
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_30;
     // 0x800E529C: div.s       $f12, $f22, $f20
     CHECK_FR(ctx, 12);
@@ -22946,7 +22946,7 @@ L_800E5464:
     // 0x800E5468: jal         0x8001CC3C
     // 0x800E546C: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
-    func_8001CC3C(rdram, ctx);
+    buildRotationMatrixSlot0(rdram, ctx);
         goto after_31;
     // 0x800E546C: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
@@ -22956,7 +22956,7 @@ L_800E5464:
     // 0x800E5474: jal         0x8001CCCC
     // 0x800E5478: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
-    func_8001CCCC(rdram, ctx);
+    composeRotationMatrixSlot1(rdram, ctx);
         goto after_32;
     // 0x800E5478: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
@@ -22968,7 +22968,7 @@ L_800E5464:
     // 0x800E5484: jal         0x800193E8
     // 0x800E5488: addu        $a1, $s6, $zero
     ctx->r5 = ADD32(ctx->r22, 0);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_33;
     // 0x800E5488: addu        $a1, $s6, $zero
     ctx->r5 = ADD32(ctx->r22, 0);
@@ -22978,7 +22978,7 @@ L_800E5464:
     // 0x800E5490: jal         0x8001CFE8
     // 0x800E5494: addu        $a0, $s6, $zero
     ctx->r4 = ADD32(ctx->r22, 0);
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_34;
     // 0x800E5494: addu        $a0, $s6, $zero
     ctx->r4 = ADD32(ctx->r22, 0);
@@ -22988,7 +22988,7 @@ L_800E5464:
     CHECK_FR(ctx, 12);
     CHECK_FR(ctx, 0);
     ctx->f12.fl = ctx->f0.fl;
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_35;
     // 0x800E549C: mov.s       $f12, $f0
     CHECK_FR(ctx, 12);
@@ -23067,7 +23067,7 @@ L_800E54E0:
     // 0x800E54E8: jal         0x80019548
     // 0x800E54EC: addu        $a2, $s6, $zero
     ctx->r6 = ADD32(ctx->r22, 0);
-    func_80019548(rdram, ctx);
+    vec3Cross(rdram, ctx);
         goto after_36;
     // 0x800E54EC: addu        $a2, $s6, $zero
     ctx->r6 = ADD32(ctx->r22, 0);
@@ -23089,7 +23089,7 @@ L_800E54E0:
     // 0x800E5504: jal         0x8001D240
     // 0x800E5508: addu        $a1, $s5, $zero
     ctx->r5 = ADD32(ctx->r21, 0);
-    func_8001D240(rdram, ctx);
+    quatFromAxisAngle(rdram, ctx);
         goto after_38;
     // 0x800E5508: addu        $a1, $s5, $zero
     ctx->r5 = ADD32(ctx->r21, 0);
@@ -23101,7 +23101,7 @@ L_800E54E0:
     // 0x800E5514: jal         0x8001D3C4
     // 0x800E5518: addiu       $a2, $sp, 0x100
     ctx->r6 = ADD32(ctx->r29, 0X100);
-    func_8001D3C4(rdram, ctx);
+    rotateVec3ByQuat(rdram, ctx);
         goto after_39;
     // 0x800E5518: addiu       $a2, $sp, 0x100
     ctx->r6 = ADD32(ctx->r29, 0X100);
@@ -23121,7 +23121,7 @@ L_800E54E0:
     // 0x800E5534: jal         0x8001CFE8
     // 0x800E5538: swc1        $f2, 0x128($sp)
     MEM_W(0X128, ctx->r29) = ctx->f2.u32l;
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_40;
     // 0x800E5538: swc1        $f2, 0x128($sp)
     MEM_W(0X128, ctx->r29) = ctx->f2.u32l;
@@ -23133,7 +23133,7 @@ L_800E54E0:
     CHECK_FR(ctx, 22);
     CHECK_FR(ctx, 0);
     ctx->f22.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_41;
     // 0x800E5544: mov.s       $f22, $f0
     CHECK_FR(ctx, 22);
@@ -23147,7 +23147,7 @@ L_800E54E0:
     CHECK_FR(ctx, 20);
     CHECK_FR(ctx, 0);
     ctx->f20.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_42;
     // 0x800E5550: mov.s       $f20, $f0
     CHECK_FR(ctx, 20);
@@ -23167,7 +23167,7 @@ L_800E54E0:
     CHECK_FR(ctx, 20);
     NAN_CHECK(ctx->f22.fl); NAN_CHECK(ctx->f20.fl); 
     ctx->f12.fl = DIV_S(ctx->f22.fl, ctx->f20.fl);
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_43;
     // 0x800E555C: div.s       $f12, $f22, $f20
     CHECK_FR(ctx, 12);
@@ -23221,7 +23221,7 @@ L_800E54E0:
     // 0x800E55AC: jal         0x80019548
     // 0x800E55B0: sw          $zero, 0x164($sp)
     MEM_W(0X164, ctx->r29) = 0;
-    func_80019548(rdram, ctx);
+    vec3Cross(rdram, ctx);
         goto after_44;
     // 0x800E55B0: sw          $zero, 0x164($sp)
     MEM_W(0X164, ctx->r29) = 0;
@@ -23261,7 +23261,7 @@ L_800E55C8:
     // 0x800E55D0: jal         0x8001CD6C
     // 0x800E55D4: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
-    func_8001CD6C(rdram, ctx);
+    buildRotationMatrixSlot1(rdram, ctx);
         goto after_45;
     // 0x800E55D4: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
@@ -23273,7 +23273,7 @@ L_800E55C8:
     // 0x800E55E0: jal         0x800193E8
     // 0x800E55E4: addu        $a2, $s5, $zero
     ctx->r6 = ADD32(ctx->r21, 0);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_46;
     // 0x800E55E4: addu        $a2, $s5, $zero
     ctx->r6 = ADD32(ctx->r21, 0);
@@ -23287,7 +23287,7 @@ L_800E55C8:
     // 0x800E55F4: jal         0x8001CFE8
     // 0x800E55F8: swc1        $f20, 0x74($s1)
     MEM_W(0X74, ctx->r17) = ctx->f20.u32l;
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_47;
     // 0x800E55F8: swc1        $f20, 0x74($s1)
     MEM_W(0X74, ctx->r17) = ctx->f20.u32l;
@@ -23299,7 +23299,7 @@ L_800E55C8:
     CHECK_FR(ctx, 20);
     CHECK_FR(ctx, 0);
     ctx->f20.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_48;
     // 0x800E5604: mov.s       $f20, $f0
     CHECK_FR(ctx, 20);
@@ -23313,7 +23313,7 @@ L_800E55C8:
     CHECK_FR(ctx, 22);
     CHECK_FR(ctx, 0);
     ctx->f22.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_49;
     // 0x800E5610: mov.s       $f22, $f0
     CHECK_FR(ctx, 22);
@@ -23333,7 +23333,7 @@ L_800E55C8:
     CHECK_FR(ctx, 22);
     NAN_CHECK(ctx->f20.fl); NAN_CHECK(ctx->f22.fl); 
     ctx->f12.fl = DIV_S(ctx->f20.fl, ctx->f22.fl);
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_50;
     // 0x800E561C: div.s       $f12, $f20, $f22
     CHECK_FR(ctx, 12);
@@ -23483,7 +23483,7 @@ RECOMP_FUNC void func_800E56AC(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E56E8: jal         0x80059B50
     // 0x800E56EC: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_80059B50(rdram, ctx);
+    mat34CrossRowsAndCopyPos(rdram, ctx);
         goto after_0;
     // 0x800E56EC: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -23536,7 +23536,7 @@ L_800E571C:
     // 0x800E5730: jal         0x8001CA50
     // 0x800E5734: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA50(rdram, ctx);
+    clearVec4QuadStruct(rdram, ctx);
         goto after_2;
     // 0x800E5734: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -23583,7 +23583,7 @@ L_800E571C:
     // 0x800E576C: jal         0x8001CA90
     // 0x800E5770: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA90(rdram, ctx);
+    addVec3At0x24(rdram, ctx);
         goto after_3;
     // 0x800E5770: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -23610,7 +23610,7 @@ L_800E5774:
     // 0x800E5790: jal         0x8001CB04
     // 0x800E5794: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CB04(rdram, ctx);
+    applyScaleToMat3x4(rdram, ctx);
         goto after_4;
     // 0x800E5794: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -23631,7 +23631,7 @@ L_800E5798:
     // 0x800E57A8: jal         0x8001DAEC
     // 0x800E57AC: addiu       $a1, $s0, 0x68
     ctx->r5 = ADD32(ctx->r16, 0X68);
-    func_8001DAEC(rdram, ctx);
+    composeQuatToMat3x4(rdram, ctx);
         goto after_5;
     // 0x800E57AC: addiu       $a1, $s0, 0x68
     ctx->r5 = ADD32(ctx->r16, 0X68);
@@ -23642,7 +23642,7 @@ L_800E57B0:
     // 0x800E57B4: jal         0x8001CCCC
     // 0x800E57B8: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CCCC(rdram, ctx);
+    composeRotationMatrixSlot1(rdram, ctx);
         goto after_6;
     // 0x800E57B8: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -23741,7 +23741,7 @@ L_800E5834:
     // 0x800E5834: jal         0x8001CA90
     // 0x800E5838: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA90(rdram, ctx);
+    addVec3At0x24(rdram, ctx);
         goto after_7;
     // 0x800E5838: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -23764,7 +23764,7 @@ L_800E583C:
     // 0x800E5850: jal         0x8001CA50
     // 0x800E5854: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA50(rdram, ctx);
+    clearVec4QuadStruct(rdram, ctx);
         goto after_8;
     // 0x800E5854: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -23811,7 +23811,7 @@ L_800E583C:
     // 0x800E588C: jal         0x8001CA90
     // 0x800E5890: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA90(rdram, ctx);
+    addVec3At0x24(rdram, ctx);
         goto after_9;
     // 0x800E5890: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -23838,7 +23838,7 @@ L_800E5894:
     // 0x800E58B0: jal         0x8001CB04
     // 0x800E58B4: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CB04(rdram, ctx);
+    applyScaleToMat3x4(rdram, ctx);
         goto after_10;
     // 0x800E58B4: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -23859,7 +23859,7 @@ L_800E58B8:
     // 0x800E58C8: jal         0x8001DAEC
     // 0x800E58CC: addiu       $a1, $s0, 0x68
     ctx->r5 = ADD32(ctx->r16, 0X68);
-    func_8001DAEC(rdram, ctx);
+    composeQuatToMat3x4(rdram, ctx);
         goto after_11;
     // 0x800E58CC: addiu       $a1, $s0, 0x68
     ctx->r5 = ADD32(ctx->r16, 0X68);
@@ -23911,7 +23911,7 @@ L_800E58D0:
     // 0x800E5910: jal         0x8001CA90
     // 0x800E5914: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA90(rdram, ctx);
+    addVec3At0x24(rdram, ctx);
         goto after_12;
     // 0x800E5914: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -23922,7 +23922,7 @@ L_800E5918:
     // 0x800E591C: jal         0x8001CB9C
     // 0x800E5920: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CB9C(rdram, ctx);
+    composeRotationMatrixSlot0(rdram, ctx);
         goto after_13;
     // 0x800E5920: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -24021,7 +24021,7 @@ L_800E599C:
     // 0x800E599C: jal         0x8001CA90
     // 0x800E59A0: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA90(rdram, ctx);
+    addVec3At0x24(rdram, ctx);
         goto after_14;
     // 0x800E59A0: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -24046,7 +24046,7 @@ L_800E59A4:
     // 0x800E59B8: jal         0x8001CA50
     // 0x800E59BC: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA50(rdram, ctx);
+    clearVec4QuadStruct(rdram, ctx);
         goto after_15;
     // 0x800E59BC: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -24093,7 +24093,7 @@ L_800E59A4:
     // 0x800E59F4: jal         0x8001CA90
     // 0x800E59F8: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA90(rdram, ctx);
+    addVec3At0x24(rdram, ctx);
         goto after_16;
     // 0x800E59F8: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -24120,7 +24120,7 @@ L_800E59FC:
     // 0x800E5A18: jal         0x8001CB04
     // 0x800E5A1C: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CB04(rdram, ctx);
+    applyScaleToMat3x4(rdram, ctx);
         goto after_17;
     // 0x800E5A1C: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -24141,7 +24141,7 @@ L_800E5A20:
     // 0x800E5A30: jal         0x8001DAEC
     // 0x800E5A34: addiu       $a1, $s0, 0x68
     ctx->r5 = ADD32(ctx->r16, 0X68);
-    func_8001DAEC(rdram, ctx);
+    composeQuatToMat3x4(rdram, ctx);
         goto after_18;
     // 0x800E5A34: addiu       $a1, $s0, 0x68
     ctx->r5 = ADD32(ctx->r16, 0X68);
@@ -24183,7 +24183,7 @@ L_800E5A38:
     // 0x800E5A6C: jal         0x8001CA90
     // 0x800E5A70: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA90(rdram, ctx);
+    addVec3At0x24(rdram, ctx);
         goto after_19;
     // 0x800E5A70: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -24284,7 +24284,7 @@ L_800E5AEC:
     // 0x800E5AEC: jal         0x8001CA90
     // 0x800E5AF0: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_8001CA90(rdram, ctx);
+    addVec3At0x24(rdram, ctx);
         goto after_20;
     // 0x800E5AF0: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -24333,7 +24333,7 @@ L_800E5B08:
     // 0x800E5B34: addiu       $sp, $sp, 0x40
     ctx->r29 = ADD32(ctx->r29, 0X40);
 ;}
-RECOMP_FUNC void func_800E5B38(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void npcWaterCraftHandleDestruction(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x800E5B38: addiu       $sp, $sp, -0x98
@@ -24406,7 +24406,7 @@ L_800E5B98:
     // 0x800E5BA0: jal         0x8006AC7C
     // 0x800E5BA4: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
-    func_8006AC7C(rdram, ctx);
+    transformMeshPartIntoWorld(rdram, ctx);
         goto after_0;
     // 0x800E5BA4: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
@@ -24440,7 +24440,7 @@ L_800E5B98:
     // 0x800E5BCC: jal         0x800612A4
     // 0x800E5BD0: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_800612A4(rdram, ctx);
+    spawnNpcType0xAFromTemplate(rdram, ctx);
         goto after_1;
     // 0x800E5BD0: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -24448,7 +24448,7 @@ L_800E5B98:
     // 0x800E5BD4: jal         0x8005EBD8
     // 0x800E5BD8: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
-    func_8005EBD8(rdram, ctx);
+    spawnByteAnimDebrisDefault(rdram, ctx);
         goto after_2;
     // 0x800E5BD8: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
@@ -24523,7 +24523,7 @@ L_800E5C28:
     // 0x800E5C44: jal         0x800989D8
     // 0x800E5C48: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_800989D8(rdram, ctx);
+    play3DSoundEvent(rdram, ctx);
         goto after_3;
     // 0x800E5C48: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -24603,7 +24603,7 @@ L_800E5C9C:
     // 0x800E5CC0: jal         0x8007202C
     // 0x800E5CC4: sw          $zero, 0x14($sp)
     MEM_W(0X14, ctx->r29) = 0;
-    func_8007202C(rdram, ctx);
+    composeRandomRotationMatrix(rdram, ctx);
         goto after_5;
     // 0x800E5CC4: sw          $zero, 0x14($sp)
     MEM_W(0X14, ctx->r29) = 0;
@@ -24651,7 +24651,7 @@ L_800E5C9C:
     // 0x800E5D00: jal         0x80072300
     // 0x800E5D04: swc1        $f0, 0x30($sp)
     MEM_W(0X30, ctx->r29) = ctx->f0.u32l;
-    func_80072300(rdram, ctx);
+    scaleVec3ByRandomRange(rdram, ctx);
         goto after_6;
     // 0x800E5D04: swc1        $f0, 0x30($sp)
     MEM_W(0X30, ctx->r29) = ctx->f0.u32l;
@@ -24814,7 +24814,7 @@ L_800E5C9C:
     // 0x800E5DB0: jal         0x80072384
     // 0x800E5DB4: swc1        $f2, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f2.u32l;
-    func_80072384(rdram, ctx);
+    spawnDebris1Npc(rdram, ctx);
         goto after_10;
     // 0x800E5DB4: swc1        $f2, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f2.u32l;
@@ -24890,7 +24890,7 @@ L_800E5E0C:
     // 0x800E5E10: jal         0x8006AC7C
     // 0x800E5E14: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
-    func_8006AC7C(rdram, ctx);
+    transformMeshPartIntoWorld(rdram, ctx);
         goto after_11;
     // 0x800E5E14: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
@@ -24924,7 +24924,7 @@ L_800E5E0C:
     // 0x800E5E3C: jal         0x800612A4
     // 0x800E5E40: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_800612A4(rdram, ctx);
+    spawnNpcType0xAFromTemplate(rdram, ctx);
         goto after_12;
     // 0x800E5E40: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -24932,7 +24932,7 @@ L_800E5E0C:
     // 0x800E5E44: jal         0x8005EBD8
     // 0x800E5E48: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
-    func_8005EBD8(rdram, ctx);
+    spawnByteAnimDebrisDefault(rdram, ctx);
         goto after_13;
     // 0x800E5E48: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
@@ -25007,7 +25007,7 @@ L_800E5E98:
     // 0x800E5EB4: jal         0x800989D8
     // 0x800E5EB8: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_800989D8(rdram, ctx);
+    play3DSoundEvent(rdram, ctx);
         goto after_14;
     // 0x800E5EB8: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -25060,7 +25060,7 @@ L_800E5EC4:
     // 0x800E5F04: jal         0x80072684
     // 0x800E5F08: swc1        $f0, 0x14($sp)
     MEM_W(0X14, ctx->r29) = ctx->f0.u32l;
-    func_80072684(rdram, ctx);
+    spawnOrientedNpc(rdram, ctx);
         goto after_15;
     // 0x800E5F08: swc1        $f0, 0x14($sp)
     MEM_W(0X14, ctx->r29) = ctx->f0.u32l;
@@ -25106,7 +25106,7 @@ L_800E5EC4:
     // 0x800E5F48: jal         0x80072684
     // 0x800E5F4C: swc1        $f0, 0x14($sp)
     MEM_W(0X14, ctx->r29) = ctx->f0.u32l;
-    func_80072684(rdram, ctx);
+    spawnOrientedNpc(rdram, ctx);
         goto after_16;
     // 0x800E5F4C: swc1        $f0, 0x14($sp)
     MEM_W(0X14, ctx->r29) = ctx->f0.u32l;
@@ -25187,7 +25187,7 @@ L_800E5FA4:
     // 0x800E5FC8: jal         0x8007202C
     // 0x800E5FCC: sw          $zero, 0x14($sp)
     MEM_W(0X14, ctx->r29) = 0;
-    func_8007202C(rdram, ctx);
+    composeRandomRotationMatrix(rdram, ctx);
         goto after_18;
     // 0x800E5FCC: sw          $zero, 0x14($sp)
     MEM_W(0X14, ctx->r29) = 0;
@@ -25235,7 +25235,7 @@ L_800E5FA4:
     // 0x800E6008: jal         0x80072300
     // 0x800E600C: swc1        $f0, 0x30($sp)
     MEM_W(0X30, ctx->r29) = ctx->f0.u32l;
-    func_80072300(rdram, ctx);
+    scaleVec3ByRandomRange(rdram, ctx);
         goto after_19;
     // 0x800E600C: swc1        $f0, 0x30($sp)
     MEM_W(0X30, ctx->r29) = ctx->f0.u32l;
@@ -25398,7 +25398,7 @@ L_800E5FA4:
     // 0x800E60B8: jal         0x80072384
     // 0x800E60BC: swc1        $f2, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f2.u32l;
-    func_80072384(rdram, ctx);
+    spawnDebris1Npc(rdram, ctx);
         goto after_23;
     // 0x800E60BC: swc1        $f2, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f2.u32l;
@@ -25667,7 +25667,7 @@ L_800E6228:
     // 0x800E6228: jal         0x80056EB0
     // 0x800E622C: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_80056EB0(rdram, ctx);
+    walkMeshdef0List(rdram, ctx);
         goto after_1;
     // 0x800E622C: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -25725,7 +25725,7 @@ L_800E6258:
     // 0x800E6280: jal         0x80059D78
     // 0x800E6284: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
-    func_80059D78(rdram, ctx);
+    composeEulerRotationXYZ(rdram, ctx);
         goto after_2;
     // 0x800E6284: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
@@ -25799,7 +25799,7 @@ L_800E6258:
     // 0x800E62E4: jal         0x8001CB64
     // 0x800E62E8: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_8001CB64(rdram, ctx);
+    initVec4TripletFromArgs(rdram, ctx);
         goto after_3;
     // 0x800E62E8: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -25811,7 +25811,7 @@ L_800E6258:
     // 0x800E62F4: jal         0x8001CB9C
     // 0x800E62F8: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_8001CB9C(rdram, ctx);
+    composeRotationMatrixSlot0(rdram, ctx);
         goto after_4;
     // 0x800E62F8: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -25823,7 +25823,7 @@ L_800E6258:
     // 0x800E6304: jal         0x8001CCCC
     // 0x800E6308: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_8001CCCC(rdram, ctx);
+    composeRotationMatrixSlot1(rdram, ctx);
         goto after_5;
     // 0x800E6308: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -25835,7 +25835,7 @@ L_800E6258:
     // 0x800E6314: jal         0x8001CDFC
     // 0x800E6318: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_8001CDFC(rdram, ctx);
+    composeRotationMatrixSlot2(rdram, ctx);
         goto after_6;
     // 0x800E6318: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -25851,7 +25851,7 @@ L_800E6258:
     // 0x800E632C: jal         0x8001CA90
     // 0x800E6330: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_8001CA90(rdram, ctx);
+    addVec3At0x24(rdram, ctx);
         goto after_7;
     // 0x800E6330: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -25972,7 +25972,7 @@ L_800E63BC:
     // 0x800E63E4: jal         0x80059434
     // 0x800E63E8: addu        $a2, $s3, $s4
     ctx->r6 = ADD32(ctx->r19, ctx->r20);
-    func_80059434(rdram, ctx);
+    lookupHmtMaterialByName(rdram, ctx);
         goto after_9;
     // 0x800E63E8: addu        $a2, $s3, $s4
     ctx->r6 = ADD32(ctx->r19, ctx->r20);
@@ -26007,7 +26007,7 @@ L_800E63F0:
     // 0x800E6418: jal         0x80059434
     // 0x800E641C: addu        $a2, $s3, $s5
     ctx->r6 = ADD32(ctx->r19, ctx->r21);
-    func_80059434(rdram, ctx);
+    lookupHmtMaterialByName(rdram, ctx);
         goto after_10;
     // 0x800E641C: addu        $a2, $s3, $s5
     ctx->r6 = ADD32(ctx->r19, ctx->r21);
@@ -26049,7 +26049,7 @@ L_800E642C:
     // 0x800E6454: jal         0x80059434
     // 0x800E6458: addu        $a2, $s3, $s6
     ctx->r6 = ADD32(ctx->r19, ctx->r22);
-    func_80059434(rdram, ctx);
+    lookupHmtMaterialByName(rdram, ctx);
         goto after_11;
     // 0x800E6458: addu        $a2, $s3, $s6
     ctx->r6 = ADD32(ctx->r19, ctx->r22);
@@ -26095,7 +26095,7 @@ L_800E6468:
     // 0x800E6498: jal         0x8003E684
     // 0x800E649C: addiu       $s4, $zero, 0x1
     ctx->r20 = ADD32(0, 0X1);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_12;
     // 0x800E649C: addiu       $s4, $zero, 0x1
     ctx->r20 = ADD32(0, 0X1);
@@ -26126,7 +26126,7 @@ L_800E64B8:
     // 0x800E64C4: jal         0x8003E684
     // 0x800E64C8: nop
 
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_13;
     // 0x800E64C8: nop
 
@@ -26155,7 +26155,7 @@ L_800E64E0:
     // 0x800E64EC: jal         0x8003E684
     // 0x800E64F0: nop
 
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_14;
     // 0x800E64F0: nop
 
@@ -26194,7 +26194,7 @@ L_800E6514:
     // 0x800E6520: jal         0x8003E684
     // 0x800E6524: nop
 
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_15;
     // 0x800E6524: nop
 
@@ -26222,7 +26222,7 @@ L_800E6534:
     // 0x800E6548: jal         0x800EC588
     // 0x800E654C: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
-    func_800EC588(rdram, ctx);
+    createAndInitObject(rdram, ctx);
         goto after_16;
     // 0x800E654C: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
@@ -26276,7 +26276,7 @@ L_800E6534:
     // 0x800E659C: jal         0x800F947C
     // 0x800E65A0: addu        $a1, $v0, $zero
     ctx->r5 = ADD32(ctx->r2, 0);
-    func_800F947C(rdram, ctx);
+    initActorAsType1(rdram, ctx);
         goto after_18;
     // 0x800E65A0: addu        $a1, $v0, $zero
     ctx->r5 = ADD32(ctx->r2, 0);
@@ -26288,7 +26288,7 @@ L_800E6534:
     // 0x800E65AC: jal         0x800F9AF4
     // 0x800E65B0: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
-    func_800F9AF4(rdram, ctx);
+    updateObjectFlags110(rdram, ctx);
         goto after_19;
     // 0x800E65B0: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
@@ -26302,7 +26302,7 @@ L_800E6534:
     // 0x800E65C0: jal         0x800F97F4
     // 0x800E65C4: nop
 
-    func_800F97F4(rdram, ctx);
+    setType1ActorField40(rdram, ctx);
         goto after_20;
     // 0x800E65C4: nop
 
@@ -26407,7 +26407,7 @@ L_800E6664:
     // 0x800E666C: jal         0x80098BDC
     // 0x800E6670: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_80098BDC(rdram, ctx);
+    play3DSoundEventVariant(rdram, ctx);
         goto after_21;
     // 0x800E6670: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -26471,7 +26471,7 @@ L_800E6680:
     // 0x800E66C0: jal         0x8006BD18
     // 0x800E66C4: nop
 
-    func_8006BD18(rdram, ctx);
+    allocateAndInitCraftNpcContext(rdram, ctx);
         goto after_22;
     // 0x800E66C4: nop
 
@@ -26554,7 +26554,7 @@ L_800E6750:
     // 0x800E6754: jal         0x80071308
     // 0x800E6758: addiu       $a0, $s3, 0x100
     ctx->r4 = ADD32(ctx->r19, 0X100);
-    func_80071308(rdram, ctx);
+    dispatchDatSubtypeByRandomIndex(rdram, ctx);
         goto after_23;
     // 0x800E6758: addiu       $a0, $s3, 0x100
     ctx->r4 = ADD32(ctx->r19, 0X100);
@@ -26583,7 +26583,7 @@ L_800E6764:
     // 0x800E6778: jal         0x80098DE0
     // 0x800E677C: addiu       $a0, $s3, 0xB4
     ctx->r4 = ADD32(ctx->r19, 0XB4);
-    func_80098DE0(rdram, ctx);
+    factor5RemoveListNode(rdram, ctx);
         goto after_24;
     // 0x800E677C: addiu       $a0, $s3, 0xB4
     ctx->r4 = ADD32(ctx->r19, 0XB4);
@@ -26633,7 +26633,7 @@ L_800E6794:
     // 0x800E67B8: jal         0x800F1E7C
     // 0x800E67BC: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
-    func_800F1E7C(rdram, ctx);
+    initActorRenderDescriptorIfUninit(rdram, ctx);
         goto after_27;
     // 0x800E67BC: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
@@ -26641,7 +26641,7 @@ L_800E6794:
     // 0x800E67C0: jal         0x800EC684
     // 0x800E67C4: addiu       $a0, $s3, 0x38
     ctx->r4 = ADD32(ctx->r19, 0X38);
-    func_800EC684(rdram, ctx);
+    clearPendingAndDestroyChildNpc(rdram, ctx);
         goto after_28;
     // 0x800E67C4: addiu       $a0, $s3, 0x38
     ctx->r4 = ADD32(ctx->r19, 0X38);
@@ -26651,7 +26651,7 @@ L_800E6794:
     // 0x800E67CC: jal         0x80072AF8
     // 0x800E67D0: addiu       $a0, $s3, 0x100
     ctx->r4 = ADD32(ctx->r19, 0X100);
-    func_80072AF8(rdram, ctx);
+    walkDatTreeAndCollectSubtypes(rdram, ctx);
         goto after_29;
     // 0x800E67D0: addiu       $a0, $s3, 0x100
     ctx->r4 = ADD32(ctx->r19, 0X100);
@@ -26661,7 +26661,7 @@ L_800E6794:
     // 0x800E67D8: jal         0x8005779C
     // 0x800E67DC: nop
 
-    func_8005779C(rdram, ctx);
+    releaseMeshAsset(rdram, ctx);
         goto after_30;
     // 0x800E67DC: nop
 
@@ -26879,7 +26879,7 @@ L_800E68C4:
     // 0x800E68D0: jal         0x800AA6D0
     // 0x800E68D4: addiu       $a2, $a2, 0x34
     ctx->r6 = ADD32(ctx->r6, 0X34);
-    func_800AA6D0(rdram, ctx);
+    npcPredictedRangeCheck(rdram, ctx);
         goto after_31;
     // 0x800E68D4: addiu       $a2, $a2, 0x34
     ctx->r6 = ADD32(ctx->r6, 0X34);
@@ -26891,7 +26891,7 @@ L_800E68C4:
     // 0x800E68E0: jal         0x800F9A14
     // 0x800E68E4: nop
 
-    func_800F9A14(rdram, ctx);
+    dispatchEffectByActorType(rdram, ctx);
         goto after_32;
     // 0x800E68E4: nop
 
@@ -26950,7 +26950,7 @@ L_800E6920:
     // 0x800E6928: jal         0x80059B50
     // 0x800E692C: addu        $a1, $s3, $zero
     ctx->r5 = ADD32(ctx->r19, 0);
-    func_80059B50(rdram, ctx);
+    mat34CrossRowsAndCopyPos(rdram, ctx);
         goto after_33;
     // 0x800E692C: addu        $a1, $s3, $zero
     ctx->r5 = ADD32(ctx->r19, 0);
@@ -27014,7 +27014,7 @@ L_800E6920:
     // 0x800E6980: jal         0x800193E8
     // 0x800E6984: swc1        $f0, 0x6C($sp)
     MEM_W(0X6C, ctx->r29) = ctx->f0.u32l;
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_35;
     // 0x800E6984: swc1        $f0, 0x6C($sp)
     MEM_W(0X6C, ctx->r29) = ctx->f0.u32l;
@@ -27103,7 +27103,7 @@ L_800E69E0:
     // 0x800E69F4: jal         0x800EFDE0
     // 0x800E69F8: nop
 
-    func_800EFDE0(rdram, ctx);
+    updateNpcEventTimer(rdram, ctx);
         goto after_37;
     // 0x800E69F8: nop
 
@@ -27308,7 +27308,7 @@ L_800E6B00:
     // 0x800E6B14: jal         0x800EFDE0
     // 0x800E6B18: nop
 
-    func_800EFDE0(rdram, ctx);
+    updateNpcEventTimer(rdram, ctx);
         goto after_40;
     // 0x800E6B18: nop
 
@@ -27384,7 +27384,7 @@ L_800E6B00:
     // 0x800E6B80: jal         0x80058360
     // 0x800E6B84: addu        $a3, $s2, $zero
     ctx->r7 = ADD32(ctx->r18, 0);
-    func_80058360(rdram, ctx);
+    lookupHmtTextureByName(rdram, ctx);
         goto after_43;
     // 0x800E6B84: addu        $a3, $s2, $zero
     ctx->r7 = ADD32(ctx->r18, 0);
@@ -27404,7 +27404,7 @@ L_800E6B00:
     // 0x800E6BA0: jal         0x80058360
     // 0x800E6BA4: addu        $a3, $s1, $zero
     ctx->r7 = ADD32(ctx->r17, 0);
-    func_80058360(rdram, ctx);
+    lookupHmtTextureByName(rdram, ctx);
         goto after_44;
     // 0x800E6BA4: addu        $a3, $s1, $zero
     ctx->r7 = ADD32(ctx->r17, 0);
@@ -27698,7 +27698,7 @@ L_800E6D3C:
     // 0x800E6D3C: jal         0x800E5B38
     // 0x800E6D40: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
-    func_800E5B38(rdram, ctx);
+    npcWaterCraftHandleDestruction(rdram, ctx);
         goto after_47;
     // 0x800E6D40: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
@@ -27710,7 +27710,7 @@ L_800E6D3C:
     // 0x800E6D4C: jal         0x8003ED74
     // 0x800E6D50: nop
 
-    func_8003ED74(rdram, ctx);
+    destroyNpcSlotByIndex(rdram, ctx);
         goto after_48;
     // 0x800E6D50: nop
 
@@ -27739,7 +27739,7 @@ L_800E6D5C:
     // 0x800E6D6C: jal         0x80047D40
     // 0x800E6D70: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
-    func_80047D40(rdram, ctx);
+    isNpcWithinActiveReferenceRange(rdram, ctx);
         goto after_49;
     // 0x800E6D70: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
@@ -27786,7 +27786,7 @@ L_800E6D84:
     // 0x800E6DAC: jal         0x8003ED74
     // 0x800E6DB0: nop
 
-    func_8003ED74(rdram, ctx);
+    destroyNpcSlotByIndex(rdram, ctx);
         goto after_50;
     // 0x800E6DB0: nop
 
@@ -27803,7 +27803,7 @@ L_800E6DBC:
     // 0x800E6DC0: jal         0x800EC6C0
     // 0x800E6DC4: nop
 
-    func_800EC6C0(rdram, ctx);
+    destroyObjectOwnedNpcSlot(rdram, ctx);
         goto after_51;
     // 0x800E6DC4: nop
 
@@ -27827,7 +27827,7 @@ L_800E6DBC:
     // 0x800E6DE0: jal         0x80072BE0
     // 0x800E6DE4: addiu       $a0, $s3, 0x100
     ctx->r4 = ADD32(ctx->r19, 0X100);
-    func_80072BE0(rdram, ctx);
+    walkDatTreeAndScaleLeafByFloat(rdram, ctx);
         goto after_52;
     // 0x800E6DE4: addiu       $a0, $s3, 0x100
     ctx->r4 = ADD32(ctx->r19, 0X100);
@@ -27858,7 +27858,7 @@ L_800E6DF0:
     // 0x800E6E08: jal         0x800988E8
     // 0x800E6E0C: addiu       $a2, $s3, 0x24
     ctx->r6 = ADD32(ctx->r19, 0X24);
-    func_800988E8(rdram, ctx);
+    updateActive3DAudioSource(rdram, ctx);
         goto after_53;
     // 0x800E6E0C: addiu       $a2, $s3, 0x24
     ctx->r6 = ADD32(ctx->r19, 0X24);
@@ -27873,7 +27873,7 @@ L_800E6E10:
     // 0x800E6E1C: jal         0x80057C8C
     // 0x800E6E20: addu        $a2, $s3, $zero
     ctx->r6 = ADD32(ctx->r19, 0);
-    func_80057C8C(rdram, ctx);
+    addNpcToVisibilityBucket(rdram, ctx);
         goto after_54;
     // 0x800E6E20: addu        $a2, $s3, $zero
     ctx->r6 = ADD32(ctx->r19, 0);
@@ -27901,7 +27901,7 @@ L_800E6E10:
     // 0x800E6E3C: jal         0x80071928
     // 0x800E6E40: addu        $a2, $s5, $zero
     ctx->r6 = ADD32(ctx->r21, 0);
-    func_80071928(rdram, ctx);
+    walkDatTreeAndVisitChildren(rdram, ctx);
         goto after_55;
     // 0x800E6E40: addu        $a2, $s5, $zero
     ctx->r6 = ADD32(ctx->r21, 0);
@@ -27924,7 +27924,7 @@ L_800E6E44:
     // 0x800E6E58: jal         0x8006BEC8
     // 0x800E6E5C: addu        $a2, $s3, $zero
     ctx->r6 = ADD32(ctx->r19, 0);
-    func_8006BEC8(rdram, ctx);
+    advanceNpcOnCurvedPath(rdram, ctx);
         goto after_56;
     // 0x800E6E5C: addu        $a2, $s3, $zero
     ctx->r6 = ADD32(ctx->r19, 0);
@@ -27957,7 +27957,7 @@ L_800E6E68:
     // 0x800E6E7C: jal         0x80076250
     // 0x800E6E80: addu        $a0, $s5, $zero
     ctx->r4 = ADD32(ctx->r21, 0);
-    func_80076250(rdram, ctx);
+    extrapolateNpcPositionForCurrentMode(rdram, ctx);
         goto after_58;
     // 0x800E6E80: addu        $a0, $s5, $zero
     ctx->r4 = ADD32(ctx->r21, 0);
@@ -28032,7 +28032,7 @@ L_800E6ED0:
     // 0x800E6EEC: jal         0x800989D8
     // 0x800E6EF0: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_800989D8(rdram, ctx);
+    play3DSoundEvent(rdram, ctx);
         goto after_59;
     // 0x800E6EF0: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -28043,7 +28043,7 @@ L_800E6EF4:
     // 0x800E6EF8: jal         0x800F287C
     // 0x800E6EFC: nop
 
-    func_800F287C(rdram, ctx);
+    getObjectDetailLevel(rdram, ctx);
         goto after_60;
     // 0x800E6EFC: nop
 
@@ -28071,7 +28071,7 @@ L_800E6EF4:
     // 0x800E6F18: jal         0x800EFD6C
     // 0x800E6F1C: addiu       $a0, $zero, 0x1F4
     ctx->r4 = ADD32(0, 0X1F4);
-    func_800EFD6C(rdram, ctx);
+    noopHandler(rdram, ctx);
         goto after_61;
     // 0x800E6F1C: addiu       $a0, $zero, 0x1F4
     ctx->r4 = ADD32(0, 0X1F4);
@@ -28104,7 +28104,7 @@ L_800E6F20:
     // 0x800E6F40: jal         0x8003E7D0
     // 0x800E6F44: sb          $v0, 0x9A($s3)
     MEM_B(0X9A, ctx->r19) = ctx->r2;
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_63;
     // 0x800E6F44: sb          $v0, 0x9A($s3)
     MEM_B(0X9A, ctx->r19) = ctx->r2;
@@ -28126,7 +28126,7 @@ L_800E6F20:
     // 0x800E6F5C: jal         0x8003E7D0
     // 0x800E6F60: addu        $a0, $v1, $zero
     ctx->r4 = ADD32(ctx->r3, 0);
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_64;
     // 0x800E6F60: addu        $a0, $v1, $zero
     ctx->r4 = ADD32(ctx->r3, 0);
@@ -28165,7 +28165,7 @@ L_800E6F64:
     // 0x800E6F98: jal         0x800F3260
     // 0x800E6F9C: nop
 
-    func_800F3260(rdram, ctx);
+    tallyMidDetailObject(rdram, ctx);
         goto after_66;
     // 0x800E6F9C: nop
 
@@ -28175,7 +28175,7 @@ L_800E6F64:
     // 0x800E6FA4: jal         0x800F2A24
     // 0x800E6FA8: nop
 
-    func_800F2A24(rdram, ctx);
+    clearPendingChildNpc(rdram, ctx);
         goto after_67;
     // 0x800E6FA8: nop
 
@@ -28185,7 +28185,7 @@ L_800E6F64:
     // 0x800E6FB0: jal         0x800F2AA4
     // 0x800E6FB4: nop
 
-    func_800F2AA4(rdram, ctx);
+    setObjectFlagBit4(rdram, ctx);
         goto after_68;
     // 0x800E6FB4: nop
 
@@ -28207,7 +28207,7 @@ L_800E6F64:
     // 0x800E6FCC: jal         0x80098DE0
     // 0x800E6FD0: addiu       $a0, $s3, 0xB4
     ctx->r4 = ADD32(ctx->r19, 0XB4);
-    func_80098DE0(rdram, ctx);
+    factor5RemoveListNode(rdram, ctx);
         goto after_69;
     // 0x800E6FD0: addiu       $a0, $s3, 0xB4
     ctx->r4 = ADD32(ctx->r19, 0XB4);
@@ -28228,7 +28228,7 @@ L_800E6FD4:
     // 0x800E6FE4: jal         0x8003ED74
     // 0x800E6FE8: addu        $a0, $v1, $zero
     ctx->r4 = ADD32(ctx->r3, 0);
-    func_8003ED74(rdram, ctx);
+    destroyNpcSlotByIndex(rdram, ctx);
         goto after_70;
     // 0x800E6FE8: addu        $a0, $v1, $zero
     ctx->r4 = ADD32(ctx->r3, 0);
@@ -28301,7 +28301,7 @@ L_800E7024:
     // 0x800E7044: jal         0x800F9AB8
     // 0x800E7048: nop
 
-    func_800F9AB8(rdram, ctx);
+    setType1ActorParams(rdram, ctx);
         goto after_71;
     // 0x800E7048: nop
 
@@ -28328,7 +28328,7 @@ L_800E7054:
     // 0x800E706C: jal         0x800F9B34
     // 0x800E7070: nop
 
-    func_800F9B34(rdram, ctx);
+    updateType1AnimRamp(rdram, ctx);
         goto after_72;
     // 0x800E7070: nop
 
@@ -28365,7 +28365,7 @@ L_800E707C:
     // 0x800E7098: jal         0x8003E7D0
     // 0x800E709C: addiu       $s1, $zero, 0x1
     ctx->r17 = ADD32(0, 0X1);
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_74;
     // 0x800E709C: addiu       $s1, $zero, 0x1
     ctx->r17 = ADD32(0, 0X1);
@@ -28396,7 +28396,7 @@ L_800E70B8:
     // 0x800E70C4: jal         0x8003E684
     // 0x800E70C8: nop
 
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_75;
     // 0x800E70C8: nop
 
@@ -28408,7 +28408,7 @@ L_800E70B8:
     // 0x800E70D4: jal         0x8003E7D0
     // 0x800E70D8: sh          $v0, 0x92($s3)
     MEM_H(0X92, ctx->r19) = ctx->r2;
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_76;
     // 0x800E70D8: sh          $v0, 0x92($s3)
     MEM_H(0X92, ctx->r19) = ctx->r2;
@@ -28435,7 +28435,7 @@ L_800E70EC:
     // 0x800E70F8: jal         0x8003E684
     // 0x800E70FC: nop
 
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_77;
     // 0x800E70FC: nop
 
@@ -28459,7 +28459,7 @@ L_800E70EC:
     // 0x800E7118: jal         0x8003E7D0
     // 0x800E711C: addu        $a0, $v1, $zero
     ctx->r4 = ADD32(ctx->r3, 0);
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_78;
     // 0x800E711C: addu        $a0, $v1, $zero
     ctx->r4 = ADD32(ctx->r3, 0);
@@ -28498,7 +28498,7 @@ L_800E7140:
     // 0x800E714C: jal         0x8003E684
     // 0x800E7150: nop
 
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_79;
     // 0x800E7150: nop
 
@@ -28513,7 +28513,7 @@ L_800E7158:
     // 0x800E7160: jal         0x800F2830
     // 0x800E7164: nop
 
-    func_800F2830(rdram, ctx);
+    setObjectDetailLevel(rdram, ctx);
         goto after_80;
     // 0x800E7164: nop
 
@@ -28530,7 +28530,7 @@ L_800E7170:
     // 0x800E7174: jal         0x800EFD80
     // 0x800E7178: addu        $a1, $s5, $zero
     ctx->r5 = ADD32(ctx->r21, 0);
-    func_800EFD80(rdram, ctx);
+    dispatchSlotAction5IfActive(rdram, ctx);
         goto after_81;
     // 0x800E7178: addu        $a1, $s5, $zero
     ctx->r5 = ADD32(ctx->r21, 0);
@@ -28613,7 +28613,7 @@ RECOMP_FUNC void func_800E71D0(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E71F4: jal         0x800F06BC
     // 0x800E71F8: nop
 
-    func_800F06BC(rdram, ctx);
+    isPendingChildNpcActive(rdram, ctx);
         goto after_0;
     // 0x800E71F8: nop
 
@@ -28670,7 +28670,7 @@ L_800E7218:
     // 0x800E724C: jal         0x8001CC3C
     // 0x800E7250: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_8001CC3C(rdram, ctx);
+    buildRotationMatrixSlot0(rdram, ctx);
         goto after_1;
     // 0x800E7250: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -28680,7 +28680,7 @@ L_800E7218:
     // 0x800E7258: jal         0x8001CCCC
     // 0x800E725C: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_8001CCCC(rdram, ctx);
+    composeRotationMatrixSlot1(rdram, ctx);
         goto after_2;
     // 0x800E725C: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -28692,7 +28692,7 @@ L_800E7218:
     // 0x800E7268: jal         0x800193E8
     // 0x800E726C: addiu       $a2, $s1, 0xC
     ctx->r6 = ADD32(ctx->r17, 0XC);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_3;
     // 0x800E726C: addiu       $a2, $s1, 0xC
     ctx->r6 = ADD32(ctx->r17, 0XC);
@@ -28704,7 +28704,7 @@ L_800E7218:
     // 0x800E7278: jal         0x800193E8
     // 0x800E727C: addiu       $a2, $s1, 0x18
     ctx->r6 = ADD32(ctx->r17, 0X18);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_4;
     // 0x800E727C: addiu       $a2, $s1, 0x18
     ctx->r6 = ADD32(ctx->r17, 0X18);
@@ -28714,7 +28714,7 @@ L_800E7218:
     // 0x800E7284: jal         0x800F07AC
     // 0x800E7288: nop
 
-    func_800F07AC(rdram, ctx);
+    validateActorTargetLOS(rdram, ctx);
         goto after_5;
     // 0x800E7288: nop
 
@@ -28755,7 +28755,7 @@ L_800E72B4:
     // 0x800E72B8: jal         0x800F06BC
     // 0x800E72BC: nop
 
-    func_800F06BC(rdram, ctx);
+    isPendingChildNpcActive(rdram, ctx);
         goto after_6;
     // 0x800E72BC: nop
 
@@ -28775,7 +28775,7 @@ L_800E72B4:
     // 0x800E72D0: jal         0x800F07AC
     // 0x800E72D4: nop
 
-    func_800F07AC(rdram, ctx);
+    validateActorTargetLOS(rdram, ctx);
         goto after_7;
     // 0x800E72D4: nop
 
@@ -28825,7 +28825,7 @@ L_800E72B4:
     // 0x800E7320: jal         0x800F2B88
     // 0x800E7324: addu        $a3, $a1, $zero
     ctx->r7 = ADD32(ctx->r5, 0);
-    func_800F2B88(rdram, ctx);
+    initObjectAnimSubstruct(rdram, ctx);
         goto after_8;
     // 0x800E7324: addu        $a3, $a1, $zero
     ctx->r7 = ADD32(ctx->r5, 0);
@@ -28839,7 +28839,7 @@ L_800E72B4:
     // 0x800E7334: jal         0x800F2D38
     // 0x800E7338: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
-    func_800F2D38(rdram, ctx);
+    applyToObjectSubstructByFlag(rdram, ctx);
         goto after_9;
     // 0x800E7338: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
@@ -28939,7 +28939,7 @@ RECOMP_FUNC void func_800E7390(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E73D0: jal         0x800F06BC
     // 0x800E73D4: nop
 
-    func_800F06BC(rdram, ctx);
+    isPendingChildNpcActive(rdram, ctx);
         goto after_0;
     // 0x800E73D4: nop
 
@@ -28961,7 +28961,7 @@ RECOMP_FUNC void func_800E7390(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E73EC: jal         0x800F09A8
     // 0x800E73F0: nop
 
-    func_800F09A8(rdram, ctx);
+    computeActorAnchorDeltaAfterLOS(rdram, ctx);
         goto after_1;
     // 0x800E73F0: nop
 
@@ -28981,7 +28981,7 @@ RECOMP_FUNC void func_800E7390(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E7404: jal         0x800F2988
     // 0x800E7408: addiu       $a1, $sp, 0x90
     ctx->r5 = ADD32(ctx->r29, 0X90);
-    func_800F2988(rdram, ctx);
+    getObjectMeshTransformOrLocal(rdram, ctx);
         goto after_2;
     // 0x800E7408: addiu       $a1, $sp, 0x90
     ctx->r5 = ADD32(ctx->r29, 0X90);
@@ -28995,7 +28995,7 @@ RECOMP_FUNC void func_800E7390(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E7418: jal         0x80059B50
     // 0x800E741C: addu        $s1, $v0, $zero
     ctx->r17 = ADD32(ctx->r2, 0);
-    func_80059B50(rdram, ctx);
+    mat34CrossRowsAndCopyPos(rdram, ctx);
         goto after_3;
     // 0x800E741C: addu        $s1, $v0, $zero
     ctx->r17 = ADD32(ctx->r2, 0);
@@ -29007,7 +29007,7 @@ RECOMP_FUNC void func_800E7390(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E7428: jal         0x8001C774
     // 0x800E742C: addiu       $a1, $sp, 0x10
     ctx->r5 = ADD32(ctx->r29, 0X10);
-    func_8001C774(rdram, ctx);
+    mat3x3InverseInto(rdram, ctx);
         goto after_4;
     // 0x800E742C: addiu       $a1, $sp, 0x10
     ctx->r5 = ADD32(ctx->r29, 0X10);
@@ -29021,7 +29021,7 @@ RECOMP_FUNC void func_800E7390(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E743C: jal         0x800193E8
     // 0x800E7440: addu        $a2, $s2, $zero
     ctx->r6 = ADD32(ctx->r18, 0);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_5;
     // 0x800E7440: addu        $a2, $s2, $zero
     ctx->r6 = ADD32(ctx->r18, 0);
@@ -29033,7 +29033,7 @@ RECOMP_FUNC void func_800E7390(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E744C: jal         0x8001CFA0
     // 0x800E7450: addu        $a1, $s2, $zero
     ctx->r5 = ADD32(ctx->r18, 0);
-    func_8001CFA0(rdram, ctx);
+    vec3NormalizeInto(rdram, ctx);
         goto after_6;
     // 0x800E7450: addu        $a1, $s2, $zero
     ctx->r5 = ADD32(ctx->r18, 0);
@@ -29043,7 +29043,7 @@ RECOMP_FUNC void func_800E7390(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E7458: jal         0x8001CC3C
     // 0x800E745C: addiu       $a0, $sp, 0x10
     ctx->r4 = ADD32(ctx->r29, 0X10);
-    func_8001CC3C(rdram, ctx);
+    buildRotationMatrixSlot0(rdram, ctx);
         goto after_7;
     // 0x800E745C: addiu       $a0, $sp, 0x10
     ctx->r4 = ADD32(ctx->r29, 0X10);
@@ -29053,7 +29053,7 @@ RECOMP_FUNC void func_800E7390(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E7464: jal         0x8001CCCC
     // 0x800E7468: addiu       $a0, $sp, 0x10
     ctx->r4 = ADD32(ctx->r29, 0X10);
-    func_8001CCCC(rdram, ctx);
+    composeRotationMatrixSlot1(rdram, ctx);
         goto after_8;
     // 0x800E7468: addiu       $a0, $sp, 0x10
     ctx->r4 = ADD32(ctx->r29, 0X10);
@@ -29069,7 +29069,7 @@ RECOMP_FUNC void func_800E7390(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E747C: jal         0x800193E8
     // 0x800E7480: addu        $a2, $s2, $zero
     ctx->r6 = ADD32(ctx->r18, 0);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_9;
     // 0x800E7480: addu        $a2, $s2, $zero
     ctx->r6 = ADD32(ctx->r18, 0);
@@ -29079,7 +29079,7 @@ RECOMP_FUNC void func_800E7390(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E7488: jal         0x8001CFE8
     // 0x800E748C: addu        $a1, $s3, $zero
     ctx->r5 = ADD32(ctx->r19, 0);
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_10;
     // 0x800E748C: addu        $a1, $s3, $zero
     ctx->r5 = ADD32(ctx->r19, 0);
@@ -29093,7 +29093,7 @@ RECOMP_FUNC void func_800E7390(uint8_t* rdram, recomp_context* ctx) {
     CHECK_FR(ctx, 12);
     CHECK_FR(ctx, 0);
     ctx->f12.fl = ctx->f0.fl;
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_11;
     // 0x800E749C: mov.s       $f12, $f0
     CHECK_FR(ctx, 12);
@@ -29172,7 +29172,7 @@ L_800E74E0:
     // 0x800E74EC: jal         0x80019548
     // 0x800E74F0: addu        $a2, $s3, $zero
     ctx->r6 = ADD32(ctx->r19, 0);
-    func_80019548(rdram, ctx);
+    vec3Cross(rdram, ctx);
         goto after_12;
     // 0x800E74F0: addu        $a2, $s3, $zero
     ctx->r6 = ADD32(ctx->r19, 0);
@@ -29194,7 +29194,7 @@ L_800E74E0:
     // 0x800E7508: jal         0x8001D240
     // 0x800E750C: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
-    func_8001D240(rdram, ctx);
+    quatFromAxisAngle(rdram, ctx);
         goto after_14;
     // 0x800E750C: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
@@ -29206,7 +29206,7 @@ L_800E74E0:
     // 0x800E7518: jal         0x8001D3C4
     // 0x800E751C: addu        $a2, $s3, $zero
     ctx->r6 = ADD32(ctx->r19, 0);
-    func_8001D3C4(rdram, ctx);
+    rotateVec3ByQuat(rdram, ctx);
         goto after_15;
     // 0x800E751C: addu        $a2, $s3, $zero
     ctx->r6 = ADD32(ctx->r19, 0);
@@ -29226,7 +29226,7 @@ L_800E74E0:
     // 0x800E7538: jal         0x8001CFE8
     // 0x800E753C: swc1        $f2, 0xC8($sp)
     MEM_W(0XC8, ctx->r29) = ctx->f2.u32l;
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_16;
     // 0x800E753C: swc1        $f2, 0xC8($sp)
     MEM_W(0XC8, ctx->r29) = ctx->f2.u32l;
@@ -29238,7 +29238,7 @@ L_800E74E0:
     CHECK_FR(ctx, 22);
     CHECK_FR(ctx, 0);
     ctx->f22.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_17;
     // 0x800E7548: mov.s       $f22, $f0
     CHECK_FR(ctx, 22);
@@ -29252,7 +29252,7 @@ L_800E74E0:
     CHECK_FR(ctx, 20);
     CHECK_FR(ctx, 0);
     ctx->f20.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_18;
     // 0x800E7554: mov.s       $f20, $f0
     CHECK_FR(ctx, 20);
@@ -29272,7 +29272,7 @@ L_800E74E0:
     CHECK_FR(ctx, 20);
     NAN_CHECK(ctx->f22.fl); NAN_CHECK(ctx->f20.fl); 
     ctx->f12.fl = DIV_S(ctx->f22.fl, ctx->f20.fl);
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_19;
     // 0x800E7560: div.s       $f12, $f22, $f20
     CHECK_FR(ctx, 12);
@@ -29324,7 +29324,7 @@ L_800E74E0:
     // 0x800E75AC: jal         0x80019548
     // 0x800E75B0: sw          $zero, 0x104($sp)
     MEM_W(0X104, ctx->r29) = 0;
-    func_80019548(rdram, ctx);
+    vec3Cross(rdram, ctx);
         goto after_20;
     // 0x800E75B0: sw          $zero, 0x104($sp)
     MEM_W(0X104, ctx->r29) = 0;
@@ -29366,7 +29366,7 @@ L_800E75CC:
     // 0x800E75D4: jal         0x8001CD6C
     // 0x800E75D8: addiu       $a0, $sp, 0x10
     ctx->r4 = ADD32(ctx->r29, 0X10);
-    func_8001CD6C(rdram, ctx);
+    buildRotationMatrixSlot1(rdram, ctx);
         goto after_21;
     // 0x800E75D8: addiu       $a0, $sp, 0x10
     ctx->r4 = ADD32(ctx->r29, 0X10);
@@ -29378,7 +29378,7 @@ L_800E75CC:
     // 0x800E75E4: jal         0x800193E8
     // 0x800E75E8: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_22;
     // 0x800E75E8: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
@@ -29392,7 +29392,7 @@ L_800E75CC:
     // 0x800E75F8: jal         0x8001CFE8
     // 0x800E75FC: swc1        $f20, 0x48($s5)
     MEM_W(0X48, ctx->r21) = ctx->f20.u32l;
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_23;
     // 0x800E75FC: swc1        $f20, 0x48($s5)
     MEM_W(0X48, ctx->r21) = ctx->f20.u32l;
@@ -29404,7 +29404,7 @@ L_800E75CC:
     CHECK_FR(ctx, 20);
     CHECK_FR(ctx, 0);
     ctx->f20.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_24;
     // 0x800E7608: mov.s       $f20, $f0
     CHECK_FR(ctx, 20);
@@ -29418,7 +29418,7 @@ L_800E75CC:
     CHECK_FR(ctx, 22);
     CHECK_FR(ctx, 0);
     ctx->f22.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_25;
     // 0x800E7614: mov.s       $f22, $f0
     CHECK_FR(ctx, 22);
@@ -29438,7 +29438,7 @@ L_800E75CC:
     CHECK_FR(ctx, 22);
     NAN_CHECK(ctx->f20.fl); NAN_CHECK(ctx->f22.fl); 
     ctx->f12.fl = DIV_S(ctx->f20.fl, ctx->f22.fl);
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_26;
     // 0x800E7620: div.s       $f12, $f20, $f22
     CHECK_FR(ctx, 12);
@@ -29467,7 +29467,7 @@ L_800E7634:
     // 0x800E7638: jal         0x8001CC3C
     // 0x800E763C: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
-    func_8001CC3C(rdram, ctx);
+    buildRotationMatrixSlot0(rdram, ctx);
         goto after_27;
     // 0x800E763C: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
@@ -29477,7 +29477,7 @@ L_800E7634:
     // 0x800E7644: jal         0x8001CCCC
     // 0x800E7648: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
-    func_8001CCCC(rdram, ctx);
+    composeRotationMatrixSlot1(rdram, ctx);
         goto after_28;
     // 0x800E7648: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
@@ -29495,7 +29495,7 @@ L_800E7634:
     // 0x800E7660: jal         0x800193E8
     // 0x800E7664: addu        $a2, $s2, $zero
     ctx->r6 = ADD32(ctx->r18, 0);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_29;
     // 0x800E7664: addu        $a2, $s2, $zero
     ctx->r6 = ADD32(ctx->r18, 0);
@@ -29505,7 +29505,7 @@ L_800E7634:
     // 0x800E766C: jal         0x8001CFE8
     // 0x800E7670: addu        $a1, $s2, $zero
     ctx->r5 = ADD32(ctx->r18, 0);
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_30;
     // 0x800E7670: addu        $a1, $s2, $zero
     ctx->r5 = ADD32(ctx->r18, 0);
@@ -29519,7 +29519,7 @@ L_800E7634:
     CHECK_FR(ctx, 12);
     CHECK_FR(ctx, 0);
     ctx->f12.fl = ctx->f0.fl;
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_31;
     // 0x800E7680: mov.s       $f12, $f0
     CHECK_FR(ctx, 12);
@@ -29598,7 +29598,7 @@ L_800E76C4:
     // 0x800E76D0: jal         0x80019548
     // 0x800E76D4: addu        $a2, $s4, $zero
     ctx->r6 = ADD32(ctx->r20, 0);
-    func_80019548(rdram, ctx);
+    vec3Cross(rdram, ctx);
         goto after_32;
     // 0x800E76D4: addu        $a2, $s4, $zero
     ctx->r6 = ADD32(ctx->r20, 0);
@@ -29620,7 +29620,7 @@ L_800E76C4:
     // 0x800E76EC: jal         0x8001D240
     // 0x800E76F0: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
-    func_8001D240(rdram, ctx);
+    quatFromAxisAngle(rdram, ctx);
         goto after_34;
     // 0x800E76F0: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
@@ -29634,7 +29634,7 @@ L_800E76C4:
     // 0x800E7700: jal         0x8001D3C4
     // 0x800E7704: addu        $a2, $s0, $zero
     ctx->r6 = ADD32(ctx->r16, 0);
-    func_8001D3C4(rdram, ctx);
+    rotateVec3ByQuat(rdram, ctx);
         goto after_35;
     // 0x800E7704: addu        $a2, $s0, $zero
     ctx->r6 = ADD32(ctx->r16, 0);
@@ -29654,7 +29654,7 @@ L_800E76C4:
     // 0x800E7720: jal         0x8001CFE8
     // 0x800E7724: swc1        $f2, 0x118($sp)
     MEM_W(0X118, ctx->r29) = ctx->f2.u32l;
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_36;
     // 0x800E7724: swc1        $f2, 0x118($sp)
     MEM_W(0X118, ctx->r29) = ctx->f2.u32l;
@@ -29666,7 +29666,7 @@ L_800E76C4:
     CHECK_FR(ctx, 22);
     CHECK_FR(ctx, 0);
     ctx->f22.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_37;
     // 0x800E7730: mov.s       $f22, $f0
     CHECK_FR(ctx, 22);
@@ -29680,7 +29680,7 @@ L_800E76C4:
     CHECK_FR(ctx, 20);
     CHECK_FR(ctx, 0);
     ctx->f20.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_38;
     // 0x800E773C: mov.s       $f20, $f0
     CHECK_FR(ctx, 20);
@@ -29700,7 +29700,7 @@ L_800E76C4:
     CHECK_FR(ctx, 20);
     NAN_CHECK(ctx->f22.fl); NAN_CHECK(ctx->f20.fl); 
     ctx->f12.fl = DIV_S(ctx->f22.fl, ctx->f20.fl);
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_39;
     // 0x800E7748: div.s       $f12, $f22, $f20
     CHECK_FR(ctx, 12);
@@ -29752,7 +29752,7 @@ L_800E76C4:
     // 0x800E7794: jal         0x80019548
     // 0x800E7798: sw          $zero, 0x154($sp)
     MEM_W(0X154, ctx->r29) = 0;
-    func_80019548(rdram, ctx);
+    vec3Cross(rdram, ctx);
         goto after_40;
     // 0x800E7798: sw          $zero, 0x154($sp)
     MEM_W(0X154, ctx->r29) = 0;
@@ -29794,7 +29794,7 @@ L_800E77B4:
     // 0x800E77BC: jal         0x8001CD6C
     // 0x800E77C0: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
-    func_8001CD6C(rdram, ctx);
+    buildRotationMatrixSlot1(rdram, ctx);
         goto after_41;
     // 0x800E77C0: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
@@ -29806,7 +29806,7 @@ L_800E77B4:
     // 0x800E77CC: jal         0x800193E8
     // 0x800E77D0: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_42;
     // 0x800E77D0: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
@@ -29820,7 +29820,7 @@ L_800E77B4:
     // 0x800E77E0: jal         0x8001CFE8
     // 0x800E77E4: swc1        $f20, 0x48($s5)
     MEM_W(0X48, ctx->r21) = ctx->f20.u32l;
-    func_8001CFE8(rdram, ctx);
+    vec3Dot(rdram, ctx);
         goto after_43;
     // 0x800E77E4: swc1        $f20, 0x48($s5)
     MEM_W(0X48, ctx->r21) = ctx->f20.u32l;
@@ -29832,7 +29832,7 @@ L_800E77B4:
     CHECK_FR(ctx, 20);
     CHECK_FR(ctx, 0);
     ctx->f20.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_44;
     // 0x800E77F0: mov.s       $f20, $f0
     CHECK_FR(ctx, 20);
@@ -29846,7 +29846,7 @@ L_800E77B4:
     CHECK_FR(ctx, 22);
     CHECK_FR(ctx, 0);
     ctx->f22.fl = ctx->f0.fl;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_45;
     // 0x800E77FC: mov.s       $f22, $f0
     CHECK_FR(ctx, 22);
@@ -29866,7 +29866,7 @@ L_800E77B4:
     CHECK_FR(ctx, 22);
     NAN_CHECK(ctx->f20.fl); NAN_CHECK(ctx->f22.fl); 
     ctx->f12.fl = DIV_S(ctx->f20.fl, ctx->f22.fl);
-    func_8001C5CC(rdram, ctx);
+    constMinusSinfApprox(rdram, ctx);
         goto after_46;
     // 0x800E7808: div.s       $f12, $f20, $f22
     CHECK_FR(ctx, 12);
@@ -30361,7 +30361,7 @@ L_800E7A9C:
     // 0x800E7AA4: jal         0x80056EB0
     // 0x800E7AA8: addu        $a0, $s2, $zero
     ctx->r4 = ADD32(ctx->r18, 0);
-    func_80056EB0(rdram, ctx);
+    walkMeshdef0List(rdram, ctx);
         goto after_2;
     // 0x800E7AA8: addu        $a0, $s2, $zero
     ctx->r4 = ADD32(ctx->r18, 0);
@@ -30377,7 +30377,7 @@ L_800E7A9C:
     // 0x800E7ABC: jal         0x80059D78
     // 0x800E7AC0: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_80059D78(rdram, ctx);
+    composeEulerRotationXYZ(rdram, ctx);
         goto after_3;
     // 0x800E7AC0: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -30451,7 +30451,7 @@ L_800E7A9C:
     // 0x800E7B20: jal         0x8001CB64
     // 0x800E7B24: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_8001CB64(rdram, ctx);
+    initVec4TripletFromArgs(rdram, ctx);
         goto after_4;
     // 0x800E7B24: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -30463,7 +30463,7 @@ L_800E7A9C:
     // 0x800E7B30: jal         0x8001CB9C
     // 0x800E7B34: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_8001CB9C(rdram, ctx);
+    composeRotationMatrixSlot0(rdram, ctx);
         goto after_5;
     // 0x800E7B34: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -30475,7 +30475,7 @@ L_800E7A9C:
     // 0x800E7B40: jal         0x8001CCCC
     // 0x800E7B44: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_8001CCCC(rdram, ctx);
+    composeRotationMatrixSlot1(rdram, ctx);
         goto after_6;
     // 0x800E7B44: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -30487,7 +30487,7 @@ L_800E7A9C:
     // 0x800E7B50: jal         0x8001CDFC
     // 0x800E7B54: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_8001CDFC(rdram, ctx);
+    composeRotationMatrixSlot2(rdram, ctx);
         goto after_7;
     // 0x800E7B54: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -30503,7 +30503,7 @@ L_800E7A9C:
     // 0x800E7B68: jal         0x8001CA90
     // 0x800E7B6C: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_8001CA90(rdram, ctx);
+    addVec3At0x24(rdram, ctx);
         goto after_8;
     // 0x800E7B6C: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -30523,7 +30523,7 @@ L_800E7A9C:
     // 0x800E7B88: jal         0x8003E684
     // 0x800E7B8C: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_9;
     // 0x800E7B8C: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
@@ -30550,7 +30550,7 @@ L_800E7BA4:
     // 0x800E7BAC: jal         0x8003E684
     // 0x800E7BB0: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_10;
     // 0x800E7BB0: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
@@ -30577,7 +30577,7 @@ L_800E7BC8:
     // 0x800E7BD0: jal         0x8003E684
     // 0x800E7BD4: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_11;
     // 0x800E7BD4: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
@@ -30614,7 +30614,7 @@ L_800E7BF8:
     // 0x800E7C00: jal         0x8003E684
     // 0x800E7C04: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_12;
     // 0x800E7C04: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
@@ -30636,7 +30636,7 @@ L_800E7C14:
     // 0x800E7C1C: jal         0x8003E684
     // 0x800E7C20: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_13;
     // 0x800E7C20: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
@@ -30698,7 +30698,7 @@ L_800E7C74:
     // 0x800E7C78: jal         0x800EC588
     // 0x800E7C7C: addu        $a2, $s4, $zero
     ctx->r6 = ADD32(ctx->r20, 0);
-    func_800EC588(rdram, ctx);
+    createAndInitObject(rdram, ctx);
         goto after_14;
     // 0x800E7C7C: addu        $a2, $s4, $zero
     ctx->r6 = ADD32(ctx->r20, 0);
@@ -30800,7 +30800,7 @@ L_800E7CD8:
     // 0x800E7D00: jal         0x800F947C
     // 0x800E7D04: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
-    func_800F947C(rdram, ctx);
+    initActorAsType1(rdram, ctx);
         goto after_16;
     // 0x800E7D04: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
@@ -30812,7 +30812,7 @@ L_800E7CD8:
     // 0x800E7D10: jal         0x800F9AF4
     // 0x800E7D14: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
-    func_800F9AF4(rdram, ctx);
+    updateObjectFlags110(rdram, ctx);
         goto after_17;
     // 0x800E7D14: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
@@ -30833,7 +30833,7 @@ L_800E7D20:
     // 0x800E7D2C: jal         0x800F981C
     // 0x800E7D30: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
-    func_800F981C(rdram, ctx);
+    initActorAsType2(rdram, ctx);
         goto after_18;
     // 0x800E7D30: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
@@ -30861,7 +30861,7 @@ L_800E7D20:
     // 0x800E7D5C: jal         0x800F98CC
     // 0x800E7D60: nop
 
-    func_800F98CC(rdram, ctx);
+    setType2ActorVelocity(rdram, ctx);
         goto after_19;
     // 0x800E7D60: nop
 
@@ -31015,7 +31015,7 @@ L_800E7D20:
     // 0x800E7E10: jal         0x8001CF2C
     // 0x800E7E14: swc1        $f0, 0x30($sp)
     MEM_W(0X30, ctx->r29) = ctx->f0.u32l;
-    func_8001CF2C(rdram, ctx);
+    vec3Length(rdram, ctx);
         goto after_22;
     // 0x800E7E14: swc1        $f0, 0x30($sp)
     MEM_W(0X30, ctx->r29) = ctx->f0.u32l;
@@ -31113,7 +31113,7 @@ L_800E7E78:
     // 0x800E7E84: jal         0x800F9918
     // 0x800E7E88: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
-    func_800F9918(rdram, ctx);
+    initActorAsType3(rdram, ctx);
         goto after_23;
     // 0x800E7E88: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
@@ -31141,7 +31141,7 @@ L_800E7E78:
     // 0x800E7EB4: jal         0x800F99C8
     // 0x800E7EB8: nop
 
-    func_800F99C8(rdram, ctx);
+    setType3ActorParams(rdram, ctx);
         goto after_24;
     // 0x800E7EB8: nop
 
@@ -31274,7 +31274,7 @@ L_800E7F48:
     // 0x800E7F48: jal         0x80067D90
     // 0x800E7F4C: nop
 
-    func_80067D90(rdram, ctx);
+    wrapAngleToCyclicRange(rdram, ctx);
         goto after_27;
     // 0x800E7F4C: nop
 
@@ -31359,7 +31359,7 @@ L_800E7FA0:
     // 0x800E7FA8: jal         0x800F9AF4
     // 0x800E7FAC: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
-    func_800F9AF4(rdram, ctx);
+    updateObjectFlags110(rdram, ctx);
         goto after_31;
     // 0x800E7FAC: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
@@ -31374,7 +31374,7 @@ L_800E7FB0:
     CHECK_FR(ctx, 14);
     CHECK_FR(ctx, 12);
     ctx->f14.fl = ctx->f12.fl;
-    func_8006BD18(rdram, ctx);
+    allocateAndInitCraftNpcContext(rdram, ctx);
         goto after_32;
     // 0x800E7FBC: mov.s       $f14, $f12
     CHECK_FR(ctx, 14);
@@ -31450,7 +31450,7 @@ L_800E8000:
     // 0x800E8024: jal         0x800F1E7C
     // 0x800E8028: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
-    func_800F1E7C(rdram, ctx);
+    initActorRenderDescriptorIfUninit(rdram, ctx);
         goto after_35;
     // 0x800E8028: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
@@ -31458,7 +31458,7 @@ L_800E8000:
     // 0x800E802C: jal         0x800EC684
     // 0x800E8030: addiu       $a0, $s1, 0x38
     ctx->r4 = ADD32(ctx->r17, 0X38);
-    func_800EC684(rdram, ctx);
+    clearPendingAndDestroyChildNpc(rdram, ctx);
         goto after_36;
     // 0x800E8030: addiu       $a0, $s1, 0x38
     ctx->r4 = ADD32(ctx->r17, 0X38);
@@ -31468,7 +31468,7 @@ L_800E8000:
     // 0x800E8038: jal         0x8005779C
     // 0x800E803C: nop
 
-    func_8005779C(rdram, ctx);
+    releaseMeshAsset(rdram, ctx);
         goto after_37;
     // 0x800E803C: nop
 
@@ -31561,7 +31561,7 @@ L_800E80B4:
     // 0x800E80B8: jal         0x8003ED74
     // 0x800E80BC: nop
 
-    func_8003ED74(rdram, ctx);
+    destroyNpcSlotByIndex(rdram, ctx);
         goto after_38;
     // 0x800E80BC: nop
 
@@ -31644,7 +31644,7 @@ L_800E80F8:
     // 0x800E8128: jal         0x800AA6D0
     // 0x800E812C: addiu       $a2, $a2, 0x34
     ctx->r6 = ADD32(ctx->r6, 0X34);
-    func_800AA6D0(rdram, ctx);
+    npcPredictedRangeCheck(rdram, ctx);
         goto after_40;
     // 0x800E812C: addiu       $a2, $a2, 0x34
     ctx->r6 = ADD32(ctx->r6, 0X34);
@@ -31656,7 +31656,7 @@ L_800E80F8:
     // 0x800E8138: jal         0x800F9A14
     // 0x800E813C: nop
 
-    func_800F9A14(rdram, ctx);
+    dispatchEffectByActorType(rdram, ctx);
         goto after_41;
     // 0x800E813C: nop
 
@@ -31752,7 +31752,7 @@ L_800E81B0:
     // 0x800E81B4: jal         0x800EFDE0
     // 0x800E81B8: addiu       $a2, $zero, 0x6
     ctx->r6 = ADD32(0, 0X6);
-    func_800EFDE0(rdram, ctx);
+    updateNpcEventTimer(rdram, ctx);
         goto after_42;
     // 0x800E81B8: addiu       $a2, $zero, 0x6
     ctx->r6 = ADD32(0, 0X6);
@@ -31826,7 +31826,7 @@ L_800E81EC:
     // 0x800E8210: jal         0x8005779C
     // 0x800E8214: nop
 
-    func_8005779C(rdram, ctx);
+    releaseMeshAsset(rdram, ctx);
         goto after_46;
     // 0x800E8214: nop
 
@@ -31836,7 +31836,7 @@ L_800E81EC:
     // 0x800E821C: jal         0x80056EB0
     // 0x800E8220: addiu       $a0, $a0, -0x7B14
     ctx->r4 = ADD32(ctx->r4, -0X7B14);
-    func_80056EB0(rdram, ctx);
+    walkMeshdef0List(rdram, ctx);
         goto after_47;
     // 0x800E8220: addiu       $a0, $a0, -0x7B14
     ctx->r4 = ADD32(ctx->r4, -0X7B14);
@@ -31850,7 +31850,7 @@ L_800E81EC:
     // 0x800E8230: jal         0x8004013C
     // 0x800E8234: nop
 
-    func_8004013C(rdram, ctx);
+    getNpcContextByIndex(rdram, ctx);
         goto after_48;
     // 0x800E8234: nop
 
@@ -31868,7 +31868,7 @@ L_800E81EC:
     // 0x800E824C: jal         0x80059B50
     // 0x800E8250: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_80059B50(rdram, ctx);
+    mat34CrossRowsAndCopyPos(rdram, ctx);
         goto after_49;
     // 0x800E8250: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -31891,7 +31891,7 @@ L_800E8264:
     // 0x800E826C: jal         0x800AA6D0
     // 0x800E8270: addiu       $a2, $a2, 0x34
     ctx->r6 = ADD32(ctx->r6, 0X34);
-    func_800AA6D0(rdram, ctx);
+    npcPredictedRangeCheck(rdram, ctx);
         goto after_50;
     // 0x800E8270: addiu       $a2, $a2, 0x34
     ctx->r6 = ADD32(ctx->r6, 0X34);
@@ -31903,7 +31903,7 @@ L_800E8264:
     // 0x800E827C: jal         0x800F9A14
     // 0x800E8280: nop
 
-    func_800F9A14(rdram, ctx);
+    dispatchEffectByActorType(rdram, ctx);
         goto after_51;
     // 0x800E8280: nop
 
@@ -31954,7 +31954,7 @@ L_800E828C:
     // 0x800E82BC: jal         0x8005779C
     // 0x800E82C0: nop
 
-    func_8005779C(rdram, ctx);
+    releaseMeshAsset(rdram, ctx);
         goto after_53;
     // 0x800E82C0: nop
 
@@ -31964,7 +31964,7 @@ L_800E828C:
     // 0x800E82C8: jal         0x80056EB0
     // 0x800E82CC: addiu       $a0, $a0, -0x7B20
     ctx->r4 = ADD32(ctx->r4, -0X7B20);
-    func_80056EB0(rdram, ctx);
+    walkMeshdef0List(rdram, ctx);
         goto after_54;
     // 0x800E82CC: addiu       $a0, $a0, -0x7B20
     ctx->r4 = ADD32(ctx->r4, -0X7B20);
@@ -31978,7 +31978,7 @@ L_800E828C:
     // 0x800E82DC: jal         0x8004013C
     // 0x800E82E0: nop
 
-    func_8004013C(rdram, ctx);
+    getNpcContextByIndex(rdram, ctx);
         goto after_55;
     // 0x800E82E0: nop
 
@@ -31996,7 +31996,7 @@ L_800E828C:
     // 0x800E82F8: jal         0x80059B50
     // 0x800E82FC: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_80059B50(rdram, ctx);
+    mat34CrossRowsAndCopyPos(rdram, ctx);
         goto after_56;
     // 0x800E82FC: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -32025,7 +32025,7 @@ L_800E8308:
     // 0x800E831C: jal         0x800F06BC
     // 0x800E8320: nop
 
-    func_800F06BC(rdram, ctx);
+    isPendingChildNpcActive(rdram, ctx);
         goto after_57;
     // 0x800E8320: nop
 
@@ -32047,7 +32047,7 @@ L_800E8308:
     // 0x800E8338: jal         0x800F07AC
     // 0x800E833C: nop
 
-    func_800F07AC(rdram, ctx);
+    validateActorTargetLOS(rdram, ctx);
         goto after_58;
     // 0x800E833C: nop
 
@@ -32095,7 +32095,7 @@ L_800E8308:
     // 0x800E8388: jal         0x800F2B88
     // 0x800E838C: addu        $a3, $a1, $zero
     ctx->r7 = ADD32(ctx->r5, 0);
-    func_800F2B88(rdram, ctx);
+    initObjectAnimSubstruct(rdram, ctx);
         goto after_59;
     // 0x800E838C: addu        $a3, $a1, $zero
     ctx->r7 = ADD32(ctx->r5, 0);
@@ -32109,7 +32109,7 @@ L_800E8308:
     // 0x800E839C: jal         0x800F2D38
     // 0x800E83A0: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
-    func_800F2D38(rdram, ctx);
+    applyToObjectSubstructByFlag(rdram, ctx);
         goto after_60;
     // 0x800E83A0: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
@@ -32141,7 +32141,7 @@ L_800E83B0:
     // 0x800E83C4: jal         0x800612A4
     // 0x800E83C8: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_800612A4(rdram, ctx);
+    spawnNpcType0xAFromTemplate(rdram, ctx);
         goto after_61;
     // 0x800E83C8: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -32175,7 +32175,7 @@ L_800E83B0:
     // 0x800E8400: jal         0x800989D8
     // 0x800E8404: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_800989D8(rdram, ctx);
+    play3DSoundEvent(rdram, ctx);
         goto after_62;
     // 0x800E8404: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -32204,7 +32204,7 @@ L_800E8410:
     // 0x800E8420: jal         0x80047D40
     // 0x800E8424: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_80047D40(rdram, ctx);
+    isNpcWithinActiveReferenceRange(rdram, ctx);
         goto after_63;
     // 0x800E8424: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -32250,7 +32250,7 @@ L_800E8458:
     // 0x800E845C: jal         0x800EC6C0
     // 0x800E8460: nop
 
-    func_800EC6C0(rdram, ctx);
+    destroyObjectOwnedNpcSlot(rdram, ctx);
         goto after_64;
     // 0x800E8460: nop
 
@@ -32271,7 +32271,7 @@ L_800E846C:
     // 0x800E8478: jal         0x80059B50
     // 0x800E847C: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_80059B50(rdram, ctx);
+    mat34CrossRowsAndCopyPos(rdram, ctx);
         goto after_65;
     // 0x800E847C: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -32285,7 +32285,7 @@ L_800E846C:
     // 0x800E848C: jal         0x80057C8C
     // 0x800E8490: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
-    func_80057C8C(rdram, ctx);
+    addNpcToVisibilityBucket(rdram, ctx);
         goto after_66;
     // 0x800E8490: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
@@ -32307,7 +32307,7 @@ L_800E846C:
     // 0x800E84A8: jal         0x8006BEC8
     // 0x800E84AC: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
-    func_8006BEC8(rdram, ctx);
+    advanceNpcOnCurvedPath(rdram, ctx);
         goto after_67;
     // 0x800E84AC: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
@@ -32364,7 +32364,7 @@ L_800E84B8:
     // 0x800E84FC: jal         0x800989D8
     // 0x800E8500: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_800989D8(rdram, ctx);
+    play3DSoundEvent(rdram, ctx);
         goto after_69;
     // 0x800E8500: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -32374,7 +32374,7 @@ L_800E84B8:
     // 0x800E8508: jal         0x800F287C
     // 0x800E850C: nop
 
-    func_800F287C(rdram, ctx);
+    getObjectDetailLevel(rdram, ctx);
         goto after_70;
     // 0x800E850C: nop
 
@@ -32402,7 +32402,7 @@ L_800E84B8:
     // 0x800E8528: jal         0x800EFD6C
     // 0x800E852C: addiu       $a0, $zero, 0x1F4
     ctx->r4 = ADD32(0, 0X1F4);
-    func_800EFD6C(rdram, ctx);
+    noopHandler(rdram, ctx);
         goto after_71;
     // 0x800E852C: addiu       $a0, $zero, 0x1F4
     ctx->r4 = ADD32(0, 0X1F4);
@@ -32435,7 +32435,7 @@ L_800E8530:
     // 0x800E8550: jal         0x8003E7D0
     // 0x800E8554: sh          $v0, 0x64($s1)
     MEM_H(0X64, ctx->r17) = ctx->r2;
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_73;
     // 0x800E8554: sh          $v0, 0x64($s1)
     MEM_H(0X64, ctx->r17) = ctx->r2;
@@ -32445,7 +32445,7 @@ L_800E8530:
     // 0x800E855C: jal         0x8003E7D0
     // 0x800E8560: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_74;
     // 0x800E8560: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
@@ -32455,7 +32455,7 @@ L_800E8530:
     // 0x800E8568: jal         0x8003E7D0
     // 0x800E856C: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_75;
     // 0x800E856C: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
@@ -32477,7 +32477,7 @@ L_800E8530:
     // 0x800E8584: jal         0x8003E7D0
     // 0x800E8588: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_76;
     // 0x800E8588: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
@@ -32490,7 +32490,7 @@ L_800E8590:
     // 0x800E8594: jal         0x8003E684
     // 0x800E8598: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_77;
     // 0x800E8598: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
@@ -32526,7 +32526,7 @@ L_800E8590:
     // 0x800E85CC: jal         0x800F3260
     // 0x800E85D0: addu        $a0, $s4, $zero
     ctx->r4 = ADD32(ctx->r20, 0);
-    func_800F3260(rdram, ctx);
+    tallyMidDetailObject(rdram, ctx);
         goto after_79;
     // 0x800E85D0: addu        $a0, $s4, $zero
     ctx->r4 = ADD32(ctx->r20, 0);
@@ -32536,7 +32536,7 @@ L_800E8590:
     // 0x800E85D8: jal         0x800F2A24
     // 0x800E85DC: nop
 
-    func_800F2A24(rdram, ctx);
+    clearPendingChildNpc(rdram, ctx);
         goto after_80;
     // 0x800E85DC: nop
 
@@ -32544,7 +32544,7 @@ L_800E8590:
     // 0x800E85E0: jal         0x800F2AA4
     // 0x800E85E4: addu        $a0, $s4, $zero
     ctx->r4 = ADD32(ctx->r20, 0);
-    func_800F2AA4(rdram, ctx);
+    setObjectFlagBit4(rdram, ctx);
         goto after_81;
     // 0x800E85E4: addu        $a0, $s4, $zero
     ctx->r4 = ADD32(ctx->r20, 0);
@@ -32565,7 +32565,7 @@ L_800E85E8:
     // 0x800E85F8: jal         0x8003ED74
     // 0x800E85FC: addu        $a0, $v1, $zero
     ctx->r4 = ADD32(ctx->r3, 0);
-    func_8003ED74(rdram, ctx);
+    destroyNpcSlotByIndex(rdram, ctx);
         goto after_82;
     // 0x800E85FC: addu        $a0, $v1, $zero
     ctx->r4 = ADD32(ctx->r3, 0);
@@ -32650,7 +32650,7 @@ L_800E8648:
     // 0x800E8668: jal         0x800F9AB8
     // 0x800E866C: nop
 
-    func_800F9AB8(rdram, ctx);
+    setType1ActorParams(rdram, ctx);
         goto after_83;
     // 0x800E866C: nop
 
@@ -32685,7 +32685,7 @@ L_800E8678:
     // 0x800E8690: jal         0x8003E7D0
     // 0x800E8694: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_85;
     // 0x800E8694: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
@@ -32716,7 +32716,7 @@ L_800E86B4:
     // 0x800E86BC: jal         0x8003E684
     // 0x800E86C0: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_86;
     // 0x800E86C0: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
@@ -32728,7 +32728,7 @@ L_800E86B4:
     // 0x800E86CC: jal         0x8003E7D0
     // 0x800E86D0: sh          $v0, 0x52($s1)
     MEM_H(0X52, ctx->r17) = ctx->r2;
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_87;
     // 0x800E86D0: sh          $v0, 0x52($s1)
     MEM_H(0X52, ctx->r17) = ctx->r2;
@@ -32753,7 +32753,7 @@ L_800E86E4:
     // 0x800E86EC: jal         0x8003E684
     // 0x800E86F0: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_88;
     // 0x800E86F0: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
@@ -32775,7 +32775,7 @@ L_800E86E4:
     // 0x800E8708: jal         0x8003E7D0
     // 0x800E870C: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_89;
     // 0x800E870C: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
@@ -32812,7 +32812,7 @@ L_800E8730:
     // 0x800E8738: jal         0x8003E684
     // 0x800E873C: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_90;
     // 0x800E873C: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
@@ -32827,7 +32827,7 @@ L_800E8744:
     // 0x800E874C: jal         0x800F2830
     // 0x800E8750: nop
 
-    func_800F2830(rdram, ctx);
+    setObjectDetailLevel(rdram, ctx);
         goto after_91;
     // 0x800E8750: nop
 
@@ -32868,7 +32868,7 @@ L_800E875C:
     // 0x800E8790: jal         0x800989D8
     // 0x800E8794: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_800989D8(rdram, ctx);
+    play3DSoundEvent(rdram, ctx);
         goto after_92;
     // 0x800E8794: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -32910,7 +32910,7 @@ L_800E875C:
     // 0x800E87D4: jal         0x8006C6FC
     // 0x800E87D8: addu        $a2, $a1, $zero
     ctx->r6 = ADD32(ctx->r5, 0);
-    func_8006C6FC(rdram, ctx);
+    spawnSplineWalkerCraft(rdram, ctx);
         goto after_94;
     // 0x800E87D8: addu        $a2, $a1, $zero
     ctx->r6 = ADD32(ctx->r5, 0);
@@ -32927,7 +32927,7 @@ L_800E87E4:
     // 0x800E87E8: jal         0x800EFD80
     // 0x800E87EC: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
-    func_800EFD80(rdram, ctx);
+    dispatchSlotAction5IfActive(rdram, ctx);
         goto after_95;
     // 0x800E87EC: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
@@ -33049,7 +33049,7 @@ L_800E8848:
     // 0x800E88A4: jal         0x800F0F94
     // 0x800E88A8: addiu       $a1, $sp, 0x28
     ctx->r5 = ADD32(ctx->r29, 0X28);
-    func_800F0F94(rdram, ctx);
+    resolveNpcAttachmentPos(rdram, ctx);
         goto after_0;
     // 0x800E88A8: addiu       $a1, $sp, 0x28
     ctx->r5 = ADD32(ctx->r29, 0X28);
@@ -33063,7 +33063,7 @@ L_800E8848:
     // 0x800E88B8: jal         0x800F1870
     // 0x800E88BC: addiu       $a3, $sp, 0x58
     ctx->r7 = ADD32(ctx->r29, 0X58);
-    func_800F1870(rdram, ctx);
+    tickProgressChannel(rdram, ctx);
         goto after_1;
     // 0x800E88BC: addiu       $a3, $sp, 0x58
     ctx->r7 = ADD32(ctx->r29, 0X58);
@@ -33097,7 +33097,7 @@ L_800E8848:
     // 0x800E88EC: jal         0x800F2FCC
     // 0x800E88F0: addiu       $a3, $a3, -0x4F44
     ctx->r7 = ADD32(ctx->r7, -0X4F44);
-    func_800F2FCC(rdram, ctx);
+    triggerCueWithSlotEffect(rdram, ctx);
         goto after_2;
     // 0x800E88F0: addiu       $a3, $a3, -0x4F44
     ctx->r7 = ADD32(ctx->r7, -0X4F44);
@@ -33131,7 +33131,7 @@ L_800E8848:
     // 0x800E8928: jal         0x800989D8
     // 0x800E892C: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_800989D8(rdram, ctx);
+    play3DSoundEvent(rdram, ctx);
         goto after_3;
     // 0x800E892C: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -33202,7 +33202,7 @@ RECOMP_FUNC void func_800E8948(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E8994: jal         0x800F2830
     // 0x800E8998: nop
 
-    func_800F2830(rdram, ctx);
+    setObjectDetailLevel(rdram, ctx);
         goto after_1;
     // 0x800E8998: nop
 
@@ -33240,7 +33240,7 @@ RECOMP_FUNC void func_800E8948(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E89D0: jal         0x800F2888
     // 0x800E89D4: nop
 
-    func_800F2888(rdram, ctx);
+    initActorMotionParams(rdram, ctx);
         goto after_2;
     // 0x800E89D4: nop
 
@@ -33280,7 +33280,7 @@ RECOMP_FUNC void func_800E8948(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E8A18: jal         0x800F2B88
     // 0x800E8A1C: addu        $a3, $a1, $zero
     ctx->r7 = ADD32(ctx->r5, 0);
-    func_800F2B88(rdram, ctx);
+    initObjectAnimSubstruct(rdram, ctx);
         goto after_3;
     // 0x800E8A1C: addu        $a3, $a1, $zero
     ctx->r7 = ADD32(ctx->r5, 0);
@@ -33341,7 +33341,7 @@ RECOMP_FUNC void func_800E8A40(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E8A78: jal         0x80074B74
     // 0x800E8A7C: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
-    func_80074B74(rdram, ctx);
+    transformLimbStrideAnchorsLocal(rdram, ctx);
         goto after_0;
     // 0x800E8A7C: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
@@ -33351,7 +33351,7 @@ RECOMP_FUNC void func_800E8A40(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E8A84: jal         0x8006AC7C
     // 0x800E8A88: addiu       $a1, $sp, 0x58
     ctx->r5 = ADD32(ctx->r29, 0X58);
-    func_8006AC7C(rdram, ctx);
+    transformMeshPartIntoWorld(rdram, ctx);
         goto after_1;
     // 0x800E8A88: addiu       $a1, $sp, 0x58
     ctx->r5 = ADD32(ctx->r29, 0X58);
@@ -33394,7 +33394,7 @@ L_800E8AB4:
     // 0x800E8AB4: jal         0x8005EBD8
     // 0x800E8AB8: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_8005EBD8(rdram, ctx);
+    spawnByteAnimDebrisDefault(rdram, ctx);
         goto after_2;
     // 0x800E8AB8: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -33416,7 +33416,7 @@ L_800E8AB4:
     // 0x800E8AD0: jal         0x800612A4
     // 0x800E8AD4: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_800612A4(rdram, ctx);
+    spawnNpcType0xAFromTemplate(rdram, ctx);
         goto after_3;
     // 0x800E8AD4: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -33497,7 +33497,7 @@ L_800E8B2C:
     // 0x800E8B50: jal         0x8007202C
     // 0x800E8B54: sw          $zero, 0x14($sp)
     MEM_W(0X14, ctx->r29) = 0;
-    func_8007202C(rdram, ctx);
+    composeRandomRotationMatrix(rdram, ctx);
         goto after_5;
     // 0x800E8B54: sw          $zero, 0x14($sp)
     MEM_W(0X14, ctx->r29) = 0;
@@ -33545,7 +33545,7 @@ L_800E8B2C:
     // 0x800E8B90: jal         0x80072300
     // 0x800E8B94: swc1        $f0, 0x70($sp)
     MEM_W(0X70, ctx->r29) = ctx->f0.u32l;
-    func_80072300(rdram, ctx);
+    scaleVec3ByRandomRange(rdram, ctx);
         goto after_6;
     // 0x800E8B94: swc1        $f0, 0x70($sp)
     MEM_W(0X70, ctx->r29) = ctx->f0.u32l;
@@ -33708,7 +33708,7 @@ L_800E8B2C:
     // 0x800E8C40: jal         0x80072384
     // 0x800E8C44: swc1        $f2, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f2.u32l;
-    func_80072384(rdram, ctx);
+    spawnDebris1Npc(rdram, ctx);
         goto after_10;
     // 0x800E8C44: swc1        $f2, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f2.u32l;
@@ -33816,7 +33816,7 @@ L_800E8C70:
     // 0x800E8CF8: jal         0x800727C0
     // 0x800E8CFC: swc1        $f2, 0x14($sp)
     MEM_W(0X14, ctx->r29) = ctx->f2.u32l;
-    func_800727C0(rdram, ctx);
+    gameStateByteGatedNpcHelper(rdram, ctx);
         goto after_11;
     // 0x800E8CFC: swc1        $f2, 0x14($sp)
     MEM_W(0X14, ctx->r29) = ctx->f2.u32l;
@@ -33848,7 +33848,7 @@ L_800E8C70:
     // 0x800E8D28: jal         0x800612A4
     // 0x800E8D2C: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_800612A4(rdram, ctx);
+    spawnNpcType0xAFromTemplate(rdram, ctx);
         goto after_12;
     // 0x800E8D2C: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -33856,7 +33856,7 @@ L_800E8C70:
     // 0x800E8D30: jal         0x8005EBD8
     // 0x800E8D34: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_8005EBD8(rdram, ctx);
+    spawnByteAnimDebrisDefault(rdram, ctx);
         goto after_13;
     // 0x800E8D34: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -33887,7 +33887,7 @@ L_800E8D38:
     // 0x800E8D5C: jal         0x8007202C
     // 0x800E8D60: sw          $zero, 0x14($sp)
     MEM_W(0X14, ctx->r29) = 0;
-    func_8007202C(rdram, ctx);
+    composeRandomRotationMatrix(rdram, ctx);
         goto after_14;
     // 0x800E8D60: sw          $zero, 0x14($sp)
     MEM_W(0X14, ctx->r29) = 0;
@@ -33935,7 +33935,7 @@ L_800E8D38:
     // 0x800E8D9C: jal         0x80072300
     // 0x800E8DA0: swc1        $f0, 0x70($sp)
     MEM_W(0X70, ctx->r29) = ctx->f0.u32l;
-    func_80072300(rdram, ctx);
+    scaleVec3ByRandomRange(rdram, ctx);
         goto after_15;
     // 0x800E8DA0: swc1        $f0, 0x70($sp)
     MEM_W(0X70, ctx->r29) = ctx->f0.u32l;
@@ -34098,7 +34098,7 @@ L_800E8D38:
     // 0x800E8E4C: jal         0x80072384
     // 0x800E8E50: swc1        $f2, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f2.u32l;
-    func_80072384(rdram, ctx);
+    spawnDebris1Npc(rdram, ctx);
         goto after_19;
     // 0x800E8E50: swc1        $f2, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f2.u32l;
@@ -34143,7 +34143,7 @@ L_800E8E80:
     // 0x800E8E84: jal         0x8006C6FC
     // 0x800E8E88: addiu       $a3, $zero, 0xC
     ctx->r7 = ADD32(0, 0XC);
-    func_8006C6FC(rdram, ctx);
+    spawnSplineWalkerCraft(rdram, ctx);
         goto after_20;
     // 0x800E8E88: addiu       $a3, $zero, 0xC
     ctx->r7 = ADD32(0, 0XC);
@@ -34172,7 +34172,7 @@ L_800E8E94:
     // 0x800E8EA8: jal         0x800612A4
     // 0x800E8EAC: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_800612A4(rdram, ctx);
+    spawnNpcType0xAFromTemplate(rdram, ctx);
         goto after_21;
     // 0x800E8EAC: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -34282,7 +34282,7 @@ L_800E8F38:
     // 0x800E8F40: jal         0x80056EB0
     // 0x800E8F44: addu        $s2, $s0, $zero
     ctx->r18 = ADD32(ctx->r16, 0);
-    func_80056EB0(rdram, ctx);
+    walkMeshdef0List(rdram, ctx);
         goto after_0;
     // 0x800E8F44: addu        $s2, $s0, $zero
     ctx->r18 = ADD32(ctx->r16, 0);
@@ -34314,7 +34314,7 @@ L_800E8F38:
     // 0x800E8F78: jal         0x80059D78
     // 0x800E8F7C: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_80059D78(rdram, ctx);
+    composeEulerRotationXYZ(rdram, ctx);
         goto after_1;
     // 0x800E8F7C: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -34342,7 +34342,7 @@ L_800E8F38:
     // 0x800E8FA8: jal         0x8001CB64
     // 0x800E8FAC: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_8001CB64(rdram, ctx);
+    initVec4TripletFromArgs(rdram, ctx);
         goto after_2;
     // 0x800E8FAC: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -34354,7 +34354,7 @@ L_800E8F38:
     // 0x800E8FB8: jal         0x8001CB9C
     // 0x800E8FBC: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_8001CB9C(rdram, ctx);
+    composeRotationMatrixSlot0(rdram, ctx);
         goto after_3;
     // 0x800E8FBC: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -34366,7 +34366,7 @@ L_800E8F38:
     // 0x800E8FC8: jal         0x8001CCCC
     // 0x800E8FCC: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_8001CCCC(rdram, ctx);
+    composeRotationMatrixSlot1(rdram, ctx);
         goto after_4;
     // 0x800E8FCC: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -34378,7 +34378,7 @@ L_800E8F38:
     // 0x800E8FD8: jal         0x8001CDFC
     // 0x800E8FDC: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_8001CDFC(rdram, ctx);
+    composeRotationMatrixSlot2(rdram, ctx);
         goto after_5;
     // 0x800E8FDC: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -34394,7 +34394,7 @@ L_800E8F38:
     // 0x800E8FF0: jal         0x8001CA90
     // 0x800E8FF4: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_8001CA90(rdram, ctx);
+    addVec3At0x24(rdram, ctx);
         goto after_6;
     // 0x800E8FF4: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -34474,7 +34474,7 @@ L_800E8F38:
     // 0x800E9064: jal         0x8003E684
     // 0x800E9068: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_8;
     // 0x800E9068: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
@@ -34511,7 +34511,7 @@ L_800E908C:
     // 0x800E9094: jal         0x8003E684
     // 0x800E9098: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_9;
     // 0x800E9098: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
@@ -34544,7 +34544,7 @@ L_800E90BC:
     // 0x800E90C4: jal         0x8003E684
     // 0x800E90C8: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_10;
     // 0x800E90C8: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
@@ -34581,7 +34581,7 @@ L_800E90EC:
     // 0x800E90F4: jal         0x8003E684
     // 0x800E90F8: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_11;
     // 0x800E90F8: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
@@ -34609,7 +34609,7 @@ L_800E9108:
     // 0x800E911C: jal         0x800EC588
     // 0x800E9120: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
-    func_800EC588(rdram, ctx);
+    createAndInitObject(rdram, ctx);
         goto after_12;
     // 0x800E9120: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
@@ -34663,7 +34663,7 @@ L_800E9108:
     // 0x800E9170: jal         0x800F947C
     // 0x800E9174: addu        $a1, $v0, $zero
     ctx->r5 = ADD32(ctx->r2, 0);
-    func_800F947C(rdram, ctx);
+    initActorAsType1(rdram, ctx);
         goto after_14;
     // 0x800E9174: addu        $a1, $v0, $zero
     ctx->r5 = ADD32(ctx->r2, 0);
@@ -34714,7 +34714,7 @@ L_800E91A4:
     // 0x800E91A8: jal         0x800F9AF4
     // 0x800E91AC: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
-    func_800F9AF4(rdram, ctx);
+    updateObjectFlags110(rdram, ctx);
         goto after_15;
     // 0x800E91AC: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
@@ -34728,7 +34728,7 @@ L_800E91A4:
     // 0x800E91BC: jal         0x800F97F4
     // 0x800E91C0: nop
 
-    func_800F97F4(rdram, ctx);
+    setType1ActorField40(rdram, ctx);
         goto after_16;
     // 0x800E91C0: nop
 
@@ -34926,7 +34926,7 @@ L_800E92E4:
     // 0x800E92F0: jal         0x80098BDC
     // 0x800E92F4: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_80098BDC(rdram, ctx);
+    play3DSoundEventVariant(rdram, ctx);
         goto after_17;
     // 0x800E92F4: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -34990,7 +34990,7 @@ L_800E9300:
     // 0x800E9344: jal         0x8006BD18
     // 0x800E9348: nop
 
-    func_8006BD18(rdram, ctx);
+    allocateAndInitCraftNpcContext(rdram, ctx);
         goto after_18;
     // 0x800E9348: nop
 
@@ -35089,7 +35089,7 @@ L_800E93D8:
     // 0x800E93EC: jal         0x80098DE0
     // 0x800E93F0: addiu       $a0, $s1, 0x60
     ctx->r4 = ADD32(ctx->r17, 0X60);
-    func_80098DE0(rdram, ctx);
+    factor5RemoveListNode(rdram, ctx);
         goto after_19;
     // 0x800E93F0: addiu       $a0, $s1, 0x60
     ctx->r4 = ADD32(ctx->r17, 0X60);
@@ -35139,7 +35139,7 @@ L_800E9408:
     // 0x800E942C: jal         0x800F1E7C
     // 0x800E9430: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
-    func_800F1E7C(rdram, ctx);
+    initActorRenderDescriptorIfUninit(rdram, ctx);
         goto after_22;
     // 0x800E9430: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
@@ -35147,7 +35147,7 @@ L_800E9408:
     // 0x800E9434: jal         0x800EC684
     // 0x800E9438: addiu       $a0, $s1, 0x38
     ctx->r4 = ADD32(ctx->r17, 0X38);
-    func_800EC684(rdram, ctx);
+    clearPendingAndDestroyChildNpc(rdram, ctx);
         goto after_23;
     // 0x800E9438: addiu       $a0, $s1, 0x38
     ctx->r4 = ADD32(ctx->r17, 0X38);
@@ -35157,7 +35157,7 @@ L_800E9408:
     // 0x800E9440: jal         0x8005779C
     // 0x800E9444: nop
 
-    func_8005779C(rdram, ctx);
+    releaseMeshAsset(rdram, ctx);
         goto after_24;
     // 0x800E9444: nop
 
@@ -35232,7 +35232,7 @@ L_800E948C:
     // 0x800E9498: jal         0x800AA6D0
     // 0x800E949C: addiu       $a2, $a2, 0x34
     ctx->r6 = ADD32(ctx->r6, 0X34);
-    func_800AA6D0(rdram, ctx);
+    npcPredictedRangeCheck(rdram, ctx);
         goto after_25;
     // 0x800E949C: addiu       $a2, $a2, 0x34
     ctx->r6 = ADD32(ctx->r6, 0X34);
@@ -35244,7 +35244,7 @@ L_800E948C:
     // 0x800E94A8: jal         0x800F9A14
     // 0x800E94AC: nop
 
-    func_800F9A14(rdram, ctx);
+    dispatchEffectByActorType(rdram, ctx);
         goto after_26;
     // 0x800E94AC: nop
 
@@ -35258,7 +35258,7 @@ L_800E948C:
     // 0x800E94BC: jal         0x80059B50
     // 0x800E94C0: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
-    func_80059B50(rdram, ctx);
+    mat34CrossRowsAndCopyPos(rdram, ctx);
         goto after_27;
     // 0x800E94C0: addiu       $a0, $a0, 0x28
     ctx->r4 = ADD32(ctx->r4, 0X28);
@@ -35317,7 +35317,7 @@ L_800E94FC:
     // 0x800E9504: jal         0x80059B50
     // 0x800E9508: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
-    func_80059B50(rdram, ctx);
+    mat34CrossRowsAndCopyPos(rdram, ctx);
         goto after_28;
     // 0x800E9508: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
@@ -35381,7 +35381,7 @@ L_800E94FC:
     // 0x800E955C: jal         0x800193E8
     // 0x800E9560: swc1        $f0, 0x5C($sp)
     MEM_W(0X5C, ctx->r29) = ctx->f0.u32l;
-    func_800193E8(rdram, ctx);
+    transformVec3ByMat34(rdram, ctx);
         goto after_30;
     // 0x800E9560: swc1        $f0, 0x5C($sp)
     MEM_W(0X5C, ctx->r29) = ctx->f0.u32l;
@@ -35576,7 +35576,7 @@ L_800E9664:
     // 0x800E967C: jal         0x800989D8
     // 0x800E9680: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_800989D8(rdram, ctx);
+    play3DSoundEvent(rdram, ctx);
         goto after_32;
     // 0x800E9680: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -35587,7 +35587,7 @@ L_800E9684:
     // 0x800E9688: jal         0x8003ED74
     // 0x800E968C: nop
 
-    func_8003ED74(rdram, ctx);
+    destroyNpcSlotByIndex(rdram, ctx);
         goto after_33;
     // 0x800E968C: nop
 
@@ -35616,7 +35616,7 @@ L_800E9698:
     // 0x800E96A8: jal         0x80047D40
     // 0x800E96AC: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    func_80047D40(rdram, ctx);
+    isNpcWithinActiveReferenceRange(rdram, ctx);
         goto after_34;
     // 0x800E96AC: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -35662,7 +35662,7 @@ L_800E96E0:
     // 0x800E96E4: jal         0x800EC6C0
     // 0x800E96E8: nop
 
-    func_800EC6C0(rdram, ctx);
+    destroyObjectOwnedNpcSlot(rdram, ctx);
         goto after_35;
     // 0x800E96E8: nop
 
@@ -35691,7 +35691,7 @@ L_800E96F4:
     // 0x800E9708: jal         0x800988E8
     // 0x800E970C: addiu       $a2, $s1, 0x24
     ctx->r6 = ADD32(ctx->r17, 0X24);
-    func_800988E8(rdram, ctx);
+    updateActive3DAudioSource(rdram, ctx);
         goto after_36;
     // 0x800E970C: addiu       $a2, $s1, 0x24
     ctx->r6 = ADD32(ctx->r17, 0X24);
@@ -35706,7 +35706,7 @@ L_800E9710:
     // 0x800E971C: jal         0x80057C8C
     // 0x800E9720: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
-    func_80057C8C(rdram, ctx);
+    addNpcToVisibilityBucket(rdram, ctx);
         goto after_37;
     // 0x800E9720: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
@@ -35728,7 +35728,7 @@ L_800E9710:
     // 0x800E9738: jal         0x8006BEC8
     // 0x800E973C: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
-    func_8006BEC8(rdram, ctx);
+    advanceNpcOnCurvedPath(rdram, ctx);
         goto after_38;
     // 0x800E973C: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
@@ -35761,7 +35761,7 @@ L_800E9748:
     // 0x800E975C: jal         0x80076250
     // 0x800E9760: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_80076250(rdram, ctx);
+    extrapolateNpcPositionForCurrentMode(rdram, ctx);
         goto after_40;
     // 0x800E9760: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -35868,7 +35868,7 @@ L_800E97EC:
     // 0x800E97FC: jal         0x800989D8
     // 0x800E9800: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_800989D8(rdram, ctx);
+    play3DSoundEvent(rdram, ctx);
         goto after_41;
     // 0x800E9800: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
@@ -35901,7 +35901,7 @@ L_800E9804:
     // 0x800E9824: jal         0x8003E7D0
     // 0x800E9828: sh          $v0, 0x3E($s1)
     MEM_H(0X3E, ctx->r17) = ctx->r2;
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_43;
     // 0x800E9828: sh          $v0, 0x3E($s1)
     MEM_H(0X3E, ctx->r17) = ctx->r2;
@@ -35923,7 +35923,7 @@ L_800E9804:
     // 0x800E9840: jal         0x8003E7D0
     // 0x800E9844: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_44;
     // 0x800E9844: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
@@ -35960,7 +35960,7 @@ L_800E9848:
     // 0x800E9878: jal         0x800F3260
     // 0x800E987C: addu        $a0, $s4, $zero
     ctx->r4 = ADD32(ctx->r20, 0);
-    func_800F3260(rdram, ctx);
+    tallyMidDetailObject(rdram, ctx);
         goto after_46;
     // 0x800E987C: addu        $a0, $s4, $zero
     ctx->r4 = ADD32(ctx->r20, 0);
@@ -35970,7 +35970,7 @@ L_800E9848:
     // 0x800E9884: jal         0x800F2A24
     // 0x800E9888: nop
 
-    func_800F2A24(rdram, ctx);
+    clearPendingChildNpc(rdram, ctx);
         goto after_47;
     // 0x800E9888: nop
 
@@ -35978,7 +35978,7 @@ L_800E9848:
     // 0x800E988C: jal         0x800F2AA4
     // 0x800E9890: addu        $a0, $s4, $zero
     ctx->r4 = ADD32(ctx->r20, 0);
-    func_800F2AA4(rdram, ctx);
+    setObjectFlagBit4(rdram, ctx);
         goto after_48;
     // 0x800E9890: addu        $a0, $s4, $zero
     ctx->r4 = ADD32(ctx->r20, 0);
@@ -36000,7 +36000,7 @@ L_800E9848:
     // 0x800E98A8: jal         0x80098DE0
     // 0x800E98AC: addiu       $a0, $s1, 0x60
     ctx->r4 = ADD32(ctx->r17, 0X60);
-    func_80098DE0(rdram, ctx);
+    factor5RemoveListNode(rdram, ctx);
         goto after_49;
     // 0x800E98AC: addiu       $a0, $s1, 0x60
     ctx->r4 = ADD32(ctx->r17, 0X60);
@@ -36021,7 +36021,7 @@ L_800E98B0:
     // 0x800E98C0: jal         0x8003ED74
     // 0x800E98C4: addu        $a0, $v1, $zero
     ctx->r4 = ADD32(ctx->r3, 0);
-    func_8003ED74(rdram, ctx);
+    destroyNpcSlotByIndex(rdram, ctx);
         goto after_50;
     // 0x800E98C4: addu        $a0, $v1, $zero
     ctx->r4 = ADD32(ctx->r3, 0);
@@ -36106,7 +36106,7 @@ L_800E9910:
     // 0x800E9930: jal         0x800F9AB8
     // 0x800E9934: nop
 
-    func_800F9AB8(rdram, ctx);
+    setType1ActorParams(rdram, ctx);
         goto after_51;
     // 0x800E9934: nop
 
@@ -36133,7 +36133,7 @@ L_800E9940:
     // 0x800E9958: jal         0x800F9B34
     // 0x800E995C: nop
 
-    func_800F9B34(rdram, ctx);
+    updateType1AnimRamp(rdram, ctx);
         goto after_52;
     // 0x800E995C: nop
 
@@ -36168,7 +36168,7 @@ L_800E9968:
     // 0x800E9980: jal         0x8003E7D0
     // 0x800E9984: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_54;
     // 0x800E9984: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
@@ -36199,7 +36199,7 @@ L_800E99A4:
     // 0x800E99AC: jal         0x8003E684
     // 0x800E99B0: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_55;
     // 0x800E99B0: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
@@ -36211,7 +36211,7 @@ L_800E99A4:
     // 0x800E99BC: jal         0x8003E7D0
     // 0x800E99C0: sh          $v0, 0x5A($s1)
     MEM_H(0X5A, ctx->r17) = ctx->r2;
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_56;
     // 0x800E99C0: sh          $v0, 0x5A($s1)
     MEM_H(0X5A, ctx->r17) = ctx->r2;
@@ -36236,7 +36236,7 @@ L_800E99D4:
     // 0x800E99DC: jal         0x8003E684
     // 0x800E99E0: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_57;
     // 0x800E99E0: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
@@ -36258,7 +36258,7 @@ L_800E99D4:
     // 0x800E99F8: jal         0x8003E7D0
     // 0x800E99FC: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
-    func_8003E7D0(rdram, ctx);
+    unregisterAndFreeNpcSlot(rdram, ctx);
         goto after_58;
     // 0x800E99FC: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
@@ -36295,7 +36295,7 @@ L_800E9A20:
     // 0x800E9A28: jal         0x8003E684
     // 0x800E9A2C: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
-    func_8003E684(rdram, ctx);
+    popNpcSlotFromTail(rdram, ctx);
         goto after_59;
     // 0x800E9A2C: addu        $a1, $s4, $zero
     ctx->r5 = ADD32(ctx->r20, 0);
@@ -36310,7 +36310,7 @@ L_800E9A34:
     // 0x800E9A3C: jal         0x800F2830
     // 0x800E9A40: nop
 
-    func_800F2830(rdram, ctx);
+    setObjectDetailLevel(rdram, ctx);
         goto after_60;
     // 0x800E9A40: nop
 
@@ -36327,7 +36327,7 @@ L_800E9A4C:
     // 0x800E9A50: jal         0x800EFD80
     // 0x800E9A54: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
-    func_800EFD80(rdram, ctx);
+    dispatchSlotAction5IfActive(rdram, ctx);
         goto after_61;
     // 0x800E9A54: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
@@ -36400,7 +36400,7 @@ RECOMP_FUNC void func_800E9A84(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E9AC0: jal         0x800F2830
     // 0x800E9AC4: nop
 
-    func_800F2830(rdram, ctx);
+    setObjectDetailLevel(rdram, ctx);
         goto after_1;
     // 0x800E9AC4: nop
 
@@ -36480,7 +36480,7 @@ RECOMP_FUNC void func_800E9B10(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E9B6C: jal         0x800F2888
     // 0x800E9B70: addu        $s0, $v0, $zero
     ctx->r16 = ADD32(ctx->r2, 0);
-    func_800F2888(rdram, ctx);
+    initActorMotionParams(rdram, ctx);
         goto after_0;
     // 0x800E9B70: addu        $s0, $v0, $zero
     ctx->r16 = ADD32(ctx->r2, 0);
@@ -36518,7 +36518,7 @@ RECOMP_FUNC void func_800E9B10(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E9BB0: jal         0x800F2B88
     // 0x800E9BB4: nop
 
-    func_800F2B88(rdram, ctx);
+    initObjectAnimSubstruct(rdram, ctx);
         goto after_1;
     // 0x800E9BB4: nop
 
@@ -36532,7 +36532,7 @@ RECOMP_FUNC void func_800E9B10(uint8_t* rdram, recomp_context* ctx) {
     // 0x800E9BC4: jal         0x800F2830
     // 0x800E9BC8: nop
 
-    func_800F2830(rdram, ctx);
+    setObjectDetailLevel(rdram, ctx);
         goto after_2;
     // 0x800E9BC8: nop
 
@@ -36804,7 +36804,7 @@ L_800E9D2C:
     // 0x800E9D44: jal         0x800989D8
     // 0x800E9D48: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;
-    func_800989D8(rdram, ctx);
+    play3DSoundEvent(rdram, ctx);
         goto after_0;
     // 0x800E9D48: swc1        $f0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f0.u32l;

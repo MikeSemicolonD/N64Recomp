@@ -1453,7 +1453,7 @@ RECOMP_FUNC void func_8008FFAC(uint8_t* rdram, recomp_context* ctx) {
     // 0x80090004: jal         0x80093E54
     // 0x80090008: srl         $s4, $v0, 12
     ctx->r20 = S32(U32(ctx->r2) >> 12);
-    func_80093E54(rdram, ctx);
+    truncDouble(rdram, ctx);
         goto after_0;
     // 0x80090008: srl         $s4, $v0, 12
     ctx->r20 = S32(U32(ctx->r2) >> 12);
@@ -2903,7 +2903,7 @@ L_80090884:
     CHECK_FR(ctx, 2);
     NAN_CHECK(ctx->f20.d); NAN_CHECK(ctx->f2.d); 
     ctx->f12.d = DIV_D(ctx->f20.d, ctx->f2.d);
-    func_80093E54(rdram, ctx);
+    truncDouble(rdram, ctx);
         goto after_6;
     // 0x80090888: div.d       $f12, $f20, $f2
     CHECK_FR(ctx, 12);
@@ -3296,7 +3296,7 @@ RECOMP_FUNC void func_80090A3C(uint8_t* rdram, recomp_context* ctx) {
     // 0x80090AB4: jal         0x80093E54
     // 0x80090AB8: nop
 
-    func_80093E54(rdram, ctx);
+    truncDouble(rdram, ctx);
         goto after_0;
     // 0x80090AB8: nop
 
@@ -3469,7 +3469,7 @@ L_80090BA0:
     // 0x80090BAC: jal         0x80093E54
     // 0x80090BB0: nop
 
-    func_80093E54(rdram, ctx);
+    truncDouble(rdram, ctx);
         goto after_1;
     // 0x80090BB0: nop
 
@@ -4515,7 +4515,7 @@ RECOMP_FUNC void func_8009123C(uint8_t* rdram, recomp_context* ctx) {
     // 0x8009125C: jal         0x800920A4
     // 0x80091260: sw          $s0, 0x20($sp)
     MEM_W(0X20, ctx->r29) = ctx->r16;
-    func_800920A4(rdram, ctx);
+    factor5QueueBlock(rdram, ctx);
         goto after_0;
     // 0x80091260: sw          $s0, 0x20($sp)
     MEM_W(0X20, ctx->r29) = ctx->r16;
@@ -4523,7 +4523,7 @@ RECOMP_FUNC void func_8009123C(uint8_t* rdram, recomp_context* ctx) {
     // 0x80091264: jal         0x80023CC0
     // 0x80091268: nop
 
-    func_80023CC0(rdram, ctx);
+    recordFrameTimestamp(rdram, ctx);
         goto after_1;
     // 0x80091268: nop
 
@@ -4939,7 +4939,7 @@ L_80091444:
     // 0x800914A4: jal         0x8008D960
     // 0x800914A8: nop
 
-    func_8008D960(rdram, ctx);
+    tickAudioSequencerFrame(rdram, ctx);
         goto after_10;
     // 0x800914A8: nop
 
@@ -5073,7 +5073,7 @@ L_80091504:
     // 0x80091564: jal         0x8008D960
     // 0x80091568: nop
 
-    func_8008D960(rdram, ctx);
+    tickAudioSequencerFrame(rdram, ctx);
         goto after_13;
     // 0x80091568: nop
 
@@ -5200,7 +5200,7 @@ L_800915B8:
     // 0x80091618: jal         0x8008D960
     // 0x8009161C: nop
 
-    func_8008D960(rdram, ctx);
+    tickAudioSequencerFrame(rdram, ctx);
         goto after_16;
     // 0x8009161C: nop
 
@@ -5329,7 +5329,7 @@ L_800916A8:
     // 0x800916D0: jal         0x8001A018
     // 0x800916D4: nop
 
-    func_8001A018(rdram, ctx);
+    yieldFromSpThread(rdram, ctx);
         goto after_21;
     // 0x800916D4: nop
 
@@ -5499,7 +5499,7 @@ L_800917E8:
     // 0x800917E8: jal         0x80023D08
     // 0x800917EC: nop
 
-    func_80023D08(rdram, ctx);
+    getTimeSinceLastFrame(rdram, ctx);
         goto after_25;
     // 0x800917EC: nop
 
@@ -5598,7 +5598,7 @@ L_80091814:
     // 0x80091868: jal         0x800920D0
     // 0x8009186C: nop
 
-    func_800920D0(rdram, ctx);
+    factor5QueueSignal(rdram, ctx);
         goto after_27;
     // 0x8009186C: nop
 
@@ -5628,7 +5628,7 @@ L_80091814:
     // 0x80091898: nop
 
 ;}
-RECOMP_FUNC void func_8009189C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void initN64RspMixer(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8009189C: addiu       $sp, $sp, -0x28
@@ -6050,7 +6050,7 @@ L_80091A78:
     // 0x80091B38: nop
 
 ;}
-RECOMP_FUNC void func_80091B3C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void initAudioSubsystem(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80091B3C: addiu       $sp, $sp, -0x30
@@ -6076,7 +6076,7 @@ RECOMP_FUNC void func_80091B3C(uint8_t* rdram, recomp_context* ctx) {
     // 0x80091B64: jal         0x80091FC4
     // 0x80091B68: sw          $s0, 0x18($sp)
     MEM_W(0X18, ctx->r29) = ctx->r16;
-    func_80091FC4(rdram, ctx);
+    initFactor5Mutex(rdram, ctx);
         goto after_0;
     // 0x80091B68: sw          $s0, 0x18($sp)
     MEM_W(0X18, ctx->r29) = ctx->r16;
@@ -6239,7 +6239,7 @@ L_80091C4C:
     // 0x80091C58: jal         0x8009189C
     // 0x80091C5C: addu        $a3, $v0, $zero
     ctx->r7 = ADD32(ctx->r2, 0);
-    func_8009189C(rdram, ctx);
+    initN64RspMixer(rdram, ctx);
         goto after_7;
     // 0x80091C5C: addu        $a3, $v0, $zero
     ctx->r7 = ADD32(ctx->r2, 0);
@@ -6267,7 +6267,7 @@ L_80091C4C:
     // 0x80091C84: nop
 
 ;}
-RECOMP_FUNC void func_80091C88(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void reapplyAudioConfig(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80091C88: addiu       $sp, $sp, -0x28
@@ -6291,7 +6291,7 @@ RECOMP_FUNC void func_80091C88(uint8_t* rdram, recomp_context* ctx) {
     // 0x80091CAC: jal         0x80091FC4
     // 0x80091CB0: addu        $s3, $a2, $zero
     ctx->r19 = ADD32(ctx->r6, 0);
-    func_80091FC4(rdram, ctx);
+    initFactor5Mutex(rdram, ctx);
         goto after_0;
     // 0x80091CB0: addu        $s3, $a2, $zero
     ctx->r19 = ADD32(ctx->r6, 0);
@@ -6364,7 +6364,7 @@ L_80091D08:
     // 0x80091D14: jal         0x8009189C
     // 0x80091D18: addu        $a3, $v0, $zero
     ctx->r7 = ADD32(ctx->r2, 0);
-    func_8009189C(rdram, ctx);
+    initN64RspMixer(rdram, ctx);
         goto after_2;
     // 0x80091D18: addu        $a3, $v0, $zero
     ctx->r7 = ADD32(ctx->r2, 0);
@@ -6664,7 +6664,7 @@ L_80091EA0:
     // 0x80091EAC: nop
 
 ;}
-RECOMP_FUNC void func_80091EB0(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void waitForMusyXAudioTaskDone(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80091EB0: lui         $v0, 0x800A
@@ -6872,9 +6872,14 @@ L_80091FB4:
     // 0x80091FC0: nop
 
 ;}
-RECOMP_FUNC void func_80091FC4(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void initFactor5Mutex(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    {
+    static int s_inited = 0;
+    if (s_inited) return;
+    s_inited = 1;
+}
     // 0x80091FC4: addiu       $sp, $sp, -0x18
     ctx->r29 = ADD32(ctx->r29, -0X18);
     // 0x80091FC8: sw          $s0, 0x10($sp)
@@ -6924,23 +6929,23 @@ RECOMP_FUNC void func_80091FC4(uint8_t* rdram, recomp_context* ctx) {
     // 0x8009200C: nop
 
 ;}
-RECOMP_FUNC void func_80092010(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void factor5MutexAcquire(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
 ;}
-RECOMP_FUNC void func_8009205C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void factor5MutexRelease(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
 ;}
-RECOMP_FUNC void func_800920A4(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void factor5QueueBlock(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
 ;}
-RECOMP_FUNC void func_800920D0(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void factor5QueueSignal(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
 ;}
-RECOMP_FUNC void func_800920FC(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void isAudioSlotActive(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x800920FC: lui         $v0, 0x8015
@@ -7349,7 +7354,7 @@ RECOMP_FUNC void func_80092368(uint8_t* rdram, recomp_context* ctx) {
     // 0x80092384: sb          $zero, 0x1($v0)
     MEM_B(0X1, ctx->r2) = 0;
 ;}
-RECOMP_FUNC void func_80092388(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void noopHandler_80092388(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80092388: jr          $ra
@@ -7701,7 +7706,7 @@ RECOMP_FUNC void func_80092564(uint8_t* rdram, recomp_context* ctx) {
     // 0x80092584: nop
 
 ;}
-RECOMP_FUNC void func_80092588(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void writebackDCacheHalfwords(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80092588: addiu       $sp, $sp, -0x18

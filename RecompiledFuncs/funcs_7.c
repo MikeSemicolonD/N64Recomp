@@ -179,7 +179,7 @@ L_80023A24:
     // 0x80023A3C: jal         0x80007D74
     // 0x80023A40: sw          $zero, 0x4($a0)
     MEM_W(0X4, ctx->r4) = 0;
-    func_80007D74(rdram, ctx);
+    allocateDisplayListBuffer(rdram, ctx);
         goto after_0;
     // 0x80023A40: sw          $zero, 0x4($a0)
     MEM_W(0X4, ctx->r4) = 0;
@@ -279,7 +279,7 @@ L_80023AB4:
     // 0x80023AD0: jal         0x80007D74
     // 0x80023AD4: sw          $zero, 0x4($a0)
     MEM_W(0X4, ctx->r4) = 0;
-    func_80007D74(rdram, ctx);
+    allocateDisplayListBuffer(rdram, ctx);
         goto after_1;
     // 0x80023AD4: sw          $zero, 0x4($a0)
     MEM_W(0X4, ctx->r4) = 0;
@@ -462,7 +462,7 @@ L_80023BB8:
     // 0x80023BD0: jal         0x80007D74
     // 0x80023BD4: sw          $zero, 0x4($a0)
     MEM_W(0X4, ctx->r4) = 0;
-    func_80007D74(rdram, ctx);
+    allocateDisplayListBuffer(rdram, ctx);
         goto after_0;
     // 0x80023BD4: sw          $zero, 0x4($a0)
     MEM_W(0X4, ctx->r4) = 0;
@@ -562,7 +562,7 @@ L_80023C48:
     // 0x80023C64: jal         0x80007D74
     // 0x80023C68: sw          $zero, 0x4($a0)
     MEM_W(0X4, ctx->r4) = 0;
-    func_80007D74(rdram, ctx);
+    allocateDisplayListBuffer(rdram, ctx);
         goto after_1;
     // 0x80023C68: sw          $zero, 0x4($a0)
     MEM_W(0X4, ctx->r4) = 0;
@@ -613,7 +613,7 @@ L_80023C74:
     // 0x80023CBC: nop
 
 ;}
-RECOMP_FUNC void func_80023CC0(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void recordFrameTimestamp(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80023CC0: addiu       $sp, $sp, -0x18
@@ -643,7 +643,7 @@ RECOMP_FUNC void func_80023CC0(uint8_t* rdram, recomp_context* ctx) {
     // 0x80023CE4: nop
 
 ;}
-RECOMP_FUNC void func_80023CE8(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void getTimeLow32(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80023CE8: addiu       $sp, $sp, -0x18
@@ -669,7 +669,7 @@ RECOMP_FUNC void func_80023CE8(uint8_t* rdram, recomp_context* ctx) {
     // 0x80023D04: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_80023D08(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void getTimeSinceLastFrame(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80023D08: addiu       $sp, $sp, -0x18
@@ -699,7 +699,7 @@ RECOMP_FUNC void func_80023D08(uint8_t* rdram, recomp_context* ctx) {
     // 0x80023D2C: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_80023D30(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void setGlobalByte_80038CE0(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80023D30: lui         $at, 0x8004
@@ -713,7 +713,7 @@ RECOMP_FUNC void func_80023D30(uint8_t* rdram, recomp_context* ctx) {
     // 0x80023D3C: nop
 
 ;}
-RECOMP_FUNC void func_80023D40(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void emitProfilerBarSegment(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80023D40: lui         $v0, 0x8004
@@ -781,7 +781,7 @@ RECOMP_FUNC void func_80023D40(uint8_t* rdram, recomp_context* ctx) {
     // 0x80023DB4: jal         0x800074E0
     // 0x80023DB8: nop
 
-    func_800074E0(rdram, ctx);
+    u64DivU64(rdram, ctx);
         goto after_0;
     // 0x80023DB8: nop
 
@@ -805,7 +805,7 @@ RECOMP_FUNC void func_80023D40(uint8_t* rdram, recomp_context* ctx) {
     // 0x80023DDC: jal         0x800074E0
     // 0x80023DE0: addu        $a1, $v1, $zero
     ctx->r5 = ADD32(ctx->r3, 0);
-    func_800074E0(rdram, ctx);
+    u64DivU64(rdram, ctx);
         goto after_1;
     // 0x80023DE0: addu        $a1, $v1, $zero
     ctx->r5 = ADD32(ctx->r3, 0);
@@ -846,7 +846,7 @@ L_80023DF4:
     // 0x80023E10: jal         0x80007D74
     // 0x80023E14: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
-    func_80007D74(rdram, ctx);
+    allocateDisplayListBuffer(rdram, ctx);
         goto after_2;
     // 0x80023E14: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
@@ -883,7 +883,7 @@ L_80023E20:
     // 0x80023E48: jal         0x80007D74
     // 0x80023E4C: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
-    func_80007D74(rdram, ctx);
+    allocateDisplayListBuffer(rdram, ctx);
         goto after_3;
     // 0x80023E4C: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
@@ -926,7 +926,7 @@ L_80023E54:
     // 0x80023E8C: jal         0x80007D74
     // 0x80023E90: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
-    func_80007D74(rdram, ctx);
+    allocateDisplayListBuffer(rdram, ctx);
         goto after_4;
     // 0x80023E90: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
@@ -967,7 +967,7 @@ L_80023E98:
     // 0x80023ECC: jal         0x80007D74
     // 0x80023ED0: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
-    func_80007D74(rdram, ctx);
+    allocateDisplayListBuffer(rdram, ctx);
         goto after_5;
     // 0x80023ED0: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
@@ -1008,7 +1008,7 @@ L_80023ED8:
     // 0x80023F0C: jal         0x80007D74
     // 0x80023F10: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
-    func_80007D74(rdram, ctx);
+    allocateDisplayListBuffer(rdram, ctx);
         goto after_6;
     // 0x80023F10: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
@@ -1061,7 +1061,7 @@ L_80023F18:
     // 0x80023F64: jal         0x80007D74
     // 0x80023F68: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
-    func_80007D74(rdram, ctx);
+    allocateDisplayListBuffer(rdram, ctx);
         goto after_7;
     // 0x80023F68: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
@@ -1096,7 +1096,7 @@ L_80023F70:
     // 0x80023F98: jal         0x80007D74
     // 0x80023F9C: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
-    func_80007D74(rdram, ctx);
+    allocateDisplayListBuffer(rdram, ctx);
         goto after_8;
     // 0x80023F9C: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
@@ -1135,7 +1135,7 @@ L_80023FA4:
     // 0x80023FD4: jal         0x80007D74
     // 0x80023FD8: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
-    func_80007D74(rdram, ctx);
+    allocateDisplayListBuffer(rdram, ctx);
         goto after_9;
     // 0x80023FD8: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
@@ -1180,7 +1180,7 @@ L_80023FE0:
     // 0x8002401C: jal         0x80007D74
     // 0x80024020: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
-    func_80007D74(rdram, ctx);
+    allocateDisplayListBuffer(rdram, ctx);
         goto after_10;
     // 0x80024020: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
@@ -1215,7 +1215,7 @@ L_80024028:
     // 0x80024050: jal         0x80007D74
     // 0x80024054: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
-    func_80007D74(rdram, ctx);
+    allocateDisplayListBuffer(rdram, ctx);
         goto after_11;
     // 0x80024054: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
@@ -1274,7 +1274,7 @@ L_8002405C:
     // 0x800240B4: jal         0x80007D74
     // 0x800240B8: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
-    func_80007D74(rdram, ctx);
+    allocateDisplayListBuffer(rdram, ctx);
         goto after_12;
     // 0x800240B8: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
@@ -1390,7 +1390,7 @@ RECOMP_FUNC void func_80024130(uint8_t* rdram, recomp_context* ctx) {
     // 0x80024174: jal         0x80007D74
     // 0x80024178: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
-    func_80007D74(rdram, ctx);
+    allocateDisplayListBuffer(rdram, ctx);
         goto after_0;
     // 0x80024178: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
@@ -1453,7 +1453,7 @@ L_80024180:
     // 0x800241D8: jal         0x80007D74
     // 0x800241DC: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
-    func_80007D74(rdram, ctx);
+    allocateDisplayListBuffer(rdram, ctx);
         goto after_2;
     // 0x800241DC: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
@@ -1492,7 +1492,7 @@ L_800241E8:
     // 0x80024214: jal         0x80007D74
     // 0x80024218: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
-    func_80007D74(rdram, ctx);
+    allocateDisplayListBuffer(rdram, ctx);
         goto after_3;
     // 0x80024218: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
@@ -1533,7 +1533,7 @@ L_80024220:
     // 0x80024254: jal         0x80007D74
     // 0x80024258: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
-    func_80007D74(rdram, ctx);
+    allocateDisplayListBuffer(rdram, ctx);
         goto after_4;
     // 0x80024258: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
@@ -1572,7 +1572,7 @@ L_80024260:
     // 0x80024290: jal         0x80007D74
     // 0x80024294: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
-    func_80007D74(rdram, ctx);
+    allocateDisplayListBuffer(rdram, ctx);
         goto after_5;
     // 0x80024294: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
@@ -1611,7 +1611,7 @@ L_8002429C:
     // 0x800242CC: jal         0x80007D74
     // 0x800242D0: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
-    func_80007D74(rdram, ctx);
+    allocateDisplayListBuffer(rdram, ctx);
         goto after_6;
     // 0x800242D0: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
@@ -1652,7 +1652,7 @@ L_800242D8:
     // 0x8002430C: jal         0x80007D74
     // 0x80024310: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
-    func_80007D74(rdram, ctx);
+    allocateDisplayListBuffer(rdram, ctx);
         goto after_7;
     // 0x80024310: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
@@ -1799,7 +1799,7 @@ L_8002436C:
     // 0x800243F8: jal         0x80007D74
     // 0x800243FC: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
-    func_80007D74(rdram, ctx);
+    allocateDisplayListBuffer(rdram, ctx);
         goto after_9;
     // 0x800243FC: sw          $zero, 0x4($s0)
     MEM_W(0X4, ctx->r16) = 0;
@@ -2257,7 +2257,7 @@ L_800246C0:
     // 0x800246E4: nop
 
 ;}
-RECOMP_FUNC void func_800246E8(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void loadDebugAssets(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x800246E8: addiu       $sp, $sp, -0x90
@@ -2291,7 +2291,7 @@ RECOMP_FUNC void func_800246E8(uint8_t* rdram, recomp_context* ctx) {
     // 0x80024720: jal         0x800047F4
     // 0x80024724: nop
 
-    func_800047F4(rdram, ctx);
+    findManifestEntryByName(rdram, ctx);
         goto after_0;
     // 0x80024724: nop
 
@@ -2345,7 +2345,7 @@ RECOMP_FUNC void func_800246E8(uint8_t* rdram, recomp_context* ctx) {
     // 0x8002476C: jal         0x80004AAC
     // 0x80024770: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
-    func_80004AAC(rdram, ctx);
+    findAssetAcrossSegments(rdram, ctx);
         goto after_3;
     // 0x80024770: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
@@ -2365,7 +2365,7 @@ RECOMP_FUNC void func_800246E8(uint8_t* rdram, recomp_context* ctx) {
     // 0x8002478C: jal         0x80004E70
     // 0x80024790: sw          $s0, 0x14($sp)
     MEM_W(0X14, ctx->r29) = ctx->r16;
-    func_80004E70(rdram, ctx);
+    setupAssetDma(rdram, ctx);
         goto after_4;
     // 0x80024790: sw          $s0, 0x14($sp)
     MEM_W(0X14, ctx->r29) = ctx->r16;
@@ -2375,7 +2375,7 @@ RECOMP_FUNC void func_800246E8(uint8_t* rdram, recomp_context* ctx) {
     // 0x80024798: jal         0x80004C70
     // 0x8002479C: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
-    func_80004C70(rdram, ctx);
+    teardownAssetDma(rdram, ctx);
         goto after_5;
     // 0x8002479C: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
@@ -2441,7 +2441,7 @@ RECOMP_FUNC void func_800246E8(uint8_t* rdram, recomp_context* ctx) {
     // 0x80024814: jal         0x80022B90
     // 0x80024818: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
-    func_80022B90(rdram, ctx);
+    registerHmtTextureInTable(rdram, ctx);
         goto after_6;
     // 0x80024818: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
@@ -2461,7 +2461,7 @@ RECOMP_FUNC void func_800246E8(uint8_t* rdram, recomp_context* ctx) {
     // 0x8002482C: jal         0x80004994
     // 0x80024830: addu        $a0, $s4, $zero
     ctx->r4 = ADD32(ctx->r20, 0);
-    func_80004994(rdram, ctx);
+    freeManifestSegmentAssets(rdram, ctx);
         goto after_8;
     // 0x80024830: addu        $a0, $s4, $zero
     ctx->r4 = ADD32(ctx->r20, 0);

@@ -1,7 +1,7 @@
 #include "recomp.h"
 #include "funcs.h"
 
-RECOMP_FUNC void func_8001A038(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void yieldFromGfxFrame(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001A038: addiu       $sp, $sp, -0x18
@@ -69,7 +69,7 @@ RECOMP_FUNC void func_8001A058(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001A094: nop
 
 ;}
-RECOMP_FUNC void func_8001A098(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void initVideoSubsystem(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001A098: addiu       $sp, $sp, -0x1C0
@@ -375,7 +375,7 @@ L_8001A280:
     // 0x8001A280: jal         0x8001BF20
     // 0x8001A284: addu        $a0, $zero, $zero
     ctx->r4 = ADD32(0, 0);
-    func_8001BF20(rdram, ctx);
+    bufferArbiterAllocSlot(rdram, ctx);
         goto after_9;
     // 0x8001A284: addu        $a0, $zero, $zero
     ctx->r4 = ADD32(0, 0);
@@ -455,7 +455,7 @@ L_8001A2E4:
     // 0x8001A2F8: jal         0x8001BEC8
     // 0x8001A2FC: nop
 
-    func_8001BEC8(rdram, ctx);
+    bufferArbiterMarkSlotReady(rdram, ctx);
         goto after_12;
     // 0x8001A2FC: nop
 
@@ -463,7 +463,7 @@ L_8001A2E4:
     // 0x8001A300: jal         0x8001BCE4
     // 0x8001A304: nop
 
-    func_8001BCE4(rdram, ctx);
+    bufferArbiterProducerMark(rdram, ctx);
         goto after_13;
     // 0x8001A304: nop
 
@@ -3924,7 +3924,7 @@ L_8001B664:
     // 0x8001B664: jal         0x8001BE80
     // 0x8001B668: nop
 
-    func_8001BE80(rdram, ctx);
+    waitOnVideoQueue(rdram, ctx);
         goto after_25;
     // 0x8001B668: nop
 
@@ -4709,7 +4709,7 @@ L_8001BA7C:
     // 0x8001BA98: nop
 
 ;}
-RECOMP_FUNC void func_8001BA9C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void swapBufferWithViMode(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001BA9C: lui         $v0, 0x8012
@@ -4991,7 +4991,7 @@ L_8001BBD4:
     // 0x8001BC30: jal         0x8001BE80
     // 0x8001BC34: nop
 
-    func_8001BE80(rdram, ctx);
+    waitOnVideoQueue(rdram, ctx);
         goto after_1;
     // 0x8001BC34: nop
 
@@ -5115,7 +5115,7 @@ L_8001BCDC:
     // 0x8001BCE0: nop
 
 ;}
-RECOMP_FUNC void func_8001BCE4(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void bufferArbiterProducerMark(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001BCE4: addiu       $sp, $sp, -0x38
@@ -5396,7 +5396,7 @@ L_8001BE54:
     // 0x8001BE7C: nop
 
 ;}
-RECOMP_FUNC void func_8001BE80(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void waitOnVideoQueue(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001BE80: addiu       $sp, $sp, -0x18
@@ -5416,12 +5416,12 @@ RECOMP_FUNC void func_8001BE80(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001BE9C: sb          $v0, 0x7808($at)
     MEM_B(0X7808, ctx->r1) = ctx->r2;
     // 0x8001BEA0: jal         0x800331D0
-    // 0x8001BEA4: addiu       $a2, $zero, 0x1
-    ctx->r6 = ADD32(0, 0X1);
+    // 0x8001BEA4: addiu       $a2, $zero, 0x0
+    ctx->r6 = ADD32(0, 0X0);
     osRecvMesg_recomp(rdram, ctx);
         goto after_0;
-    // 0x8001BEA4: addiu       $a2, $zero, 0x1
-    ctx->r6 = ADD32(0, 0X1);
+    // 0x8001BEA4: addiu       $a2, $zero, 0x0
+    ctx->r6 = ADD32(0, 0X0);
     after_0:
     // 0x8001BEA8: lui         $at, 0x8003
     ctx->r1 = S32(0X8003 << 16);
@@ -5446,7 +5446,7 @@ RECOMP_FUNC void func_8001BE80(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001BEC4: nop
 
 ;}
-RECOMP_FUNC void func_8001BEC8(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void bufferArbiterMarkSlotReady(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001BEC8: lui         $v1, 0x8013
@@ -5513,7 +5513,7 @@ L_8001BF14:
     // 0x8001BF1C: nop
 
 ;}
-RECOMP_FUNC void func_8001BF20(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void bufferArbiterAllocSlot(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001BF20: addiu       $sp, $sp, -0x30
@@ -5585,7 +5585,7 @@ L_8001BF74:
     // 0x8001BF8C: jal         0x80001880
     // 0x8001BF90: sw          $v0, 0x0($a1)
     MEM_W(0X0, ctx->r5) = ctx->r2;
-    func_80001880(rdram, ctx);
+    clearFrameReadyFlag(rdram, ctx);
         goto after_0;
     // 0x8001BF90: sw          $v0, 0x0($a1)
     MEM_W(0X0, ctx->r5) = ctx->r2;
@@ -5879,7 +5879,7 @@ L_8001C10C:
     // 0x8001C128: nop
 
 ;}
-RECOMP_FUNC void func_8001C12C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void postSwapRdpReset(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001C12C: addiu       $sp, $sp, -0x18
@@ -5905,7 +5905,7 @@ RECOMP_FUNC void func_8001C12C(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001C14C: jal         0x8001BF20
     // 0x8001C150: addiu       $a0, $zero, 0x1
     ctx->r4 = ADD32(0, 0X1);
-    func_8001BF20(rdram, ctx);
+    bufferArbiterAllocSlot(rdram, ctx);
         goto after_0;
     // 0x8001C150: addiu       $a0, $zero, 0x1
     ctx->r4 = ADD32(0, 0X1);
@@ -6058,7 +6058,7 @@ L_8001C230:
     // 0x8001C240: nop
 
 ;}
-RECOMP_FUNC void func_8001C244(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void setPostSwapPendingFlags(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001C244: addiu       $v0, $zero, 0x1
@@ -6078,7 +6078,7 @@ RECOMP_FUNC void func_8001C244(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001C25C: nop
 
 ;}
-RECOMP_FUNC void func_8001C260(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void waitForPostSwapAck(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001C260: addiu       $sp, $sp, -0x20
@@ -6093,8 +6093,8 @@ RECOMP_FUNC void func_8001C260(uint8_t* rdram, recomp_context* ctx) {
     MEM_W(0X14, ctx->r29) = ctx->r17;
     // 0x8001C274: sw          $s0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r16;
-    // 0x8001C278: lbu         $v0, 0x0($v1)
-    ctx->r2 = MEM_BU(ctx->r3, 0X0);
+    // 0x8001C278: addiu       $v0, $zero, 0x0
+    ctx->r2 = ADD32(0, 0X0);
     // 0x8001C27C: beq         $v0, $zero, L_8001C2E0
     if (ctx->r2 == 0) {
         // 0x8001C280: nop
@@ -6183,7 +6183,7 @@ L_8001C2E0:
     // 0x8001C2F4: nop
 
 ;}
-RECOMP_FUNC void func_8001C2F8(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void clearPostSwapPendingFlags(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001C2F8: lui         $at, 0x8012
@@ -6219,9 +6219,13 @@ RECOMP_FUNC void func_8001C310(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001C324: nop
 
 ;}
-RECOMP_FUNC void func_8001C328(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void dpInterruptHandlerThread(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    {
+    extern void rs64_dbg_log4(const char* tag, unsigned a, unsigned b, unsigned c, unsigned d);
+    rs64_dbg_log4("dpHandler ENTRY", 0, 0, 0, 0);
+}
     // 0x8001C328: addiu       $sp, $sp, -0x18
     ctx->r29 = ADD32(ctx->r29, -0X18);
     // 0x8001C32C: sw          $s0, 0x10($sp)
@@ -6279,6 +6283,14 @@ RECOMP_FUNC void func_8001C328(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001C37C: addiu       $s0, $s0, -0x5763
     ctx->r16 = ADD32(ctx->r16, -0X5763);
 L_8001C380:
+    {
+    static unsigned s_iters = 0;
+    extern void rs64_dbg_log4(const char* tag, unsigned a, unsigned b, unsigned c, unsigned d);
+    unsigned n = ++s_iters;
+    if (n <= 4 || (n & 31) == 0) {
+        rs64_dbg_log4("dpHandler iter", n, 0, 0, 0);
+    }
+}
     // 0x8001C380: lui         $a0, 0x8012
     ctx->r4 = S32(0X8012 << 16);
     // 0x8001C384: addiu       $a0, $a0, -0x5BF8
@@ -6314,7 +6326,7 @@ L_8001C380:
     // 0x8001C3B0: jal         0x80023D08
     // 0x8001C3B4: nop
 
-    func_80023D08(rdram, ctx);
+    getTimeSinceLastFrame(rdram, ctx);
         goto after_5;
     // 0x8001C3B4: nop
 
@@ -6325,12 +6337,8 @@ L_8001C380:
     ctx->r1 = S32(0X8013 << 16);
     // 0x8001C3C0: sw          $v0, -0x7124($at)
     MEM_W(-0X7124, ctx->r1) = ctx->r2;
-    // 0x8001C3C4: beq         $v1, $zero, L_8001C3DC
-    if (ctx->r3 == 0) {
-        // 0x8001C3C8: addu        $a1, $zero, $zero
-        ctx->r5 = ADD32(0, 0);
-            goto L_8001C3DC;
-    }
+    // 0x8001C3C4: nop
+
     // 0x8001C3C8: addu        $a1, $zero, $zero
     ctx->r5 = ADD32(0, 0);
     // 0x8001C3CC: lui         $a0, 0x8012
@@ -6345,7 +6353,6 @@ L_8001C380:
     // 0x8001C3D8: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
     after_6:
-L_8001C3DC:
     // 0x8001C3DC: sb          $zero, -0x2($s0)
     MEM_B(-0X2, ctx->r16) = 0;
     // 0x8001C3E0: j           L_8001C380
@@ -6371,7 +6378,7 @@ RECOMP_FUNC void fake_func_8001C3FC(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
 ;}
-RECOMP_FUNC void func_8001C400(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void sinfApprox(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001C400: lui         $at, 0x8000
@@ -6786,7 +6793,7 @@ L_8001C5C4:
     // 0x8001C5C8: nop
 
 ;}
-RECOMP_FUNC void func_8001C5CC(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void constMinusSinfApprox(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001C5CC: addiu       $sp, $sp, -0x18
@@ -6796,7 +6803,7 @@ RECOMP_FUNC void func_8001C5CC(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001C5D4: jal         0x8001C400
     // 0x8001C5D8: nop
 
-    func_8001C400(rdram, ctx);
+    sinfApprox(rdram, ctx);
         goto after_0;
     // 0x8001C5D8: nop
 
@@ -6945,7 +6952,7 @@ RECOMP_FUNC void func_8001C5F4(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001C668: jal         0x8001C400
     // 0x8001C66C: nop
 
-    func_8001C400(rdram, ctx);
+    sinfApprox(rdram, ctx);
         goto after_0;
     // 0x8001C66C: nop
 
@@ -6960,7 +6967,7 @@ L_8001C678:
     // 0x8001C678: jal         0x8001C400
     // 0x8001C67C: nop
 
-    func_8001C400(rdram, ctx);
+    sinfApprox(rdram, ctx);
         goto after_1;
     // 0x8001C67C: nop
 
@@ -7004,7 +7011,7 @@ L_8001C690:
     CHECK_FR(ctx, 12);
     NAN_CHECK(ctx->f12.fl); 
     ctx->f12.fl = -ctx->f12.fl;
-    func_8001C400(rdram, ctx);
+    sinfApprox(rdram, ctx);
         goto after_2;
     // 0x8001C6A4: neg.s       $f12, $f12
     CHECK_FR(ctx, 12);
@@ -7037,7 +7044,7 @@ L_8001C6B8:
     CHECK_FR(ctx, 12);
     NAN_CHECK(ctx->f12.fl); 
     ctx->f12.fl = -ctx->f12.fl;
-    func_8001C400(rdram, ctx);
+    sinfApprox(rdram, ctx);
         goto after_3;
     // 0x8001C6BC: neg.s       $f12, $f12
     CHECK_FR(ctx, 12);
@@ -7097,7 +7104,7 @@ L_8001C6D0:
     CHECK_FR(ctx, 12);
     CHECK_FR(ctx, 14);
     ctx->f12.fl = ctx->f14.fl;
-    func_8001C400(rdram, ctx);
+    sinfApprox(rdram, ctx);
         goto after_4;
     // 0x8001C6F4: mov.s       $f12, $f14
     CHECK_FR(ctx, 12);
@@ -7129,7 +7136,7 @@ L_8001C708:
     CHECK_FR(ctx, 14);
     NAN_CHECK(ctx->f14.fl); 
     ctx->f12.fl = -ctx->f14.fl;
-    func_8001C400(rdram, ctx);
+    sinfApprox(rdram, ctx);
         goto after_5;
     // 0x8001C70C: neg.s       $f12, $f14
     CHECK_FR(ctx, 12);
@@ -7175,7 +7182,7 @@ L_8001C720:
     CHECK_FR(ctx, 12);
     CHECK_FR(ctx, 14);
     ctx->f12.fl = ctx->f14.fl;
-    func_8001C400(rdram, ctx);
+    sinfApprox(rdram, ctx);
         goto after_6;
     // 0x8001C734: mov.s       $f12, $f14
     CHECK_FR(ctx, 12);
@@ -7207,7 +7214,7 @@ L_8001C748:
     CHECK_FR(ctx, 14);
     NAN_CHECK(ctx->f14.fl); 
     ctx->f12.fl = -ctx->f14.fl;
-    func_8001C400(rdram, ctx);
+    sinfApprox(rdram, ctx);
         goto after_7;
     // 0x8001C74C: neg.s       $f12, $f14
     CHECK_FR(ctx, 12);
@@ -7250,7 +7257,7 @@ L_8001C764:
     // 0x8001C770: nop
 
 ;}
-RECOMP_FUNC void func_8001C774(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void mat3x3InverseInto(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001C774: lwc1        $f14, 0x10($a1)
@@ -7893,7 +7900,7 @@ L_8001C9B4:
     // 0x8001CA4C: sh          $zero, 0x3E($t3)
     MEM_H(0X3E, ctx->r11) = 0;
 ;}
-RECOMP_FUNC void func_8001CA50(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void clearVec4QuadStruct(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001CA50: lui         $at, 0x8000
@@ -7931,7 +7938,7 @@ RECOMP_FUNC void func_8001CA50(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001CA8C: swc1        $f2, 0x0($a0)
     MEM_W(0X0, ctx->r4) = ctx->f2.u32l;
 ;}
-RECOMP_FUNC void func_8001CA90(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void addVec3At0x24(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001CA90: lwc1        $f4, 0x24($a0)
@@ -7975,7 +7982,7 @@ RECOMP_FUNC void func_8001CA90(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001CAC0: swc1        $f0, 0x2C($a0)
     MEM_W(0X2C, ctx->r4) = ctx->f0.u32l;
 ;}
-RECOMP_FUNC void func_8001CAC4(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void setVec3At0x24(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001CAC4: lui         $at, 0x8000
@@ -8013,7 +8020,7 @@ RECOMP_FUNC void func_8001CAC4(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001CB00: swc1        $f2, 0x0($a0)
     MEM_W(0X0, ctx->r4) = ctx->f2.u32l;
 ;}
-RECOMP_FUNC void func_8001CB04(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void applyScaleToMat3x4(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001CB04: addiu       $sp, $sp, -0x48
@@ -8055,7 +8062,7 @@ RECOMP_FUNC void func_8001CB04(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001CB4C: jal         0x800191C4
     // 0x8001CB50: swc1        $f0, 0x28($sp)
     MEM_W(0X28, ctx->r29) = ctx->f0.u32l;
-    func_800191C4(rdram, ctx);
+    mat3x4Multiply(rdram, ctx);
         goto after_0;
     // 0x8001CB50: swc1        $f0, 0x28($sp)
     MEM_W(0X28, ctx->r29) = ctx->f0.u32l;
@@ -8071,7 +8078,7 @@ RECOMP_FUNC void func_8001CB04(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001CB60: nop
 
 ;}
-RECOMP_FUNC void func_8001CB64(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void initVec4TripletFromArgs(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     { if (((uint64_t)ctx->r4 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) return; }
@@ -8106,7 +8113,7 @@ RECOMP_FUNC void func_8001CB64(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001CB98: swc1        $f0, 0x18($a0)
     MEM_W(0X18, ctx->r4) = ctx->f0.u32l;
 ;}
-RECOMP_FUNC void func_8001CB9C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void composeRotationMatrixSlot0(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     { if (((uint64_t)ctx->r4 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) return; }
@@ -8203,7 +8210,7 @@ RECOMP_FUNC void func_8001CB9C(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001CC1C: jal         0x800191C4
     // 0x8001CC20: swc1        $f4, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f4.u32l;
-    func_800191C4(rdram, ctx);
+    mat3x4Multiply(rdram, ctx);
         goto after_2;
     // 0x8001CC20: swc1        $f4, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f4.u32l;
@@ -8224,7 +8231,7 @@ RECOMP_FUNC void func_8001CB9C(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001CC38: nop
 
 ;}
-RECOMP_FUNC void func_8001CC3C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void buildRotationMatrixSlot0(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001CC3C: lui         $at, 0x8000
@@ -8329,7 +8336,7 @@ RECOMP_FUNC void func_8001CC3C(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001CCC8: nop
 
 ;}
-RECOMP_FUNC void func_8001CCCC(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void composeRotationMatrixSlot1(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001CCCC: lui         $at, 0x8000
@@ -8425,7 +8432,7 @@ RECOMP_FUNC void func_8001CCCC(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001CD4C: jal         0x800191C4
     // 0x8001CD50: swc1        $f4, 0x20($sp)
     MEM_W(0X20, ctx->r29) = ctx->f4.u32l;
-    func_800191C4(rdram, ctx);
+    mat3x4Multiply(rdram, ctx);
         goto after_2;
     // 0x8001CD50: swc1        $f4, 0x20($sp)
     MEM_W(0X20, ctx->r29) = ctx->f4.u32l;
@@ -8446,7 +8453,7 @@ RECOMP_FUNC void func_8001CCCC(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001CD68: nop
 
 ;}
-RECOMP_FUNC void func_8001CD6C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void buildRotationMatrixSlot1(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001CD6C: lui         $at, 0x8000
@@ -8551,7 +8558,7 @@ RECOMP_FUNC void func_8001CD6C(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001CDF8: nop
 
 ;}
-RECOMP_FUNC void func_8001CDFC(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void composeRotationMatrixSlot2(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001CDFC: lui         $at, 0x8000
@@ -8647,7 +8654,7 @@ RECOMP_FUNC void func_8001CDFC(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001CE7C: jal         0x800191C4
     // 0x8001CE80: swc1        $f4, 0x30($sp)
     MEM_W(0X30, ctx->r29) = ctx->f4.u32l;
-    func_800191C4(rdram, ctx);
+    mat3x4Multiply(rdram, ctx);
         goto after_2;
     // 0x8001CE80: swc1        $f4, 0x30($sp)
     MEM_W(0X30, ctx->r29) = ctx->f4.u32l;
@@ -8668,7 +8675,7 @@ RECOMP_FUNC void func_8001CDFC(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001CE98: nop
 
 ;}
-RECOMP_FUNC void func_8001CE9C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void buildRotationMatrixSlot2(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001CE9C: lui         $at, 0x8000
@@ -8773,7 +8780,7 @@ RECOMP_FUNC void func_8001CE9C(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001CF28: nop
 
 ;}
-RECOMP_FUNC void func_8001CF2C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void vec3Length(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001CF2C: lwc1        $f0, 0x0($a0)
@@ -8901,7 +8908,7 @@ RECOMP_FUNC void normalize_vector(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001CF9C: swc1        $f4, 0x4($a0)
     MEM_W(0X4, ctx->r4) = ctx->f4.u32l;
 ;}
-RECOMP_FUNC void func_8001CFA0(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void vec3NormalizeInto(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001CFA0: lwc1        $f6, 0x0($a1)
@@ -8978,7 +8985,7 @@ RECOMP_FUNC void func_8001CFA0(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001CFE4: swc1        $f2, 0x8($a0)
     MEM_W(0X8, ctx->r4) = ctx->f2.u32l;
 ;}
-RECOMP_FUNC void func_8001CFE8(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void vec3Dot(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001CFE8: lwc1        $f6, 0x0($a0)
@@ -9032,7 +9039,7 @@ RECOMP_FUNC void func_8001CFE8(uint8_t* rdram, recomp_context* ctx) {
     NAN_CHECK(ctx->f6.fl); NAN_CHECK(ctx->f0.fl); 
     ctx->f0.fl = ctx->f6.fl + ctx->f0.fl;
 ;}
-RECOMP_FUNC void func_8001D018(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void vec2Cross2D(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001D018: lwc1        $f4, 0x0($a0)
@@ -9070,7 +9077,7 @@ RECOMP_FUNC void func_8001D018(uint8_t* rdram, recomp_context* ctx) {
     NAN_CHECK(ctx->f4.fl); NAN_CHECK(ctx->f0.fl); 
     ctx->f0.fl = ctx->f4.fl - ctx->f0.fl;
 ;}
-RECOMP_FUNC void func_8001D038(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void quatFromCardinalAxis(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001D038: addiu       $sp, $sp, -0x20
@@ -9276,7 +9283,7 @@ L_8001D0F0:
     // 0x8001D140: nop
 
 ;}
-RECOMP_FUNC void func_8001D144(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void quatFromAxisAngleSafe(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001D144: addiu       $sp, $sp, -0x30
@@ -9495,7 +9502,7 @@ L_8001D220:
     // 0x8001D23C: nop
 
 ;}
-RECOMP_FUNC void func_8001D240(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void quatFromAxisAngle(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001D240: lui         $at, 0x8000
@@ -9597,7 +9604,7 @@ RECOMP_FUNC void func_8001D240(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001D2BC: nop
 
 ;}
-RECOMP_FUNC void func_8001D2C0(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void quatMultiply(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001D2C0: addiu       $sp, $sp, -0x30
@@ -9683,7 +9690,7 @@ RECOMP_FUNC void func_8001D2C0(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001D328: jal         0x80019548
     // 0x8001D32C: swc1        $f0, 0x0($s2)
     MEM_W(0X0, ctx->r18) = ctx->f0.u32l;
-    func_80019548(rdram, ctx);
+    vec3Cross(rdram, ctx);
         goto after_0;
     // 0x8001D32C: swc1        $f0, 0x0($s2)
     MEM_W(0X0, ctx->r18) = ctx->f0.u32l;
@@ -9813,7 +9820,7 @@ RECOMP_FUNC void func_8001D2C0(uint8_t* rdram, recomp_context* ctx) {
     // 0x8001D3C0: nop
 
 ;}
-RECOMP_FUNC void func_8001D3C4(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void rotateVec3ByQuat(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8001D3C4: lwc1        $f12, 0x4($a0)

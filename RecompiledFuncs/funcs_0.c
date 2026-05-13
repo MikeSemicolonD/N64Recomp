@@ -191,7 +191,7 @@ L_80000C24:
     // 0x80000C24: jal         0x800033A0
     // 0x80000C28: addiu       $a0, $sp, 0x10
     ctx->r4 = ADD32(ctx->r29, 0X10);
-    func_800033A0(rdram, ctx);
+    processOverlayDmaStruct(rdram, ctx);
         goto after_0;
     // 0x80000C28: addiu       $a0, $sp, 0x10
     ctx->r4 = ADD32(ctx->r29, 0X10);
@@ -212,7 +212,7 @@ L_80000C34:
     // 0x80000C40: addiu       $sp, $sp, 0x88
     ctx->r29 = ADD32(ctx->r29, 0X88);
 ;}
-RECOMP_FUNC void func_80000C44(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void getGameConfig(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80000C44: lui         $v0, 0x8003
@@ -248,7 +248,7 @@ RECOMP_FUNC void func_80000C60(uint8_t* rdram, recomp_context* ctx) {
     // 0x80000C64: addu        $v0, $zero, $zero
     ctx->r2 = ADD32(0, 0);
 ;}
-RECOMP_FUNC void func_80000C68(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void mainBootstrapWorker(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80000C68: addiu       $sp, $sp, -0x58
@@ -282,7 +282,7 @@ RECOMP_FUNC void func_80000C68(uint8_t* rdram, recomp_context* ctx) {
     // 0x80000C98: jal         0x800246E8
     // 0x80000C9C: nop
 
-    func_800246E8(rdram, ctx);
+    loadDebugAssets(rdram, ctx);
         goto after_1;
     // 0x80000C9C: nop
 
@@ -348,7 +348,7 @@ RECOMP_FUNC void func_80000C68(uint8_t* rdram, recomp_context* ctx) {
     // 0x80000D04: jal         0x8000569C
     // 0x80000D08: sw          $v0, 0x20($sp)
     MEM_W(0X20, ctx->r29) = ctx->r2;
-    func_8000569C(rdram, ctx);
+    submitDmaRequestBatch(rdram, ctx);
         goto after_3;
     // 0x80000D08: sw          $v0, 0x20($sp)
     MEM_W(0X20, ctx->r29) = ctx->r2;
@@ -381,7 +381,7 @@ L_80000D2C:
     // 0x80000D2C: jal         0x80003308
     // 0x80000D30: nop
 
-    func_80003308(rdram, ctx);
+    initSiQueue(rdram, ctx);
         goto after_6;
     // 0x80000D30: nop
 
@@ -405,7 +405,7 @@ L_80000D2C:
     // 0x80000D4C: jal         0x80007380
     // 0x80000D50: nop
 
-    func_80007380(rdram, ctx);
+    installPeriodicCallback(rdram, ctx);
         goto after_7;
     // 0x80000D50: nop
 
@@ -446,7 +446,7 @@ L_80000D54:
     // 0x80000D8C: jal         0x8008EA14
     // 0x80000D90: nop
 
-    func_8008EA14(rdram, ctx);
+    setDisplayMode(rdram, ctx);
         goto after_8;
     // 0x80000D90: nop
 
@@ -1033,7 +1033,7 @@ RECOMP_FUNC void thread3_video_handle(uint8_t* rdram, recomp_context* ctx) {
     // 0x800010FC: jal         0x80000C44
     // 0x80001100: addu        $a0, $zero, $zero
     ctx->r4 = ADD32(0, 0);
-    func_80000C44(rdram, ctx);
+    getGameConfig(rdram, ctx);
         goto after_3;
     // 0x80001100: addu        $a0, $zero, $zero
     ctx->r4 = ADD32(0, 0);
@@ -1167,7 +1167,7 @@ L_800011B0:
     // 0x800011C8: jal         0x80006C00
     // 0x800011CC: nop
 
-    func_80006C00(rdram, ctx);
+    initServiceRegistry(rdram, ctx);
         goto after_6;
     // 0x800011CC: nop
 
@@ -1195,7 +1195,7 @@ L_800011E4:
     // 0x800011EC: jal         0x800045E8
     // 0x800011F0: addu        $a0, $zero, $zero
     ctx->r4 = ADD32(0, 0);
-    func_800045E8(rdram, ctx);
+    initDmaSlots(rdram, ctx);
         goto after_7;
     // 0x800011F0: addu        $a0, $zero, $zero
     ctx->r4 = ADD32(0, 0);
@@ -1347,7 +1347,7 @@ L_80001224:
     // 0x800012EC: jal         0x80018468
     // 0x800012F0: sw          $v0, 0x44($sp)
     MEM_W(0X44, ctx->r29) = ctx->r2;
-    func_80018468(rdram, ctx);
+    initVideoBootWrapper(rdram, ctx);
         goto after_10;
     // 0x800012F0: sw          $v0, 0x44($sp)
     MEM_W(0X44, ctx->r29) = ctx->r2;
@@ -1375,7 +1375,7 @@ L_80001224:
     // 0x80001314: jal         0x80006C28
     // 0x80001318: addiu       $a2, $zero, 0xA
     ctx->r6 = ADD32(0, 0XA);
-    func_80006C28(rdram, ctx);
+    registerServiceWorker(rdram, ctx);
         goto after_11;
     // 0x80001318: addiu       $a2, $zero, 0xA
     ctx->r6 = ADD32(0, 0XA);
@@ -1383,7 +1383,7 @@ L_80001224:
     // 0x8000131C: jal         0x80006D9C
     // 0x80001320: addu        $a0, $v0, $zero
     ctx->r4 = ADD32(ctx->r2, 0);
-    func_80006D9C(rdram, ctx);
+    startServiceWorker(rdram, ctx);
         goto after_12;
     // 0x80001320: addu        $a0, $v0, $zero
     ctx->r4 = ADD32(ctx->r2, 0);
@@ -1416,7 +1416,7 @@ L_80001324:
     // 0x80001350: nop
 
 ;}
-RECOMP_FUNC void func_80001354(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void runVideoFrameTick(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80001354: addiu       $sp, $sp, -0x80
@@ -1655,7 +1655,7 @@ L_80001420:
     // 0x800014F0: jal         0x8001818C
     // 0x800014F4: sw          $v0, 0x44($sp)
     MEM_W(0X44, ctx->r29) = ctx->r2;
-    func_8001818C(rdram, ctx);
+    advanceVideoFrame(rdram, ctx);
         goto after_3;
     // 0x800014F4: sw          $v0, 0x44($sp)
     MEM_W(0X44, ctx->r29) = ctx->r2;
@@ -1709,7 +1709,7 @@ L_80001420:
     // 0x8000153C: jal         0x8008EB5C
     // 0x80001540: nop
 
-    func_8008EB5C(rdram, ctx);
+    reapplyDisplayMode(rdram, ctx);
         goto after_4;
     // 0x80001540: nop
 
@@ -2088,7 +2088,7 @@ L_8000176C:
     // 0x80001774: jal         0x80004FD0
     // 0x80001778: nop
 
-    func_80004FD0(rdram, ctx);
+    noopHandler_80004FD0(rdram, ctx);
         goto after_5;
     // 0x80001778: nop
 
@@ -2210,7 +2210,7 @@ L_80001804:
     // 0x8000181C: nop
 
 ;}
-RECOMP_FUNC void func_80001820(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void queueDeferredClearRequest(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80001820: addiu       $sp, $sp, -0x20
@@ -2276,7 +2276,7 @@ L_80001870:
     // 0x8000187C: addiu       $sp, $sp, 0x20
     ctx->r29 = ADD32(ctx->r29, 0X20);
 ;}
-RECOMP_FUNC void func_80001880(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void clearFrameReadyFlag(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80001880: lui         $at, 0x8011
@@ -2599,7 +2599,7 @@ L_80001A40:
     // 0x80001A44: addu        $v0, $a1, $zero
     ctx->r2 = ADD32(ctx->r5, 0);
 ;}
-RECOMP_FUNC void func_80001A48(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void findLargestFreeHeapChunk(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80001A48: lui         $a0, 0x8011
@@ -4851,7 +4851,7 @@ RECOMP_FUNC void func_8000268C(uint8_t* rdram, recomp_context* ctx) {
     // 0x800026DC: jal         0x800074E0
     // 0x800026E0: nop
 
-    func_800074E0(rdram, ctx);
+    u64DivU64(rdram, ctx);
         goto after_1;
     // 0x800026E0: nop
 
@@ -4865,7 +4865,7 @@ RECOMP_FUNC void func_8000268C(uint8_t* rdram, recomp_context* ctx) {
     // 0x800026F0: jal         0x800074E0
     // 0x800026F4: addu        $a1, $v1, $zero
     ctx->r5 = ADD32(ctx->r3, 0);
-    func_800074E0(rdram, ctx);
+    u64DivU64(rdram, ctx);
         goto after_2;
     // 0x800026F4: addu        $a1, $v1, $zero
     ctx->r5 = ADD32(ctx->r3, 0);
@@ -5030,7 +5030,7 @@ RECOMP_FUNC void fake_func_800027B8(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
 ;}
-RECOMP_FUNC void func_800027C0(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void processPolledControllerData(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x800027C0: addiu       $sp, $sp, -0x28
@@ -5130,7 +5130,7 @@ L_800027EC:
     CHECK_FR(ctx, 12);
     CHECK_FR(ctx, 20);
     ctx->f12.fl = ctx->f20.fl;
-    func_80007510(rdram, ctx);
+    floatToInt(rdram, ctx);
         goto after_0;
     // 0x80002844: mov.s       $f12, $f20
     CHECK_FR(ctx, 12);
@@ -6241,7 +6241,7 @@ L_80002DCC:
     // 0x80002E0C: addiu       $sp, $sp, 0x28
     ctx->r29 = ADD32(ctx->r29, 0X28);
 ;}
-RECOMP_FUNC void func_80002E10(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void siServiceThread(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80002E10: addiu       $sp, $sp, -0x28
@@ -6446,7 +6446,7 @@ L_80002EA0:
     // 0x80002F24: jal         0x800027C0
     // 0x80002F28: nop
 
-    func_800027C0(rdram, ctx);
+    processPolledControllerData(rdram, ctx);
         goto after_15;
     // 0x80002F28: nop
 
@@ -6474,7 +6474,7 @@ L_80002EA0:
     // 0x80002F48: addiu       $a0, $s4, -0xB0
     ctx->r4 = ADD32(ctx->r20, -0XB0);
 ;}
-RECOMP_FUNC void func_80002F4C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void startSiPollingThread(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80002F4C: addiu       $sp, $sp, -0x20
@@ -6565,7 +6565,7 @@ L_80002F70:
     // 0x80002FDC: jal         0x80007910
     // 0x80002FE0: addiu       $a0, $a0, 0x3250
     ctx->r4 = ADD32(ctx->r4, 0X3250);
-    func_80007910(rdram, ctx);
+    registerSiCallback(rdram, ctx);
         goto after_2;
     // 0x80002FE0: addiu       $a0, $a0, 0x3250
     ctx->r4 = ADD32(ctx->r4, 0X3250);
@@ -6581,7 +6581,7 @@ L_80002F70:
     // 0x80002FF0: addiu       $sp, $sp, 0x20
     ctx->r29 = ADD32(ctx->r29, 0X20);
 ;}
-RECOMP_FUNC void func_80002FF4(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void pollControllerInputs(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80002FF4: addiu       $sp, $sp, -0x18
@@ -7050,7 +7050,7 @@ L_80003278:
     // 0x80003280: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_80003284(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void waitForSerialIdle(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80003284: lui         $v1, 0x8011
@@ -7120,7 +7120,7 @@ L_800032B4:
     // 0x800032DC: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_800032E0(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void releaseSerialLock(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x800032E0: addiu       $sp, $sp, -0x18
@@ -7150,7 +7150,7 @@ RECOMP_FUNC void func_800032E0(uint8_t* rdram, recomp_context* ctx) {
     // 0x80003304: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_80003308(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void initSiQueue(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80003308: addiu       $sp, $sp, -0x18
@@ -7210,7 +7210,7 @@ RECOMP_FUNC void func_80003308(uint8_t* rdram, recomp_context* ctx) {
     // 0x80003364: jal         0x80002F4C
     // 0x80003368: nop
 
-    func_80002F4C(rdram, ctx);
+    startSiPollingThread(rdram, ctx);
         goto after_2;
     // 0x80003368: nop
 

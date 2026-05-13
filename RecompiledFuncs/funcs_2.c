@@ -5,7 +5,7 @@ RECOMP_FUNC void fake_func_8000595C(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
 ;}
-RECOMP_FUNC void func_80005960(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void initMemoryPack(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80005960: addiu       $sp, $sp, -0x20
@@ -463,7 +463,7 @@ L_80005B88:
     // 0x80005B98: addiu       $sp, $sp, 0x20
     ctx->r29 = ADD32(ctx->r29, 0X20);
 ;}
-RECOMP_FUNC void func_80005B9C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void writeSaveBodyToEeprom(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80005B9C: addiu       $sp, $sp, -0x58
@@ -502,7 +502,7 @@ L_80005BDC:
     // 0x80005BDC: jal         0x80005960
     // 0x80005BE0: addu        $a0, $s4, $zero
     ctx->r4 = ADD32(ctx->r20, 0);
-    func_80005960(rdram, ctx);
+    initMemoryPack(rdram, ctx);
         goto after_0;
     // 0x80005BE0: addu        $a0, $s4, $zero
     ctx->r4 = ADD32(ctx->r20, 0);
@@ -1123,7 +1123,7 @@ L_80005EE8:
     // 0x80005F14: addiu       $sp, $sp, 0x58
     ctx->r29 = ADD32(ctx->r29, 0X58);
 ;}
-RECOMP_FUNC void func_80005F18(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void writeSaveDataBodyToEeprom(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80005F18: addiu       $sp, $sp, -0x50
@@ -1158,7 +1158,7 @@ L_80005F50:
     // 0x80005F50: jal         0x80005960
     // 0x80005F54: addu        $a0, $s2, $zero
     ctx->r4 = ADD32(ctx->r18, 0);
-    func_80005960(rdram, ctx);
+    initMemoryPack(rdram, ctx);
         goto after_0;
     // 0x80005F54: addu        $a0, $s2, $zero
     ctx->r4 = ADD32(ctx->r18, 0);
@@ -1581,7 +1581,7 @@ L_8000616C:
     // 0x80006194: addiu       $sp, $sp, 0x50
     ctx->r29 = ADD32(ctx->r29, 0X50);
 ;}
-RECOMP_FUNC void func_80006198(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void copySaveUnk08(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80006198: addiu       $sp, $sp, -0x50
@@ -1652,7 +1652,7 @@ L_80006210:
     // 0x80006210: jal         0x80005960
     // 0x80006214: addu        $a0, $s7, $zero
     ctx->r4 = ADD32(ctx->r23, 0);
-    func_80005960(rdram, ctx);
+    initMemoryPack(rdram, ctx);
         goto after_0;
     // 0x80006214: addu        $a0, $s7, $zero
     ctx->r4 = ADD32(ctx->r23, 0);
@@ -1867,7 +1867,7 @@ L_80006308:
     // 0x80006334: addiu       $sp, $sp, 0x50
     ctx->r29 = ADD32(ctx->r29, 0X50);
 ;}
-RECOMP_FUNC void func_80006338(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void initSaveData(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80006338: addiu       $sp, $sp, -0x48
@@ -1974,7 +1974,7 @@ L_800063E4:
     // 0x800063E8: jal         0x80003284
     // 0x800063EC: sw          $a0, 0x2720($v0)
     MEM_W(0X2720, ctx->r2) = ctx->r4;
-    func_80003284(rdram, ctx);
+    waitForSerialIdle(rdram, ctx);
         goto after_2;
     // 0x800063EC: sw          $a0, 0x2720($v0)
     MEM_W(0X2720, ctx->r2) = ctx->r4;
@@ -1994,7 +1994,7 @@ L_800063E4:
     // 0x80006400: jal         0x800032E0
     // 0x80006404: sb          $v0, 0x26EC($s0)
     MEM_B(0X26EC, ctx->r16) = ctx->r2;
-    func_800032E0(rdram, ctx);
+    releaseSerialLock(rdram, ctx);
         goto after_4;
     // 0x80006404: sb          $v0, 0x26EC($s0)
     MEM_B(0X26EC, ctx->r16) = ctx->r2;
@@ -2150,7 +2150,7 @@ L_800064DC:
     // 0x800064DC: jal         0x80003284
     // 0x800064E0: nop
 
-    func_80003284(rdram, ctx);
+    waitForSerialIdle(rdram, ctx);
         goto after_10;
     // 0x800064E0: nop
 
@@ -2178,7 +2178,7 @@ L_800064DC:
     // 0x80006504: jal         0x800032E0
     // 0x80006508: addu        $s0, $v0, $zero
     ctx->r16 = ADD32(ctx->r2, 0);
-    func_800032E0(rdram, ctx);
+    releaseSerialLock(rdram, ctx);
         goto after_12;
     // 0x80006508: addu        $s0, $v0, $zero
     ctx->r16 = ADD32(ctx->r2, 0);
@@ -2468,7 +2468,7 @@ L_80006680:
     // 0x80006680: jal         0x80003284
     // 0x80006684: lui         $s0, 0x8011
     ctx->r16 = S32(0X8011 << 16);
-    func_80003284(rdram, ctx);
+    waitForSerialIdle(rdram, ctx);
         goto after_23;
     // 0x80006684: lui         $s0, 0x8011
     ctx->r16 = S32(0X8011 << 16);
@@ -2500,7 +2500,7 @@ L_80006680:
     // 0x800066A8: jal         0x800032E0
     // 0x800066AC: nop
 
-    func_800032E0(rdram, ctx);
+    releaseSerialLock(rdram, ctx);
         goto after_25;
     // 0x800066AC: nop
 
@@ -2539,7 +2539,7 @@ L_800066C8:
     // 0x800066D8: jal         0x800032E0
     // 0x800066DC: addu        $s0, $v0, $zero
     ctx->r16 = ADD32(ctx->r2, 0);
-    func_800032E0(rdram, ctx);
+    releaseSerialLock(rdram, ctx);
         goto after_27;
     // 0x800066DC: addu        $s0, $v0, $zero
     ctx->r16 = ADD32(ctx->r2, 0);
@@ -2648,7 +2648,7 @@ L_80006748:
     // 0x80006760: addiu       $sp, $sp, 0x48
     ctx->r29 = ADD32(ctx->r29, 0X48);
 ;}
-RECOMP_FUNC void func_80006764(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void freeSaveDataBuffer(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80006764: lui         $v0, 0x8011
@@ -2678,7 +2678,7 @@ RECOMP_FUNC void func_80006764(uint8_t* rdram, recomp_context* ctx) {
     // 0x80006788: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_8000678C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void setSaveDataCallback(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8000678C: lui         $v0, 0x8011
@@ -2690,7 +2690,7 @@ RECOMP_FUNC void func_8000678C(uint8_t* rdram, recomp_context* ctx) {
     // 0x80006794: sw          $a0, 0x26F0($v0)
     MEM_W(0X26F0, ctx->r2) = ctx->r4;
 ;}
-RECOMP_FUNC void func_80006798(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void saveLoadDispatcher(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80006798: addiu       $sp, $sp, -0x40
@@ -2741,7 +2741,7 @@ L_800067E8:
     // 0x800067E8: jal         0x80003284
     // 0x800067EC: nop
 
-    func_80003284(rdram, ctx);
+    waitForSerialIdle(rdram, ctx);
         goto after_0;
     // 0x800067EC: nop
 
@@ -2930,7 +2930,7 @@ L_800068E0:
     // 0x800068EC: jal         0x80005B9C
     // 0x800068F0: addu        $a3, $s6, $zero
     ctx->r7 = ADD32(ctx->r22, 0);
-    func_80005B9C(rdram, ctx);
+    writeSaveBodyToEeprom(rdram, ctx);
         goto after_9;
     // 0x800068F0: addu        $a3, $s6, $zero
     ctx->r7 = ADD32(ctx->r22, 0);
@@ -2941,7 +2941,7 @@ L_800068F8:
     // 0x800068F8: jal         0x800032E0
     // 0x800068FC: nop
 
-    func_800032E0(rdram, ctx);
+    releaseSerialLock(rdram, ctx);
         goto after_10;
     // 0x800068FC: nop
 
@@ -3019,7 +3019,7 @@ L_80006974:
     // 0x80006974: jal         0x80003284
     // 0x80006978: nop
 
-    func_80003284(rdram, ctx);
+    waitForSerialIdle(rdram, ctx);
         goto after_0;
     // 0x80006978: nop
 
@@ -3197,7 +3197,7 @@ L_80006A58:
     // 0x80006A60: jal         0x80005F18
     // 0x80006A64: addu        $a3, $s5, $zero
     ctx->r7 = ADD32(ctx->r21, 0);
-    func_80005F18(rdram, ctx);
+    writeSaveDataBodyToEeprom(rdram, ctx);
         goto after_7;
     // 0x80006A64: addu        $a3, $s5, $zero
     ctx->r7 = ADD32(ctx->r21, 0);
@@ -3208,7 +3208,7 @@ L_80006A6C:
     // 0x80006A6C: jal         0x800032E0
     // 0x80006A70: nop
 
-    func_800032E0(rdram, ctx);
+    releaseSerialLock(rdram, ctx);
         goto after_8;
     // 0x80006A70: nop
 
@@ -3280,7 +3280,7 @@ L_80006ADC:
     // 0x80006ADC: jal         0x80003284
     // 0x80006AE0: nop
 
-    func_80003284(rdram, ctx);
+    waitForSerialIdle(rdram, ctx);
         goto after_0;
     // 0x80006AE0: nop
 
@@ -3449,7 +3449,7 @@ L_80006BC0:
     // 0x80006BC0: jal         0x80006198
     // 0x80006BC4: addu        $a1, $s2, $zero
     ctx->r5 = ADD32(ctx->r18, 0);
-    func_80006198(rdram, ctx);
+    copySaveUnk08(rdram, ctx);
         goto after_6;
     // 0x80006BC4: addu        $a1, $s2, $zero
     ctx->r5 = ADD32(ctx->r18, 0);
@@ -3458,7 +3458,7 @@ L_80006BC8:
     // 0x80006BC8: jal         0x800032E0
     // 0x80006BCC: nop
 
-    func_800032E0(rdram, ctx);
+    releaseSerialLock(rdram, ctx);
         goto after_7;
     // 0x80006BCC: nop
 
@@ -3492,7 +3492,7 @@ RECOMP_FUNC void fake_func_80006BFC(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
 ;}
-RECOMP_FUNC void func_80006C00(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void initServiceRegistry(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80006C00: lui         $v0, 0x8011
@@ -3524,7 +3524,7 @@ RECOMP_FUNC void func_80006C20(uint8_t* rdram, recomp_context* ctx) {
     // 0x80006C24: addiu       $v0, $zero, 0x1
     ctx->r2 = ADD32(0, 0X1);
 ;}
-RECOMP_FUNC void func_80006C28(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void registerServiceWorker(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80006C28: addiu       $sp, $sp, -0x38
@@ -3754,7 +3754,7 @@ L_80006D74:
     // 0x80006D98: addiu       $sp, $sp, 0x38
     ctx->r29 = ADD32(ctx->r29, 0X38);
 ;}
-RECOMP_FUNC void func_80006D9C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void startServiceWorker(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80006D9C: addu        $v1, $a0, $zero
@@ -3897,7 +3897,7 @@ L_80006E40:
     // 0x80006E44: addiu       $v0, $zero, 0x1
     ctx->r2 = ADD32(0, 0X1);
 ;}
-RECOMP_FUNC void func_80006E48(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void peekServiceMessage(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80006E48: lui         $v0, 0x8011
@@ -3993,7 +3993,7 @@ L_80006EB0:
     // 0x80006EC0: addiu       $sp, $sp, 0x20
     ctx->r29 = ADD32(ctx->r29, 0X20);
 ;}
-RECOMP_FUNC void func_80006EC4(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void tryRecvServiceMessage(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80006EC4: addiu       $sp, $sp, -0x18
@@ -4073,7 +4073,7 @@ L_80006F14:
     // 0x80006F20: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_80006F24(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void recvServiceMessage(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80006F24: addiu       $sp, $sp, -0x18
@@ -4142,7 +4142,7 @@ L_80006F58:
     // 0x80006F74: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_80006F78(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void sendServiceMessage(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80006F78: addiu       $sp, $sp, -0x20
@@ -4328,7 +4328,7 @@ RECOMP_FUNC void func_80007064(uint8_t* rdram, recomp_context* ctx) {
     // 0x8000706C: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_80007070(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void postMessageToServiceWorker(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80007070: addu        $v1, $a0, $zero
@@ -4393,7 +4393,7 @@ L_800070A4:
     // 0x800070B8: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_800070BC(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void unregisterServiceWorker(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x800070BC: addiu       $sp, $sp, -0x20
@@ -4709,7 +4709,7 @@ L_80007240:
     // 0x80007258: addiu       $sp, $sp, 0x28
     ctx->r29 = ADD32(ctx->r29, 0X28);
 ;}
-RECOMP_FUNC void func_8000725C(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void setServiceWorkerPriority(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x8000725C: addu        $v1, $a0, $zero
@@ -4776,7 +4776,7 @@ L_80007290:
     // 0x800072A8: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_800072AC(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void yieldThreadRet1(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x800072AC: addiu       $sp, $sp, -0x18
@@ -4802,7 +4802,7 @@ RECOMP_FUNC void func_800072AC(uint8_t* rdram, recomp_context* ctx) {
     // 0x800072C8: addiu       $sp, $sp, 0x18
     ctx->r29 = ADD32(ctx->r29, 0X18);
 ;}
-RECOMP_FUNC void func_800072CC(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void stopServiceWorker(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x800072CC: addu        $v1, $a0, $zero
@@ -4948,7 +4948,7 @@ RECOMP_FUNC void fake_func_8000737C(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
 ;}
-RECOMP_FUNC void func_80007380(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void installPeriodicCallback(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80007380: addiu       $sp, $sp, -0x38
@@ -5102,7 +5102,7 @@ RECOMP_FUNC void func_80007380(uint8_t* rdram, recomp_context* ctx) {
     // 0x8000747C: nop
 
 ;}
-RECOMP_FUNC void func_80007480(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void periodicCallbackWorker(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80007480: addiu       $sp, $sp, -0x18
@@ -5171,7 +5171,7 @@ RECOMP_FUNC void fake_func_800074D8(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
 ;}
-RECOMP_FUNC void func_800074E0(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void u64DivU64(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x800074E0: dsll32      $v0, $a0, 0
@@ -5201,7 +5201,7 @@ RECOMP_FUNC void func_800074E0(uint8_t* rdram, recomp_context* ctx) {
     // 0x8000750C: dsrl32      $v0, $v1, 0
     ctx->r2 = ctx->r3 >> (0 + 32);
 ;}
-RECOMP_FUNC void func_80007510(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void floatToInt(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80007510: trunc.w.s   $f4, $f12
@@ -6053,7 +6053,7 @@ RECOMP_FUNC void fake_func_80007908(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
 ;}
-RECOMP_FUNC void func_80007910(uint8_t* rdram, recomp_context* ctx) {
+RECOMP_FUNC void registerSiCallback(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     // 0x80007910: addu        $a1, $zero, $zero
