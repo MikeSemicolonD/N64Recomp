@@ -24694,12 +24694,8 @@ RECOMP_FUNC void initVideoBootWrapper(uint8_t* rdram, recomp_context* ctx) {
     after_3:
     // 0x800185E4: andi        $v0, $v0, 0xFF
     ctx->r2 = ctx->r2 & 0XFF;
-    // 0x800185E8: beq         $v0, $zero, L_8001861C
-    if (ctx->r2 == 0) {
-        // 0x800185EC: addu        $v0, $zero, $zero
-        ctx->r2 = ADD32(0, 0);
-            goto L_8001861C;
-    }
+    // 0x800185E8: nop
+
     // 0x800185EC: addu        $v0, $zero, $zero
     ctx->r2 = ADD32(0, 0);
     // 0x800185F0: jal         0x80021F38
@@ -24732,7 +24728,6 @@ RECOMP_FUNC void initVideoBootWrapper(uint8_t* rdram, recomp_context* ctx) {
     ctx->r1 = S32(0X8003 << 16);
     // 0x80018618: sw          $v1, 0x7804($at)
     MEM_W(0X7804, ctx->r1) = ctx->r3;
-L_8001861C:
     // 0x8001861C: lw          $ra, 0x6C($sp)
     ctx->r31 = MEM_W(ctx->r29, 0X6C);
     // 0x80018620: lw          $fp, 0x68($sp)

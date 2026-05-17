@@ -662,7 +662,7 @@ L_8006CCF4:
     // 0x8006CD24: jal         0x800AA850
     // 0x8006CD28: addiu       $a2, $s0, 0x10
     ctx->r6 = ADD32(ctx->r16, 0X10);
-    func_800AA850(rdram, ctx);
+    LOOKUP_FUNC(0x800AA850)(rdram, ctx);
         goto after_2;
     // 0x8006CD28: addiu       $a2, $s0, 0x10
     ctx->r6 = ADD32(ctx->r16, 0X10);
@@ -2638,7 +2638,7 @@ L_8006D6B8:
     // 0x8006D6F8: jal         0x800F3260
     // 0x8006D6FC: addu        $a0, $s5, $zero
     ctx->r4 = ADD32(ctx->r21, 0);
-    tallyMidDetailObject(rdram, ctx);
+    LOOKUP_FUNC(0x800F3260)(rdram, ctx);
         goto after_54;
     // 0x8006D6FC: addu        $a0, $s5, $zero
     ctx->r4 = ADD32(ctx->r21, 0);
@@ -2646,7 +2646,7 @@ L_8006D6B8:
     // 0x8006D700: jal         0x800F2AA4
     // 0x8006D704: addu        $a0, $s5, $zero
     ctx->r4 = ADD32(ctx->r21, 0);
-    setObjectFlagBit4(rdram, ctx);
+    LOOKUP_FUNC(0x800F2AA4)(rdram, ctx);
         goto after_55;
     // 0x8006D704: addu        $a0, $s5, $zero
     ctx->r4 = ADD32(ctx->r21, 0);

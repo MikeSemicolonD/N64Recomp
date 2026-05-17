@@ -119,7 +119,6 @@ L_8003EC90:
     MEM_B(0X1, ctx->r2) = ctx->r3;
     // 0x8003ECB4: lw          $v0, 0x48($a1)
     ctx->r2 = MEM_W(ctx->r5, 0X48);
-    { if ((uint32_t)(uint64_t)ctx->r2 == 0xFFFFFFFFu) ctx->r2 = 0; }
     // 0x8003ECB8: bne         $v0, $zero, L_8003ECFC
     if (ctx->r2 != 0) {
         // 0x8003ECBC: nop
@@ -130,7 +129,6 @@ L_8003EC90:
 
     // 0x8003ECC0: lw          $v0, 0x44($a1)
     ctx->r2 = MEM_W(ctx->r5, 0X44);
-    { if ((uint32_t)(uint64_t)ctx->r2 == 0xFFFFFFFFu) ctx->r2 = 0; }
     // 0x8003ECC4: bne         $v0, $zero, L_8003ECF0
     if (ctx->r2 != 0) {
         // 0x8003ECC8: nop
@@ -184,9 +182,8 @@ L_8003ECFC:
     ctx->r6 = MEM_W(ctx->r5, 0X48);
     // 0x8003ED00: lb          $v1, 0x0($a1)
     ctx->r3 = MEM_B(ctx->r5, 0X0);
-    { if (((uint64_t)ctx->r6 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) goto L_8003ED58; ctx->r2 = MEM_B(ctx->r6, 0x0); }
-    // 0x8003ED04: nop
-
+    // 0x8003ED04: lb          $v0, 0x0($a2)
+    ctx->r2 = MEM_B(ctx->r6, 0X0);
     // 0x8003ED08: slt         $v0, $v0, $v1
     ctx->r2 = SIGNED(ctx->r2) < SIGNED(ctx->r3) ? 1 : 0;
     // 0x8003ED0C: beq         $v0, $zero, L_8003ED58
@@ -199,7 +196,6 @@ L_8003ECFC:
 
     // 0x8003ED14: lw          $v0, 0x44($a1)
     ctx->r2 = MEM_W(ctx->r5, 0X44);
-    { if ((uint32_t)(uint64_t)ctx->r2 == 0xFFFFFFFFu) ctx->r2 = 0; }
     // 0x8003ED18: beql        $v0, $zero, L_8003ED24
     if (ctx->r2 == 0) {
         // 0x8003ED1C: sw          $a2, 0x0($a3)
@@ -225,15 +221,13 @@ L_8003ED24:
     ctx->r2 = MEM_W(ctx->r2, 0X48);
     // 0x8003ED38: bnel        $v0, $zero, L_8003ED40
     if (ctx->r2 != 0) {
-        { if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) MEM_W(0x44, ctx->r2) = ctx->r5; }
-        // 0x8003ED3C: nop
-    
+        // 0x8003ED3C: sw          $a1, 0x44($v0)
+        MEM_W(0X44, ctx->r2) = ctx->r5;
             goto L_8003ED40;
     }
     goto skip_1;
-    { if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) MEM_W(0x44, ctx->r2) = ctx->r5; }
-    // 0x8003ED3C: nop
-
+    // 0x8003ED3C: sw          $a1, 0x44($v0)
+    MEM_W(0X44, ctx->r2) = ctx->r5;
     skip_1:
 L_8003ED40:
     // 0x8003ED40: lw          $v0, 0x48($a1)
@@ -17508,7 +17502,7 @@ L_80044A74:
     // 0x80044A98: jal         0x800AE3BC
     // 0x80044A9C: nop
 
-    func_800AE3BC(rdram, ctx);
+    LOOKUP_FUNC(0x800AE3BC)(rdram, ctx);
         goto after_14;
     // 0x80044A9C: nop
 

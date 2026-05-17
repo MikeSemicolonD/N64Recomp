@@ -39,6 +39,10 @@ RECOMP_FUNC void loadOverlay(uint8_t* rdram, recomp_context* ctx) {
     }
     // 0x80000B38: sw          $ra, 0x84($sp)
     MEM_W(0X84, ctx->r29) = ctx->r31;
+    {
+    extern void rs64_load_overlay(unsigned int);
+    rs64_load_overlay((unsigned int)ctx->r16);
+}
     // 0x80000B3C: addiu       $v1, $zero, 0x1
     ctx->r3 = ADD32(0, 0X1);
     // 0x80000B40: beq         $s0, $v1, L_80000BA8

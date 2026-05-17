@@ -80,6 +80,17 @@ L_8000798C:
 RECOMP_FUNC void func_800079A4(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    {
+    extern unsigned g_f79a4_first;
+    extern unsigned g_f79a4_iter;
+    g_f79a4_first = 0;
+    g_f79a4_iter = 0;
+    // Bail if the block to free ($a0) is itself a wild pointer — the entry
+    // `lw $v0, 0x0($a0)` derefs it directly, before the loop guard below.
+    if (ctx->r4 != 0 && (((uint64_t)ctx->r4 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL)) {
+        return;
+    }
+}
     // 0x800079A4: beq         $a0, $zero, L_800079E8
     if (ctx->r4 == 0) {
         // 0x800079A8: nop
@@ -99,10 +110,35 @@ RECOMP_FUNC void func_800079A4(uint8_t* rdram, recomp_context* ctx) {
     // 0x800079B4: addu        $v1, $a0, $zero
     ctx->r3 = ADD32(ctx->r4, 0);
 L_800079B8:
-    // 0x800079B8: lw          $v1, 0x0($v1)
-    ctx->r3 = MEM_W(ctx->r3, 0X0);
-    // 0x800079BC: lw          $v0, 0x0($v1)
-    ctx->r2 = MEM_W(ctx->r3, 0X0);
+    {
+    extern unsigned g_f79a4_first;
+    extern unsigned g_f79a4_iter;
+    // ctx->r3 is the current node; loop loads next (+0x0) then derefs it.
+    if (((uint64_t)ctx->r3 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) {
+        ctx->r2 = 0;
+        goto L_800079C8;
+    }
+    uint32_t next = (uint32_t)MEM_W(ctx->r3, 0x0);
+    if ((next & 0xE0000000u) != 0x80000000u) {
+        // next pointer not KSEG0 — end of list; keep ctx->r3 at last good node.
+        ctx->r2 = 0;
+        goto L_800079C8;
+    }
+    if (g_f79a4_iter == 0) {
+        g_f79a4_first = next;
+        g_f79a4_iter = 1;
+    } else {
+        g_f79a4_iter++;
+        if (g_f79a4_iter > 2 && next == g_f79a4_first) { ctx->r2 = 0; goto L_800079C8; }
+        if (g_f79a4_iter > 100000u) { ctx->r2 = 0; goto L_800079C8; }
+    }
+    ctx->r3 = next;
+    ctx->r2 = MEM_W(ctx->r3, 0x0);
+}
+    // 0x800079B8: nop
+
+    // 0x800079BC: nop
+
     // 0x800079C0: bne         $v0, $zero, L_800079B8
     if (ctx->r2 != 0) {
         // 0x800079C4: nop

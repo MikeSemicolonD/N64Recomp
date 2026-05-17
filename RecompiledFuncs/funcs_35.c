@@ -385,7 +385,7 @@ L_800C6414:
     // 0x800C641C: jal         0x800C41B0
     // 0x800C6420: addu        $a1, $a1, $s0
     ctx->r5 = ADD32(ctx->r5, ctx->r16);
-    func_800C41B0(rdram, ctx);
+    LOOKUP_FUNC(0x800C41B0)(rdram, ctx);
         goto after_1;
     // 0x800C6420: addu        $a1, $a1, $s0
     ctx->r5 = ADD32(ctx->r5, ctx->r16);
@@ -561,7 +561,7 @@ L_800C6510:
     // 0x800C651C: jal         0x800C723C
     // 0x800C6520: nop
 
-    func_800C723C(rdram, ctx);
+    LOOKUP_FUNC(0x800C723C)(rdram, ctx);
         goto after_0;
     // 0x800C6520: nop
 
@@ -589,7 +589,7 @@ L_800C6510:
     // 0x800C6544: jal         0x800BFEA0
     // 0x800C6548: addu        $a0, $s0, $a0
     ctx->r4 = ADD32(ctx->r16, ctx->r4);
-    findHudElementExtremes(rdram, ctx);
+    LOOKUP_FUNC(0x800BFEA0)(rdram, ctx);
         goto after_1;
     // 0x800C6548: addu        $a0, $s0, $a0
     ctx->r4 = ADD32(ctx->r16, ctx->r4);
@@ -1463,7 +1463,7 @@ L_800C6850:
     // 0x800C6850: jal         0x800C4060
     // 0x800C6854: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
-    func_800C4060(rdram, ctx);
+    LOOKUP_FUNC(0x800C4060)(rdram, ctx);
         goto after_0;
     // 0x800C6854: addu        $a2, $s1, $zero
     ctx->r6 = ADD32(ctx->r17, 0);
@@ -1982,7 +1982,7 @@ RECOMP_FUNC void runHangarMenuFromOverlay(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C6878: jal         0x800C6234
     // 0x800C687C: sw          $s2, 0x18($sp)
     MEM_W(0X18, ctx->r29) = ctx->r18;
-    getAvailablePlayerCraftFlagsConsiderUnlocks(rdram, ctx);
+    LOOKUP_FUNC(0x800C6234)(rdram, ctx);
         goto after_0;
     // 0x800C687C: sw          $s2, 0x18($sp)
     MEM_W(0X18, ctx->r29) = ctx->r18;
@@ -2008,7 +2008,7 @@ RECOMP_FUNC void runHangarMenuFromOverlay(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C68A4: jal         0x800A9364
     // 0x800C68A8: andi        $a3, $s1, 0xFF
     ctx->r7 = ctx->r17 & 0XFF;
-    hangarInitialize(rdram, ctx);
+    LOOKUP_FUNC(0x800A9364)(rdram, ctx);
         goto after_1;
     // 0x800C68A8: andi        $a3, $s1, 0xFF
     ctx->r7 = ctx->r17 & 0XFF;
@@ -2017,7 +2017,7 @@ L_800C68AC:
     // 0x800C68AC: jal         0x800AAD9C
     // 0x800C68B0: andi        $a0, $s1, 0xFF
     ctx->r4 = ctx->r17 & 0XFF;
-    func_800AAD9C(rdram, ctx);
+    LOOKUP_FUNC(0x800AAD9C)(rdram, ctx);
         goto after_2;
     // 0x800C68B0: andi        $a0, $s1, 0xFF
     ctx->r4 = ctx->r17 & 0XFF;
@@ -2035,7 +2035,7 @@ L_800C68AC:
     // 0x800C68C0: jal         0x800AE74C
     // 0x800C68C4: nop
 
-    gracefulMenuShutdown(rdram, ctx);
+    LOOKUP_FUNC(0x800AE74C)(rdram, ctx);
         goto after_3;
     // 0x800C68C4: nop
 
@@ -2294,7 +2294,7 @@ L_800C6910:
     // 0x800C69C4: jal         0x800C64B0
     // 0x800C69C8: andi        $a1, $v0, 0xFF
     ctx->r5 = ctx->r2 & 0XFF;
-    func_800C64B0(rdram, ctx);
+    LOOKUP_FUNC(0x800C64B0)(rdram, ctx);
         goto after_8;
     // 0x800C69C8: andi        $a1, $v0, 0xFF
     ctx->r5 = ctx->r2 & 0XFF;
@@ -2374,7 +2374,7 @@ L_800C69E8:
     // 0x800C6A38: jal         0x800AA3B4
     // 0x800C6A3C: addu        $a2, $v1, $a2
     ctx->r6 = ADD32(ctx->r3, ctx->r6);
-    func_800AA3B4(rdram, ctx);
+    LOOKUP_FUNC(0x800AA3B4)(rdram, ctx);
         goto after_12;
     // 0x800C6A3C: addu        $a2, $v1, $a2
     ctx->r6 = ADD32(ctx->r3, ctx->r6);
@@ -3148,7 +3148,7 @@ L_800C6E34:
     // 0x800C6E74: jal         0x800C65CC
     // 0x800C6E78: andi        $a1, $v0, 0xFF
     ctx->r5 = ctx->r2 & 0XFF;
-    func_800C65CC(rdram, ctx);
+    LOOKUP_FUNC(0x800C65CC)(rdram, ctx);
         goto after_19;
     // 0x800C6E78: andi        $a1, $v0, 0xFF
     ctx->r5 = ctx->r2 & 0XFF;
@@ -3249,7 +3249,7 @@ L_800C6E84:
     // 0x800C6F0C: jal         0x800FEECC
     // 0x800C6F10: nop
 
-    func_800FEECC(rdram, ctx);
+    LOOKUP_FUNC(0x800FEECC)(rdram, ctx);
         goto after_20;
     // 0x800C6F10: nop
 
@@ -3269,7 +3269,7 @@ L_800C6E84:
     // 0x800C6F20: jal         0x800FEEF4
     // 0x800C6F24: nop
 
-    getHudSecondaryWeponCount(rdram, ctx);
+    LOOKUP_FUNC(0x800FEEF4)(rdram, ctx);
         goto after_21;
     // 0x800C6F24: nop
 
@@ -3571,7 +3571,7 @@ RECOMP_FUNC void loadJfifAsset(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C69C8: jal         0x800C6C40
     // 0x800C69CC: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
-    func_800C6C40(rdram, ctx);
+    LOOKUP_FUNC(0x800C6C40)(rdram, ctx);
         goto after_2;
     // 0x800C69CC: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
@@ -3699,7 +3699,7 @@ RECOMP_FUNC void loadJfifAsset(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C6A6C: jal         0x800C9B8C
     // 0x800C6A70: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_800C9B8C(rdram, ctx);
+    LOOKUP_FUNC(0x800C9B8C)(rdram, ctx);
         goto after_8;
     // 0x800C6A70: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -3865,7 +3865,7 @@ L_800C6B00:
     // 0x800C6B00: jal         0x800C6F24
     // 0x800C6B04: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    parseJfifSOIMarker(rdram, ctx);
+    LOOKUP_FUNC(0x800C6F24)(rdram, ctx);
         goto after_9;
     // 0x800C6B04: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -3889,7 +3889,7 @@ L_800C6B1C:
     // 0x800C6B1C: jal         0x800C7070
     // 0x800C6B20: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    parseJfifSOF0Marker(rdram, ctx);
+    LOOKUP_FUNC(0x800C7070)(rdram, ctx);
         goto after_10;
     // 0x800C6B20: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -3904,7 +3904,7 @@ L_800C6B2C:
     // 0x800C6B2C: jal         0x800C73E4
     // 0x800C6B30: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    parseJfifDQTMarker(rdram, ctx);
+    LOOKUP_FUNC(0x800C73E4)(rdram, ctx);
         goto after_11;
     // 0x800C6B30: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -3919,7 +3919,7 @@ L_800C6B3C:
     // 0x800C6B3C: jal         0x800C7534
     // 0x800C6B40: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    parseJfifDHTMarker(rdram, ctx);
+    LOOKUP_FUNC(0x800C7534)(rdram, ctx);
         goto after_12;
     // 0x800C6B40: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -3947,7 +3947,7 @@ L_800C6B5C:
     // 0x800C6B5C: jal         0x800C76B8
     // 0x800C6B60: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    paserJfifSOSMarker(rdram, ctx);
+    LOOKUP_FUNC(0x800C76B8)(rdram, ctx);
         goto after_13;
     // 0x800C6B60: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -4276,7 +4276,7 @@ L_800C6D0C:
     // 0x800C6D0C: jal         0x800C9A88
     // 0x800C6D10: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_800C9A88(rdram, ctx);
+    LOOKUP_FUNC(0x800C9A88)(rdram, ctx);
         goto after_3;
     // 0x800C6D10: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -4360,7 +4360,7 @@ L_800C6D64:
     // 0x800C6D64: jal         0x800C8A64
     // 0x800C6D68: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_800C8A64(rdram, ctx);
+    LOOKUP_FUNC(0x800C8A64)(rdram, ctx);
         goto after_8;
     // 0x800C6D68: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -6330,7 +6330,7 @@ L_800C73EC:
     // 0x800C742C: jal         0x800F20EC
     // 0x800C7430: nop
 
-    getNpcCurrentHealth(rdram, ctx);
+    LOOKUP_FUNC(0x800F20EC)(rdram, ctx);
         goto after_4;
     // 0x800C7430: nop
 
@@ -6912,7 +6912,7 @@ L_800C763C:
     // 0x800C7644: jal         0x800C83E4
     // 0x800C7648: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
-    func_800C83E4(rdram, ctx);
+    LOOKUP_FUNC(0x800C83E4)(rdram, ctx);
         goto after_0;
     // 0x800C7648: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
@@ -6930,7 +6930,7 @@ L_800C763C:
     // 0x800C7658: jal         0x800C8520
     // 0x800C765C: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
-    func_800C8520(rdram, ctx);
+    LOOKUP_FUNC(0x800C8520)(rdram, ctx);
         goto after_1;
     // 0x800C765C: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
@@ -6948,7 +6948,7 @@ L_800C763C:
     // 0x800C766C: jal         0x800C86C8
     // 0x800C7670: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
-    func_800C86C8(rdram, ctx);
+    LOOKUP_FUNC(0x800C86C8)(rdram, ctx);
         goto after_2;
     // 0x800C7670: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
@@ -7748,7 +7748,7 @@ L_800C793C:
     // 0x800C793C: jal         0x800C804C
     // 0x800C7940: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_800C804C(rdram, ctx);
+    LOOKUP_FUNC(0x800C804C)(rdram, ctx);
         goto after_1;
     // 0x800C7940: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);

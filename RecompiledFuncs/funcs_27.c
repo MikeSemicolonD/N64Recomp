@@ -5856,7 +5856,7 @@ RECOMP_FUNC void cinematicLoopBody(uint8_t* rdram, recomp_context* ctx) {
     // 0x800A5DCC: jal         0x800AE928
     // 0x800A5DD0: sb          $a2, 0x7D($sp)
     MEM_B(0X7D, ctx->r29) = ctx->r6;
-    shouldShowCutsceneForLevelStage(rdram, ctx);
+    LOOKUP_FUNC(0x800AE928)(rdram, ctx);
         goto after_0;
     // 0x800A5DD0: sb          $a2, 0x7D($sp)
     MEM_B(0X7D, ctx->r29) = ctx->r6;
@@ -6046,7 +6046,7 @@ L_800A5ECC:
     // 0x800A5F08: jal         0x800A9ABC
     // 0x800A5F0C: sw          $zero, 0xBA4($v0)
     MEM_W(0XBA4, ctx->r2) = 0;
-    initSceneForMission(rdram, ctx);
+    LOOKUP_FUNC(0x800A9ABC)(rdram, ctx);
         goto after_2;
     // 0x800A5F0C: sw          $zero, 0xBA4($v0)
     MEM_W(0XBA4, ctx->r2) = 0;
@@ -6056,7 +6056,7 @@ L_800A5ECC:
     // 0x800A5F14: jal         0x800A6CE4
     // 0x800A5F18: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
-    setupCutsceneLevel(rdram, ctx);
+    LOOKUP_FUNC(0x800A6CE4)(rdram, ctx);
         goto after_3;
     // 0x800A5F18: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
@@ -6066,7 +6066,7 @@ L_800A5ECC:
     // 0x800A5F20: jal         0x800AF0EC
     // 0x800A5F24: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
-    maybeLoadYwingCutscene(rdram, ctx);
+    LOOKUP_FUNC(0x800AF0EC)(rdram, ctx);
         goto after_4;
     // 0x800A5F24: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
@@ -6076,7 +6076,7 @@ L_800A5ECC:
     // 0x800A5F2C: jal         0x800A6620
     // 0x800A5F30: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
-    load_cutscene(rdram, ctx);
+    LOOKUP_FUNC(0x800A6620)(rdram, ctx);
         goto after_5;
     // 0x800A5F30: addu        $a1, $s1, $zero
     ctx->r5 = ADD32(ctx->r17, 0);
@@ -6086,7 +6086,7 @@ L_800A5ECC:
     // 0x800A5F38: jal         0x800AEB7C
     // 0x800A5F3C: sw          $v0, 0x1904($s0)
     MEM_W(0X1904, ctx->r16) = ctx->r2;
-    resetCutsceneActionSlots(rdram, ctx);
+    LOOKUP_FUNC(0x800AEB7C)(rdram, ctx);
         goto after_6;
     // 0x800A5F3C: sw          $v0, 0x1904($s0)
     MEM_W(0X1904, ctx->r16) = ctx->r2;
@@ -6094,7 +6094,7 @@ L_800A5ECC:
     // 0x800A5F40: jal         0x800AEFC8
     // 0x800A5F44: addu        $s2, $zero, $zero
     ctx->r18 = ADD32(0, 0);
-    initCutsceneSlotTable(rdram, ctx);
+    LOOKUP_FUNC(0x800AEFC8)(rdram, ctx);
         goto after_7;
     // 0x800A5F44: addu        $s2, $zero, $zero
     ctx->r18 = ADD32(0, 0);
@@ -6207,7 +6207,7 @@ L_800A5FA8:
     // 0x800A5FF4: jal         0x800A73E4
     // 0x800A5FF8: sw          $t1, 0x8C($sp)
     MEM_W(0X8C, ctx->r29) = ctx->r9;
-    cutscenePopulateSlotsFromLevelLists(rdram, ctx);
+    LOOKUP_FUNC(0x800A73E4)(rdram, ctx);
         goto after_8;
     // 0x800A5FF8: sw          $t1, 0x8C($sp)
     MEM_W(0X8C, ctx->r29) = ctx->r9;
@@ -6223,7 +6223,7 @@ L_800A5FA8:
     // 0x800A600C: jal         0x800A9D70
     // 0x800A6010: sw          $v0, 0x1A08($v1)
     MEM_W(0X1A08, ctx->r3) = ctx->r2;
-    func_800A9D70(rdram, ctx);
+    LOOKUP_FUNC(0x800A9D70)(rdram, ctx);
         goto after_9;
     // 0x800A6010: sw          $v0, 0x1A08($v1)
     MEM_W(0X1A08, ctx->r3) = ctx->r2;
@@ -6286,7 +6286,7 @@ L_800A6024:
     // 0x800A6024: jal         0x800AF360
     // 0x800A6028: nop
 
-    cinematicComputeDt(rdram, ctx);
+    LOOKUP_FUNC(0x800AF360)(rdram, ctx);
         goto after_10;
     // 0x800A6028: nop
 
@@ -6344,7 +6344,7 @@ L_800A6024:
     // 0x800A6068: jal         0x800AF550
     // 0x800A606C: swc1        $f0, 0xBA4($v0)
     MEM_W(0XBA4, ctx->r2) = ctx->f0.u32l;
-    cinematicStageAdvancer(rdram, ctx);
+    LOOKUP_FUNC(0x800AF550)(rdram, ctx);
         goto after_13;
     // 0x800A606C: swc1        $f0, 0xBA4($v0)
     MEM_W(0XBA4, ctx->r2) = ctx->f0.u32l;
@@ -6362,7 +6362,7 @@ L_800A6024:
     // 0x800A607C: jal         0x800AF668
     // 0x800A6080: nop
 
-    cinematicInterpRatio(rdram, ctx);
+    LOOKUP_FUNC(0x800AF668)(rdram, ctx);
         goto after_14;
     // 0x800A6080: nop
 
@@ -6798,7 +6798,7 @@ L_800A627C:
     // 0x800A627C: jal         0x800AF540
     // 0x800A6280: nop
 
-    isCinematicActive(rdram, ctx);
+    LOOKUP_FUNC(0x800AF540)(rdram, ctx);
         goto after_18;
     // 0x800A6280: nop
 
@@ -6839,7 +6839,7 @@ L_800A62AC:
     // 0x800A62B4: jal         0x800AF408
     // 0x800A62B8: addiu       $a1, $sp, 0x18
     ctx->r5 = ADD32(ctx->r29, 0X18);
-    cinematicInitializer(rdram, ctx);
+    LOOKUP_FUNC(0x800AF408)(rdram, ctx);
         goto after_19;
     // 0x800A62B8: addiu       $a1, $sp, 0x18
     ctx->r5 = ADD32(ctx->r29, 0X18);
@@ -6901,7 +6901,7 @@ L_800A62EC:
     // 0x800A6304: jal         0x800A89B0
     // 0x800A6308: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
-    func_800A89B0(rdram, ctx);
+    LOOKUP_FUNC(0x800A89B0)(rdram, ctx);
         goto after_23;
     // 0x800A6308: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
@@ -6921,7 +6921,7 @@ L_800A62EC:
     // 0x800A6324: jal         0x800A73E4
     // 0x800A6328: swc1        $f22, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f22.u32l;
-    cutscenePopulateSlotsFromLevelLists(rdram, ctx);
+    LOOKUP_FUNC(0x800A73E4)(rdram, ctx);
         goto after_24;
     // 0x800A6328: swc1        $f22, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->f22.u32l;
@@ -6937,7 +6937,7 @@ L_800A62EC:
     // 0x800A633C: jal         0x800A6FC0
     // 0x800A6340: sw          $v0, 0x1A08($v1)
     MEM_W(0X1A08, ctx->r3) = ctx->r2;
-    initCinematicDispatchSlots(rdram, ctx);
+    LOOKUP_FUNC(0x800A6FC0)(rdram, ctx);
         goto after_25;
     // 0x800A6340: sw          $v0, 0x1A08($v1)
     MEM_W(0X1A08, ctx->r3) = ctx->r2;
@@ -6951,7 +6951,7 @@ L_800A62EC:
     // 0x800A6350: jal         0x800A8420
     // 0x800A6354: addiu       $a0, $sp, 0x18
     ctx->r4 = ADD32(ctx->r29, 0X18);
-    cutsceneDispatchSlotsByFlag(rdram, ctx);
+    LOOKUP_FUNC(0x800A8420)(rdram, ctx);
         goto after_26;
     // 0x800A6354: addiu       $a0, $sp, 0x18
     ctx->r4 = ADD32(ctx->r29, 0X18);
@@ -6961,7 +6961,7 @@ L_800A62EC:
     CHECK_FR(ctx, 12);
     CHECK_FR(ctx, 22);
     ctx->f12.fl = ctx->f22.fl;
-    tickCutsceneActionSlots(rdram, ctx);
+    LOOKUP_FUNC(0x800AA658)(rdram, ctx);
         goto after_27;
     // 0x800A635C: mov.s       $f12, $f22
     CHECK_FR(ctx, 12);
@@ -6973,7 +6973,7 @@ L_800A62EC:
     // 0x800A6364: jal         0x800ABD0C
     // 0x800A6368: addiu       $a0, $sp, 0x18
     ctx->r4 = ADD32(ctx->r29, 0X18);
-    npcIncomingMissileUpdate(rdram, ctx);
+    LOOKUP_FUNC(0x800ABD0C)(rdram, ctx);
         goto after_28;
     // 0x800A6368: addiu       $a0, $sp, 0x18
     ctx->r4 = ADD32(ctx->r29, 0X18);
@@ -6985,7 +6985,7 @@ L_800A62EC:
     // 0x800A6374: jal         0x800AEE14
     // 0x800A6378: nop
 
-    tickCutsceneNpcSlots(rdram, ctx);
+    LOOKUP_FUNC(0x800AEE14)(rdram, ctx);
         goto after_29;
     // 0x800A6378: nop
 
@@ -7147,7 +7147,7 @@ L_800A62EC:
     // 0x800A6430: jal         0x800AD224
     // 0x800A6434: nop
 
-    computeCutsceneScreenScale(rdram, ctx);
+    LOOKUP_FUNC(0x800AD224)(rdram, ctx);
         goto after_40;
     // 0x800A6434: nop
 
@@ -7170,7 +7170,7 @@ L_800A6440:
     // 0x800A6448: jal         0x800AD690
     // 0x800A644C: nop
 
-    func_800AD690(rdram, ctx);
+    LOOKUP_FUNC(0x800AD690)(rdram, ctx);
         goto after_41;
     // 0x800A644C: nop
 
@@ -7194,7 +7194,7 @@ L_800A6454:
     // 0x800A6464: jal         0x800A70E4
     // 0x800A6468: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
-    cinematicSlotBatchDispatch(rdram, ctx);
+    LOOKUP_FUNC(0x800A70E4)(rdram, ctx);
         goto after_43;
     // 0x800A6468: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
@@ -7232,7 +7232,7 @@ L_800A6454:
     // 0x800A6488: jal         0x800AA1BC
     // 0x800A648C: addiu       $a1, $t1, 0x1938
     ctx->r5 = ADD32(ctx->r9, 0X1938);
-    func_800AA1BC(rdram, ctx);
+    LOOKUP_FUNC(0x800AA1BC)(rdram, ctx);
         goto after_46;
     // 0x800A648C: addiu       $a1, $t1, 0x1938
     ctx->r5 = ADD32(ctx->r9, 0X1938);
@@ -7250,7 +7250,7 @@ L_800A6454:
     // 0x800A649C: jal         0x800A71B8
     // 0x800A64A0: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
-    slotEffectHandlerDispatch(rdram, ctx);
+    LOOKUP_FUNC(0x800A71B8)(rdram, ctx);
         goto after_48;
     // 0x800A64A0: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
@@ -7293,7 +7293,7 @@ L_800A64BC:
     // 0x800A64CC: jal         0x800AF60C
     // 0x800A64D0: addiu       $a1, $sp, 0x18
     ctx->r5 = ADD32(ctx->r29, 0X18);
-    cinematicDeactivator(rdram, ctx);
+    LOOKUP_FUNC(0x800AF60C)(rdram, ctx);
         goto after_52;
     // 0x800A64D0: addiu       $a1, $sp, 0x18
     ctx->r5 = ADD32(ctx->r29, 0X18);
@@ -7313,7 +7313,7 @@ L_800A64BC:
     // 0x800A64E4: jal         0x800AEB30
     // 0x800A64E8: nop
 
-    noopHandler_800AEB30(rdram, ctx);
+    LOOKUP_FUNC(0x800AEB30)(rdram, ctx);
         goto after_54;
     // 0x800A64E8: nop
 
@@ -7321,7 +7321,7 @@ L_800A64BC:
     // 0x800A64EC: jal         0x800AF260
     // 0x800A64F0: nop
 
-    cinematicShutdownAudioAndAssets(rdram, ctx);
+    LOOKUP_FUNC(0x800AF260)(rdram, ctx);
         goto after_55;
     // 0x800A64F0: nop
 
@@ -7329,7 +7329,7 @@ L_800A64BC:
     // 0x800A64F4: jal         0x800AEB38
     // 0x800A64F8: nop
 
-    freeCutsceneResources(rdram, ctx);
+    LOOKUP_FUNC(0x800AEB38)(rdram, ctx);
         goto after_56;
     // 0x800A64F8: nop
 
@@ -7620,7 +7620,7 @@ RECOMP_FUNC void load_cutscene(uint8_t* rdram, recomp_context* ctx) {
     // 0x800A669C: jal         0x800ACE8C
     // 0x800A66A0: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
-    processCutsceneActions(rdram, ctx);
+    LOOKUP_FUNC(0x800ACE8C)(rdram, ctx);
         goto after_2;
     // 0x800A66A0: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
@@ -7904,7 +7904,7 @@ L_800A684C:
     // 0x800A684C: jal         0x800AEA28
     // 0x800A6850: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
-    cuts_0058_bubble_sort(rdram, ctx);
+    LOOKUP_FUNC(0x800AEA28)(rdram, ctx);
         goto after_8;
     // 0x800A6850: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
@@ -7918,7 +7918,7 @@ L_800A684C:
     // 0x800A6860: jal         0x800A7C4C
     // 0x800A6864: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
-    func_800A7C4C(rdram, ctx);
+    LOOKUP_FUNC(0x800A7C4C)(rdram, ctx);
         goto after_9;
     // 0x800A6864: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
@@ -7938,7 +7938,7 @@ L_800A684C:
     // 0x800A6878: jal         0x800A7C4C
     // 0x800A687C: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
-    func_800A7C4C(rdram, ctx);
+    LOOKUP_FUNC(0x800A7C4C)(rdram, ctx);
         goto after_11;
     // 0x800A687C: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
@@ -7965,7 +7965,7 @@ L_800A6894:
     // 0x800A6894: jal         0x800A959C
     // 0x800A6898: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
-    func_800A959C(rdram, ctx);
+    LOOKUP_FUNC(0x800A959C)(rdram, ctx);
         goto after_13;
     // 0x800A6898: addu        $a0, $s3, $zero
     ctx->r4 = ADD32(ctx->r19, 0);
@@ -9140,7 +9140,7 @@ L_800A6DC8:
     // 0x800A6DF8: jal         0x800ADF74
     // 0x800A6DFC: sb          $zero, 0x2($v0)
     MEM_B(0X2, ctx->r2) = 0;
-    loadBackdropAsset(rdram, ctx);
+    LOOKUP_FUNC(0x800ADF74)(rdram, ctx);
         goto after_6;
     // 0x800A6DFC: sb          $zero, 0x2($v0)
     MEM_B(0X2, ctx->r2) = 0;
@@ -9152,7 +9152,7 @@ L_800A6DC8:
     // 0x800A6E08: jal         0x800AF65C
     // 0x800A6E0C: sw          $a0, 0xB10($v0)
     MEM_W(0XB10, ctx->r2) = ctx->r4;
-    func_800AF65C(rdram, ctx);
+    LOOKUP_FUNC(0x800AF65C)(rdram, ctx);
         goto after_7;
     // 0x800A6E0C: sw          $a0, 0xB10($v0)
     MEM_W(0XB10, ctx->r2) = ctx->r4;
@@ -9174,7 +9174,7 @@ L_800A6DC8:
     // 0x800A6E24: jal         0x800AC574
     // 0x800A6E28: nop
 
-    func_800AC574(rdram, ctx);
+    LOOKUP_FUNC(0x800AC574)(rdram, ctx);
         goto after_9;
     // 0x800A6E28: nop
 
@@ -9274,7 +9274,7 @@ L_800A6E80:
     // 0x800A6EB8: jal         0x800ADF74
     // 0x800A6EBC: sb          $v1, 0x2($v0)
     MEM_B(0X2, ctx->r2) = ctx->r3;
-    loadBackdropAsset(rdram, ctx);
+    LOOKUP_FUNC(0x800ADF74)(rdram, ctx);
         goto after_13;
     // 0x800A6EBC: sb          $v1, 0x2($v0)
     MEM_B(0X2, ctx->r2) = ctx->r3;
@@ -9292,7 +9292,7 @@ L_800A6E80:
     // 0x800A6ED4: jal         0x800ADF74
     // 0x800A6ED8: sw          $v0, 0xB04($s0)
     MEM_W(0XB04, ctx->r16) = ctx->r2;
-    loadBackdropAsset(rdram, ctx);
+    LOOKUP_FUNC(0x800ADF74)(rdram, ctx);
         goto after_14;
     // 0x800A6ED8: sw          $v0, 0xB04($s0)
     MEM_W(0XB04, ctx->r16) = ctx->r2;
@@ -9312,7 +9312,7 @@ L_800A6E80:
     // 0x800A6EF4: jal         0x800ADF74
     // 0x800A6EF8: sw          $v0, 0xB08($s1)
     MEM_W(0XB08, ctx->r17) = ctx->r2;
-    loadBackdropAsset(rdram, ctx);
+    LOOKUP_FUNC(0x800ADF74)(rdram, ctx);
         goto after_15;
     // 0x800A6EF8: sw          $v0, 0xB08($s1)
     MEM_W(0XB08, ctx->r17) = ctx->r2;
@@ -9324,7 +9324,7 @@ L_800A6E80:
     // 0x800A6F04: jal         0x800AF65C
     // 0x800A6F08: sw          $v0, 0xB0C($s2)
     MEM_W(0XB0C, ctx->r18) = ctx->r2;
-    func_800AF65C(rdram, ctx);
+    LOOKUP_FUNC(0x800AF65C)(rdram, ctx);
         goto after_16;
     // 0x800A6F08: sw          $v0, 0xB0C($s2)
     MEM_W(0XB0C, ctx->r18) = ctx->r2;
@@ -9348,7 +9348,7 @@ L_800A6E80:
     // 0x800A6F24: jal         0x800AF65C
     // 0x800A6F28: nop
 
-    func_800AF65C(rdram, ctx);
+    LOOKUP_FUNC(0x800AF65C)(rdram, ctx);
         goto after_18;
     // 0x800A6F28: nop
 
@@ -9370,7 +9370,7 @@ L_800A6E80:
     // 0x800A6F40: jal         0x800AF65C
     // 0x800A6F44: nop
 
-    func_800AF65C(rdram, ctx);
+    LOOKUP_FUNC(0x800AF65C)(rdram, ctx);
         goto after_20;
     // 0x800A6F44: nop
 
@@ -10278,7 +10278,7 @@ RECOMP_FUNC void cutscenePopulateSlotsFromLevelLists(uint8_t* rdram, recomp_cont
     // 0x800A745C: jal         0x800A6904
     // 0x800A7460: addu        $a0, $s1, $a0
     ctx->r4 = ADD32(ctx->r17, ctx->r4);
-    cinematicSlotUpdate(rdram, ctx);
+    LOOKUP_FUNC(0x800A6904)(rdram, ctx);
         goto after_0;
     // 0x800A7460: addu        $a0, $s1, $a0
     ctx->r4 = ADD32(ctx->r17, ctx->r4);
@@ -10308,7 +10308,7 @@ RECOMP_FUNC void cutscenePopulateSlotsFromLevelLists(uint8_t* rdram, recomp_cont
     // 0x800A7490: jal         0x800A6904
     // 0x800A7494: addu        $a0, $s1, $a0
     ctx->r4 = ADD32(ctx->r17, ctx->r4);
-    cinematicSlotUpdate(rdram, ctx);
+    LOOKUP_FUNC(0x800A6904)(rdram, ctx);
         goto after_1;
     // 0x800A7494: addu        $a0, $s1, $a0
     ctx->r4 = ADD32(ctx->r17, ctx->r4);
@@ -10334,7 +10334,7 @@ RECOMP_FUNC void cutscenePopulateSlotsFromLevelLists(uint8_t* rdram, recomp_cont
     // 0x800A74BC: jal         0x800A6904
     // 0x800A74C0: addu        $a0, $s1, $a0
     ctx->r4 = ADD32(ctx->r17, ctx->r4);
-    cinematicSlotUpdate(rdram, ctx);
+    LOOKUP_FUNC(0x800A6904)(rdram, ctx);
         goto after_2;
     // 0x800A74C0: addu        $a0, $s1, $a0
     ctx->r4 = ADD32(ctx->r17, ctx->r4);
@@ -10360,7 +10360,7 @@ RECOMP_FUNC void cutscenePopulateSlotsFromLevelLists(uint8_t* rdram, recomp_cont
     // 0x800A74E8: jal         0x800A6904
     // 0x800A74EC: addu        $a0, $s1, $a0
     ctx->r4 = ADD32(ctx->r17, ctx->r4);
-    cinematicSlotUpdate(rdram, ctx);
+    LOOKUP_FUNC(0x800A6904)(rdram, ctx);
         goto after_3;
     // 0x800A74EC: addu        $a0, $s1, $a0
     ctx->r4 = ADD32(ctx->r17, ctx->r4);
@@ -10390,7 +10390,7 @@ RECOMP_FUNC void cutscenePopulateSlotsFromLevelLists(uint8_t* rdram, recomp_cont
     // 0x800A751C: jal         0x800A6904
     // 0x800A7520: addu        $a0, $s1, $a0
     ctx->r4 = ADD32(ctx->r17, ctx->r4);
-    cinematicSlotUpdate(rdram, ctx);
+    LOOKUP_FUNC(0x800A6904)(rdram, ctx);
         goto after_4;
     // 0x800A7520: addu        $a0, $s1, $a0
     ctx->r4 = ADD32(ctx->r17, ctx->r4);
@@ -10416,7 +10416,7 @@ RECOMP_FUNC void cutscenePopulateSlotsFromLevelLists(uint8_t* rdram, recomp_cont
     // 0x800A7548: jal         0x800A6904
     // 0x800A754C: addu        $a0, $s1, $a0
     ctx->r4 = ADD32(ctx->r17, ctx->r4);
-    cinematicSlotUpdate(rdram, ctx);
+    LOOKUP_FUNC(0x800A6904)(rdram, ctx);
         goto after_5;
     // 0x800A754C: addu        $a0, $s1, $a0
     ctx->r4 = ADD32(ctx->r17, ctx->r4);
@@ -10442,7 +10442,7 @@ RECOMP_FUNC void cutscenePopulateSlotsFromLevelLists(uint8_t* rdram, recomp_cont
     // 0x800A7574: jal         0x800A6904
     // 0x800A7578: addu        $a0, $s1, $a0
     ctx->r4 = ADD32(ctx->r17, ctx->r4);
-    cinematicSlotUpdate(rdram, ctx);
+    LOOKUP_FUNC(0x800A6904)(rdram, ctx);
         goto after_6;
     // 0x800A7578: addu        $a0, $s1, $a0
     ctx->r4 = ADD32(ctx->r17, ctx->r4);
@@ -10468,7 +10468,7 @@ RECOMP_FUNC void cutscenePopulateSlotsFromLevelLists(uint8_t* rdram, recomp_cont
     // 0x800A75A0: jal         0x800A6904
     // 0x800A75A4: addu        $a0, $s1, $a0
     ctx->r4 = ADD32(ctx->r17, ctx->r4);
-    cinematicSlotUpdate(rdram, ctx);
+    LOOKUP_FUNC(0x800A6904)(rdram, ctx);
         goto after_7;
     // 0x800A75A4: addu        $a0, $s1, $a0
     ctx->r4 = ADD32(ctx->r17, ctx->r4);
@@ -10622,7 +10622,7 @@ RECOMP_FUNC void cutscenePopulateSlotsFromLevelLists(uint8_t* rdram, recomp_cont
     // 0x800A767C: jal         0x800AF164
     // 0x800A7680: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
-    func_800AF164(rdram, ctx);
+    LOOKUP_FUNC(0x800AF164)(rdram, ctx);
         goto after_13;
     // 0x800A7680: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
@@ -10744,7 +10744,7 @@ RECOMP_FUNC void cinematicSlotDispatcher(uint8_t* rdram, recomp_context* ctx) {
     // 0x800A774C: jal         0x800A6904
     // 0x800A7750: addu        $a0, $s2, $a0
     ctx->r4 = ADD32(ctx->r18, ctx->r4);
-    cinematicSlotUpdate(rdram, ctx);
+    LOOKUP_FUNC(0x800A6904)(rdram, ctx);
         goto after_0;
     // 0x800A7750: addu        $a0, $s2, $a0
     ctx->r4 = ADD32(ctx->r18, ctx->r4);
@@ -10770,7 +10770,7 @@ RECOMP_FUNC void cinematicSlotDispatcher(uint8_t* rdram, recomp_context* ctx) {
     // 0x800A7778: jal         0x800A6904
     // 0x800A777C: addu        $a0, $s2, $a0
     ctx->r4 = ADD32(ctx->r18, ctx->r4);
-    cinematicSlotUpdate(rdram, ctx);
+    LOOKUP_FUNC(0x800A6904)(rdram, ctx);
         goto after_1;
     // 0x800A777C: addu        $a0, $s2, $a0
     ctx->r4 = ADD32(ctx->r18, ctx->r4);
@@ -10796,7 +10796,7 @@ RECOMP_FUNC void cinematicSlotDispatcher(uint8_t* rdram, recomp_context* ctx) {
     // 0x800A77A4: jal         0x800A6904
     // 0x800A77A8: addu        $a0, $s2, $a0
     ctx->r4 = ADD32(ctx->r18, ctx->r4);
-    cinematicSlotUpdate(rdram, ctx);
+    LOOKUP_FUNC(0x800A6904)(rdram, ctx);
         goto after_2;
     // 0x800A77A8: addu        $a0, $s2, $a0
     ctx->r4 = ADD32(ctx->r18, ctx->r4);
@@ -10822,7 +10822,7 @@ RECOMP_FUNC void cinematicSlotDispatcher(uint8_t* rdram, recomp_context* ctx) {
     // 0x800A77D0: jal         0x800A6904
     // 0x800A77D4: addu        $a0, $s2, $a0
     ctx->r4 = ADD32(ctx->r18, ctx->r4);
-    cinematicSlotUpdate(rdram, ctx);
+    LOOKUP_FUNC(0x800A6904)(rdram, ctx);
         goto after_3;
     // 0x800A77D4: addu        $a0, $s2, $a0
     ctx->r4 = ADD32(ctx->r18, ctx->r4);
@@ -10852,7 +10852,7 @@ RECOMP_FUNC void cinematicSlotDispatcher(uint8_t* rdram, recomp_context* ctx) {
     // 0x800A7804: jal         0x800A6904
     // 0x800A7808: addu        $a0, $s2, $a0
     ctx->r4 = ADD32(ctx->r18, ctx->r4);
-    cinematicSlotUpdate(rdram, ctx);
+    LOOKUP_FUNC(0x800A6904)(rdram, ctx);
         goto after_4;
     // 0x800A7808: addu        $a0, $s2, $a0
     ctx->r4 = ADD32(ctx->r18, ctx->r4);
@@ -10878,7 +10878,7 @@ RECOMP_FUNC void cinematicSlotDispatcher(uint8_t* rdram, recomp_context* ctx) {
     // 0x800A7830: jal         0x800A6904
     // 0x800A7834: addu        $a0, $s2, $a0
     ctx->r4 = ADD32(ctx->r18, ctx->r4);
-    cinematicSlotUpdate(rdram, ctx);
+    LOOKUP_FUNC(0x800A6904)(rdram, ctx);
         goto after_5;
     // 0x800A7834: addu        $a0, $s2, $a0
     ctx->r4 = ADD32(ctx->r18, ctx->r4);
@@ -10904,7 +10904,7 @@ RECOMP_FUNC void cinematicSlotDispatcher(uint8_t* rdram, recomp_context* ctx) {
     // 0x800A785C: jal         0x800A6904
     // 0x800A7860: addu        $a0, $s2, $a0
     ctx->r4 = ADD32(ctx->r18, ctx->r4);
-    cinematicSlotUpdate(rdram, ctx);
+    LOOKUP_FUNC(0x800A6904)(rdram, ctx);
         goto after_6;
     // 0x800A7860: addu        $a0, $s2, $a0
     ctx->r4 = ADD32(ctx->r18, ctx->r4);
@@ -10932,7 +10932,7 @@ RECOMP_FUNC void cinematicSlotDispatcher(uint8_t* rdram, recomp_context* ctx) {
     // 0x800A788C: jal         0x800A6904
     // 0x800A7890: addu        $a0, $s2, $a0
     ctx->r4 = ADD32(ctx->r18, ctx->r4);
-    cinematicSlotUpdate(rdram, ctx);
+    LOOKUP_FUNC(0x800A6904)(rdram, ctx);
         goto after_7;
     // 0x800A7890: addu        $a0, $s2, $a0
     ctx->r4 = ADD32(ctx->r18, ctx->r4);
@@ -10958,7 +10958,7 @@ RECOMP_FUNC void cinematicSlotDispatcher(uint8_t* rdram, recomp_context* ctx) {
     // 0x800A78B8: jal         0x800A6904
     // 0x800A78BC: addu        $a0, $s2, $a0
     ctx->r4 = ADD32(ctx->r18, ctx->r4);
-    cinematicSlotUpdate(rdram, ctx);
+    LOOKUP_FUNC(0x800A6904)(rdram, ctx);
         goto after_8;
     // 0x800A78BC: addu        $a0, $s2, $a0
     ctx->r4 = ADD32(ctx->r18, ctx->r4);
@@ -10984,7 +10984,7 @@ RECOMP_FUNC void cinematicSlotDispatcher(uint8_t* rdram, recomp_context* ctx) {
     // 0x800A78E4: jal         0x800A6904
     // 0x800A78E8: addu        $a0, $s2, $a0
     ctx->r4 = ADD32(ctx->r18, ctx->r4);
-    cinematicSlotUpdate(rdram, ctx);
+    LOOKUP_FUNC(0x800A6904)(rdram, ctx);
         goto after_9;
     // 0x800A78E8: addu        $a0, $s2, $a0
     ctx->r4 = ADD32(ctx->r18, ctx->r4);
@@ -11010,7 +11010,7 @@ RECOMP_FUNC void cinematicSlotDispatcher(uint8_t* rdram, recomp_context* ctx) {
     // 0x800A7910: jal         0x800A6904
     // 0x800A7914: addu        $a0, $s2, $a0
     ctx->r4 = ADD32(ctx->r18, ctx->r4);
-    cinematicSlotUpdate(rdram, ctx);
+    LOOKUP_FUNC(0x800A6904)(rdram, ctx);
         goto after_10;
     // 0x800A7914: addu        $a0, $s2, $a0
     ctx->r4 = ADD32(ctx->r18, ctx->r4);
@@ -11158,7 +11158,7 @@ L_800A7984:
     // 0x800A79F0: jal         0x800AF284
     // 0x800A79F4: addiu       $a2, $zero, 0x2
     ctx->r6 = ADD32(0, 0X2);
-    bytesDiffer(rdram, ctx);
+    LOOKUP_FUNC(0x800AF284)(rdram, ctx);
         goto after_11;
     // 0x800A79F4: addiu       $a2, $zero, 0x2
     ctx->r6 = ADD32(0, 0X2);
@@ -12971,7 +12971,7 @@ L_800A84BC:
     // 0x800A84BC: jal         0x800A76B8
     // 0x800A84C0: addiu       $s0, $s0, 0x13C
     ctx->r16 = ADD32(ctx->r16, 0X13C);
-    cinematicSlotDispatcher(rdram, ctx);
+    LOOKUP_FUNC(0x800A76B8)(rdram, ctx);
         goto after_0;
     // 0x800A84C0: addiu       $s0, $s0, 0x13C
     ctx->r16 = ADD32(ctx->r16, 0X13C);
@@ -12994,7 +12994,7 @@ L_800A84D8:
     // 0x800A84D8: jal         0x800A98AC
     // 0x800A84DC: addu        $a0, $s5, $zero
     ctx->r4 = ADD32(ctx->r21, 0);
-    func_800A98AC(rdram, ctx);
+    LOOKUP_FUNC(0x800A98AC)(rdram, ctx);
         goto after_1;
     // 0x800A84DC: addu        $a0, $s5, $zero
     ctx->r4 = ADD32(ctx->r21, 0);
@@ -13472,14 +13472,12 @@ L_800A8784:
     ctx->r6 = ADD32(ctx->r16, ctx->r6);
     // 0x800A879C: lw          $v0, 0x50($a2)
     ctx->r2 = MEM_W(ctx->r6, 0X50);
-    { if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) { ctx->r2 = MEM_W(ctx->r2, 0x0); } else { ctx->r2 = 0; } }
-    // 0x800A87A0: nop
-
+    // 0x800A87A0: lw          $v0, 0x0($v0)
+    ctx->r2 = MEM_W(ctx->r2, 0X0);
     // 0x800A87A4: lwc1        $f0, 0x64($a2)
     ctx->f0.u32l = MEM_W(ctx->r6, 0X64);
-    { if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) { ctx->f2.u32l = MEM_W(ctx->r2, 0x44); } else { ctx->f2.u32l = 0; } }
-    // 0x800A87A8: nop
-
+    // 0x800A87A8: lwc1        $f2, 0x44($v0)
+    ctx->f2.u32l = MEM_W(ctx->r2, 0X44);
     // 0x800A87AC: mul.s       $f2, $f2, $f0
     CHECK_FR(ctx, 2);
     CHECK_FR(ctx, 2);
@@ -14838,7 +14836,7 @@ L_800A8EE8:
     // 0x800A8F28: jal         0x800AEF30
     // 0x800A8F2C: nop
 
-    func_800AEF30(rdram, ctx);
+    LOOKUP_FUNC(0x800AEF30)(rdram, ctx);
         goto after_14;
     // 0x800A8F2C: nop
 
@@ -14910,7 +14908,7 @@ L_800A8F60:
     // 0x800A8F9C: jal         0x800AF03C
     // 0x800A8FA0: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
-    lookupCutsceneIdMapping(rdram, ctx);
+    LOOKUP_FUNC(0x800AF03C)(rdram, ctx);
         goto after_15;
     // 0x800A8FA0: addu        $a0, $s1, $zero
     ctx->r4 = ADD32(ctx->r17, 0);
@@ -15387,7 +15385,7 @@ L_800A9210:
     // 0x800A9248: jal         0x800AF2C8
     // 0x800A924C: addu        $a2, $s0, $zero
     ctx->r6 = ADD32(ctx->r16, 0);
-    func_800AF2C8(rdram, ctx);
+    LOOKUP_FUNC(0x800AF2C8)(rdram, ctx);
         goto after_22;
     // 0x800A924C: addu        $a2, $s0, $zero
     ctx->r6 = ADD32(ctx->r16, 0);
@@ -15682,7 +15680,7 @@ L_800A93A4:
     // 0x800A93C4: jal         0x800AEBD0
     // 0x800A93C8: nop
 
-    func_800AEBD0(rdram, ctx);
+    LOOKUP_FUNC(0x800AEBD0)(rdram, ctx);
         goto after_27;
     // 0x800A93C8: nop
 
@@ -15824,7 +15822,7 @@ L_800A9480:
     // 0x800A9480: jal         0x800AAC88
     // 0x800A9484: addu        $a0, $s2, $zero
     ctx->r4 = ADD32(ctx->r18, 0);
-    func_800AAC88(rdram, ctx);
+    LOOKUP_FUNC(0x800AAC88)(rdram, ctx);
         goto after_30;
     // 0x800A9484: addu        $a0, $s2, $zero
     ctx->r4 = ADD32(ctx->r18, 0);
@@ -15845,7 +15843,7 @@ L_800A9490:
     // 0x800A949C: jal         0x800AC75C
     // 0x800A94A0: addu        $a3, $a2, $zero
     ctx->r7 = ADD32(ctx->r6, 0);
-    func_800AC75C(rdram, ctx);
+    LOOKUP_FUNC(0x800AC75C)(rdram, ctx);
         goto after_31;
     // 0x800A94A0: addu        $a3, $a2, $zero
     ctx->r7 = ADD32(ctx->r6, 0);
@@ -15948,7 +15946,7 @@ L_800A94F8:
     // 0x800A94F8: jal         0x800AF08C
     // 0x800A94FC: addiu       $a0, $zero, 0x3
     ctx->r4 = ADD32(0, 0X3);
-    destroyAllNpcsInSlotChain(rdram, ctx);
+    LOOKUP_FUNC(0x800AF08C)(rdram, ctx);
         goto after_33;
     // 0x800A94FC: addiu       $a0, $zero, 0x3
     ctx->r4 = ADD32(0, 0X3);
@@ -16427,7 +16425,7 @@ L_800A94B0:
     // 0x800A94B4: jal         0x800C6234
     // 0x800A94B8: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    getAvailablePlayerCraftFlagsConsiderUnlocks(rdram, ctx);
+    LOOKUP_FUNC(0x800C6234)(rdram, ctx);
         goto after_1;
     // 0x800A94B8: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -16443,7 +16441,7 @@ L_800A94B0:
     // 0x800A94CC: jal         0x800C6234
     // 0x800A94D0: sb          $v0, -0x2933($v1)
     MEM_B(-0X2933, ctx->r3) = ctx->r2;
-    getAvailablePlayerCraftFlagsConsiderUnlocks(rdram, ctx);
+    LOOKUP_FUNC(0x800C6234)(rdram, ctx);
         goto after_2;
     // 0x800A94D0: sb          $v0, -0x2933($v1)
     MEM_B(-0X2933, ctx->r3) = ctx->r2;
@@ -18148,7 +18146,7 @@ L_800A95F4:
     // 0x800AA1A4: jal         0x800AE9E0
     // 0x800AA1A8: nop
 
-    hangarLoadShadows(rdram, ctx);
+    LOOKUP_FUNC(0x800AE9E0)(rdram, ctx);
         goto after_12;
     // 0x800AA1A8: nop
 
@@ -19184,7 +19182,7 @@ L_800AA798:
     // 0x800AA7A4: jal         0x800AE088
     // 0x800AA7A8: addiu       $a2, $a2, -0x3A68
     ctx->r6 = ADD32(ctx->r6, -0X3A68);
-    hangarInitializeShipShadowHob(rdram, ctx);
+    LOOKUP_FUNC(0x800AE088)(rdram, ctx);
         goto after_41;
     // 0x800AA7A8: addiu       $a2, $a2, -0x3A68
     ctx->r6 = ADD32(ctx->r6, -0X3A68);
@@ -19832,7 +19830,7 @@ L_800AAB40:
     // 0x800AAB70: jal         0x800AB658
     // 0x800AAB74: sb          $zero, -0x3C1C($v0)
     MEM_B(-0X3C1C, ctx->r2) = 0;
-    func_800AB658(rdram, ctx);
+    LOOKUP_FUNC(0x800AB658)(rdram, ctx);
         goto after_61;
     // 0x800AAB74: sb          $zero, -0x3C1C($v0)
     MEM_B(-0X3C1C, ctx->r2) = 0;
@@ -19916,7 +19914,7 @@ L_800AABD8:
     // 0x800AABFC: jal         0x800AE088
     // 0x800AAC00: addiu       $s0, $s0, 0x278
     ctx->r16 = ADD32(ctx->r16, 0X278);
-    hangarInitializeShipShadowHob(rdram, ctx);
+    LOOKUP_FUNC(0x800AE088)(rdram, ctx);
         goto after_63;
     // 0x800AAC00: addiu       $s0, $s0, 0x278
     ctx->r16 = ADD32(ctx->r16, 0X278);
@@ -20166,7 +20164,7 @@ L_800AABD8:
     // 0x800AAD60: jal         0x800AEB48
     // 0x800AAD64: andi        $a0, $fp, 0xFF
     ctx->r4 = ctx->r30 & 0XFF;
-    hangarSetSecondaryWeaponDisplay(rdram, ctx);
+    LOOKUP_FUNC(0x800AEB48)(rdram, ctx);
         goto after_80;
     // 0x800AAD64: andi        $a0, $fp, 0xFF
     ctx->r4 = ctx->r30 & 0XFF;

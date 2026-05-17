@@ -15,7 +15,7 @@ RECOMP_FUNC void lv3_dealDamageHookA(uint8_t* rdram, recomp_context* ctx) {
     // 0x801034AC: jal         0x800C7390
     // 0x801034B0: addiu       $a1, $zero, 0x3A98
     ctx->r5 = ADD32(0, 0X3A98);
-    dealDamagetoDatItem(rdram, ctx);
+    LOOKUP_FUNC(0x800C7390)(rdram, ctx);
         goto after_0;
     // 0x801034B0: addiu       $a1, $zero, 0x3A98
     ctx->r5 = ADD32(0, 0X3A98);
@@ -43,7 +43,7 @@ RECOMP_FUNC void lv3_dealDamageHookB(uint8_t* rdram, recomp_context* ctx) {
     // 0x801034D0: jal         0x800C7390
     // 0x801034D4: addiu       $a1, $zero, 0x32C8
     ctx->r5 = ADD32(0, 0X32C8);
-    dealDamagetoDatItem(rdram, ctx);
+    LOOKUP_FUNC(0x800C7390)(rdram, ctx);
         goto after_0;
     // 0x801034D4: addiu       $a1, $zero, 0x32C8
     ctx->r5 = ADD32(0, 0X32C8);
@@ -71,7 +71,7 @@ RECOMP_FUNC void lv3_dealDamageHookA_v2(uint8_t* rdram, recomp_context* ctx) {
     // 0x801034F4: jal         0x800C7390
     // 0x801034F8: addiu       $a1, $zero, 0x3A98
     ctx->r5 = ADD32(0, 0X3A98);
-    dealDamagetoDatItem(rdram, ctx);
+    LOOKUP_FUNC(0x800C7390)(rdram, ctx);
         goto after_0;
     // 0x801034F8: addiu       $a1, $zero, 0x3A98
     ctx->r5 = ADD32(0, 0X3A98);
@@ -97,7 +97,7 @@ RECOMP_FUNC void playVoice_0x07(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103514: jal         0x800C7540
     // 0x80103518: addu        $a1, $zero, $zero
     ctx->r5 = ADD32(0, 0);
-    setObjectiveBoolean(rdram, ctx);
+    LOOKUP_FUNC(0x800C7540)(rdram, ctx);
         goto after_0;
     // 0x80103518: addu        $a1, $zero, $zero
     ctx->r5 = ADD32(0, 0);
@@ -133,7 +133,7 @@ RECOMP_FUNC void lv3_calculateFriendliesSaved(uint8_t* rdram, recomp_context* ct
     // 0x8010353C: jal         0x800C761C
     // 0x80103540: sw          $s0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r16;
-    getObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C761C)(rdram, ctx);
         goto after_0;
     // 0x80103540: sw          $s0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r16;
@@ -143,7 +143,7 @@ RECOMP_FUNC void lv3_calculateFriendliesSaved(uint8_t* rdram, recomp_context* ct
     // 0x80103548: jal         0x800C761C
     // 0x8010354C: addu        $s0, $v0, $zero
     ctx->r16 = ADD32(ctx->r2, 0);
-    getObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C761C)(rdram, ctx);
         goto after_1;
     // 0x8010354C: addu        $s0, $v0, $zero
     ctx->r16 = ADD32(ctx->r2, 0);
@@ -159,7 +159,7 @@ RECOMP_FUNC void lv3_calculateFriendliesSaved(uint8_t* rdram, recomp_context* ct
     // 0x80103560: jal         0x800C77B0
     // 0x80103564: sw          $s0, -0x2FAC($v1)
     MEM_W(-0X2FAC, ctx->r3) = ctx->r16;
-    setFriendliesSaved(rdram, ctx);
+    LOOKUP_FUNC(0x800C77B0)(rdram, ctx);
         goto after_2;
     // 0x80103564: sw          $s0, -0x2FAC($v1)
     MEM_W(-0X2FAC, ctx->r3) = ctx->r16;
@@ -235,7 +235,7 @@ RECOMP_FUNC void lv4_initializeObjectTracking(uint8_t* rdram, recomp_context* ct
     // 0x801035E0: jal         0x800C7830
     // 0x801035E4: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
-    addBooleanCountHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7830)(rdram, ctx);
         goto after_0;
     // 0x801035E4: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
@@ -253,7 +253,7 @@ RECOMP_FUNC void lv4_initializeObjectTracking(uint8_t* rdram, recomp_context* ct
     // 0x801035FC: jal         0x800C7830
     // 0x80103600: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
-    addBooleanCountHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7830)(rdram, ctx);
         goto after_1;
     // 0x80103600: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
@@ -271,7 +271,7 @@ RECOMP_FUNC void lv4_initializeObjectTracking(uint8_t* rdram, recomp_context* ct
     // 0x80103618: jal         0x800C7830
     // 0x8010361C: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
-    addBooleanCountHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7830)(rdram, ctx);
         goto after_2;
     // 0x8010361C: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
@@ -289,7 +289,7 @@ RECOMP_FUNC void lv4_initializeObjectTracking(uint8_t* rdram, recomp_context* ct
     // 0x80103634: jal         0x800C7830
     // 0x80103638: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
-    addBooleanCountHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7830)(rdram, ctx);
         goto after_3;
     // 0x80103638: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
@@ -309,7 +309,7 @@ RECOMP_FUNC void lv4_initializeObjectTracking(uint8_t* rdram, recomp_context* ct
     // 0x80103654: jal         0x800C7830
     // 0x80103658: sw          $v0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r2;
-    addBooleanCountHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7830)(rdram, ctx);
         goto after_4;
     // 0x80103658: sw          $v0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r2;
@@ -329,7 +329,7 @@ RECOMP_FUNC void lv4_initializeObjectTracking(uint8_t* rdram, recomp_context* ct
     // 0x80103674: jal         0x800C7830
     // 0x80103678: sw          $s0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r16;
-    addBooleanCountHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7830)(rdram, ctx);
         goto after_5;
     // 0x80103678: sw          $s0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r16;
@@ -349,7 +349,7 @@ RECOMP_FUNC void lv4_initializeObjectTracking(uint8_t* rdram, recomp_context* ct
     // 0x80103694: jal         0x800C7830
     // 0x80103698: sw          $v0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r2;
-    addBooleanCountHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7830)(rdram, ctx);
         goto after_6;
     // 0x80103698: sw          $v0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r2;
@@ -367,7 +367,7 @@ RECOMP_FUNC void lv4_initializeObjectTracking(uint8_t* rdram, recomp_context* ct
     // 0x801036B0: jal         0x800C7830
     // 0x801036B4: sw          $s0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r16;
-    addBooleanCountHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7830)(rdram, ctx);
         goto after_7;
     // 0x801036B4: sw          $s0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r16;
@@ -385,7 +385,7 @@ RECOMP_FUNC void lv4_initializeObjectTracking(uint8_t* rdram, recomp_context* ct
     // 0x801036CC: jal         0x800C7830
     // 0x801036D0: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
-    addBooleanCountHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7830)(rdram, ctx);
         goto after_8;
     // 0x801036D0: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
@@ -403,7 +403,7 @@ RECOMP_FUNC void lv4_initializeObjectTracking(uint8_t* rdram, recomp_context* ct
     // 0x801036E8: jal         0x800C7830
     // 0x801036EC: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
-    addBooleanCountHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7830)(rdram, ctx);
         goto after_9;
     // 0x801036EC: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
@@ -415,7 +415,7 @@ RECOMP_FUNC void lv4_initializeObjectTracking(uint8_t* rdram, recomp_context* ct
     // 0x801036F8: jal         0x800C7864
     // 0x801036FC: addiu       $a0, $a0, 0x3C40
     ctx->r4 = ADD32(ctx->r4, 0X3C40);
-    addTimerHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7864)(rdram, ctx);
         goto after_10;
     // 0x801036FC: addiu       $a0, $a0, 0x3C40
     ctx->r4 = ADD32(ctx->r4, 0X3C40);
@@ -425,7 +425,7 @@ RECOMP_FUNC void lv4_initializeObjectTracking(uint8_t* rdram, recomp_context* ct
     // 0x80103704: jal         0x800C7D1C
     // 0x80103708: addiu       $a0, $zero, 0x2A2
     ctx->r4 = ADD32(0, 0X2A2);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_11;
     // 0x80103708: addiu       $a0, $zero, 0x2A2
     ctx->r4 = ADD32(0, 0X2A2);
@@ -455,7 +455,7 @@ RECOMP_FUNC void lv4_checkComplexObjectives(uint8_t* rdram, recomp_context* ctx)
     // 0x8010372C: jal         0x800C761C
     // 0x80103730: sw          $s0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r16;
-    getObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C761C)(rdram, ctx);
         goto after_0;
     // 0x80103730: sw          $s0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r16;
@@ -473,7 +473,7 @@ RECOMP_FUNC void lv4_checkComplexObjectives(uint8_t* rdram, recomp_context* ctx)
     // 0x80103740: jal         0x800C7738
     // 0x80103744: nop
 
-    setHudEnableBit4(rdram, ctx);
+    LOOKUP_FUNC(0x800C7738)(rdram, ctx);
         goto after_1;
     // 0x80103744: nop
 
@@ -482,7 +482,7 @@ L_80103748:
     // 0x80103748: jal         0x800C761C
     // 0x8010374C: addiu       $a0, $zero, 0xF
     ctx->r4 = ADD32(0, 0XF);
-    getObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C761C)(rdram, ctx);
         goto after_2;
     // 0x8010374C: addiu       $a0, $zero, 0xF
     ctx->r4 = ADD32(0, 0XF);
@@ -500,7 +500,7 @@ L_80103748:
     // 0x8010375C: jal         0x800C7738
     // 0x80103760: nop
 
-    setHudEnableBit4(rdram, ctx);
+    LOOKUP_FUNC(0x800C7738)(rdram, ctx);
         goto after_3;
     // 0x80103760: nop
 
@@ -509,7 +509,7 @@ L_80103764:
     // 0x80103764: jal         0x800C761C
     // 0x80103768: addiu       $a0, $zero, 0x1C
     ctx->r4 = ADD32(0, 0X1C);
-    getObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C761C)(rdram, ctx);
         goto after_4;
     // 0x80103768: addiu       $a0, $zero, 0x1C
     ctx->r4 = ADD32(0, 0X1C);
@@ -537,7 +537,7 @@ L_80103764:
     // 0x80103784: jal         0x800C776C
     // 0x80103788: nop
 
-    setHudEnableBit8(rdram, ctx);
+    LOOKUP_FUNC(0x800C776C)(rdram, ctx);
         goto after_5;
     // 0x80103788: nop
 
@@ -545,7 +545,7 @@ L_80103764:
     // 0x8010378C: jal         0x800C76B0
     // 0x80103790: addiu       $a0, $zero, 0x1
     ctx->r4 = ADD32(0, 0X1);
-    activateObjectiveCompleteFlag(rdram, ctx);
+    LOOKUP_FUNC(0x800C76B0)(rdram, ctx);
         goto after_6;
     // 0x80103790: addiu       $a0, $zero, 0x1
     ctx->r4 = ADD32(0, 0X1);
@@ -553,7 +553,7 @@ L_80103764:
     // 0x80103794: jal         0x800C76B0
     // 0x80103798: addiu       $a0, $zero, 0x2
     ctx->r4 = ADD32(0, 0X2);
-    activateObjectiveCompleteFlag(rdram, ctx);
+    LOOKUP_FUNC(0x800C76B0)(rdram, ctx);
         goto after_7;
     // 0x80103798: addiu       $a0, $zero, 0x2
     ctx->r4 = ADD32(0, 0X2);
@@ -562,7 +562,7 @@ L_8010379C:
     // 0x8010379C: jal         0x800C759C
     // 0x801037A0: addiu       $a0, $zero, 0xC
     ctx->r4 = ADD32(0, 0XC);
-    getObjectiveBoolean(rdram, ctx);
+    LOOKUP_FUNC(0x800C759C)(rdram, ctx);
         goto after_8;
     // 0x801037A0: addiu       $a0, $zero, 0xC
     ctx->r4 = ADD32(0, 0XC);
@@ -582,7 +582,7 @@ L_8010379C:
     // 0x801037B4: jal         0x800C759C
     // 0x801037B8: addiu       $a0, $zero, 0x20
     ctx->r4 = ADD32(0, 0X20);
-    getObjectiveBoolean(rdram, ctx);
+    LOOKUP_FUNC(0x800C759C)(rdram, ctx);
         goto after_9;
     // 0x801037B8: addiu       $a0, $zero, 0x20
     ctx->r4 = ADD32(0, 0X20);
@@ -612,7 +612,7 @@ L_8010379C:
     // 0x801037D8: jal         0x800C7D1C
     // 0x801037DC: sw          $v1, -0x2F9C($a2)
     MEM_W(-0X2F9C, ctx->r6) = ctx->r3;
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_10;
     // 0x801037DC: sw          $v1, -0x2F9C($a2)
     MEM_W(-0X2F9C, ctx->r6) = ctx->r3;
@@ -622,7 +622,7 @@ L_8010379C:
     // 0x801037E4: jal         0x800C7D1C
     // 0x801037E8: addiu       $a0, $zero, 0x143
     ctx->r4 = ADD32(0, 0X143);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_11;
     // 0x801037E8: addiu       $a0, $zero, 0x143
     ctx->r4 = ADD32(0, 0X143);
@@ -631,7 +631,7 @@ L_801037EC:
     // 0x801037EC: jal         0x800C761C
     // 0x801037F0: addiu       $a0, $zero, 0x1D
     ctx->r4 = ADD32(0, 0X1D);
-    getObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C761C)(rdram, ctx);
         goto after_12;
     // 0x801037F0: addiu       $a0, $zero, 0x1D
     ctx->r4 = ADD32(0, 0X1D);
@@ -649,7 +649,7 @@ L_801037EC:
     // 0x80103800: jal         0x800C761C
     // 0x80103804: addiu       $a0, $zero, 0x1E
     ctx->r4 = ADD32(0, 0X1E);
-    getObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C761C)(rdram, ctx);
         goto after_13;
     // 0x80103804: addiu       $a0, $zero, 0x1E
     ctx->r4 = ADD32(0, 0X1E);
@@ -679,7 +679,7 @@ L_801037EC:
     // 0x80103824: jal         0x800C7CF8
     // 0x80103828: addiu       $a0, $zero, 0x7
     ctx->r4 = ADD32(0, 0X7);
-    playObjectiveVoiceLine1(rdram, ctx);
+    LOOKUP_FUNC(0x800C7CF8)(rdram, ctx);
         goto after_14;
     // 0x80103828: addiu       $a0, $zero, 0x7
     ctx->r4 = ADD32(0, 0X7);
@@ -688,7 +688,7 @@ L_8010382C:
     // 0x8010382C: jal         0x800C759C
     // 0x80103830: addiu       $a0, $zero, 0x1A
     ctx->r4 = ADD32(0, 0X1A);
-    getObjectiveBoolean(rdram, ctx);
+    LOOKUP_FUNC(0x800C759C)(rdram, ctx);
         goto after_15;
     // 0x80103830: addiu       $a0, $zero, 0x1A
     ctx->r4 = ADD32(0, 0X1A);
@@ -718,7 +718,7 @@ L_8010382C:
     // 0x80103850: jal         0x800C7738
     // 0x80103854: sw          $v1, -0x2F8C($a0)
     MEM_W(-0X2F8C, ctx->r4) = ctx->r3;
-    setHudEnableBit4(rdram, ctx);
+    LOOKUP_FUNC(0x800C7738)(rdram, ctx);
         goto after_16;
     // 0x80103854: sw          $v1, -0x2F8C($a0)
     MEM_W(-0X2F8C, ctx->r4) = ctx->r3;
@@ -726,7 +726,7 @@ L_8010382C:
     // 0x80103858: jal         0x800C7CF8
     // 0x8010385C: addiu       $a0, $zero, 0xC
     ctx->r4 = ADD32(0, 0XC);
-    playObjectiveVoiceLine1(rdram, ctx);
+    LOOKUP_FUNC(0x800C7CF8)(rdram, ctx);
         goto after_17;
     // 0x8010385C: addiu       $a0, $zero, 0xC
     ctx->r4 = ADD32(0, 0XC);
@@ -735,7 +735,7 @@ L_80103860:
     // 0x80103860: jal         0x800C759C
     // 0x80103864: addiu       $a0, $zero, 0xC
     ctx->r4 = ADD32(0, 0XC);
-    getObjectiveBoolean(rdram, ctx);
+    LOOKUP_FUNC(0x800C759C)(rdram, ctx);
         goto after_18;
     // 0x80103864: addiu       $a0, $zero, 0xC
     ctx->r4 = ADD32(0, 0XC);
@@ -751,7 +751,7 @@ L_80103860:
     // 0x80103870: jal         0x800C761C
     // 0x80103874: addiu       $a0, $zero, 0x1F
     ctx->r4 = ADD32(0, 0X1F);
-    getObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C761C)(rdram, ctx);
         goto after_19;
     // 0x80103874: addiu       $a0, $zero, 0x1F
     ctx->r4 = ADD32(0, 0X1F);
@@ -783,7 +783,7 @@ L_80103860:
     // 0x80103898: jal         0x800C7D1C
     // 0x8010389C: addiu       $a0, $zero, 0xB
     ctx->r4 = ADD32(0, 0XB);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_20;
     // 0x8010389C: addiu       $a0, $zero, 0xB
     ctx->r4 = ADD32(0, 0XB);
@@ -795,7 +795,7 @@ L_80103860:
     // 0x801038A8: jal         0x800C7864
     // 0x801038AC: addiu       $a0, $a0, 0x3C30
     ctx->r4 = ADD32(ctx->r4, 0X3C30);
-    addTimerHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7864)(rdram, ctx);
         goto after_21;
     // 0x801038AC: addiu       $a0, $a0, 0x3C30
     ctx->r4 = ADD32(ctx->r4, 0X3C30);
@@ -806,7 +806,7 @@ L_801038B4:
     // 0x801038B4: jal         0x800C759C
     // 0x801038B8: addiu       $a0, $zero, 0xC
     ctx->r4 = ADD32(0, 0XC);
-    getObjectiveBoolean(rdram, ctx);
+    LOOKUP_FUNC(0x800C759C)(rdram, ctx);
         goto after_22;
     // 0x801038B8: addiu       $a0, $zero, 0xC
     ctx->r4 = ADD32(0, 0XC);
@@ -822,7 +822,7 @@ L_801038B4:
     // 0x801038C4: jal         0x800C761C
     // 0x801038C8: addiu       $a0, $zero, 0x1F
     ctx->r4 = ADD32(0, 0X1F);
-    getObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C761C)(rdram, ctx);
         goto after_23;
     // 0x801038C8: addiu       $a0, $zero, 0x1F
     ctx->r4 = ADD32(0, 0X1F);
@@ -856,7 +856,7 @@ L_801038B4:
     // 0x801038F0: jal         0x800C7864
     // 0x801038F4: sw          $zero, -0x2F90($a2)
     MEM_W(-0X2F90, ctx->r6) = 0;
-    addTimerHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7864)(rdram, ctx);
         goto after_24;
     // 0x801038F4: sw          $zero, -0x2F90($a2)
     MEM_W(-0X2F90, ctx->r6) = 0;
@@ -865,7 +865,7 @@ L_801038F8:
     // 0x801038F8: jal         0x800C759C
     // 0x801038FC: addiu       $a0, $zero, 0xC
     ctx->r4 = ADD32(0, 0XC);
-    getObjectiveBoolean(rdram, ctx);
+    LOOKUP_FUNC(0x800C759C)(rdram, ctx);
         goto after_25;
     // 0x801038FC: addiu       $a0, $zero, 0xC
     ctx->r4 = ADD32(0, 0XC);
@@ -881,7 +881,7 @@ L_801038F8:
     // 0x80103908: jal         0x800C761C
     // 0x8010390C: addiu       $a0, $zero, 0x1F
     ctx->r4 = ADD32(0, 0X1F);
-    getObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C761C)(rdram, ctx);
         goto after_26;
     // 0x8010390C: addiu       $a0, $zero, 0x1F
     ctx->r4 = ADD32(0, 0X1F);
@@ -915,7 +915,7 @@ L_801038F8:
     // 0x80103934: jal         0x800C7864
     // 0x80103938: sw          $v0, -0x2F88($v1)
     MEM_W(-0X2F88, ctx->r3) = ctx->r2;
-    addTimerHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7864)(rdram, ctx);
         goto after_27;
     // 0x80103938: sw          $v0, -0x2F88($v1)
     MEM_W(-0X2F88, ctx->r3) = ctx->r2;
@@ -924,7 +924,7 @@ L_8010393C:
     // 0x8010393C: jal         0x800C759C
     // 0x80103940: addiu       $a0, $zero, 0xC
     ctx->r4 = ADD32(0, 0XC);
-    getObjectiveBoolean(rdram, ctx);
+    LOOKUP_FUNC(0x800C759C)(rdram, ctx);
         goto after_28;
     // 0x80103940: addiu       $a0, $zero, 0xC
     ctx->r4 = ADD32(0, 0XC);
@@ -940,7 +940,7 @@ L_8010393C:
     // 0x8010394C: jal         0x800C761C
     // 0x80103950: addiu       $a0, $zero, 0x1F
     ctx->r4 = ADD32(0, 0X1F);
-    getObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C761C)(rdram, ctx);
         goto after_29;
     // 0x80103950: addiu       $a0, $zero, 0x1F
     ctx->r4 = ADD32(0, 0X1F);
@@ -974,7 +974,7 @@ L_8010393C:
     // 0x80103978: jal         0x800C7864
     // 0x8010397C: sw          $v0, -0x2F84($v1)
     MEM_W(-0X2F84, ctx->r3) = ctx->r2;
-    addTimerHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7864)(rdram, ctx);
         goto after_30;
     // 0x8010397C: sw          $v0, -0x2F84($v1)
     MEM_W(-0X2F84, ctx->r3) = ctx->r2;
@@ -1003,7 +1003,7 @@ RECOMP_FUNC void playVoice_0x0A(uint8_t* rdram, recomp_context* ctx) {
     // 0x8010399C: jal         0x800C7CF8
     // 0x801039A0: addiu       $a0, $zero, 0xA
     ctx->r4 = ADD32(0, 0XA);
-    playObjectiveVoiceLine1(rdram, ctx);
+    LOOKUP_FUNC(0x800C7CF8)(rdram, ctx);
         goto after_0;
     // 0x801039A0: addiu       $a0, $zero, 0xA
     ctx->r4 = ADD32(0, 0XA);
@@ -1027,7 +1027,7 @@ RECOMP_FUNC void lv4_progressWithDialogueA(uint8_t* rdram, recomp_context* ctx) 
     // 0x801039B8: jal         0x800C761C
     // 0x801039BC: addiu       $a0, $zero, 0x1E
     ctx->r4 = ADD32(0, 0X1E);
-    getObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C761C)(rdram, ctx);
         goto after_0;
     // 0x801039BC: addiu       $a0, $zero, 0x1E
     ctx->r4 = ADD32(0, 0X1E);
@@ -1056,7 +1056,7 @@ L_801039D8:
     // 0x801039DC: jal         0x800C7D1C
     // 0x801039E0: addiu       $a0, $zero, 0xB
     ctx->r4 = ADD32(0, 0XB);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_1;
     // 0x801039E0: addiu       $a0, $zero, 0xB
     ctx->r4 = ADD32(0, 0XB);
@@ -1069,7 +1069,7 @@ L_801039EC:
     // 0x801039EC: jal         0x800C7D1C
     // 0x801039F0: nop
 
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_2;
     // 0x801039F0: nop
 
@@ -1093,7 +1093,7 @@ RECOMP_FUNC void lv4_progressWithDialogueB(uint8_t* rdram, recomp_context* ctx) 
     // 0x80103A08: jal         0x800C761C
     // 0x80103A0C: addiu       $a0, $zero, 0x1E
     ctx->r4 = ADD32(0, 0X1E);
-    getObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C761C)(rdram, ctx);
         goto after_0;
     // 0x80103A0C: addiu       $a0, $zero, 0x1E
     ctx->r4 = ADD32(0, 0X1E);
@@ -1122,7 +1122,7 @@ L_80103A28:
     // 0x80103A2C: jal         0x800C7D1C
     // 0x80103A30: addiu       $a0, $zero, 0x33
     ctx->r4 = ADD32(0, 0X33);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_1;
     // 0x80103A30: addiu       $a0, $zero, 0x33
     ctx->r4 = ADD32(0, 0X33);
@@ -1135,7 +1135,7 @@ L_80103A3C:
     // 0x80103A3C: jal         0x800C7D1C
     // 0x80103A40: nop
 
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_2;
     // 0x80103A40: nop
 
@@ -1161,7 +1161,7 @@ RECOMP_FUNC void playVoice2_0x034(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103A5C: jal         0x800C7D1C
     // 0x80103A60: addiu       $a0, $zero, 0x34
     ctx->r4 = ADD32(0, 0X34);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_0;
     // 0x80103A60: addiu       $a0, $zero, 0x34
     ctx->r4 = ADD32(0, 0X34);
@@ -1187,7 +1187,7 @@ RECOMP_FUNC void playVoice2_0x028(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103A7C: jal         0x800C7D1C
     // 0x80103A80: addiu       $a0, $zero, 0x28
     ctx->r4 = ADD32(0, 0X28);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_0;
     // 0x80103A80: addiu       $a0, $zero, 0x28
     ctx->r4 = ADD32(0, 0X28);
@@ -1213,7 +1213,7 @@ RECOMP_FUNC void playVoice2_0x027(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103A9C: jal         0x800C7D1C
     // 0x80103AA0: addiu       $a0, $zero, 0x27
     ctx->r4 = ADD32(0, 0X27);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_0;
     // 0x80103AA0: addiu       $a0, $zero, 0x27
     ctx->r4 = ADD32(0, 0X27);
@@ -1244,7 +1244,7 @@ RECOMP_FUNC void lv4_majorMidMissionEvent(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103AC4: jal         0x800C7884
     // 0x80103AC8: addiu       $a0, $a0, -0x6940
     ctx->r4 = ADD32(ctx->r4, -0X6940);
-    setHudFlagBit40AndStoreArg(rdram, ctx);
+    LOOKUP_FUNC(0x800C7884)(rdram, ctx);
         goto after_0;
     // 0x80103AC8: addiu       $a0, $a0, -0x6940
     ctx->r4 = ADD32(ctx->r4, -0X6940);
@@ -1254,7 +1254,7 @@ RECOMP_FUNC void lv4_majorMidMissionEvent(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103AD0: jal         0x800C7D1C
     // 0x80103AD4: addiu       $a0, $zero, 0x238
     ctx->r4 = ADD32(0, 0X238);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_1;
     // 0x80103AD4: addiu       $a0, $zero, 0x238
     ctx->r4 = ADD32(0, 0X238);
@@ -1264,7 +1264,7 @@ RECOMP_FUNC void lv4_majorMidMissionEvent(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103ADC: jal         0x800C7D1C
     // 0x80103AE0: addiu       $a0, $zero, 0x30
     ctx->r4 = ADD32(0, 0X30);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_2;
     // 0x80103AE0: addiu       $a0, $zero, 0x30
     ctx->r4 = ADD32(0, 0X30);
@@ -1274,7 +1274,7 @@ RECOMP_FUNC void lv4_majorMidMissionEvent(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103AE8: jal         0x800C7D1C
     // 0x80103AEC: addiu       $a0, $zero, 0x142
     ctx->r4 = ADD32(0, 0X142);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_3;
     // 0x80103AEC: addiu       $a0, $zero, 0x142
     ctx->r4 = ADD32(0, 0X142);
@@ -1286,7 +1286,7 @@ RECOMP_FUNC void lv4_majorMidMissionEvent(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103AF8: jal         0x800C7864
     // 0x80103AFC: addiu       $a0, $a0, 0x3B34
     ctx->r4 = ADD32(ctx->r4, 0X3B34);
-    addTimerHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7864)(rdram, ctx);
         goto after_4;
     // 0x80103AFC: addiu       $a0, $a0, 0x3B34
     ctx->r4 = ADD32(ctx->r4, 0X3B34);
@@ -1298,7 +1298,7 @@ RECOMP_FUNC void lv4_majorMidMissionEvent(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103B08: jal         0x800C7864
     // 0x80103B0C: addiu       $a0, $a0, 0x3B88
     ctx->r4 = ADD32(ctx->r4, 0X3B88);
-    addTimerHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7864)(rdram, ctx);
         goto after_5;
     // 0x80103B0C: addiu       $a0, $a0, 0x3B88
     ctx->r4 = ADD32(ctx->r4, 0X3B88);
@@ -1306,7 +1306,7 @@ RECOMP_FUNC void lv4_majorMidMissionEvent(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103B10: jal         0x800C7D98
     // 0x80103B14: addiu       $a0, $zero, 0x3
     ctx->r4 = ADD32(0, 0X3);
-    triggerSoundCueByType(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D98)(rdram, ctx);
         goto after_6;
     // 0x80103B14: addiu       $a0, $zero, 0x3
     ctx->r4 = ADD32(0, 0X3);
@@ -1316,7 +1316,7 @@ RECOMP_FUNC void lv4_majorMidMissionEvent(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103B1C: jal         0x800C7540
     // 0x80103B20: addiu       $a1, $zero, 0x1
     ctx->r5 = ADD32(0, 0X1);
-    setObjectiveBoolean(rdram, ctx);
+    LOOKUP_FUNC(0x800C7540)(rdram, ctx);
         goto after_7;
     // 0x80103B20: addiu       $a1, $zero, 0x1
     ctx->r5 = ADD32(0, 0X1);
@@ -1353,7 +1353,7 @@ RECOMP_FUNC void func_80103B34(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103B50: jal         0x800C7AB0
     // 0x80103B54: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
-    func_800C7AB0(rdram, ctx);
+    LOOKUP_FUNC(0x800C7AB0)(rdram, ctx);
         goto after_0;
     // 0x80103B54: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
@@ -1365,7 +1365,7 @@ RECOMP_FUNC void func_80103B34(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103B60: jal         0x800C7AB0
     // 0x80103B64: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
-    func_800C7AB0(rdram, ctx);
+    LOOKUP_FUNC(0x800C7AB0)(rdram, ctx);
         goto after_1;
     // 0x80103B64: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
@@ -1377,7 +1377,7 @@ RECOMP_FUNC void func_80103B34(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103B70: jal         0x800C7AB0
     // 0x80103B74: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
-    func_800C7AB0(rdram, ctx);
+    LOOKUP_FUNC(0x800C7AB0)(rdram, ctx);
         goto after_2;
     // 0x80103B74: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
@@ -1407,7 +1407,7 @@ RECOMP_FUNC void lv4_dealMultiDamageEvent(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103B98: jal         0x800C7390
     // 0x80103B9C: addiu       $a1, $zero, 0x2
     ctx->r5 = ADD32(0, 0X2);
-    dealDamagetoDatItem(rdram, ctx);
+    LOOKUP_FUNC(0x800C7390)(rdram, ctx);
         goto after_0;
     // 0x80103B9C: addiu       $a1, $zero, 0x2
     ctx->r5 = ADD32(0, 0X2);
@@ -1419,7 +1419,7 @@ RECOMP_FUNC void lv4_dealMultiDamageEvent(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103BA8: jal         0x800C7390
     // 0x80103BAC: addiu       $a1, $zero, 0x2
     ctx->r5 = ADD32(0, 0X2);
-    dealDamagetoDatItem(rdram, ctx);
+    LOOKUP_FUNC(0x800C7390)(rdram, ctx);
         goto after_1;
     // 0x80103BAC: addiu       $a1, $zero, 0x2
     ctx->r5 = ADD32(0, 0X2);
@@ -1451,7 +1451,7 @@ RECOMP_FUNC void lv4_completeObjectiveWithVoice(uint8_t* rdram, recomp_context* 
     // 0x80103BD4: jal         0x800C7D1C
     // 0x80103BD8: sw          $v0, -0x2FA0($v1)
     MEM_W(-0X2FA0, ctx->r3) = ctx->r2;
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_0;
     // 0x80103BD8: sw          $v0, -0x2FA0($v1)
     MEM_W(-0X2FA0, ctx->r3) = ctx->r2;
@@ -1459,7 +1459,7 @@ RECOMP_FUNC void lv4_completeObjectiveWithVoice(uint8_t* rdram, recomp_context* 
     // 0x80103BDC: jal         0x800C76B0
     // 0x80103BE0: addiu       $a0, $zero, 0x3
     ctx->r4 = ADD32(0, 0X3);
-    activateObjectiveCompleteFlag(rdram, ctx);
+    LOOKUP_FUNC(0x800C76B0)(rdram, ctx);
         goto after_1;
     // 0x80103BE0: addiu       $a0, $zero, 0x3
     ctx->r4 = ADD32(0, 0X3);
@@ -1485,7 +1485,7 @@ RECOMP_FUNC void playVoice2_0x032(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103BFC: jal         0x800C7D1C
     // 0x80103C00: addiu       $a0, $zero, 0x32
     ctx->r4 = ADD32(0, 0X32);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_0;
     // 0x80103C00: addiu       $a0, $zero, 0x32
     ctx->r4 = ADD32(0, 0X32);
@@ -1511,7 +1511,7 @@ RECOMP_FUNC void playVoice2_0x0FE(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103C1C: jal         0x800C7D1C
     // 0x80103C20: addiu       $a0, $zero, 0xFE
     ctx->r4 = ADD32(0, 0XFE);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_0;
     // 0x80103C20: addiu       $a0, $zero, 0xFE
     ctx->r4 = ADD32(0, 0XFE);
@@ -1567,7 +1567,7 @@ RECOMP_FUNC void lv4_dealDamageHookA(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103C60: jal         0x800C7390
     // 0x80103C64: addiu       $a1, $zero, 0xD3
     ctx->r5 = ADD32(0, 0XD3);
-    dealDamagetoDatItem(rdram, ctx);
+    LOOKUP_FUNC(0x800C7390)(rdram, ctx);
         goto after_0;
     // 0x80103C64: addiu       $a1, $zero, 0xD3
     ctx->r5 = ADD32(0, 0XD3);
@@ -1595,7 +1595,7 @@ RECOMP_FUNC void lv4_dealDamageHookB(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103C84: jal         0x800C7390
     // 0x80103C88: addiu       $a1, $zero, 0xD3
     ctx->r5 = ADD32(0, 0XD3);
-    dealDamagetoDatItem(rdram, ctx);
+    LOOKUP_FUNC(0x800C7390)(rdram, ctx);
         goto after_0;
     // 0x80103C88: addiu       $a1, $zero, 0xD3
     ctx->r5 = ADD32(0, 0XD3);
@@ -1623,7 +1623,7 @@ RECOMP_FUNC void lv4_dealDamageHookC(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103CA8: jal         0x800C7390
     // 0x80103CAC: addiu       $a1, $zero, 0xD3
     ctx->r5 = ADD32(0, 0XD3);
-    dealDamagetoDatItem(rdram, ctx);
+    LOOKUP_FUNC(0x800C7390)(rdram, ctx);
         goto after_0;
     // 0x80103CAC: addiu       $a1, $zero, 0xD3
     ctx->r5 = ADD32(0, 0XD3);
@@ -1659,7 +1659,7 @@ RECOMP_FUNC void lv4_calculateFriendliesSaved(uint8_t* rdram, recomp_context* ct
     // 0x80103CD0: jal         0x800C761C
     // 0x80103CD4: sw          $s0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r16;
-    getObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C761C)(rdram, ctx);
         goto after_0;
     // 0x80103CD4: sw          $s0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r16;
@@ -1669,7 +1669,7 @@ RECOMP_FUNC void lv4_calculateFriendliesSaved(uint8_t* rdram, recomp_context* ct
     // 0x80103CDC: jal         0x800C761C
     // 0x80103CE0: addu        $s0, $v0, $zero
     ctx->r16 = ADD32(ctx->r2, 0);
-    getObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C761C)(rdram, ctx);
         goto after_1;
     // 0x80103CE0: addu        $s0, $v0, $zero
     ctx->r16 = ADD32(ctx->r2, 0);
@@ -1681,7 +1681,7 @@ RECOMP_FUNC void lv4_calculateFriendliesSaved(uint8_t* rdram, recomp_context* ct
     // 0x80103CEC: jal         0x800C77B0
     // 0x80103CF0: subu        $a0, $a0, $s0
     ctx->r4 = SUB32(ctx->r4, ctx->r16);
-    setFriendliesSaved(rdram, ctx);
+    LOOKUP_FUNC(0x800C77B0)(rdram, ctx);
         goto after_2;
     // 0x80103CF0: subu        $a0, $a0, $s0
     ctx->r4 = SUB32(ctx->r4, ctx->r16);
@@ -1731,7 +1731,7 @@ RECOMP_FUNC void lv5_initializeObjectTracking(uint8_t* rdram, recomp_context* ct
     // 0x80103D3C: jal         0x800C7830
     // 0x80103D40: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
-    addBooleanCountHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7830)(rdram, ctx);
         goto after_0;
     // 0x80103D40: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
@@ -1751,7 +1751,7 @@ RECOMP_FUNC void lv5_initializeObjectTracking(uint8_t* rdram, recomp_context* ct
     // 0x80103D5C: jal         0x800C7830
     // 0x80103D60: sw          $v0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r2;
-    addBooleanCountHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7830)(rdram, ctx);
         goto after_1;
     // 0x80103D60: sw          $v0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r2;
@@ -1771,7 +1771,7 @@ RECOMP_FUNC void lv5_initializeObjectTracking(uint8_t* rdram, recomp_context* ct
     // 0x80103D7C: jal         0x800C7830
     // 0x80103D80: sw          $v0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r2;
-    addBooleanCountHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7830)(rdram, ctx);
         goto after_2;
     // 0x80103D80: sw          $v0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r2;
@@ -1791,7 +1791,7 @@ RECOMP_FUNC void lv5_initializeObjectTracking(uint8_t* rdram, recomp_context* ct
     // 0x80103D9C: jal         0x800C7830
     // 0x80103DA0: sw          $v0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r2;
-    addBooleanCountHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7830)(rdram, ctx);
         goto after_3;
     // 0x80103DA0: sw          $v0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r2;
@@ -1809,7 +1809,7 @@ RECOMP_FUNC void lv5_initializeObjectTracking(uint8_t* rdram, recomp_context* ct
     // 0x80103DB8: jal         0x800C7830
     // 0x80103DBC: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
-    addBooleanCountHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7830)(rdram, ctx);
         goto after_4;
     // 0x80103DBC: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
@@ -1827,7 +1827,7 @@ RECOMP_FUNC void lv5_initializeObjectTracking(uint8_t* rdram, recomp_context* ct
     // 0x80103DD4: jal         0x800C7830
     // 0x80103DD8: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
-    addBooleanCountHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7830)(rdram, ctx);
         goto after_5;
     // 0x80103DD8: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
@@ -1845,7 +1845,7 @@ RECOMP_FUNC void lv5_initializeObjectTracking(uint8_t* rdram, recomp_context* ct
     // 0x80103DF0: jal         0x800C7830
     // 0x80103DF4: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
-    addBooleanCountHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7830)(rdram, ctx);
         goto after_6;
     // 0x80103DF4: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
@@ -1863,7 +1863,7 @@ RECOMP_FUNC void lv5_initializeObjectTracking(uint8_t* rdram, recomp_context* ct
     // 0x80103E0C: jal         0x800C7830
     // 0x80103E10: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
-    addBooleanCountHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7830)(rdram, ctx);
         goto after_7;
     // 0x80103E10: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
@@ -1881,7 +1881,7 @@ RECOMP_FUNC void lv5_initializeObjectTracking(uint8_t* rdram, recomp_context* ct
     // 0x80103E28: jal         0x800C7830
     // 0x80103E2C: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
-    addBooleanCountHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7830)(rdram, ctx);
         goto after_8;
     // 0x80103E2C: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
@@ -1899,7 +1899,7 @@ RECOMP_FUNC void lv5_initializeObjectTracking(uint8_t* rdram, recomp_context* ct
     // 0x80103E44: jal         0x800C7830
     // 0x80103E48: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
-    addBooleanCountHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7830)(rdram, ctx);
         goto after_9;
     // 0x80103E48: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
@@ -1933,7 +1933,7 @@ RECOMP_FUNC void lv5_startMissionAndBriefing(uint8_t* rdram, recomp_context* ctx
     // 0x80103E70: jal         0x800C7540
     // 0x80103E74: addiu       $a1, $zero, 0x1
     ctx->r5 = ADD32(0, 0X1);
-    setObjectiveBoolean(rdram, ctx);
+    LOOKUP_FUNC(0x800C7540)(rdram, ctx);
         goto after_0;
     // 0x80103E74: addiu       $a1, $zero, 0x1
     ctx->r5 = ADD32(0, 0X1);
@@ -1941,7 +1941,7 @@ RECOMP_FUNC void lv5_startMissionAndBriefing(uint8_t* rdram, recomp_context* ctx
     // 0x80103E78: jal         0x800C76B0
     // 0x80103E7C: addiu       $a0, $zero, 0x2
     ctx->r4 = ADD32(0, 0X2);
-    activateObjectiveCompleteFlag(rdram, ctx);
+    LOOKUP_FUNC(0x800C76B0)(rdram, ctx);
         goto after_1;
     // 0x80103E7C: addiu       $a0, $zero, 0x2
     ctx->r4 = ADD32(0, 0X2);
@@ -1951,7 +1951,7 @@ RECOMP_FUNC void lv5_startMissionAndBriefing(uint8_t* rdram, recomp_context* ctx
     // 0x80103E84: jal         0x800C7884
     // 0x80103E88: addiu       $a0, $a0, -0x68D0
     ctx->r4 = ADD32(ctx->r4, -0X68D0);
-    setHudFlagBit40AndStoreArg(rdram, ctx);
+    LOOKUP_FUNC(0x800C7884)(rdram, ctx);
         goto after_2;
     // 0x80103E88: addiu       $a0, $a0, -0x68D0
     ctx->r4 = ADD32(ctx->r4, -0X68D0);
@@ -1961,7 +1961,7 @@ RECOMP_FUNC void lv5_startMissionAndBriefing(uint8_t* rdram, recomp_context* ctx
     // 0x80103E90: jal         0x800C7D1C
     // 0x80103E94: addiu       $a0, $zero, 0xE
     ctx->r4 = ADD32(0, 0XE);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_3;
     // 0x80103E94: addiu       $a0, $zero, 0xE
     ctx->r4 = ADD32(0, 0XE);
@@ -1977,7 +1977,7 @@ RECOMP_FUNC void lv5_startMissionAndBriefing(uint8_t* rdram, recomp_context* ctx
     // 0x80103EA8: jal         0x800C7D1C
     // 0x80103EAC: addiu       $a0, $zero, 0xF
     ctx->r4 = ADD32(0, 0XF);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_4;
     // 0x80103EAC: addiu       $a0, $zero, 0xF
     ctx->r4 = ADD32(0, 0XF);
@@ -1987,7 +1987,7 @@ RECOMP_FUNC void lv5_startMissionAndBriefing(uint8_t* rdram, recomp_context* ctx
     // 0x80103EB4: jal         0x800C7D1C
     // 0x80103EB8: addiu       $a0, $zero, 0x147
     ctx->r4 = ADD32(0, 0X147);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_5;
     // 0x80103EB8: addiu       $a0, $zero, 0x147
     ctx->r4 = ADD32(0, 0X147);
@@ -1997,7 +1997,7 @@ RECOMP_FUNC void lv5_startMissionAndBriefing(uint8_t* rdram, recomp_context* ctx
     // 0x80103EC0: jal         0x800C7D1C
     // 0x80103EC4: addiu       $a0, $zero, 0x23E
     ctx->r4 = ADD32(0, 0X23E);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_6;
     // 0x80103EC4: addiu       $a0, $zero, 0x23E
     ctx->r4 = ADD32(0, 0X23E);
@@ -2007,7 +2007,7 @@ RECOMP_FUNC void lv5_startMissionAndBriefing(uint8_t* rdram, recomp_context* ctx
     // 0x80103ECC: jal         0x800C7D1C
     // 0x80103ED0: addiu       $a0, $zero, 0x148
     ctx->r4 = ADD32(0, 0X148);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_7;
     // 0x80103ED0: addiu       $a0, $zero, 0x148
     ctx->r4 = ADD32(0, 0X148);
@@ -2017,7 +2017,7 @@ RECOMP_FUNC void lv5_startMissionAndBriefing(uint8_t* rdram, recomp_context* ctx
     // 0x80103ED8: jal         0x800C7D1C
     // 0x80103EDC: addiu       $a0, $zero, 0xDC
     ctx->r4 = ADD32(0, 0XDC);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_8;
     // 0x80103EDC: addiu       $a0, $zero, 0xDC
     ctx->r4 = ADD32(0, 0XDC);
@@ -2027,7 +2027,7 @@ RECOMP_FUNC void lv5_startMissionAndBriefing(uint8_t* rdram, recomp_context* ctx
     // 0x80103EE4: jal         0x800C7D1C
     // 0x80103EE8: addiu       $a0, $zero, 0x149
     ctx->r4 = ADD32(0, 0X149);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_9;
     // 0x80103EE8: addiu       $a0, $zero, 0x149
     ctx->r4 = ADD32(0, 0X149);
@@ -2037,7 +2037,7 @@ RECOMP_FUNC void lv5_startMissionAndBriefing(uint8_t* rdram, recomp_context* ctx
     // 0x80103EF0: jal         0x800C7D1C
     // 0x80103EF4: addiu       $a0, $zero, 0x2A3
     ctx->r4 = ADD32(0, 0X2A3);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_10;
     // 0x80103EF4: addiu       $a0, $zero, 0x2A3
     ctx->r4 = ADD32(0, 0X2A3);
@@ -2047,7 +2047,7 @@ RECOMP_FUNC void lv5_startMissionAndBriefing(uint8_t* rdram, recomp_context* ctx
     // 0x80103EFC: jal         0x800C7540
     // 0x80103F00: addiu       $a1, $zero, 0x1
     ctx->r5 = ADD32(0, 0X1);
-    setObjectiveBoolean(rdram, ctx);
+    LOOKUP_FUNC(0x800C7540)(rdram, ctx);
         goto after_11;
     // 0x80103F00: addiu       $a1, $zero, 0x1
     ctx->r5 = ADD32(0, 0X1);
@@ -2055,7 +2055,7 @@ RECOMP_FUNC void lv5_startMissionAndBriefing(uint8_t* rdram, recomp_context* ctx
     // 0x80103F04: jal         0x800C7D98
     // 0x80103F08: addu        $a0, $zero, $zero
     ctx->r4 = ADD32(0, 0);
-    triggerSoundCueByType(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D98)(rdram, ctx);
         goto after_12;
     // 0x80103F08: addu        $a0, $zero, $zero
     ctx->r4 = ADD32(0, 0);
@@ -2067,7 +2067,7 @@ RECOMP_FUNC void lv5_startMissionAndBriefing(uint8_t* rdram, recomp_context* ctx
     // 0x80103F14: jal         0x800C7D60
     // 0x80103F18: addu        $a1, $zero, $zero
     ctx->r5 = ADD32(0, 0);
-    delegateToLevelStageTick(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D60)(rdram, ctx);
         goto after_13;
     // 0x80103F18: addu        $a1, $zero, $zero
     ctx->r5 = ADD32(0, 0);
@@ -2077,7 +2077,7 @@ RECOMP_FUNC void lv5_startMissionAndBriefing(uint8_t* rdram, recomp_context* ctx
     // 0x80103F20: jal         0x800C7648
     // 0x80103F24: addu        $a1, $a0, $zero
     ctx->r5 = ADD32(ctx->r4, 0);
-    getAndSetByteAtLevelStateTable(rdram, ctx);
+    LOOKUP_FUNC(0x800C7648)(rdram, ctx);
         goto after_14;
     // 0x80103F24: addu        $a1, $a0, $zero
     ctx->r5 = ADD32(ctx->r4, 0);
@@ -2089,7 +2089,7 @@ RECOMP_FUNC void lv5_startMissionAndBriefing(uint8_t* rdram, recomp_context* ctx
     // 0x80103F30: jal         0x800C7864
     // 0x80103F34: addiu       $a0, $a0, 0x40F0
     ctx->r4 = ADD32(ctx->r4, 0X40F0);
-    addTimerHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7864)(rdram, ctx);
         goto after_15;
     // 0x80103F34: addiu       $a0, $a0, 0x40F0
     ctx->r4 = ADD32(ctx->r4, 0X40F0);
@@ -2119,7 +2119,7 @@ RECOMP_FUNC void playVoice_0x0B(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103F54: jal         0x800C7CF8
     // 0x80103F58: addiu       $a0, $zero, 0xB
     ctx->r4 = ADD32(0, 0XB);
-    playObjectiveVoiceLine1(rdram, ctx);
+    LOOKUP_FUNC(0x800C7CF8)(rdram, ctx);
         goto after_0;
     // 0x80103F58: addiu       $a0, $zero, 0xB
     ctx->r4 = ADD32(0, 0XB);
@@ -2145,7 +2145,7 @@ RECOMP_FUNC void playVoice2_0x00B(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103F74: jal         0x800C7D1C
     // 0x80103F78: addiu       $a0, $zero, 0xB
     ctx->r4 = ADD32(0, 0XB);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_0;
     // 0x80103F78: addiu       $a0, $zero, 0xB
     ctx->r4 = ADD32(0, 0XB);
@@ -2171,7 +2171,7 @@ RECOMP_FUNC void playVoice2_0x15D(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103F94: jal         0x800C7D1C
     // 0x80103F98: addiu       $a0, $zero, 0x15D
     ctx->r4 = ADD32(0, 0X15D);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_0;
     // 0x80103F98: addiu       $a0, $zero, 0x15D
     ctx->r4 = ADD32(0, 0X15D);
@@ -2197,7 +2197,7 @@ RECOMP_FUNC void playVoice2_0x0AF(uint8_t* rdram, recomp_context* ctx) {
     // 0x80103FB4: jal         0x800C7D1C
     // 0x80103FB8: addiu       $a0, $zero, 0xAF
     ctx->r4 = ADD32(0, 0XAF);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_0;
     // 0x80103FB8: addiu       $a0, $zero, 0xAF
     ctx->r4 = ADD32(0, 0XAF);
@@ -2224,7 +2224,7 @@ RECOMP_FUNC void lv5_dialogueWithStateChange(uint8_t* rdram, recomp_context* ctx
     // 0x80103FD4: jal         0x800C759C
     // 0x80103FD8: addiu       $a0, $zero, 0x28
     ctx->r4 = ADD32(0, 0X28);
-    getObjectiveBoolean(rdram, ctx);
+    LOOKUP_FUNC(0x800C759C)(rdram, ctx);
         goto after_0;
     // 0x80103FD8: addiu       $a0, $zero, 0x28
     ctx->r4 = ADD32(0, 0X28);
@@ -2242,7 +2242,7 @@ RECOMP_FUNC void lv5_dialogueWithStateChange(uint8_t* rdram, recomp_context* ctx
     // 0x80103FE8: jal         0x800C759C
     // 0x80103FEC: addiu       $a0, $zero, 0x23
     ctx->r4 = ADD32(0, 0X23);
-    getObjectiveBoolean(rdram, ctx);
+    LOOKUP_FUNC(0x800C759C)(rdram, ctx);
         goto after_1;
     // 0x80103FEC: addiu       $a0, $zero, 0x23
     ctx->r4 = ADD32(0, 0X23);
@@ -2262,7 +2262,7 @@ RECOMP_FUNC void lv5_dialogueWithStateChange(uint8_t* rdram, recomp_context* ctx
     // 0x80104000: jal         0x800C7D1C
     // 0x80104004: addiu       $a0, $zero, 0xDB
     ctx->r4 = ADD32(0, 0XDB);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_2;
     // 0x80104004: addiu       $a0, $zero, 0xDB
     ctx->r4 = ADD32(0, 0XDB);
@@ -2272,7 +2272,7 @@ RECOMP_FUNC void lv5_dialogueWithStateChange(uint8_t* rdram, recomp_context* ctx
     // 0x8010400C: jal         0x800C7D1C
     // 0x80104010: addiu       $a0, $zero, 0x23B
     ctx->r4 = ADD32(0, 0X23B);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_3;
     // 0x80104010: addiu       $a0, $zero, 0x23B
     ctx->r4 = ADD32(0, 0X23B);
@@ -2282,7 +2282,7 @@ RECOMP_FUNC void lv5_dialogueWithStateChange(uint8_t* rdram, recomp_context* ctx
     // 0x80104018: jal         0x800C7D1C
     // 0x8010401C: addiu       $a0, $zero, 0x146
     ctx->r4 = ADD32(0, 0X146);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_4;
     // 0x8010401C: addiu       $a0, $zero, 0x146
     ctx->r4 = ADD32(0, 0X146);
@@ -2317,7 +2317,7 @@ RECOMP_FUNC void lv5_runDialogueSequenceA(uint8_t* rdram, recomp_context* ctx) {
     // 0x80104044: jal         0x800C7D1C
     // 0x80104048: addiu       $a0, $zero, 0x239
     ctx->r4 = ADD32(0, 0X239);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_0;
     // 0x80104048: addiu       $a0, $zero, 0x239
     ctx->r4 = ADD32(0, 0X239);
@@ -2327,7 +2327,7 @@ RECOMP_FUNC void lv5_runDialogueSequenceA(uint8_t* rdram, recomp_context* ctx) {
     // 0x80104050: jal         0x800C7D1C
     // 0x80104054: addiu       $a0, $zero, 0x144
     ctx->r4 = ADD32(0, 0X144);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_1;
     // 0x80104054: addiu       $a0, $zero, 0x144
     ctx->r4 = ADD32(0, 0X144);
@@ -2337,7 +2337,7 @@ RECOMP_FUNC void lv5_runDialogueSequenceA(uint8_t* rdram, recomp_context* ctx) {
     // 0x8010405C: jal         0x800C7D1C
     // 0x80104060: addiu       $a0, $zero, 0x23A
     ctx->r4 = ADD32(0, 0X23A);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_2;
     // 0x80104060: addiu       $a0, $zero, 0x23A
     ctx->r4 = ADD32(0, 0X23A);
@@ -2347,7 +2347,7 @@ RECOMP_FUNC void lv5_runDialogueSequenceA(uint8_t* rdram, recomp_context* ctx) {
     // 0x80104068: jal         0x800C7D1C
     // 0x8010406C: addiu       $a0, $zero, 0x145
     ctx->r4 = ADD32(0, 0X145);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_3;
     // 0x8010406C: addiu       $a0, $zero, 0x145
     ctx->r4 = ADD32(0, 0X145);
@@ -2374,7 +2374,7 @@ RECOMP_FUNC void lv5_dialogueAndBool(uint8_t* rdram, recomp_context* ctx) {
     // 0x80104088: jal         0x800C759C
     // 0x8010408C: addiu       $a0, $zero, 0x23
     ctx->r4 = ADD32(0, 0X23);
-    getObjectiveBoolean(rdram, ctx);
+    LOOKUP_FUNC(0x800C759C)(rdram, ctx);
         goto after_0;
     // 0x8010408C: addiu       $a0, $zero, 0x23
     ctx->r4 = ADD32(0, 0X23);
@@ -2392,7 +2392,7 @@ RECOMP_FUNC void lv5_dialogueAndBool(uint8_t* rdram, recomp_context* ctx) {
     // 0x8010409C: jal         0x800C7D1C
     // 0x801040A0: addiu       $a0, $zero, 0xD
     ctx->r4 = ADD32(0, 0XD);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_1;
     // 0x801040A0: addiu       $a0, $zero, 0xD
     ctx->r4 = ADD32(0, 0XD);
@@ -2419,7 +2419,7 @@ RECOMP_FUNC void playVoice2_0x163(uint8_t* rdram, recomp_context* ctx) {
     // 0x801040BC: jal         0x800C7D1C
     // 0x801040C0: addiu       $a0, $zero, 0x163
     ctx->r4 = ADD32(0, 0X163);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_0;
     // 0x801040C0: addiu       $a0, $zero, 0x163
     ctx->r4 = ADD32(0, 0X163);
@@ -2445,7 +2445,7 @@ RECOMP_FUNC void playVoice2_0x2A4(uint8_t* rdram, recomp_context* ctx) {
     // 0x801040DC: jal         0x800C7D1C
     // 0x801040E0: addiu       $a0, $zero, 0x2A4
     ctx->r4 = ADD32(0, 0X2A4);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_0;
     // 0x801040E0: addiu       $a0, $zero, 0x2A4
     ctx->r4 = ADD32(0, 0X2A4);
@@ -2471,7 +2471,7 @@ RECOMP_FUNC void playVoice_0x65(uint8_t* rdram, recomp_context* ctx) {
     // 0x801040FC: jal         0x800C7648
     // 0x80104100: addiu       $a1, $zero, 0x1
     ctx->r5 = ADD32(0, 0X1);
-    getAndSetByteAtLevelStateTable(rdram, ctx);
+    LOOKUP_FUNC(0x800C7648)(rdram, ctx);
         goto after_0;
     // 0x80104100: addiu       $a1, $zero, 0x1
     ctx->r5 = ADD32(0, 0X1);
@@ -2507,7 +2507,7 @@ RECOMP_FUNC void lv5_calculateFriendliesSaved(uint8_t* rdram, recomp_context* ct
     // 0x80104124: jal         0x800C761C
     // 0x80104128: sw          $s0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r16;
-    getObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C761C)(rdram, ctx);
         goto after_0;
     // 0x80104128: sw          $s0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r16;
@@ -2517,7 +2517,7 @@ RECOMP_FUNC void lv5_calculateFriendliesSaved(uint8_t* rdram, recomp_context* ct
     // 0x80104130: jal         0x800C761C
     // 0x80104134: addu        $s0, $v0, $zero
     ctx->r16 = ADD32(ctx->r2, 0);
-    getObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C761C)(rdram, ctx);
         goto after_1;
     // 0x80104134: addu        $s0, $v0, $zero
     ctx->r16 = ADD32(ctx->r2, 0);
@@ -2529,7 +2529,7 @@ RECOMP_FUNC void lv5_calculateFriendliesSaved(uint8_t* rdram, recomp_context* ct
     // 0x80104140: jal         0x800C77B0
     // 0x80104144: subu        $a0, $a0, $s0
     ctx->r4 = SUB32(ctx->r4, ctx->r16);
-    setFriendliesSaved(rdram, ctx);
+    LOOKUP_FUNC(0x800C77B0)(rdram, ctx);
         goto after_2;
     // 0x80104144: subu        $a0, $a0, $s0
     ctx->r4 = SUB32(ctx->r4, ctx->r16);
@@ -2560,7 +2560,7 @@ RECOMP_FUNC void lv5_checkComplexObjectives(uint8_t* rdram, recomp_context* ctx)
     // 0x80104168: jal         0x800C761C
     // 0x8010416C: addiu       $a0, $zero, 0x2
     ctx->r4 = ADD32(0, 0X2);
-    getObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C761C)(rdram, ctx);
         goto after_0;
     // 0x8010416C: addiu       $a0, $zero, 0x2
     ctx->r4 = ADD32(0, 0X2);
@@ -2592,7 +2592,7 @@ RECOMP_FUNC void lv5_checkComplexObjectives(uint8_t* rdram, recomp_context* ctx)
     // 0x80104190: jal         0x800C7738
     // 0x80104194: sw          $v0, -0x2F80($v1)
     MEM_W(-0X2F80, ctx->r3) = ctx->r2;
-    setHudEnableBit4(rdram, ctx);
+    LOOKUP_FUNC(0x800C7738)(rdram, ctx);
         goto after_1;
     // 0x80104194: sw          $v0, -0x2F80($v1)
     MEM_W(-0X2F80, ctx->r3) = ctx->r2;
@@ -2602,7 +2602,7 @@ RECOMP_FUNC void lv5_checkComplexObjectives(uint8_t* rdram, recomp_context* ctx)
     // 0x8010419C: jal         0x800C7D1C
     // 0x801041A0: addiu       $a0, $zero, 0x11
     ctx->r4 = ADD32(0, 0X11);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_2;
     // 0x801041A0: addiu       $a0, $zero, 0x11
     ctx->r4 = ADD32(0, 0X11);
@@ -2612,7 +2612,7 @@ RECOMP_FUNC void lv5_checkComplexObjectives(uint8_t* rdram, recomp_context* ctx)
     // 0x801041A8: jal         0x800C7D1C
     // 0x801041AC: addiu       $a0, $zero, 0xDD
     ctx->r4 = ADD32(0, 0XDD);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_3;
     // 0x801041AC: addiu       $a0, $zero, 0xDD
     ctx->r4 = ADD32(0, 0XDD);
@@ -2622,7 +2622,7 @@ RECOMP_FUNC void lv5_checkComplexObjectives(uint8_t* rdram, recomp_context* ctx)
     // 0x801041B4: jal         0x800C7D1C
     // 0x801041B8: addiu       $a0, $zero, 0x14B
     ctx->r4 = ADD32(0, 0X14B);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_4;
     // 0x801041B8: addiu       $a0, $zero, 0x14B
     ctx->r4 = ADD32(0, 0X14B);
@@ -2631,7 +2631,7 @@ L_801041BC:
     // 0x801041BC: jal         0x800C761C
     // 0x801041C0: addiu       $a0, $zero, 0x4
     ctx->r4 = ADD32(0, 0X4);
-    getObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C761C)(rdram, ctx);
         goto after_5;
     // 0x801041C0: addiu       $a0, $zero, 0x4
     ctx->r4 = ADD32(0, 0X4);
@@ -2659,7 +2659,7 @@ L_801041BC:
     // 0x801041DC: jal         0x800C776C
     // 0x801041E0: sw          $v0, -0x2F7C($v1)
     MEM_W(-0X2F7C, ctx->r3) = ctx->r2;
-    setHudEnableBit8(rdram, ctx);
+    LOOKUP_FUNC(0x800C776C)(rdram, ctx);
         goto after_6;
     // 0x801041E0: sw          $v0, -0x2F7C($v1)
     MEM_W(-0X2F7C, ctx->r3) = ctx->r2;
@@ -2667,7 +2667,7 @@ L_801041BC:
     // 0x801041E4: jal         0x800C76B0
     // 0x801041E8: addiu       $a0, $zero, 0x1
     ctx->r4 = ADD32(0, 0X1);
-    activateObjectiveCompleteFlag(rdram, ctx);
+    LOOKUP_FUNC(0x800C76B0)(rdram, ctx);
         goto after_7;
     // 0x801041E8: addiu       $a0, $zero, 0x1
     ctx->r4 = ADD32(0, 0X1);
@@ -2675,7 +2675,7 @@ L_801041BC:
     // 0x801041EC: jal         0x800C76B0
     // 0x801041F0: addiu       $a0, $zero, 0x3
     ctx->r4 = ADD32(0, 0X3);
-    activateObjectiveCompleteFlag(rdram, ctx);
+    LOOKUP_FUNC(0x800C76B0)(rdram, ctx);
         goto after_8;
     // 0x801041F0: addiu       $a0, $zero, 0x3
     ctx->r4 = ADD32(0, 0X3);
@@ -2711,7 +2711,7 @@ RECOMP_FUNC void lv6_checkComplexObjectives(uint8_t* rdram, recomp_context* ctx)
     // 0x8010421C: jal         0x800C761C
     // 0x80104220: sw          $s0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r16;
-    getObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C761C)(rdram, ctx);
         goto after_0;
     // 0x80104220: sw          $s0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r16;
@@ -2730,7 +2730,7 @@ L_80104230:
     // 0x80104230: jal         0x800C7738
     // 0x80104234: nop
 
-    setHudEnableBit4(rdram, ctx);
+    LOOKUP_FUNC(0x800C7738)(rdram, ctx);
         goto after_1;
     // 0x80104234: nop
 
@@ -2738,7 +2738,7 @@ L_80104230:
     // 0x80104238: jal         0x800C7CF8
     // 0x8010423C: addiu       $a0, $zero, 0x65
     ctx->r4 = ADD32(0, 0X65);
-    playObjectiveVoiceLine1(rdram, ctx);
+    LOOKUP_FUNC(0x800C7CF8)(rdram, ctx);
         goto after_2;
     // 0x8010423C: addiu       $a0, $zero, 0x65
     ctx->r4 = ADD32(0, 0X65);
@@ -2753,7 +2753,7 @@ L_80104248:
     // 0x80104248: jal         0x800C761C
     // 0x8010424C: addiu       $a0, $zero, 0x23
     ctx->r4 = ADD32(0, 0X23);
-    getObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C761C)(rdram, ctx);
         goto after_3;
     // 0x8010424C: addiu       $a0, $zero, 0x23
     ctx->r4 = ADD32(0, 0X23);
@@ -2769,7 +2769,7 @@ L_80104248:
     // 0x80104258: jal         0x800C761C
     // 0x8010425C: addiu       $a0, $zero, 0x24
     ctx->r4 = ADD32(0, 0X24);
-    getObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C761C)(rdram, ctx);
         goto after_4;
     // 0x8010425C: addiu       $a0, $zero, 0x24
     ctx->r4 = ADD32(0, 0X24);
@@ -2785,7 +2785,7 @@ L_80104248:
     // 0x80104268: jal         0x800C761C
     // 0x8010426C: addiu       $a0, $zero, 0x25
     ctx->r4 = ADD32(0, 0X25);
-    getObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C761C)(rdram, ctx);
         goto after_5;
     // 0x8010426C: addiu       $a0, $zero, 0x25
     ctx->r4 = ADD32(0, 0X25);
@@ -2801,7 +2801,7 @@ L_80104248:
     // 0x80104278: jal         0x800C761C
     // 0x8010427C: addiu       $a0, $zero, 0x26
     ctx->r4 = ADD32(0, 0X26);
-    getObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C761C)(rdram, ctx);
         goto after_6;
     // 0x8010427C: addiu       $a0, $zero, 0x26
     ctx->r4 = ADD32(0, 0X26);
@@ -2817,7 +2817,7 @@ L_80104248:
     // 0x80104288: jal         0x800C761C
     // 0x8010428C: addiu       $a0, $zero, 0x27
     ctx->r4 = ADD32(0, 0X27);
-    getObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C761C)(rdram, ctx);
         goto after_7;
     // 0x8010428C: addiu       $a0, $zero, 0x27
     ctx->r4 = ADD32(0, 0X27);
@@ -2833,7 +2833,7 @@ L_80104248:
     // 0x80104298: jal         0x800C761C
     // 0x8010429C: addiu       $a0, $zero, 0x62
     ctx->r4 = ADD32(0, 0X62);
-    getObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C761C)(rdram, ctx);
         goto after_8;
     // 0x8010429C: addiu       $a0, $zero, 0x62
     ctx->r4 = ADD32(0, 0X62);
@@ -2851,7 +2851,7 @@ L_80104248:
     // 0x801042AC: jal         0x800C759C
     // 0x801042B0: addiu       $a0, $zero, 0x62
     ctx->r4 = ADD32(0, 0X62);
-    getObjectiveBoolean(rdram, ctx);
+    LOOKUP_FUNC(0x800C759C)(rdram, ctx);
         goto after_9;
     // 0x801042B0: addiu       $a0, $zero, 0x62
     ctx->r4 = ADD32(0, 0X62);
@@ -2867,7 +2867,7 @@ L_80104248:
     // 0x801042BC: jal         0x800C7540
     // 0x801042C0: addiu       $a1, $zero, 0x1
     ctx->r5 = ADD32(0, 0X1);
-    setObjectiveBoolean(rdram, ctx);
+    LOOKUP_FUNC(0x800C7540)(rdram, ctx);
         goto after_10;
     // 0x801042C0: addiu       $a1, $zero, 0x1
     ctx->r5 = ADD32(0, 0X1);
@@ -2877,7 +2877,7 @@ L_80104248:
     // 0x801042C8: jal         0x800C75EC
     // 0x801042CC: addiu       $a1, $zero, 0x1
     ctx->r5 = ADD32(0, 0X1);
-    increaseObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C75EC)(rdram, ctx);
         goto after_11;
     // 0x801042CC: addiu       $a1, $zero, 0x1
     ctx->r5 = ADD32(0, 0X1);
@@ -2887,7 +2887,7 @@ L_80104248:
     // 0x801042D4: jal         0x800C7D1C
     // 0x801042D8: addu        $a1, $zero, $zero
     ctx->r5 = ADD32(0, 0);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_12;
     // 0x801042D8: addu        $a1, $zero, $zero
     ctx->r5 = ADD32(0, 0);
@@ -2895,7 +2895,7 @@ L_80104248:
     // 0x801042DC: jal         0x800C76B0
     // 0x801042E0: addiu       $a0, $zero, 0x1
     ctx->r4 = ADD32(0, 0X1);
-    activateObjectiveCompleteFlag(rdram, ctx);
+    LOOKUP_FUNC(0x800C76B0)(rdram, ctx);
         goto after_13;
     // 0x801042E0: addiu       $a0, $zero, 0x1
     ctx->r4 = ADD32(0, 0X1);
@@ -2904,7 +2904,7 @@ L_801042E4:
     // 0x801042E4: jal         0x800C761C
     // 0x801042E8: addiu       $a0, $zero, 0x32
     ctx->r4 = ADD32(0, 0X32);
-    getObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C761C)(rdram, ctx);
         goto after_14;
     // 0x801042E8: addiu       $a0, $zero, 0x32
     ctx->r4 = ADD32(0, 0X32);
@@ -2922,7 +2922,7 @@ L_801042E4:
     // 0x801042F8: jal         0x800C759C
     // 0x801042FC: addiu       $a0, $zero, 0x63
     ctx->r4 = ADD32(0, 0X63);
-    getObjectiveBoolean(rdram, ctx);
+    LOOKUP_FUNC(0x800C759C)(rdram, ctx);
         goto after_15;
     // 0x801042FC: addiu       $a0, $zero, 0x63
     ctx->r4 = ADD32(0, 0X63);
@@ -2938,7 +2938,7 @@ L_801042E4:
     // 0x80104308: jal         0x800C7540
     // 0x8010430C: addiu       $a1, $zero, 0x1
     ctx->r5 = ADD32(0, 0X1);
-    setObjectiveBoolean(rdram, ctx);
+    LOOKUP_FUNC(0x800C7540)(rdram, ctx);
         goto after_16;
     // 0x8010430C: addiu       $a1, $zero, 0x1
     ctx->r5 = ADD32(0, 0X1);
@@ -2948,7 +2948,7 @@ L_801042E4:
     // 0x80104314: jal         0x800C75EC
     // 0x80104318: addiu       $a1, $zero, 0x1
     ctx->r5 = ADD32(0, 0X1);
-    increaseObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C75EC)(rdram, ctx);
         goto after_17;
     // 0x80104318: addiu       $a1, $zero, 0x1
     ctx->r5 = ADD32(0, 0X1);
@@ -2957,7 +2957,7 @@ L_8010431C:
     // 0x8010431C: jal         0x800C759C
     // 0x80104320: addiu       $a0, $zero, 0x28
     ctx->r4 = ADD32(0, 0X28);
-    getObjectiveBoolean(rdram, ctx);
+    LOOKUP_FUNC(0x800C759C)(rdram, ctx);
         goto after_18;
     // 0x80104320: addiu       $a0, $zero, 0x28
     ctx->r4 = ADD32(0, 0X28);
@@ -2975,7 +2975,7 @@ L_8010431C:
     // 0x80104330: jal         0x800C76B0
     // 0x80104334: addiu       $a0, $zero, 0x2
     ctx->r4 = ADD32(0, 0X2);
-    activateObjectiveCompleteFlag(rdram, ctx);
+    LOOKUP_FUNC(0x800C76B0)(rdram, ctx);
         goto after_19;
     // 0x80104334: addiu       $a0, $zero, 0x2
     ctx->r4 = ADD32(0, 0X2);
@@ -2984,7 +2984,7 @@ L_80104338:
     // 0x80104338: jal         0x800C759C
     // 0x8010433C: addiu       $a0, $zero, 0x7D
     ctx->r4 = ADD32(0, 0X7D);
-    getObjectiveBoolean(rdram, ctx);
+    LOOKUP_FUNC(0x800C759C)(rdram, ctx);
         goto after_20;
     // 0x8010433C: addiu       $a0, $zero, 0x7D
     ctx->r4 = ADD32(0, 0X7D);
@@ -3000,7 +3000,7 @@ L_80104338:
     // 0x80104348: jal         0x800C76B0
     // 0x8010434C: addiu       $a0, $zero, 0x3
     ctx->r4 = ADD32(0, 0X3);
-    activateObjectiveCompleteFlag(rdram, ctx);
+    LOOKUP_FUNC(0x800C76B0)(rdram, ctx);
         goto after_21;
     // 0x8010434C: addiu       $a0, $zero, 0x3
     ctx->r4 = ADD32(0, 0X3);
@@ -3009,7 +3009,7 @@ L_80104350:
     // 0x80104350: jal         0x800C761C
     // 0x80104354: addiu       $a0, $zero, 0x63
     ctx->r4 = ADD32(0, 0X63);
-    getObjectiveCount(rdram, ctx);
+    LOOKUP_FUNC(0x800C761C)(rdram, ctx);
         goto after_22;
     // 0x80104354: addiu       $a0, $zero, 0x63
     ctx->r4 = ADD32(0, 0X63);
@@ -3027,7 +3027,7 @@ L_80104350:
     // 0x80104364: jal         0x800C759C
     // 0x80104368: addiu       $a0, $zero, 0xB
     ctx->r4 = ADD32(0, 0XB);
-    getObjectiveBoolean(rdram, ctx);
+    LOOKUP_FUNC(0x800C759C)(rdram, ctx);
         goto after_23;
     // 0x80104368: addiu       $a0, $zero, 0xB
     ctx->r4 = ADD32(0, 0XB);
@@ -3045,7 +3045,7 @@ L_80104350:
     // 0x80104378: jal         0x800C7540
     // 0x8010437C: addiu       $a1, $zero, 0x1
     ctx->r5 = ADD32(0, 0X1);
-    setObjectiveBoolean(rdram, ctx);
+    LOOKUP_FUNC(0x800C7540)(rdram, ctx);
         goto after_24;
     // 0x8010437C: addiu       $a1, $zero, 0x1
     ctx->r5 = ADD32(0, 0X1);
@@ -3053,7 +3053,7 @@ L_80104350:
     // 0x80104380: jal         0x800C776C
     // 0x80104384: nop
 
-    setHudEnableBit8(rdram, ctx);
+    LOOKUP_FUNC(0x800C776C)(rdram, ctx);
         goto after_25;
     // 0x80104384: nop
 
@@ -3086,7 +3086,7 @@ RECOMP_FUNC void lv6_initializeObjectTracking(uint8_t* rdram, recomp_context* ct
     // 0x801043AC: jal         0x800C7CEC
     // 0x801043B0: sw          $s0, 0x18($sp)
     MEM_W(0X18, ctx->r29) = ctx->r16;
-    setLevelObjectTrackingScalar(rdram, ctx);
+    LOOKUP_FUNC(0x800C7CEC)(rdram, ctx);
         goto after_0;
     // 0x801043B0: sw          $s0, 0x18($sp)
     MEM_W(0X18, ctx->r29) = ctx->r16;
@@ -3106,7 +3106,7 @@ RECOMP_FUNC void lv6_initializeObjectTracking(uint8_t* rdram, recomp_context* ct
     // 0x801043CC: jal         0x800C7830
     // 0x801043D0: sw          $s0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r16;
-    addBooleanCountHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7830)(rdram, ctx);
         goto after_1;
     // 0x801043D0: sw          $s0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r16;
@@ -3124,7 +3124,7 @@ RECOMP_FUNC void lv6_initializeObjectTracking(uint8_t* rdram, recomp_context* ct
     // 0x801043E8: jal         0x800C7830
     // 0x801043EC: sw          $s0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r16;
-    addBooleanCountHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7830)(rdram, ctx);
         goto after_2;
     // 0x801043EC: sw          $s0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r16;
@@ -3142,7 +3142,7 @@ RECOMP_FUNC void lv6_initializeObjectTracking(uint8_t* rdram, recomp_context* ct
     // 0x80104404: jal         0x800C7830
     // 0x80104408: sw          $s0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r16;
-    addBooleanCountHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7830)(rdram, ctx);
         goto after_3;
     // 0x80104408: sw          $s0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r16;
@@ -3160,7 +3160,7 @@ RECOMP_FUNC void lv6_initializeObjectTracking(uint8_t* rdram, recomp_context* ct
     // 0x80104420: jal         0x800C7830
     // 0x80104424: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
-    addBooleanCountHandleWrapper(rdram, ctx);
+    LOOKUP_FUNC(0x800C7830)(rdram, ctx);
         goto after_4;
     // 0x80104424: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
@@ -3210,7 +3210,7 @@ RECOMP_FUNC void lv6_playPairedDialogue(uint8_t* rdram, recomp_context* ctx) {
     // 0x80104458: jal         0x800C7D1C
     // 0x8010445C: addiu       $a0, $zero, 0x63
     ctx->r4 = ADD32(0, 0X63);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_0;
     // 0x8010445C: addiu       $a0, $zero, 0x63
     ctx->r4 = ADD32(0, 0X63);
@@ -3222,7 +3222,7 @@ RECOMP_FUNC void lv6_playPairedDialogue(uint8_t* rdram, recomp_context* ctx) {
     // 0x80104468: jal         0x800C7D1C
     // 0x8010446C: addiu       $a0, $zero, 0x101
     ctx->r4 = ADD32(0, 0X101);
-    playObjectiveVoiceLine2(rdram, ctx);
+    LOOKUP_FUNC(0x800C7D1C)(rdram, ctx);
         goto after_1;
     // 0x8010446C: addiu       $a0, $zero, 0x101
     ctx->r4 = ADD32(0, 0X101);

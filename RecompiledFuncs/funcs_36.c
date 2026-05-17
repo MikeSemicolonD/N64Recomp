@@ -253,7 +253,7 @@ RECOMP_FUNC void addBooleanCountHandleWrapper(uint8_t* rdram, recomp_context* ct
     // 0x800C784C: jal         0x800FA15C
     // 0x800C7850: sw          $v0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r2;
-    addBooleanCountHandle(rdram, ctx);
+    LOOKUP_FUNC(0x800FA15C)(rdram, ctx);
         goto after_0;
     // 0x800C7850: sw          $v0, 0x10($sp)
     MEM_W(0X10, ctx->r29) = ctx->r2;
@@ -279,7 +279,7 @@ RECOMP_FUNC void addTimerHandleWrapper(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C786C: jal         0x800FA1DC
     // 0x800C7870: nop
 
-    addTimerHandle(rdram, ctx);
+    LOOKUP_FUNC(0x800FA1DC)(rdram, ctx);
         goto after_0;
     // 0x800C7870: nop
 
@@ -574,7 +574,7 @@ L_800C79BC:
     // 0x800C79D8: jal         0x800C821C
     // 0x800C79DC: sw          $t0, 0x18($sp)
     MEM_W(0X18, ctx->r29) = ctx->r8;
-    func_800C821C(rdram, ctx);
+    LOOKUP_FUNC(0x800C821C)(rdram, ctx);
         goto after_0;
     // 0x800C79DC: sw          $t0, 0x18($sp)
     MEM_W(0X18, ctx->r29) = ctx->r8;
@@ -694,7 +694,7 @@ L_800C7A6C:
     // 0x800C7A98: jal         0x800C7B68
     // 0x800C7A9C: sw          $t1, 0x1C($sp)
     MEM_W(0X1C, ctx->r29) = ctx->r9;
-    func_800C7B68(rdram, ctx);
+    LOOKUP_FUNC(0x800C7B68)(rdram, ctx);
         goto after_1;
     // 0x800C7A9C: sw          $t1, 0x1C($sp)
     MEM_W(0X1C, ctx->r29) = ctx->r9;
@@ -1029,7 +1029,7 @@ L_800C7A70:
     // 0x800C7A88: jal         0x800F947C
     // 0x800C7A8C: swc1        $f0, 0x14($sp)
     MEM_W(0X14, ctx->r29) = ctx->f0.u32l;
-    initActorAsType1(rdram, ctx);
+    LOOKUP_FUNC(0x800F947C)(rdram, ctx);
         goto after_3;
     // 0x800C7A8C: swc1        $f0, 0x14($sp)
     MEM_W(0X14, ctx->r29) = ctx->f0.u32l;
@@ -1165,7 +1165,7 @@ RECOMP_FUNC void func_800C7AB0(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C7B38: jal         0x800F9674
     // 0x800C7B3C: swc1        $f0, 0x18($sp)
     MEM_W(0X18, ctx->r29) = ctx->f0.u32l;
-    initActorAsType1WithAnchor(rdram, ctx);
+    LOOKUP_FUNC(0x800F9674)(rdram, ctx);
         goto after_3;
     // 0x800C7B3C: swc1        $f0, 0x18($sp)
     MEM_W(0X18, ctx->r29) = ctx->f0.u32l;
@@ -1251,7 +1251,7 @@ RECOMP_FUNC void getDatItemHealth(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C7BA0: jal         0x800F20EC
     // 0x800C7BA4: nop
 
-    getNpcCurrentHealth(rdram, ctx);
+    LOOKUP_FUNC(0x800F20EC)(rdram, ctx);
         goto after_2;
     // 0x800C7BA4: nop
 
@@ -2430,7 +2430,7 @@ RECOMP_FUNC void getDatItemHealthPercentage(uint8_t* rdram, recomp_context* ctx)
     // 0x800C7C64: jal         0x800F219C
     // 0x800C7C68: nop
 
-    getNpcHealthPercentage(rdram, ctx);
+    LOOKUP_FUNC(0x800F219C)(rdram, ctx);
         goto after_2;
     // 0x800C7C68: nop
 
@@ -2641,7 +2641,7 @@ RECOMP_FUNC void delegateToLevelStageTick(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C7D68: jal         0x800EF770
     // 0x800C7D6C: nop
 
-    func_800EF770(rdram, ctx);
+    LOOKUP_FUNC(0x800EF770)(rdram, ctx);
         goto after_0;
     // 0x800C7D6C: nop
 
@@ -2665,7 +2665,7 @@ RECOMP_FUNC void func_800C7D7C(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C7D84: jal         0x800EF95C
     // 0x800C7D88: nop
 
-    func_800EF95C(rdram, ctx);
+    LOOKUP_FUNC(0x800EF95C)(rdram, ctx);
         goto after_0;
     // 0x800C7D88: nop
 
@@ -2689,7 +2689,7 @@ RECOMP_FUNC void triggerSoundCueByType(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C7DA0: jal         0x800EFCD4
     // 0x800C7DA4: nop
 
-    initSoundCueRequest(rdram, ctx);
+    LOOKUP_FUNC(0x800EFCD4)(rdram, ctx);
         goto after_0;
     // 0x800C7DA4: nop
 
@@ -2727,7 +2727,7 @@ RECOMP_FUNC void func_800C7DC0(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C7DDC: jal         0x800F2070
     // 0x800C7DE0: addiu       $a1, $a2, 0x6C
     ctx->r5 = ADD32(ctx->r6, 0X6C);
-    setNpcHealth(rdram, ctx);
+    LOOKUP_FUNC(0x800F2070)(rdram, ctx);
         goto after_0;
     // 0x800C7DE0: addiu       $a1, $a2, 0x6C
     ctx->r5 = ADD32(ctx->r6, 0X6C);
@@ -2795,7 +2795,7 @@ L_800C7DF8:
     // 0x800C7E4C: jal         0x800F2888
     // 0x800C7E50: nop
 
-    initActorMotionParams(rdram, ctx);
+    LOOKUP_FUNC(0x800F2888)(rdram, ctx);
         goto after_1;
     // 0x800C7E50: nop
 
@@ -2809,7 +2809,7 @@ L_800C7DF8:
     // 0x800C7E60: jal         0x800F2830
     // 0x800C7E64: nop
 
-    setObjectDetailLevel(rdram, ctx);
+    LOOKUP_FUNC(0x800F2830)(rdram, ctx);
         goto after_2;
     // 0x800C7E64: nop
 
@@ -3035,7 +3035,7 @@ L_800C7FCC:
     // 0x800C7FDC: jal         0x800F2B88
     // 0x800C7FE0: nop
 
-    initObjectAnimSubstruct(rdram, ctx);
+    LOOKUP_FUNC(0x800F2B88)(rdram, ctx);
         goto after_3;
     // 0x800C7FE0: nop
 
@@ -3126,7 +3126,7 @@ RECOMP_FUNC void func_800C7FF8(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C806C: jal         0x800F2DC8
     // 0x800C8070: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
-    generatePerpEmitDirectionWithJitter(rdram, ctx);
+    LOOKUP_FUNC(0x800F2DC8)(rdram, ctx);
         goto after_2;
     // 0x800C8070: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
@@ -3138,7 +3138,7 @@ RECOMP_FUNC void func_800C7FF8(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C807C: jal         0x800F2DC8
     // 0x800C8080: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
-    generatePerpEmitDirectionWithJitter(rdram, ctx);
+    LOOKUP_FUNC(0x800F2DC8)(rdram, ctx);
         goto after_3;
     // 0x800C8080: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
@@ -3152,7 +3152,7 @@ RECOMP_FUNC void func_800C7FF8(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C8090: jal         0x800F1870
     // 0x800C8094: addiu       $a3, $sp, 0xB8
     ctx->r7 = ADD32(ctx->r29, 0XB8);
-    tickProgressChannel(rdram, ctx);
+    LOOKUP_FUNC(0x800F1870)(rdram, ctx);
         goto after_4;
     // 0x800C8094: addiu       $a3, $sp, 0xB8
     ctx->r7 = ADD32(ctx->r29, 0XB8);
@@ -3174,7 +3174,7 @@ RECOMP_FUNC void func_800C7FF8(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C80AC: jal         0x800F1870
     // 0x800C80B0: addiu       $a3, $sp, 0xBC
     ctx->r7 = ADD32(ctx->r29, 0XBC);
-    tickProgressChannel(rdram, ctx);
+    LOOKUP_FUNC(0x800F1870)(rdram, ctx);
         goto after_5;
     // 0x800C80B0: addiu       $a3, $sp, 0xBC
     ctx->r7 = ADD32(ctx->r29, 0XBC);
@@ -3212,7 +3212,7 @@ RECOMP_FUNC void func_800C7FF8(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C80E8: jal         0x800F2FCC
     // 0x800C80EC: addu        $a3, $s0, $zero
     ctx->r7 = ADD32(ctx->r16, 0);
-    triggerCueWithSlotEffect(rdram, ctx);
+    LOOKUP_FUNC(0x800F2FCC)(rdram, ctx);
         goto after_6;
     // 0x800C80EC: addu        $a3, $s0, $zero
     ctx->r7 = ADD32(ctx->r16, 0);
@@ -3234,7 +3234,7 @@ RECOMP_FUNC void func_800C7FF8(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C810C: jal         0x800F2FCC
     // 0x800C8110: addu        $a3, $s0, $zero
     ctx->r7 = ADD32(ctx->r16, 0);
-    triggerCueWithSlotEffect(rdram, ctx);
+    LOOKUP_FUNC(0x800F2FCC)(rdram, ctx);
         goto after_7;
     // 0x800C8110: addu        $a3, $s0, $zero
     ctx->r7 = ADD32(ctx->r16, 0);
@@ -3651,7 +3651,7 @@ RECOMP_FUNC void func_800C8178(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C81AC: jal         0x800F2988
     // 0x800C81B0: addiu       $a1, $sp, 0x48
     ctx->r5 = ADD32(ctx->r29, 0X48);
-    getObjectMeshTransformOrLocal(rdram, ctx);
+    LOOKUP_FUNC(0x800F2988)(rdram, ctx);
         goto after_0;
     // 0x800C81B0: addiu       $a1, $sp, 0x48
     ctx->r5 = ADD32(ctx->r29, 0X48);
@@ -3735,7 +3735,7 @@ L_800C8214:
     // 0x800C821C: jal         0x800F2A00
     // 0x800C8220: ori         $s6, $zero, 0xFFFF
     ctx->r22 = 0 | 0XFFFF;
-    getObjectNpcTypeId(rdram, ctx);
+    LOOKUP_FUNC(0x800F2A00)(rdram, ctx);
         goto after_1;
     // 0x800C8220: ori         $s6, $zero, 0xFFFF
     ctx->r22 = 0 | 0XFFFF;
@@ -3837,7 +3837,7 @@ L_800C8214:
     // 0x800C82C4: jal         0x800F2DC8
     // 0x800C82C8: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
-    generatePerpEmitDirectionWithJitter(rdram, ctx);
+    LOOKUP_FUNC(0x800F2DC8)(rdram, ctx);
         goto after_4;
     // 0x800C82C8: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
@@ -3849,7 +3849,7 @@ L_800C8214:
     // 0x800C82D4: jal         0x800F2DC8
     // 0x800C82D8: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
-    generatePerpEmitDirectionWithJitter(rdram, ctx);
+    LOOKUP_FUNC(0x800F2DC8)(rdram, ctx);
         goto after_5;
     // 0x800C82D8: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
@@ -3873,7 +3873,7 @@ L_800C8214:
     // 0x800C82F4: jal         0x800F1870
     // 0x800C82F8: addiu       $a3, $sp, 0xD8
     ctx->r7 = ADD32(ctx->r29, 0XD8);
-    tickProgressChannel(rdram, ctx);
+    LOOKUP_FUNC(0x800F1870)(rdram, ctx);
         goto after_6;
     // 0x800C82F8: addiu       $a3, $sp, 0xD8
     ctx->r7 = ADD32(ctx->r29, 0XD8);
@@ -3907,7 +3907,7 @@ L_800C8214:
     // 0x800C8328: jal         0x800F2FCC
     // 0x800C832C: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
-    triggerCueWithSlotEffect(rdram, ctx);
+    LOOKUP_FUNC(0x800F2FCC)(rdram, ctx);
         goto after_7;
     // 0x800C832C: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
@@ -3934,7 +3934,7 @@ L_800C8340:
     // 0x800C834C: jal         0x800F1870
     // 0x800C8350: addiu       $a3, $sp, 0xDC
     ctx->r7 = ADD32(ctx->r29, 0XDC);
-    tickProgressChannel(rdram, ctx);
+    LOOKUP_FUNC(0x800F1870)(rdram, ctx);
         goto after_9;
     // 0x800C8350: addiu       $a3, $sp, 0xDC
     ctx->r7 = ADD32(ctx->r29, 0XDC);
@@ -3968,7 +3968,7 @@ L_800C8340:
     // 0x800C8380: jal         0x800F2FCC
     // 0x800C8384: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
-    triggerCueWithSlotEffect(rdram, ctx);
+    LOOKUP_FUNC(0x800F2FCC)(rdram, ctx);
         goto after_10;
     // 0x800C8384: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
@@ -4001,7 +4001,7 @@ L_800C8390:
     // 0x800C83AC: jal         0x800F1870
     // 0x800C83B0: addiu       $a3, $sp, 0xD8
     ctx->r7 = ADD32(ctx->r29, 0XD8);
-    tickProgressChannel(rdram, ctx);
+    LOOKUP_FUNC(0x800F1870)(rdram, ctx);
         goto after_11;
     // 0x800C83B0: addiu       $a3, $sp, 0xD8
     ctx->r7 = ADD32(ctx->r29, 0XD8);
@@ -4035,7 +4035,7 @@ L_800C8390:
     // 0x800C83E0: jal         0x800F2FCC
     // 0x800C83E4: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
-    triggerCueWithSlotEffect(rdram, ctx);
+    LOOKUP_FUNC(0x800F2FCC)(rdram, ctx);
         goto after_12;
     // 0x800C83E4: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
@@ -4058,7 +4058,7 @@ L_800C83F4:
     // 0x800C8400: jal         0x800F1870
     // 0x800C8404: addiu       $a3, $sp, 0xDC
     ctx->r7 = ADD32(ctx->r29, 0XDC);
-    tickProgressChannel(rdram, ctx);
+    LOOKUP_FUNC(0x800F1870)(rdram, ctx);
         goto after_13;
     // 0x800C8404: addiu       $a3, $sp, 0xDC
     ctx->r7 = ADD32(ctx->r29, 0XDC);
@@ -4092,7 +4092,7 @@ L_800C83F4:
     // 0x800C8434: jal         0x800F2FCC
     // 0x800C8438: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
-    triggerCueWithSlotEffect(rdram, ctx);
+    LOOKUP_FUNC(0x800F2FCC)(rdram, ctx);
         goto after_14;
     // 0x800C8438: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
@@ -4318,7 +4318,7 @@ RECOMP_FUNC void func_800C821C(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C829C: jal         0x800C888C
     // 0x800C82A0: andi        $a1, $a1, 0xFE
     ctx->r5 = ctx->r5 & 0XFE;
-    func_800C888C(rdram, ctx);
+    LOOKUP_FUNC(0x800C888C)(rdram, ctx);
         goto after_1;
     // 0x800C82A0: andi        $a1, $a1, 0xFE
     ctx->r5 = ctx->r5 & 0XFE;
@@ -4336,7 +4336,7 @@ RECOMP_FUNC void func_800C821C(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C82B0: jal         0x800C87B0
     // 0x800C82B4: andi        $a1, $s0, 0xFF
     ctx->r5 = ctx->r16 & 0XFF;
-    func_800C87B0(rdram, ctx);
+    LOOKUP_FUNC(0x800C87B0)(rdram, ctx);
         goto after_2;
     // 0x800C82B4: andi        $a1, $s0, 0xFF
     ctx->r5 = ctx->r16 & 0XFF;
@@ -4418,7 +4418,7 @@ L_800C8338:
     // 0x800C8338: jal         0x800C888C
     // 0x800C833C: andi        $a1, $s6, 0xFF
     ctx->r5 = ctx->r22 & 0XFF;
-    func_800C888C(rdram, ctx);
+    LOOKUP_FUNC(0x800C888C)(rdram, ctx);
         goto after_3;
     // 0x800C833C: andi        $a1, $s6, 0xFF
     ctx->r5 = ctx->r22 & 0XFF;
@@ -4442,7 +4442,7 @@ L_800C8338:
     // 0x800C8358: jal         0x800C87B0
     // 0x800C835C: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
-    func_800C87B0(rdram, ctx);
+    LOOKUP_FUNC(0x800C87B0)(rdram, ctx);
         goto after_4;
     // 0x800C835C: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
@@ -4834,7 +4834,7 @@ RECOMP_FUNC void func_800C8504(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C858C: jal         0x800F2DC8
     // 0x800C8590: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
-    generatePerpEmitDirectionWithJitter(rdram, ctx);
+    LOOKUP_FUNC(0x800F2DC8)(rdram, ctx);
         goto after_2;
     // 0x800C8590: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
@@ -4846,7 +4846,7 @@ RECOMP_FUNC void func_800C8504(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C859C: jal         0x800F2DC8
     // 0x800C85A0: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
-    generatePerpEmitDirectionWithJitter(rdram, ctx);
+    LOOKUP_FUNC(0x800F2DC8)(rdram, ctx);
         goto after_3;
     // 0x800C85A0: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
@@ -4860,7 +4860,7 @@ RECOMP_FUNC void func_800C8504(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C85B0: jal         0x800F1870
     // 0x800C85B4: addiu       $a3, $sp, 0xD8
     ctx->r7 = ADD32(ctx->r29, 0XD8);
-    tickProgressChannel(rdram, ctx);
+    LOOKUP_FUNC(0x800F1870)(rdram, ctx);
         goto after_4;
     // 0x800C85B4: addiu       $a3, $sp, 0xD8
     ctx->r7 = ADD32(ctx->r29, 0XD8);
@@ -4884,7 +4884,7 @@ RECOMP_FUNC void func_800C8504(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C85D0: jal         0x800F1870
     // 0x800C85D4: addiu       $a3, $sp, 0xDC
     ctx->r7 = ADD32(ctx->r29, 0XDC);
-    tickProgressChannel(rdram, ctx);
+    LOOKUP_FUNC(0x800F1870)(rdram, ctx);
         goto after_5;
     // 0x800C85D4: addiu       $a3, $sp, 0xDC
     ctx->r7 = ADD32(ctx->r29, 0XDC);
@@ -4926,7 +4926,7 @@ RECOMP_FUNC void func_800C8504(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C8610: jal         0x800F2FCC
     // 0x800C8614: addu        $a3, $s0, $zero
     ctx->r7 = ADD32(ctx->r16, 0);
-    triggerCueWithSlotEffect(rdram, ctx);
+    LOOKUP_FUNC(0x800F2FCC)(rdram, ctx);
         goto after_6;
     // 0x800C8614: addu        $a3, $s0, $zero
     ctx->r7 = ADD32(ctx->r16, 0);
@@ -4948,7 +4948,7 @@ RECOMP_FUNC void func_800C8504(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C8634: jal         0x800F2FCC
     // 0x800C8638: addu        $a3, $s0, $zero
     ctx->r7 = ADD32(ctx->r16, 0);
-    triggerCueWithSlotEffect(rdram, ctx);
+    LOOKUP_FUNC(0x800F2FCC)(rdram, ctx);
         goto after_7;
     // 0x800C8638: addu        $a3, $s0, $zero
     ctx->r7 = ADD32(ctx->r16, 0);
@@ -4977,7 +4977,7 @@ L_800C865C:
     // 0x800C8660: jal         0x800F2988
     // 0x800C8664: addiu       $a1, $sp, 0x28
     ctx->r5 = ADD32(ctx->r29, 0X28);
-    getObjectMeshTransformOrLocal(rdram, ctx);
+    LOOKUP_FUNC(0x800F2988)(rdram, ctx);
         goto after_8;
     // 0x800C8664: addiu       $a1, $sp, 0x28
     ctx->r5 = ADD32(ctx->r29, 0X28);
@@ -5052,7 +5052,7 @@ L_800C86BC:
     // 0x800C86C8: jal         0x800F2A00
     // 0x800C86CC: ori         $s5, $zero, 0xFFFF
     ctx->r21 = 0 | 0XFFFF;
-    getObjectNpcTypeId(rdram, ctx);
+    LOOKUP_FUNC(0x800F2A00)(rdram, ctx);
         goto after_9;
     // 0x800C86CC: ori         $s5, $zero, 0xFFFF
     ctx->r21 = 0 | 0XFFFF;
@@ -5152,7 +5152,7 @@ L_800C86BC:
     // 0x800C876C: jal         0x800F2DC8
     // 0x800C8770: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
-    generatePerpEmitDirectionWithJitter(rdram, ctx);
+    LOOKUP_FUNC(0x800F2DC8)(rdram, ctx);
         goto after_12;
     // 0x800C8770: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
@@ -5164,7 +5164,7 @@ L_800C86BC:
     // 0x800C877C: jal         0x800F2DC8
     // 0x800C8780: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
-    generatePerpEmitDirectionWithJitter(rdram, ctx);
+    LOOKUP_FUNC(0x800F2DC8)(rdram, ctx);
         goto after_13;
     // 0x800C8780: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
@@ -5188,7 +5188,7 @@ L_800C86BC:
     // 0x800C879C: jal         0x800F1870
     // 0x800C87A0: addiu       $a3, $sp, 0xD8
     ctx->r7 = ADD32(ctx->r29, 0XD8);
-    tickProgressChannel(rdram, ctx);
+    LOOKUP_FUNC(0x800F1870)(rdram, ctx);
         goto after_14;
     // 0x800C87A0: addiu       $a3, $sp, 0xD8
     ctx->r7 = ADD32(ctx->r29, 0XD8);
@@ -5222,7 +5222,7 @@ L_800C86BC:
     // 0x800C87D0: jal         0x800F2FCC
     // 0x800C87D4: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
-    triggerCueWithSlotEffect(rdram, ctx);
+    LOOKUP_FUNC(0x800F2FCC)(rdram, ctx);
         goto after_15;
     // 0x800C87D4: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
@@ -5239,7 +5239,7 @@ L_800C87DC:
     // 0x800C87E8: jal         0x800F1870
     // 0x800C87EC: addiu       $a3, $sp, 0xDC
     ctx->r7 = ADD32(ctx->r29, 0XDC);
-    tickProgressChannel(rdram, ctx);
+    LOOKUP_FUNC(0x800F1870)(rdram, ctx);
         goto after_16;
     // 0x800C87EC: addiu       $a3, $sp, 0xDC
     ctx->r7 = ADD32(ctx->r29, 0XDC);
@@ -5273,7 +5273,7 @@ L_800C87DC:
     // 0x800C881C: jal         0x800F2FCC
     // 0x800C8820: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
-    triggerCueWithSlotEffect(rdram, ctx);
+    LOOKUP_FUNC(0x800F2FCC)(rdram, ctx);
         goto after_17;
     // 0x800C8820: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
@@ -5306,7 +5306,7 @@ L_800C882C:
     // 0x800C8848: jal         0x800F1870
     // 0x800C884C: addiu       $a3, $sp, 0xD8
     ctx->r7 = ADD32(ctx->r29, 0XD8);
-    tickProgressChannel(rdram, ctx);
+    LOOKUP_FUNC(0x800F1870)(rdram, ctx);
         goto after_18;
     // 0x800C884C: addiu       $a3, $sp, 0xD8
     ctx->r7 = ADD32(ctx->r29, 0XD8);
@@ -5347,7 +5347,7 @@ L_800C8878:
     // 0x800C8884: jal         0x800F1870
     // 0x800C8888: addiu       $a3, $sp, 0xDC
     ctx->r7 = ADD32(ctx->r29, 0XDC);
-    tickProgressChannel(rdram, ctx);
+    LOOKUP_FUNC(0x800F1870)(rdram, ctx);
         goto after_19;
     // 0x800C8888: addiu       $a3, $sp, 0xDC
     ctx->r7 = ADD32(ctx->r29, 0XDC);
@@ -5382,7 +5382,7 @@ L_800C88B0:
     // 0x800C88B8: jal         0x800F2FCC
     // 0x800C88BC: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
-    triggerCueWithSlotEffect(rdram, ctx);
+    LOOKUP_FUNC(0x800F2FCC)(rdram, ctx);
         goto after_20;
     // 0x800C88BC: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
@@ -6517,7 +6517,7 @@ RECOMP_FUNC void func_800C8978(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C8A1C: jal         0x800F06BC
     // 0x800C8A20: addu        $s0, $zero, $zero
     ctx->r16 = ADD32(0, 0);
-    isPendingChildNpcActive(rdram, ctx);
+    LOOKUP_FUNC(0x800F06BC)(rdram, ctx);
         goto after_3;
     // 0x800C8A20: addu        $s0, $zero, $zero
     ctx->r16 = ADD32(0, 0);
@@ -6539,7 +6539,7 @@ RECOMP_FUNC void func_800C8978(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C8A38: jal         0x800F09A8
     // 0x800C8A3C: nop
 
-    computeActorAnchorDeltaAfterLOS(rdram, ctx);
+    LOOKUP_FUNC(0x800F09A8)(rdram, ctx);
         goto after_4;
     // 0x800C8A3C: nop
 
@@ -6580,7 +6580,7 @@ L_800C8A50:
     // 0x800C8A78: jal         0x800F2988
     // 0x800C8A7C: addiu       $a1, $sp, 0x98
     ctx->r5 = ADD32(ctx->r29, 0X98);
-    getObjectMeshTransformOrLocal(rdram, ctx);
+    LOOKUP_FUNC(0x800F2988)(rdram, ctx);
         goto after_5;
     // 0x800C8A7C: addiu       $a1, $sp, 0x98
     ctx->r5 = ADD32(ctx->r29, 0X98);
@@ -6612,7 +6612,7 @@ L_800C8AA0:
     // 0x800C8AA0: jal         0x800F2AC4
     // 0x800C8AA4: addiu       $a3, $sp, 0x88
     ctx->r7 = ADD32(ctx->r29, 0X88);
-    func_800F2AC4(rdram, ctx);
+    LOOKUP_FUNC(0x800F2AC4)(rdram, ctx);
         goto after_6;
     // 0x800C8AA4: addiu       $a3, $sp, 0x88
     ctx->r7 = ADD32(ctx->r29, 0X88);
@@ -7909,7 +7909,7 @@ L_800C8D2C:
     // 0x800C8D2C: jal         0x800C7970
     // 0x800C8D30: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_800C7970(rdram, ctx);
+    LOOKUP_FUNC(0x800C7970)(rdram, ctx);
         goto after_1;
     // 0x800C8D30: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -10959,7 +10959,7 @@ L_800C9344:
     // 0x800C9374: jal         0x800EC588
     // 0x800C9378: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
-    createAndInitObject(rdram, ctx);
+    LOOKUP_FUNC(0x800EC588)(rdram, ctx);
         goto after_15;
     // 0x800C9378: sw          $zero, 0x10($sp)
     MEM_W(0X10, ctx->r29) = 0;
@@ -11015,7 +11015,7 @@ L_800C93AC:
     // 0x800C93C4: jal         0x800F1E7C
     // 0x800C93C8: addu        $a3, $a1, $zero
     ctx->r7 = ADD32(ctx->r5, 0);
-    initActorRenderDescriptorIfUninit(rdram, ctx);
+    LOOKUP_FUNC(0x800F1E7C)(rdram, ctx);
         goto after_17;
     // 0x800C93C8: addu        $a3, $a1, $zero
     ctx->r7 = ADD32(ctx->r5, 0);
@@ -11023,7 +11023,7 @@ L_800C93AC:
     // 0x800C93CC: jal         0x800EC684
     // 0x800C93D0: addiu       $a0, $s1, 0x38
     ctx->r4 = ADD32(ctx->r17, 0X38);
-    clearPendingAndDestroyChildNpc(rdram, ctx);
+    LOOKUP_FUNC(0x800EC684)(rdram, ctx);
         goto after_18;
     // 0x800C93D0: addiu       $a0, $s1, 0x38
     ctx->r4 = ADD32(ctx->r17, 0X38);
@@ -11128,7 +11128,7 @@ L_800C9430:
     // 0x800C9440: jal         0x800EFDE0
     // 0x800C9444: addiu       $a2, $zero, 0x6
     ctx->r6 = ADD32(0, 0X6);
-    updateNpcEventTimer(rdram, ctx);
+    LOOKUP_FUNC(0x800EFDE0)(rdram, ctx);
         goto after_20;
     // 0x800C9444: addiu       $a2, $zero, 0x6
     ctx->r6 = ADD32(0, 0X6);
@@ -11237,7 +11237,7 @@ L_800C94A0:
     // 0x800C94CC: jal         0x800EFDE0
     // 0x800C94D0: addiu       $a2, $zero, 0x6
     ctx->r6 = ADD32(0, 0X6);
-    updateNpcEventTimer(rdram, ctx);
+    LOOKUP_FUNC(0x800EFDE0)(rdram, ctx);
         goto after_21;
     // 0x800C94D0: addiu       $a2, $zero, 0x6
     ctx->r6 = ADD32(0, 0X6);
@@ -11249,7 +11249,7 @@ L_800C94A0:
     // 0x800C94DC: jal         0x800C8978
     // 0x800C94E0: sh          $s0, 0x72($s1)
     MEM_H(0X72, ctx->r17) = ctx->r16;
-    func_800C8978(rdram, ctx);
+    LOOKUP_FUNC(0x800C8978)(rdram, ctx);
         goto after_22;
     // 0x800C94E0: sh          $s0, 0x72($s1)
     MEM_H(0X72, ctx->r17) = ctx->r16;
@@ -11317,7 +11317,7 @@ L_800C94A0:
     // 0x800C953C: jal         0x800F07AC
     // 0x800C9540: nop
 
-    validateActorTargetLOS(rdram, ctx);
+    LOOKUP_FUNC(0x800F07AC)(rdram, ctx);
         goto after_26;
     // 0x800C9540: nop
 
@@ -11351,7 +11351,7 @@ L_800C94A0:
     // 0x800C9570: jal         0x800F2D38
     // 0x800C9574: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
-    applyToObjectSubstructByFlag(rdram, ctx);
+    LOOKUP_FUNC(0x800F2D38)(rdram, ctx);
         goto after_27;
     // 0x800C9574: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
@@ -11707,7 +11707,7 @@ L_800C9580:
     // 0x800C972C: jal         0x800C8E90
     // 0x800C9730: sh          $v0, 0x72($s1)
     MEM_H(0X72, ctx->r17) = ctx->r2;
-    func_800C8E90(rdram, ctx);
+    LOOKUP_FUNC(0x800C8E90)(rdram, ctx);
         goto after_37;
     // 0x800C9730: sh          $v0, 0x72($s1)
     MEM_H(0X72, ctx->r17) = ctx->r2;
@@ -12438,7 +12438,7 @@ L_800C9A8C:
     // 0x800C9A90: jal         0x800EC6C0
     // 0x800C9A94: nop
 
-    destroyObjectOwnedNpcSlot(rdram, ctx);
+    LOOKUP_FUNC(0x800EC6C0)(rdram, ctx);
         goto after_52;
     // 0x800C9A94: nop
 
@@ -13215,7 +13215,7 @@ L_800C9E70:
     // 0x800C9E74: jal         0x800F20EC
     // 0x800C9E78: addu        $s2, $s0, $zero
     ctx->r18 = ADD32(ctx->r16, 0);
-    getNpcCurrentHealth(rdram, ctx);
+    LOOKUP_FUNC(0x800F20EC)(rdram, ctx);
         goto after_75;
     // 0x800C9E78: addu        $s2, $s0, $zero
     ctx->r18 = ADD32(ctx->r16, 0);
@@ -13277,7 +13277,7 @@ L_800C9E70:
     // 0x800C9ED0: jal         0x800F2120
     // 0x800C9ED4: nop
 
-    dealDamageToNpc(rdram, ctx);
+    LOOKUP_FUNC(0x800F2120)(rdram, ctx);
         goto after_78;
     // 0x800C9ED4: nop
 
@@ -13482,7 +13482,7 @@ L_800C9FC0:
     // 0x800C9FFC: jal         0x800F3260
     // 0x800CA000: addu        $a0, $s5, $zero
     ctx->r4 = ADD32(ctx->r21, 0);
-    tallyMidDetailObject(rdram, ctx);
+    LOOKUP_FUNC(0x800F3260)(rdram, ctx);
         goto after_87;
     // 0x800CA000: addu        $a0, $s5, $zero
     ctx->r4 = ADD32(ctx->r21, 0);
@@ -13492,7 +13492,7 @@ L_800C9FC0:
     // 0x800CA008: jal         0x800F2A24
     // 0x800CA00C: nop
 
-    clearPendingChildNpc(rdram, ctx);
+    LOOKUP_FUNC(0x800F2A24)(rdram, ctx);
         goto after_88;
     // 0x800CA00C: nop
 
@@ -13500,7 +13500,7 @@ L_800C9FC0:
     // 0x800CA010: jal         0x800F2AA4
     // 0x800CA014: addu        $a0, $s5, $zero
     ctx->r4 = ADD32(ctx->r21, 0);
-    setObjectFlagBit4(rdram, ctx);
+    LOOKUP_FUNC(0x800F2AA4)(rdram, ctx);
         goto after_89;
     // 0x800CA014: addu        $a0, $s5, $zero
     ctx->r4 = ADD32(ctx->r21, 0);
@@ -13550,7 +13550,7 @@ L_800CA038:
     // 0x800CA04C: jal         0x800F20EC
     // 0x800CA050: nop
 
-    getNpcCurrentHealth(rdram, ctx);
+    LOOKUP_FUNC(0x800F20EC)(rdram, ctx);
         goto after_91;
     // 0x800CA050: nop
 
@@ -13710,7 +13710,7 @@ L_800CA114:
     // 0x800CA11C: jal         0x800F2830
     // 0x800CA120: nop
 
-    setObjectDetailLevel(rdram, ctx);
+    LOOKUP_FUNC(0x800F2830)(rdram, ctx);
         goto after_98;
     // 0x800CA120: nop
 
@@ -13722,7 +13722,7 @@ L_800CA128:
     // 0x800CA128: jal         0x800EFD80
     // 0x800CA12C: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
-    dispatchSlotAction5IfActive(rdram, ctx);
+    LOOKUP_FUNC(0x800EFD80)(rdram, ctx);
         goto after_99;
     // 0x800CA12C: addu        $a1, $s0, $zero
     ctx->r5 = ADD32(ctx->r16, 0);
@@ -14078,7 +14078,7 @@ RECOMP_FUNC void func_800C9BF0(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C9C38: jal         0x800CA638
     // 0x800C9C3C: sb          $a1, 0xAF($sp)
     MEM_B(0XAF, ctx->r29) = ctx->r5;
-    func_800CA638(rdram, ctx);
+    LOOKUP_FUNC(0x800CA638)(rdram, ctx);
         goto after_0;
     // 0x800C9C3C: sb          $a1, 0xAF($sp)
     MEM_B(0XAF, ctx->r29) = ctx->r5;
@@ -14158,7 +14158,7 @@ RECOMP_FUNC void func_800C9BF0(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C9CC8: jal         0x800B3AFC
     // 0x800C9CCC: swc1        $f6, 0xC4($sp)
     MEM_W(0XC4, ctx->r29) = ctx->f6.u32l;
-    func_800B3AFC(rdram, ctx);
+    LOOKUP_FUNC(0x800B3AFC)(rdram, ctx);
         goto after_2;
     // 0x800C9CCC: swc1        $f6, 0xC4($sp)
     MEM_W(0XC4, ctx->r29) = ctx->f6.u32l;
@@ -14172,7 +14172,7 @@ RECOMP_FUNC void func_800C9BF0(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C9CDC: jal         0x800B3CD4
     // 0x800C9CE0: addiu       $a2, $zero, 0x96
     ctx->r6 = ADD32(0, 0X96);
-    setChildPosFromI16Pair(rdram, ctx);
+    LOOKUP_FUNC(0x800B3CD4)(rdram, ctx);
         goto after_3;
     // 0x800C9CE0: addiu       $a2, $zero, 0x96
     ctx->r6 = ADD32(0, 0X96);
@@ -14186,7 +14186,7 @@ RECOMP_FUNC void func_800C9BF0(uint8_t* rdram, recomp_context* ctx) {
     CHECK_FR(ctx, 30);
     CHECK_FR(ctx, 26);
     ctx->f30.fl = ctx->f26.fl;
-    getStructField0xC(rdram, ctx);
+    LOOKUP_FUNC(0x800B3D08)(rdram, ctx);
         goto after_4;
     // 0x800C9CF0: mov.s       $f30, $f26
     CHECK_FR(ctx, 30);
@@ -14238,7 +14238,7 @@ RECOMP_FUNC void func_800C9BF0(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C9D30: jal         0x800CB9BC
     // 0x800C9D34: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    selectPostCrawlCraft(rdram, ctx);
+    LOOKUP_FUNC(0x800CB9BC)(rdram, ctx);
         goto after_8;
     // 0x800C9D34: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -14246,7 +14246,7 @@ RECOMP_FUNC void func_800C9BF0(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C9D38: jal         0x800CB604
     // 0x800C9D3C: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_800CB604(rdram, ctx);
+    LOOKUP_FUNC(0x800CB604)(rdram, ctx);
         goto after_9;
     // 0x800C9D3C: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -14254,7 +14254,7 @@ RECOMP_FUNC void func_800C9BF0(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C9D40: jal         0x800CADB8
     // 0x800C9D44: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_800CADB8(rdram, ctx);
+    LOOKUP_FUNC(0x800CADB8)(rdram, ctx);
         goto after_10;
     // 0x800C9D44: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -14282,7 +14282,7 @@ RECOMP_FUNC void func_800C9BF0(uint8_t* rdram, recomp_context* ctx) {
     // 0x800C9D60: jal         0x800CA714
     // 0x800C9D64: addu        $a1, $s7, $zero
     ctx->r5 = ADD32(ctx->r23, 0);
-    func_800CA714(rdram, ctx);
+    LOOKUP_FUNC(0x800CA714)(rdram, ctx);
         goto after_13;
     // 0x800C9D64: addu        $a1, $s7, $zero
     ctx->r5 = ADD32(ctx->r23, 0);
@@ -14317,7 +14317,7 @@ L_800C9D8C:
     // 0x800C9D8C: jal         0x800C6660
     // 0x800C9D90: nop
 
-    func_800C6660(rdram, ctx);
+    LOOKUP_FUNC(0x800C6660)(rdram, ctx);
         goto after_14;
     // 0x800C9D90: nop
 
@@ -14391,7 +14391,7 @@ L_800C9D8C:
     // 0x800C9DDC: jal         0x800CBCF4
     // 0x800C9DE0: sw          $v0, 0x8($t0)
     MEM_W(0X8, ctx->r8) = ctx->r2;
-    func_800CBCF4(rdram, ctx);
+    LOOKUP_FUNC(0x800CBCF4)(rdram, ctx);
         goto after_20;
     // 0x800C9DE0: sw          $v0, 0x8($t0)
     MEM_W(0X8, ctx->r8) = ctx->r2;
@@ -14407,7 +14407,7 @@ L_800C9D8C:
     CHECK_FR(ctx, 14);
     CHECK_FR(ctx, 26);
     ctx->f14.fl = ctx->f26.fl;
-    func_800CB30C(rdram, ctx);
+    LOOKUP_FUNC(0x800CB30C)(rdram, ctx);
         goto after_21;
     // 0x800C9DF0: mov.s       $f14, $f26
     CHECK_FR(ctx, 14);
@@ -14986,7 +14986,7 @@ L_800CA0C0:
     // 0x800CA0D0: jal         0x800B3CD4
     // 0x800CA0D4: sra         $a2, $a2, 16
     ctx->r6 = S32(SIGNED(ctx->r6) >> 16);
-    setChildPosFromI16Pair(rdram, ctx);
+    LOOKUP_FUNC(0x800B3CD4)(rdram, ctx);
         goto after_33;
     // 0x800CA0D4: sra         $a2, $a2, 16
     ctx->r6 = S32(SIGNED(ctx->r6) >> 16);
@@ -15012,7 +15012,7 @@ L_800CA0C0:
     // 0x800CA0F0: jal         0x800CBB7C
     // 0x800CA0F4: addiu       $a0, $sp, 0x40
     ctx->r4 = ADD32(ctx->r29, 0X40);
-    func_800CBB7C(rdram, ctx);
+    LOOKUP_FUNC(0x800CBB7C)(rdram, ctx);
         goto after_34;
     // 0x800CA0F4: addiu       $a0, $sp, 0x40
     ctx->r4 = ADD32(ctx->r29, 0X40);
@@ -15628,7 +15628,7 @@ L_800CA438:
     // 0x800CA44C: jal         0x800B3D08
     // 0x800CA450: nop
 
-    getStructField0xC(rdram, ctx);
+    LOOKUP_FUNC(0x800B3D08)(rdram, ctx);
         goto after_50;
     // 0x800CA450: nop
 
@@ -15755,7 +15755,7 @@ L_800CA4E0:
     // 0x800CA4F4: jal         0x800B4168
     // 0x800CA4F8: addu        $s0, $v1, $zero
     ctx->r16 = ADD32(ctx->r3, 0);
-    func_800B4168(rdram, ctx);
+    LOOKUP_FUNC(0x800B4168)(rdram, ctx);
         goto after_59;
     // 0x800CA4F8: addu        $s0, $v1, $zero
     ctx->r16 = ADD32(ctx->r3, 0);
@@ -15792,7 +15792,7 @@ L_800CA51C:
     // 0x800CA51C: jal         0x800B4264
     // 0x800CA520: nop
 
-    func_800B4264(rdram, ctx);
+    LOOKUP_FUNC(0x800B4264)(rdram, ctx);
         goto after_60;
     // 0x800CA520: nop
 
@@ -15846,7 +15846,7 @@ L_800CA51C:
     // 0x800CA568: jal         0x800B4048
     // 0x800CA56C: nop
 
-    func_800B4048(rdram, ctx);
+    LOOKUP_FUNC(0x800B4048)(rdram, ctx);
         goto after_63;
     // 0x800CA56C: nop
 
@@ -15902,7 +15902,7 @@ L_800CA580:
     // 0x800CA5A8: jal         0x800B4274
     // 0x800CA5AC: addiu       $a1, $a1, 0x370
     ctx->r5 = ADD32(ctx->r5, 0X370);
-    func_800B4274(rdram, ctx);
+    LOOKUP_FUNC(0x800B4274)(rdram, ctx);
         goto after_67;
     // 0x800CA5AC: addiu       $a1, $a1, 0x370
     ctx->r5 = ADD32(ctx->r5, 0X370);
@@ -15912,7 +15912,7 @@ L_800CA580:
     // 0x800CA5B4: jal         0x800B3CC0
     // 0x800CA5B8: nop
 
-    func_800B3CC0(rdram, ctx);
+    LOOKUP_FUNC(0x800B3CC0)(rdram, ctx);
         goto after_68;
     // 0x800CA5B8: nop
 
@@ -15922,7 +15922,7 @@ L_800CA580:
     // 0x800CA5C0: jal         0x800CBD6C
     // 0x800CA5C4: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_800CBD6C(rdram, ctx);
+    LOOKUP_FUNC(0x800CBD6C)(rdram, ctx);
         goto after_69;
     // 0x800CA5C4: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -15930,7 +15930,7 @@ L_800CA580:
     // 0x800CA5C8: jal         0x800CBC24
     // 0x800CA5CC: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    func_800CBC24(rdram, ctx);
+    LOOKUP_FUNC(0x800CBC24)(rdram, ctx);
         goto after_70;
     // 0x800CA5CC: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
@@ -15938,7 +15938,7 @@ L_800CA580:
     // 0x800CA5D0: jal         0x800CBBB8
     // 0x800CA5D4: addiu       $a0, $sp, 0x40
     ctx->r4 = ADD32(ctx->r29, 0X40);
-    func_800CBBB8(rdram, ctx);
+    LOOKUP_FUNC(0x800CBBB8)(rdram, ctx);
         goto after_71;
     // 0x800CA5D4: addiu       $a0, $sp, 0x40
     ctx->r4 = ADD32(ctx->r29, 0X40);
@@ -15946,7 +15946,7 @@ L_800CA580:
     // 0x800CA5D8: jal         0x800CBB30
     // 0x800CA5DC: nop
 
-    func_800CBB30(rdram, ctx);
+    LOOKUP_FUNC(0x800CBB30)(rdram, ctx);
         goto after_72;
     // 0x800CA5DC: nop
 
@@ -16046,7 +16046,7 @@ RECOMP_FUNC void func_800CA18C(uint8_t* rdram, recomp_context* ctx) {
     // 0x800CA1C4: jal         0x800F2DC8
     // 0x800CA1C8: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
-    generatePerpEmitDirectionWithJitter(rdram, ctx);
+    LOOKUP_FUNC(0x800F2DC8)(rdram, ctx);
         goto after_1;
     // 0x800CA1C8: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
@@ -16060,7 +16060,7 @@ RECOMP_FUNC void func_800CA18C(uint8_t* rdram, recomp_context* ctx) {
     // 0x800CA1D8: jal         0x800F1870
     // 0x800CA1DC: addiu       $a3, $sp, 0x58
     ctx->r7 = ADD32(ctx->r29, 0X58);
-    tickProgressChannel(rdram, ctx);
+    LOOKUP_FUNC(0x800F1870)(rdram, ctx);
         goto after_2;
     // 0x800CA1DC: addiu       $a3, $sp, 0x58
     ctx->r7 = ADD32(ctx->r29, 0X58);
@@ -16098,7 +16098,7 @@ RECOMP_FUNC void func_800CA18C(uint8_t* rdram, recomp_context* ctx) {
     // 0x800CA214: jal         0x800F2FCC
     // 0x800CA218: addiu       $a3, $a3, -0x5A54
     ctx->r7 = ADD32(ctx->r7, -0X5A54);
-    triggerCueWithSlotEffect(rdram, ctx);
+    LOOKUP_FUNC(0x800F2FCC)(rdram, ctx);
         goto after_3;
     // 0x800CA218: addiu       $a3, $a3, -0x5A54
     ctx->r7 = ADD32(ctx->r7, -0X5A54);
@@ -16234,7 +16234,7 @@ RECOMP_FUNC void func_800CA270(uint8_t* rdram, recomp_context* ctx) {
     // 0x800CA2D8: jal         0x800F2070
     // 0x800CA2DC: swc1        $f0, 0x58($s1)
     MEM_W(0X58, ctx->r17) = ctx->f0.u32l;
-    setNpcHealth(rdram, ctx);
+    LOOKUP_FUNC(0x800F2070)(rdram, ctx);
         goto after_1;
     // 0x800CA2DC: swc1        $f0, 0x58($s1)
     MEM_W(0X58, ctx->r17) = ctx->f0.u32l;
@@ -16262,7 +16262,7 @@ RECOMP_FUNC void func_800CA270(uint8_t* rdram, recomp_context* ctx) {
     // 0x800CA308: jal         0x800F2888
     // 0x800CA30C: nop
 
-    initActorMotionParams(rdram, ctx);
+    LOOKUP_FUNC(0x800F2888)(rdram, ctx);
         goto after_2;
     // 0x800CA30C: nop
 
@@ -16274,7 +16274,7 @@ RECOMP_FUNC void func_800CA270(uint8_t* rdram, recomp_context* ctx) {
     // 0x800CA318: jal         0x800F2830
     // 0x800CA31C: nop
 
-    setObjectDetailLevel(rdram, ctx);
+    LOOKUP_FUNC(0x800F2830)(rdram, ctx);
         goto after_3;
     // 0x800CA31C: nop
 
@@ -16324,7 +16324,7 @@ RECOMP_FUNC void func_800CA270(uint8_t* rdram, recomp_context* ctx) {
     // 0x800CA374: jal         0x800F2B88
     // 0x800CA378: nop
 
-    initObjectAnimSubstruct(rdram, ctx);
+    LOOKUP_FUNC(0x800F2B88)(rdram, ctx);
         goto after_4;
     // 0x800CA378: nop
 
@@ -16336,7 +16336,7 @@ RECOMP_FUNC void func_800CA270(uint8_t* rdram, recomp_context* ctx) {
     // 0x800CA384: jal         0x800F2FC0
     // 0x800CA388: nop
 
-    setEffectIntensity(rdram, ctx);
+    LOOKUP_FUNC(0x800F2FC0)(rdram, ctx);
         goto after_5;
     // 0x800CA388: nop
 

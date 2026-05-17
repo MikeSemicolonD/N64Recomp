@@ -13194,6 +13194,12 @@ RECOMP_FUNC void tickTextureMaterialExpiry(uint8_t* rdram, recomp_context* ctx) 
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
     {
+    static int s_disable = -1;
+    if (s_disable < 0) {
+        const char* e = getenv("ROGUESQ_DISABLE_TTME");
+        s_disable = (e && *e && *e != '0') ? 1 : 0;
+    }
+    if (s_disable) return;
     extern unsigned g_tick_walker_first;
     extern unsigned g_tick_walker_iter;
     g_tick_walker_first = 0;
@@ -13695,8 +13701,19 @@ L_800222AC:
     ctx->r2 = S32(ctx->r2 << 2);
     // 0x800222C0: addu        $v0, $v0, $v1
     ctx->r2 = ADD32(ctx->r2, ctx->r3);
-    // 0x800222C4: sw          $a0, 0x0($v0)
-    MEM_W(0X0, ctx->r2) = ctx->r4;
+    {
+    uint32_t addr = (uint32_t)(uint64_t)ctx->r2;
+    uint32_t base = 0x80128F00u;
+    uint32_t cnt  = (uint32_t)MEM_HU(0x8EF0, S32(0x8012 << 16));
+    if (addr >= base && addr < base + cnt * 4u) {
+        MEM_W(0x0, ctx->r2) = ctx->r4;
+    } else {
+        extern void rs64_dbg_log4(const char*, unsigned, unsigned, unsigned, unsigned);
+        rs64_dbg_log4("matpool findAndUnlink OOB slot-write blocked", addr, base, cnt, 0);
+    }
+}
+    // 0x800222C4: nop
+
 L_800222C8:
     // 0x800222C8: lw          $v1, 0x0($a1)
     ctx->r3 = MEM_W(ctx->r5, 0X0);
@@ -14248,6 +14265,7 @@ L_800225D0:
 RECOMP_FUNC void func_800225F8(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    { extern unsigned g_matwalk_first; extern unsigned g_matwalk_iter; g_matwalk_first = 0; g_matwalk_iter = 0; }
     // 0x800225F8: addu        $t0, $a0, $zero
     ctx->r8 = ADD32(ctx->r4, 0);
     // 0x800225FC: lui         $v0, 0x8012
@@ -14309,7 +14327,21 @@ RECOMP_FUNC void func_800225F8(uint8_t* rdram, recomp_context* ctx) {
     // 0x8002265C: andi        $a3, $v0, 0x80
     ctx->r7 = ctx->r2 & 0X80;
 L_80022660:
-    { if (((uint64_t)ctx->r3 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) { ctx->r16 = 0; goto L_800226B4; } ctx->r2 = MEM_W(ctx->r3, 0x10); }
+    {
+    if (((uint64_t)ctx->r3 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) { ctx->r16 = 0; goto L_800226B4; }
+    extern unsigned g_matwalk_first;
+    extern unsigned g_matwalk_iter;
+    unsigned cur = (unsigned)(uint64_t)ctx->r3;
+    if (g_matwalk_iter == 0) {
+        g_matwalk_first = cur;
+        g_matwalk_iter = 1;
+    } else {
+        g_matwalk_iter++;
+        if (g_matwalk_iter > 2 && cur == g_matwalk_first) { ctx->r16 = 0; goto L_800226B4; }
+        if (g_matwalk_iter > 100000u) { ctx->r16 = 0; goto L_800226B4; }
+    }
+    ctx->r2 = MEM_W(ctx->r3, 0x10);
+}
     // 0x80022660: nop
 
     // 0x80022664: bne         $v0, $t1, L_800226A4

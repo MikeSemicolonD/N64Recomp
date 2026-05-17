@@ -42,6 +42,7 @@ namespace N64Recomp {
         bool uses_mips3_float_mode;
         bool single_file_output;
         bool use_absolute_symbols;
+        bool use_lookup_for_all_function_calls;
         bool unpaired_lo16_warnings;
         bool use_mdebug;
         bool trace_mode;

@@ -10495,7 +10495,7 @@ L_8003E04C:
     // 0x8003E08C: jal         0x800C58A0
     // 0x8003E090: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
-    menuOverlayInit(rdram, ctx);
+    LOOKUP_FUNC(0x800C58A0)(rdram, ctx);
         goto after_7;
     // 0x8003E090: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
@@ -10551,7 +10551,7 @@ L_8003E04C:
     // 0x8003E0CC: jal         0x800C58A0
     // 0x8003E0D0: addiu       $a2, $zero, 0xB
     ctx->r6 = ADD32(0, 0XB);
-    menuOverlayInit(rdram, ctx);
+    LOOKUP_FUNC(0x800C58A0)(rdram, ctx);
         goto after_11;
     // 0x8003E0D0: addiu       $a2, $zero, 0xB
     ctx->r6 = ADD32(0, 0XB);
@@ -10608,7 +10608,7 @@ L_8003E0DC:
     // 0x8003E10C: jal         0x800A5D80
     // 0x8003E110: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
-    cinematicLoopBody(rdram, ctx);
+    LOOKUP_FUNC(0x800A5D80)(rdram, ctx);
         goto after_14;
     // 0x8003E110: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
@@ -10648,7 +10648,7 @@ L_8003E138:
     // 0x8003E13C: jal         0x800C58A0
     // 0x8003E140: addu        $a2, $s0, $zero
     ctx->r6 = ADD32(ctx->r16, 0);
-    menuOverlayInit(rdram, ctx);
+    LOOKUP_FUNC(0x800C58A0)(rdram, ctx);
         goto after_16;
     // 0x8003E140: addu        $a2, $s0, $zero
     ctx->r6 = ADD32(ctx->r16, 0);
@@ -10711,7 +10711,7 @@ L_8003E188:
     // 0x8003E1A0: jal         0x800A5D80
     // 0x8003E1A4: sb          $v0, 0x1($s3)
     MEM_B(0X1, ctx->r19) = ctx->r2;
-    cinematicLoopBody(rdram, ctx);
+    LOOKUP_FUNC(0x800A5D80)(rdram, ctx);
         goto after_18;
     // 0x8003E1A4: sb          $v0, 0x1($s3)
     MEM_B(0X1, ctx->r19) = ctx->r2;
@@ -10737,7 +10737,7 @@ L_8003E188:
     // 0x8003E1C4: jal         0x800A5D80
     // 0x8003E1C8: sb          $v0, 0x1($s3)
     MEM_B(0X1, ctx->r19) = ctx->r2;
-    cinematicLoopBody(rdram, ctx);
+    LOOKUP_FUNC(0x800A5D80)(rdram, ctx);
         goto after_19;
     // 0x8003E1C8: sb          $v0, 0x1($s3)
     MEM_B(0X1, ctx->r19) = ctx->r2;
@@ -10803,7 +10803,7 @@ L_8003E210:
     // 0x8003E220: jal         0x800C58A0
     // 0x8003E224: addiu       $a2, $zero, 0x2
     ctx->r6 = ADD32(0, 0X2);
-    menuOverlayInit(rdram, ctx);
+    LOOKUP_FUNC(0x800C58A0)(rdram, ctx);
         goto after_21;
     // 0x8003E224: addiu       $a2, $zero, 0x2
     ctx->r6 = ADD32(0, 0X2);
@@ -10911,7 +10911,7 @@ L_8003E250:
     // 0x8003E2B4: jal         0x800FA250
     // 0x8003E2B8: sw          $v0, 0x7CFC($a3)
     MEM_W(0X7CFC, ctx->r7) = ctx->r2;
-    initMission(rdram, ctx);
+    LOOKUP_FUNC(0x800FA250)(rdram, ctx);
         goto after_27;
     // 0x8003E2B8: sw          $v0, 0x7CFC($a3)
     MEM_W(0X7CFC, ctx->r7) = ctx->r2;
@@ -10919,7 +10919,7 @@ L_8003E250:
     // 0x8003E2BC: jal         0x800FA6A4
     // 0x8003E2C0: nop
 
-    runInMissionFrame(rdram, ctx);
+    LOOKUP_FUNC(0x800FA6A4)(rdram, ctx);
         goto after_28;
     // 0x8003E2C0: nop
 
@@ -10927,7 +10927,7 @@ L_8003E250:
     // 0x8003E2C4: jal         0x800FB9E4
     // 0x8003E2C8: nop
 
-    endMissionCleanup(rdram, ctx);
+    LOOKUP_FUNC(0x800FB9E4)(rdram, ctx);
         goto after_29;
     // 0x8003E2C8: nop
 
@@ -10995,7 +10995,7 @@ L_8003E304:
     // 0x8003E324: jal         0x800A5D80
     // 0x8003E328: addu        $a2, $a1, $zero
     ctx->r6 = ADD32(ctx->r5, 0);
-    cinematicLoopBody(rdram, ctx);
+    LOOKUP_FUNC(0x800A5D80)(rdram, ctx);
         goto after_32;
     // 0x8003E328: addu        $a2, $a1, $zero
     ctx->r6 = ADD32(ctx->r5, 0);
@@ -11026,7 +11026,7 @@ L_8003E340:
     // 0x8003E348: jal         0x800BF358
     // 0x8003E34C: nop
 
-    applyResModeFromSettings(rdram, ctx);
+    LOOKUP_FUNC(0x800BF358)(rdram, ctx);
         goto after_34;
     // 0x8003E34C: nop
 
@@ -11066,7 +11066,7 @@ L_8003E340:
     // 0x8003E378: jal         0x800FA250
     // 0x8003E37C: sw          $v0, 0x7CFC($a3)
     MEM_W(0X7CFC, ctx->r7) = ctx->r2;
-    initMission(rdram, ctx);
+    LOOKUP_FUNC(0x800FA250)(rdram, ctx);
         goto after_38;
     // 0x8003E37C: sw          $v0, 0x7CFC($a3)
     MEM_W(0X7CFC, ctx->r7) = ctx->r2;
@@ -11074,7 +11074,7 @@ L_8003E340:
     // 0x8003E380: jal         0x800FA6A4
     // 0x8003E384: nop
 
-    runInMissionFrame(rdram, ctx);
+    LOOKUP_FUNC(0x800FA6A4)(rdram, ctx);
         goto after_39;
     // 0x8003E384: nop
 
@@ -11082,7 +11082,7 @@ L_8003E340:
     // 0x8003E388: jal         0x800FB9E4
     // 0x8003E38C: nop
 
-    endMissionCleanup(rdram, ctx);
+    LOOKUP_FUNC(0x800FB9E4)(rdram, ctx);
         goto after_40;
     // 0x8003E38C: nop
 
@@ -11177,7 +11177,7 @@ L_8003E3E4:
     // 0x8003E3F4: jal         0x800A5D80
     // 0x8003E3F8: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
-    cinematicLoopBody(rdram, ctx);
+    LOOKUP_FUNC(0x800A5D80)(rdram, ctx);
         goto after_44;
     // 0x8003E3F8: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
@@ -11228,7 +11228,7 @@ L_8003E420:
     // 0x8003E434: jal         0x800C58A0
     // 0x8003E438: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
-    menuOverlayInit(rdram, ctx);
+    LOOKUP_FUNC(0x800C58A0)(rdram, ctx);
         goto after_47;
     // 0x8003E438: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
@@ -11290,7 +11290,7 @@ L_8003E470:
     // 0x8003E47C: jal         0x800AE878
     // 0x8003E480: addu        $a1, $zero, $zero
     ctx->r5 = ADD32(0, 0);
-    dispatchCinematicFromMainLoop(rdram, ctx);
+    LOOKUP_FUNC(0x800AE878)(rdram, ctx);
         goto after_49;
     // 0x8003E480: addu        $a1, $zero, $zero
     ctx->r5 = ADD32(0, 0);
@@ -11310,7 +11310,7 @@ L_8003E470:
     // 0x8003E494: jal         0x800C58A0
     // 0x8003E498: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
-    menuOverlayInit(rdram, ctx);
+    LOOKUP_FUNC(0x800C58A0)(rdram, ctx);
         goto after_51;
     // 0x8003E498: addu        $a2, $zero, $zero
     ctx->r6 = ADD32(0, 0);
@@ -11372,7 +11372,7 @@ L_8003E4BC:
     // 0x8003E4EC: jal         0x800C58A0
     // 0x8003E4F0: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
-    menuOverlayInit(rdram, ctx);
+    LOOKUP_FUNC(0x800C58A0)(rdram, ctx);
         goto after_53;
     // 0x8003E4F0: addiu       $a2, $zero, 0x1
     ctx->r6 = ADD32(0, 0X1);
@@ -11423,7 +11423,7 @@ L_8003E518:
     // 0x8003E530: jal         0x800C58A0
     // 0x8003E534: addu        $a2, $a1, $zero
     ctx->r6 = ADD32(ctx->r5, 0);
-    menuOverlayInit(rdram, ctx);
+    LOOKUP_FUNC(0x800C58A0)(rdram, ctx);
         goto after_55;
     // 0x8003E534: addu        $a2, $a1, $zero
     ctx->r6 = ADD32(ctx->r5, 0);
@@ -11440,7 +11440,7 @@ L_8003E544:
     // 0x8003E544: jal         0x800BF3A4
     // 0x8003E548: nop
 
-    restoreGameSettingsAfterDemo(rdram, ctx);
+    LOOKUP_FUNC(0x800BF3A4)(rdram, ctx);
         goto after_56;
     // 0x8003E548: nop
 
@@ -12230,7 +12230,6 @@ L_8003E9D0:
     ctx->r2 = MEM_BU(ctx->r17, 0X1A);
     // 0x8003E9D4: addiu       $v0, $v0, -0x1
     ctx->r2 = ADD32(ctx->r2, -0X1);
-    { if (((uint64_t)ctx->r17 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) { ctx->r17 = 0; goto L_8003EA08; } }
     // 0x8003E9D8: sb          $v0, 0x1A($s1)
     MEM_B(0X1A, ctx->r17) = ctx->r2;
     // 0x8003E9DC: andi        $v0, $v0, 0xFF
@@ -12557,7 +12556,6 @@ L_8003EB98:
     }
     // 0x8003EBA0: nop
 
-    { if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) goto L_8003EBFC; }
     // 0x8003EBA4: lb          $v0, 0x0($v1)
     ctx->r2 = MEM_B(ctx->r3, 0X0);
     // 0x8003EBA8: slt         $v0, $a1, $v0

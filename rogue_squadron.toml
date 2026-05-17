@@ -3,6 +3,16 @@ entrypoint = 0x80000400
 elf_path = "../rogue_squadron64/build/roguesquadron.elf"
 rom_file_path = "../rogue_squadron64/rogue_squadron.z64"
 output_func_path = "RecompiledFuncs"
+
+# Overlay dispatch fix (2026-05-16): the three game overlays
+# (.ovl.mission / .ovl.menu / .ovl.cinematic) all load at VA 0x800A5130 and
+# swap at runtime. With direct jal calls, every call into that VA range is
+# bound at link time to one overlay's version, so menu/cinematic overlay code
+# never runs. Forcing all calls through the runtime func_map fixes that — the
+# rs64_load_overlay hook keeps func_map pointing at the live overlay.
+# The recompiler now resolves reimplemented/ignored (runtime-provided libultra)
+# functions to direct _recomp calls even in lookup mode, so they don't need a
+# func_map entry. See recompilation.cpp resolve_jal().
 use_lookup_for_all_function_calls = true
 
 # Dual-entry functions: vanilla code enters these at an offset, but splat
@@ -730,6 +740,34 @@ text = '''{ uint64_t a0h = (uint64_t)ctx->r4 & 0xFFFFFFFFE0000000ULL; uint64_t a
 func = "func_80090A3C"
 text = '''{ return; }'''
 
+# func_8009123C audio tick (viRetraceHandlerThread -> func_8009123C, per VI)
+# does an indirect call `jalr $v0` at 0x80091798 through the N64-RSP-mixer
+# callback slot MEM_W[0x801499D0]. initN64RspMixer (-> initAudioSubsystem)
+# writes a valid function (0x8001A058) into that slot, but on first boot the
+# audio tick runs before initAudioSubsystem, so the slot holds uninitialized
+# garbage (0x801F7910) -> LOOKUP_FUNC -> get_function abort (fatal, bypasses
+# the SEH net).
+#
+# The valid callback IS needed (it drives RSP-task / DL submission — NOPing
+# the call unconditionally dropped send_dl from 64 to 2). So: NOP the jalr
+# and re-issue the call from a hook ONLY when the slot holds a plausible
+# recompiled-code address. The pre-init garbage (0x801F7910, past all code)
+# is skipped; the real callback (0x8001A058) still runs.
+[[patches.instruction]]
+func = "func_8009123C"
+vram = 0x80091798
+value = 0x00000000
+[[patches.hook]]
+func = "func_8009123C"
+before_vram = 0x80091798
+text = '''{
+    uint32_t cb = (uint32_t)(uint64_t)ctx->r2;
+    if (cb >= 0x80000400u && cb < 0x80110000u) {
+        ctx->r4 = ctx->r16;   // delay slot: a0 = s0
+        LOOKUP_FUNC(ctx->r2)(rdram, ctx);
+    }
+}'''
+
 # func_800225F8 texture-material list walker: walks materialListHead[a1]
 # at MEM[0x80128F00 + a1*4] looking for a matching entry (tag bytes at
 # +0xC/+0xE, type at +0x10). Reached from text-rendering paths
@@ -738,11 +776,16 @@ text = '''{ return; }'''
 # tickTextureMaterialExpiry is stubbed elsewhere in this toml), eventually
 # one has a non-KSEG0 next pointer → AV in the recompile's MEM_W when it
 # tries to translate the garbage address.
-# Single guard at the loop body's first load (L_80022660): if current
-# node ptr isn't KSEG0, set $s0=0 and goto exit L_800226B4 ("no match
-# found, fall through to allocate a new entry"). Subsequent body loads
-# and the next-ptr load at L_800226A4 are safe because they reuse the
-# just-validated $v1.
+# Guard at the loop body's first load (L_80022660): if current node ptr
+# isn't KSEG0, set $s0=0 and goto exit L_800226B4 ("no match found, fall
+# through to allocate a new entry"). The KSEG0 check stops AVs but not a
+# cycle of valid pointers, so the hook also does cycle detection: reset at
+# function entry, bail if the walk revisits its first node or exceeds a
+# 100K iter cap. Subsequent body loads and the next-ptr load at L_800226A4
+# are safe because they reuse the just-validated $v1.
+[[patches.hook]]
+func = "func_800225F8"
+text = '''{ extern unsigned g_matwalk_first; extern unsigned g_matwalk_iter; g_matwalk_first = 0; g_matwalk_iter = 0; }'''
 [[patches.instruction]]
 func = "func_800225F8"
 vram = 0x80022660
@@ -750,7 +793,21 @@ value = 0x00000000
 [[patches.hook]]
 func = "func_800225F8"
 before_vram = 0x80022660
-text = '''{ if (((uint64_t)ctx->r3 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) { ctx->r16 = 0; goto L_800226B4; } ctx->r2 = MEM_W(ctx->r3, 0x10); }'''
+text = '''{
+    if (((uint64_t)ctx->r3 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) { ctx->r16 = 0; goto L_800226B4; }
+    extern unsigned g_matwalk_first;
+    extern unsigned g_matwalk_iter;
+    unsigned cur = (unsigned)(uint64_t)ctx->r3;
+    if (g_matwalk_iter == 0) {
+        g_matwalk_first = cur;
+        g_matwalk_iter = 1;
+    } else {
+        g_matwalk_iter++;
+        if (g_matwalk_iter > 2 && cur == g_matwalk_first) { ctx->r16 = 0; goto L_800226B4; }
+        if (g_matwalk_iter > 100000u) { ctx->r16 = 0; goto L_800226B4; }
+    }
+    ctx->r2 = MEM_W(ctx->r3, 0x10);
+}'''
 
 # Pace the 32-iteration attribution-display loop in
 # runIdleFramesAndLoadSaveData. Per memory notes + investigation
@@ -767,6 +824,24 @@ before_vram = 0x8006D980
 text = '''{
     extern void rs64_idle_pace(void);
     rs64_idle_pace();
+}'''
+
+# Runtime overlay registration. RS64's three overlays (.ovl.mission,
+# .ovl.menu, .ovl.cinematic) all load at VA 0x800A5130 and swap at runtime.
+# librecomp's boot-time load_overlays only registers .ovl.mission (the other
+# two have ROM offsets past the 1MB boot-load cutoff). Without registering
+# the menu/cinematic overlays' functions in func_map when they DMA in, calls
+# into the overlay VA range keep dispatching to the mission overlay's code.
+# Hook loadOverlay just past its already-loaded skip-check (0x80000B3C, where
+# $s0 still holds the overlay id) so the host re-registers func_map for the
+# overlay actually being loaded. Game overlay ids: 0=mission, 1=menu,
+# 2=cinematic.
+[[patches.hook]]
+func = "loadOverlay"
+before_vram = 0x80000B3C
+text = '''{
+    extern void rs64_load_overlay(unsigned int);
+    rs64_load_overlay((unsigned int)ctx->r16);
 }'''
 
 # initFactor5Mutex guard: boot calls this twice (initAudioSubsystem and
@@ -825,17 +900,20 @@ text = '''{ if (((uint64_t)ctx->r3 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF8000000
 # slots populated globally, runs every frame everywhere — not cinematic-
 # only. r17 is the current slot pointer; bail to L_8003EA08 when it's
 # non-canonical.
-[[patches.hook]]
-func = "slotDispatcherIter"
-before_vram = 0x8003E9D8
-text = '''{ if (((uint64_t)ctx->r17 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) { ctx->r17 = 0; goto L_8003EA08; } }'''
+# GUARD EXPERIMENT 2026-05-16: slotDispatcherIter KSEG0 guard disabled to
+# test whether defensive guards short-circuit the game's own logic.
+#[[patches.hook]]
+#func = "slotDispatcherIter"
+#before_vram = 0x8003E9D8
+#text = '''{ if (((uint64_t)ctx->r17 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) { ctx->r17 = 0; goto L_8003EA08; } }'''
 
 # slotDispatcherInner (was func_8003EA4C) is called from slotDispatcherIter's
 # per-slot path. Same guard pattern: r2 is the slot pointer being dispatched.
-[[patches.hook]]
-func = "slotDispatcherInner"
-before_vram = 0x8003EBA4
-text = '''{ if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) goto L_8003EBFC; }'''
+# GUARD EXPERIMENT 2026-05-16: slotDispatcherInner KSEG0 guard disabled.
+#[[patches.hook]]
+#func = "slotDispatcherInner"
+#before_vram = 0x8003EBA4
+#text = '''{ if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) goto L_8003EBFC; }'''
 
 # NOTE 2026-05-13: tried zero-initing materialListHead[] (allocated but
 # never zeroed by initTextureLUTAndAllocBuffers) in the belief that heap
@@ -861,9 +939,20 @@ text = '''{ if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF8000000
 # function running, the list gets pruned per-frame.
 #
 # Function-entry hook: reset cycle-detection state for the inner walker.
+# A/B test (2026-05-16): ROGUESQ_DISABLE_TTME=1 early-returns the whole
+# function. Tests whether tickTextureMaterialExpiry's expiry/splice is the
+# source of the free-list node corruption that AVs func_8002236C — the
+# guards below skip the active-list unlink stores on garbage pointers,
+# which can leave a node on both the active and free lists.
 [[patches.hook]]
 func = "tickTextureMaterialExpiry"
 text = '''{
+    static int s_disable = -1;
+    if (s_disable < 0) {
+        const char* e = getenv("ROGUESQ_DISABLE_TTME");
+        s_disable = (e && *e && *e != '0') ? 1 : 0;
+    }
+    if (s_disable) return;
     extern unsigned g_tick_walker_first;
     extern unsigned g_tick_walker_iter;
     g_tick_walker_first = 0;
@@ -934,6 +1023,174 @@ value = 0x00000000
 func = "tickTextureMaterialExpiry"
 before_vram = 0x8002210C
 text = '''{ if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) MEM_W(0x4, ctx->r2) = ctx->r16; }'''
+
+# findAndUnlinkSmallestEntry (0x8002221C) — texture-material eviction manager,
+# called by func_8002236C when the node free-list is empty. When it evicts an
+# active-list HEAD node it does `materialListHead[node->0xA] = node->next` at
+# 0x800222C4, using the node's +0xA halfword as a slot index with NO bounds
+# check. If +0xA is stale/garbage (the allocators don't always initialize it),
+# that's an arbitrary RDRAM write — a garbage index landing in the material
+# node pool corrupts free-list `next` pointers, which is the corruption that
+# AVs func_8002236C's dequeue. Bounds-check the computed slot address ($v0=r2)
+# against the materialListHead table [0x80128F00, +count*4); skip the write if
+# out of range.
+[[patches.instruction]]
+func = "findAndUnlinkSmallestEntry"
+vram = 0x800222C4
+value = 0x00000000
+[[patches.hook]]
+func = "findAndUnlinkSmallestEntry"
+before_vram = 0x800222C4
+text = '''{
+    uint32_t addr = (uint32_t)(uint64_t)ctx->r2;
+    uint32_t base = 0x80128F00u;
+    uint32_t cnt  = (uint32_t)MEM_HU(0x8EF0, S32(0x8012 << 16));
+    if (addr >= base && addr < base + cnt * 4u) {
+        MEM_W(0x0, ctx->r2) = ctx->r4;
+    } else {
+        extern void rs64_dbg_log4(const char*, unsigned, unsigned, unsigned, unsigned);
+        rs64_dbg_log4("matpool findAndUnlink OOB slot-write blocked", addr, base, cnt, 0);
+    }
+}'''
+
+# func_800079A4 (free-list insert/coalesce, called by tickTextureMaterialExpiry
+# to expire entries). The L_800079B8 loop walks a next-pointer chain at field
+# +0x0 with no KSEG0 check and no cycle detection — it AVs (verified via the
+# frameStartReset -> tickTextureMaterialExpiry -> func_800079A4 crash stack)
+# when the chain has a wild pointer, and would hang on a cyclic chain. Same
+# guard pattern as heapWalker / func_800225F8: NOP the two loop loads, do them
+# in a hook that validates the pointer and bails to the post-loop splice
+# (L_800079C8) on a bad or cyclic next-pointer. Function-entry hook resets
+# cycle-detection state.
+[[patches.hook]]
+func = "func_800079A4"
+text = '''{
+    extern unsigned g_f79a4_first;
+    extern unsigned g_f79a4_iter;
+    g_f79a4_first = 0;
+    g_f79a4_iter = 0;
+    // Bail if the block to free ($a0) is itself a wild pointer — the entry
+    // `lw $v0, 0x0($a0)` derefs it directly, before the loop guard below.
+    if (ctx->r4 != 0 && (((uint64_t)ctx->r4 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL)) {
+        return;
+    }
+}'''
+[[patches.instruction]]
+func = "func_800079A4"
+vram = 0x800079B8
+value = 0x00000000
+[[patches.instruction]]
+func = "func_800079A4"
+vram = 0x800079BC
+value = 0x00000000
+[[patches.hook]]
+func = "func_800079A4"
+before_vram = 0x800079B8
+text = '''{
+    extern unsigned g_f79a4_first;
+    extern unsigned g_f79a4_iter;
+    // ctx->r3 is the current node; loop loads next (+0x0) then derefs it.
+    if (((uint64_t)ctx->r3 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) {
+        ctx->r2 = 0;
+        goto L_800079C8;
+    }
+    uint32_t next = (uint32_t)MEM_W(ctx->r3, 0x0);
+    if ((next & 0xE0000000u) != 0x80000000u) {
+        // next pointer not KSEG0 — end of list; keep ctx->r3 at last good node.
+        ctx->r2 = 0;
+        goto L_800079C8;
+    }
+    if (g_f79a4_iter == 0) {
+        g_f79a4_first = next;
+        g_f79a4_iter = 1;
+    } else {
+        g_f79a4_iter++;
+        if (g_f79a4_iter > 2 && next == g_f79a4_first) { ctx->r2 = 0; goto L_800079C8; }
+        if (g_f79a4_iter > 100000u) { ctx->r2 = 0; goto L_800079C8; }
+    }
+    ctx->r3 = next;
+    ctx->r2 = MEM_W(ctx->r3, 0x0);
+}'''
+
+# =============================================================================
+# Texture-material pool ROOT-CAUSE fix (2026-05-16)
+# =============================================================================
+# The texture-material subsystem (materialListHead @0x80128F00, node free-list
+# @0x80128EF8, 512-node pool @0x80128EF4) was AVing across func_800225F8 /
+# func_8002236C / func_800079A4 because the node pool is never created.
+#
+# Traced chain:
+#   initVideoBootWrapper:
+#     buildAndRegisterDefaultMaterial()        -> returns 0
+#       -> registerHmtTextureInTable()
+#         -> parseHmtMaterials() returns 0xFFFF (HMT/D_8011A444 table not
+#            populated — an asset-data hole)
+#     if (result == 0) goto L_8001861C         <-- SKIPS func_80021F38
+#     func_80021F38()  = createMaterialPool: rs_malloc(0x3000)=512x24-byte
+#                        nodes, sets pool ptr @0x80128EF4, chains the free-list
+#
+# Creating the pool does NOT depend on the default material — the game just
+# bundled the two and gated both on material registration. With the pool
+# uncreated, 0x80128EF4 stays garbage and every material function dereferences
+# wild free-list pointers.
+#
+# Fix: NOP the gate branch `beq $v0,$zero,L_8001861C` at 0x800185E8 so
+# func_80021F38 always runs at boot. The success path it falls into does not
+# use the 0xFFFF registration result as an index (verified by reading
+# buildAndRegisterDefaultMaterial L_80017E18+), so forcing it is safe.
+[[patches.instruction]]
+func = "initVideoBootWrapper"
+vram = 0x800185E8
+value = 0x00000000
+
+# The pool-gate fix above was verified with temporary instrumentation
+# (ROGUESQ_LOG_HOOKS): after the NOP, func_80021F38 creates the pool
+# (rs_malloc 0x3000 -> 512 24-byte nodes) and func_8002236C's free-list
+# dequeues are 100% in-range — the garbage free-list is gone.
+
+# func_80064488 (cinematic effect-slot scanner). Walks a slot table — base at
+# *($s1), count at $s1+0x4, 8-byte entries — and for each active entry loads a
+# sub-object pointer from entry+0x0 ($s0) and derefs it. The deterministic
+# crash (cinematicLoopBody -> slotEffectHandlerDispatch -> func_80064488) is at
+# `lbu $v0,0x5($v1)` (0x800644D0): $v1 = *($s1) + idx*8, and the table base
+# *($s1) is itself a garbage pointer, so the very first entry deref AVs.
+# Verified by disassembling the crash site (RVA 0x40332A = `add $5; xor $3;
+# sub $0x80000000; movzbl`).
+#
+# Entry guard: if the arg ($a0=$s1) or the table base *($s1) isn't a valid
+# in-RDRAM pointer, skip the whole function (it only rebuilds an effect list
+# as a side effect; a stale list for one frame is harmless). Bailing at entry
+# also avoids the rs_malloc of the 0x400 work buffer.
+[[patches.hook]]
+func = "func_80064488"
+text = '''{
+    uint32_t a0 = (uint32_t)(uint64_t)ctx->r4;
+    if ((a0 - 0x80000000u) >= 0x800000u) {
+        return;
+    }
+    uint32_t tbl_base = (uint32_t)MEM_W(ctx->r4, 0x0);
+    if ((tbl_base - 0x80000000u) >= 0x800000u) {
+        return;
+    }
+}'''
+# Second guard: the per-entry sub-object pointer ($s0 = entry+0x0) is also
+# unvalidated. If it's not valid in-RDRAM, skip just that slot entry —
+# increment index $a2 and continue at L_8006452C, like the function's own
+# "inactive entry" paths.
+[[patches.instruction]]
+func = "func_80064488"
+vram = 0x800644E0
+value = 0x00000000
+[[patches.hook]]
+func = "func_80064488"
+before_vram = 0x800644E0
+text = '''{
+    if (((uint32_t)(uint64_t)ctx->r16 - 0x80000000u) >= 0x800000u) {
+        ctx->r6 = ADD32(ctx->r6, 0x1);
+        goto L_8006452C;
+    }
+    ctx->r2 = MEM_W(ctx->r16, 0x14);
+}'''
 
 # saveServiceWorker (was func_8006F2CC) is the save/account service-worker
 # thread. Registered by registerSaveService (func_8006EF98) with key=4. Calls
@@ -1007,42 +1264,43 @@ text = '''{ if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF8000000
 # bytes from previous allocations. The linked-list walker's `bne $v0, $zero`
 # treats 0xFFFFFFFF as a valid link → walks off into garbage. Normalize
 # 0xFFFFFFFF→0 right after each load so the bne behaves like the original.
-[[patches.hook]]
-func = "func_8003EC10"
-before_vram = 0x8003ECB8
-text = '''{ if ((uint32_t)(uint64_t)ctx->r2 == 0xFFFFFFFFu) ctx->r2 = 0; }'''
-
-[[patches.hook]]
-func = "func_8003EC10"
-before_vram = 0x8003ECC4
-text = '''{ if ((uint32_t)(uint64_t)ctx->r2 == 0xFFFFFFFFu) ctx->r2 = 0; }'''
-
-[[patches.hook]]
-func = "func_8003EC10"
-before_vram = 0x8003ED18
-text = '''{ if ((uint32_t)(uint64_t)ctx->r2 == 0xFFFFFFFFu) ctx->r2 = 0; }'''
-
-# func_8003EC10 L_8003ECFC: skip lb when next-pointer is non-canonical.
-# Replaces `lb $v0, 0x0($a2)` at 0x8003ED04. Bypass to L_8003ED58 (skip the
-# whole comparison block) when $a2 (next ptr) isn't a real KSEG0 pointer.
-[[patches.instruction]]
-func = "func_8003EC10"
-vram = 0x8003ED04
-value = 0x00000000
-[[patches.hook]]
-func = "func_8003EC10"
-before_vram = 0x8003ED04
-text = '''{ if (((uint64_t)ctx->r6 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) goto L_8003ED58; ctx->r2 = MEM_B(ctx->r6, 0x0); }'''
-
-# func_8003EC10 0x8003ED3C: skip `sw $a1, 0x44($v0)` when $v0 is non-canonical.
-[[patches.instruction]]
-func = "func_8003EC10"
-vram = 0x8003ED3C
-value = 0x00000000
-[[patches.hook]]
-func = "func_8003EC10"
-before_vram = 0x8003ED3C
-text = '''{ if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) MEM_W(0x44, ctx->r2) = ctx->r5; }'''
+# GUARD EXPERIMENT 2026-05-16: all func_8003EC10 cinematic linked-list guards
+# disabled. The 0xFFFFFFFF->0 normalization is the prime "fighting the game"
+# suspect — with rs_malloc zero-init, 0xFFFFFFFF can only be a value the game
+# itself wrote, possibly as a real sentinel. Instruction-NOP patches removed
+# too so the original lb/sw run.
+#[[patches.hook]]
+#func = "func_8003EC10"
+#before_vram = 0x8003ECB8
+#text = '''{ if ((uint32_t)(uint64_t)ctx->r2 == 0xFFFFFFFFu) ctx->r2 = 0; }'''
+#
+#[[patches.hook]]
+#func = "func_8003EC10"
+#before_vram = 0x8003ECC4
+#text = '''{ if ((uint32_t)(uint64_t)ctx->r2 == 0xFFFFFFFFu) ctx->r2 = 0; }'''
+#
+#[[patches.hook]]
+#func = "func_8003EC10"
+#before_vram = 0x8003ED18
+#text = '''{ if ((uint32_t)(uint64_t)ctx->r2 == 0xFFFFFFFFu) ctx->r2 = 0; }'''
+#
+#[[patches.instruction]]
+#func = "func_8003EC10"
+#vram = 0x8003ED04
+#value = 0x00000000
+#[[patches.hook]]
+#func = "func_8003EC10"
+#before_vram = 0x8003ED04
+#text = '''{ if (((uint64_t)ctx->r6 & 0xFFFFFFFFE0000000ULL) != 0xFFFFFFFF80000000ULL) goto L_8003ED58; ctx->r2 = MEM_B(ctx->r6, 0x0); }'''
+#
+#[[patches.instruction]]
+#func = "func_8003EC10"
+#vram = 0x8003ED3C
+#value = 0x00000000
+#[[patches.hook]]
+#func = "func_8003EC10"
+#before_vram = 0x8003ED3C
+#text = '''{ if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) MEM_W(0x44, ctx->r2) = ctx->r5; }'''
 
 # --- Cinematic inner-loop scrub (func_800A5D80) ---
 # At L_800A6024 (loop top), the inlined dequeue pattern in 100+ places reads
@@ -1125,22 +1383,24 @@ text = '''{ uint32_t v0 = (uint32_t)(uint64_t)ctx->r2; if (v0 < 0x80000000u || v
 # Pattern: $v0 = MEM_W($a2+0x50); $v0 = MEM_W($v0); $f2 = MEM_W($v0+0x44).
 # When the loaded $v0 isn't KSEG0, treat it as null → f2 = 0 (no scaling).
 # Replaces 2 instructions (the chain deref and the f2 load).
-[[patches.instruction]]
-func = "cutsceneDispatchSlotsByFlag"
-vram = 0x800A87A0
-value = 0x00000000
-[[patches.instruction]]
-func = "cutsceneDispatchSlotsByFlag"
-vram = 0x800A87A8
-value = 0x00000000
-[[patches.hook]]
-func = "cutsceneDispatchSlotsByFlag"
-before_vram = 0x800A87A0
-text = '''{ if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) { ctx->r2 = MEM_W(ctx->r2, 0x0); } else { ctx->r2 = 0; } }'''
-[[patches.hook]]
-func = "cutsceneDispatchSlotsByFlag"
-before_vram = 0x800A87A8
-text = '''{ if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) { ctx->f2.u32l = MEM_W(ctx->r2, 0x44); } else { ctx->f2.u32l = 0; } }'''
+# GUARD EXPERIMENT 2026-05-16: cutsceneDispatchSlotsByFlag chain-deref guard
+# disabled (instruction NOPs + hooks both removed so the original chain runs).
+#[[patches.instruction]]
+#func = "cutsceneDispatchSlotsByFlag"
+#vram = 0x800A87A0
+#value = 0x00000000
+#[[patches.instruction]]
+#func = "cutsceneDispatchSlotsByFlag"
+#vram = 0x800A87A8
+#value = 0x00000000
+#[[patches.hook]]
+#func = "cutsceneDispatchSlotsByFlag"
+#before_vram = 0x800A87A0
+#text = '''{ if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) { ctx->r2 = MEM_W(ctx->r2, 0x0); } else { ctx->r2 = 0; } }'''
+#[[patches.hook]]
+#func = "cutsceneDispatchSlotsByFlag"
+#before_vram = 0x800A87A8
+#text = '''{ if (((uint64_t)ctx->r2 & 0xFFFFFFFFE0000000ULL) == 0xFFFFFFFF80000000ULL) { ctx->f2.u32l = MEM_W(ctx->r2, 0x44); } else { ctx->f2.u32l = 0; } }'''
 
 # --- Chain-deref guard (func_80047368) — struct-table walk ---
 # Replaces `lhu $s4, 0x0($a1)` at 0x80047538 with conditional halfword load.

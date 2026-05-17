@@ -24,7 +24,43 @@ enum class JalResolutionResult {
 JalResolutionResult resolve_jal(const N64Recomp::Context& context, size_t cur_section_index, uint32_t target_func_vram, size_t& matched_function_index) {
     // Skip resolution if all function calls should use lookup and just return Ambiguous.
     if (context.use_lookup_for_all_function_calls) {
-        return JalResolutionResult::Ambiguous;
+        const auto vram_find = context.functions_by_vram.find(target_func_vram);
+        if (vram_find != context.functions_by_vram.end()) {
+            // reimplemented/ignored functions are runtime-provided (libultra, libc,
+            // etc.) and have no entry in the runtime func_map, so a LOOKUP_FUNC on
+            // them would fail. Resolve them to a direct call to the runtime's
+            // _recomp implementation instead.
+            for (size_t candidate_index : vram_find->second) {
+                const auto& candidate = context.functions[candidate_index];
+                if (candidate.reimplemented || candidate.ignored) {
+                    matched_function_index = candidate_index;
+                    return JalResolutionResult::Match;
+                }
+            }
+            // If any candidate lives in an overlay section — a section whose load
+            // address is shared with another section, i.e. alternate overlays that
+            // swap in at the same vram — the live overlay's version must be picked
+            // at runtime, so force a func_map lookup. Targets in ordinary sections
+            // fall through to normal resolution and stay direct calls, so only
+            // overlay calls pay the per-call lookup cost.
+            for (size_t candidate_index : vram_find->second) {
+                uint16_t sec_idx = context.functions[candidate_index].section_index;
+                if (sec_idx >= context.sections.size()) {
+                    continue;
+                }
+                uint32_t sec_addr = context.sections[sec_idx].ram_addr;
+                int sharing_sections = 0;
+                for (const auto& other : context.sections) {
+                    if (other.ram_addr == sec_addr) {
+                        sharing_sections++;
+                    }
+                }
+                if (sharing_sections > 1) {
+                    return JalResolutionResult::Ambiguous;
+                }
+            }
+        }
+        // Fall through to normal resolution for unambiguous (non-overlay) targets.
     }
 
     // Look for symbols with the target vram address

@@ -5439,14 +5439,17 @@ L_800916E0:
     ctx->r2 = S32(0X8015 << 16);
     // 0x80091794: lw          $v0, -0x6630($v0)
     ctx->r2 = MEM_W(ctx->r2, -0X6630);
-    // 0x80091798: jalr        $v0
+    {
+    uint32_t cb = (uint32_t)(uint64_t)ctx->r2;
+    if (cb >= 0x80000400u && cb < 0x80110000u) {
+        ctx->r4 = ctx->r16;   // delay slot: a0 = s0
+        LOOKUP_FUNC(ctx->r2)(rdram, ctx);
+    }
+}
+    // 0x80091798: nop
+
     // 0x8009179C: addu        $a0, $s0, $zero
     ctx->r4 = ADD32(ctx->r16, 0);
-    LOOKUP_FUNC(ctx->r2)(rdram, ctx);
-        goto after_23;
-    // 0x8009179C: addu        $a0, $s0, $zero
-    ctx->r4 = ADD32(ctx->r16, 0);
-    after_23:
     // 0x800917A0: addiu       $v0, $zero, 0x1
     ctx->r2 = ADD32(0, 0X1);
     // 0x800917A4: lui         $at, 0x8015
@@ -5480,10 +5483,10 @@ L_800917AC:
     // 0x800917D4: nop
 
     func_80097DA8(rdram, ctx);
-        goto after_24;
+        goto after_23;
     // 0x800917D4: nop
 
-    after_24:
+    after_23:
     // 0x800917D8: j           L_800917E8
     // 0x800917DC: nop
 
@@ -5500,10 +5503,10 @@ L_800917E8:
     // 0x800917EC: nop
 
     getTimeSinceLastFrame(rdram, ctx);
-        goto after_25;
+        goto after_24;
     // 0x800917EC: nop
 
-    after_25:
+    after_24:
     // 0x800917F0: lui         $at, 0x800A
     ctx->r1 = S32(0X800A << 16);
     // 0x800917F4: sw          $v0, 0x1778($at)
@@ -5585,10 +5588,10 @@ L_80091814:
     // 0x80091858: nop
 
     osGetTime_recomp(rdram, ctx);
-        goto after_26;
+        goto after_25;
     // 0x80091858: nop
 
-    after_26:
+    after_25:
     // 0x8009185C: subu        $v1, $v1, $s6
     ctx->r3 = SUB32(ctx->r3, ctx->r22);
     // 0x80091860: lui         $at, 0x8015
@@ -5599,10 +5602,10 @@ L_80091814:
     // 0x8009186C: nop
 
     factor5QueueSignal(rdram, ctx);
-        goto after_27;
+        goto after_26;
     // 0x8009186C: nop
 
-    after_27:
+    after_26:
     // 0x80091870: lw          $ra, 0x3C($sp)
     ctx->r31 = MEM_W(ctx->r29, 0X3C);
     // 0x80091874: lw          $s6, 0x38($sp)

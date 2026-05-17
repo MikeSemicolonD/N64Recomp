@@ -318,7 +318,8 @@ int main(int argc, char** argv) {
     ignored_syms_set.insert(config.ignored_funcs.begin(), config.ignored_funcs.end());
 
     N64Recomp::Context context{};
-    
+    context.use_lookup_for_all_function_calls = config.use_lookup_for_all_function_calls;
+
     if (!config.elf_path.empty() && !config.symbols_file_path.empty()) {
         exit_failure("Config file cannot provide both an elf and a symbols file\n");
     }

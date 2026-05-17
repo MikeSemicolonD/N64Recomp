@@ -5159,7 +5159,7 @@ L_80046F40:
     // 0x80046F64: jal         0x800AA870
     // 0x80046F68: nop
 
-    parseDatEventTriggers(rdram, ctx);
+    LOOKUP_FUNC(0x800AA870)(rdram, ctx);
         goto after_12;
     // 0x80046F68: nop
 
@@ -5265,7 +5265,7 @@ L_80046FA0:
     // 0x80046FE8: jal         0x800AE98C
     // 0x80046FEC: andi        $a0, $a0, 0xFF
     ctx->r4 = ctx->r4 & 0XFF;
-    getAssetNameForNpcType(rdram, ctx);
+    LOOKUP_FUNC(0x800AE98C)(rdram, ctx);
         goto after_14;
     // 0x80046FEC: andi        $a0, $a0, 0xFF
     ctx->r4 = ctx->r4 & 0XFF;
@@ -6773,7 +6773,7 @@ L_800477F4:
     // 0x80047818: jal         0x800AA850
     // 0x8004781C: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
-    func_800AA850(rdram, ctx);
+    LOOKUP_FUNC(0x800AA850)(rdram, ctx);
         goto after_0;
     // 0x8004781C: addu        $a3, $zero, $zero
     ctx->r7 = ADD32(0, 0);
@@ -7151,7 +7151,7 @@ L_80047A18:
     // 0x80047A18: jal         0x800AEA18
     // 0x80047A1C: nop
 
-    func_800AEA18(rdram, ctx);
+    LOOKUP_FUNC(0x800AEA18)(rdram, ctx);
         goto after_14;
     // 0x80047A1C: nop
 
@@ -7837,7 +7837,7 @@ L_80047D88:
     // 0x80047D88: jal         0x800AEA18
     // 0x80047D8C: nop
 
-    func_800AEA18(rdram, ctx);
+    LOOKUP_FUNC(0x800AEA18)(rdram, ctx);
         goto after_1;
     // 0x80047D8C: nop
 
@@ -22880,7 +22880,7 @@ L_8004CF0C:
     // 0x8004CF60: jal         0x800AA350
     // 0x8004CF64: addu        $a0, $s2, $zero
     ctx->r4 = ADD32(ctx->r18, 0);
-    clampVec3ToUnitIfLongerThan(rdram, ctx);
+    LOOKUP_FUNC(0x800AA350)(rdram, ctx);
         goto after_8;
     // 0x8004CF64: addu        $a0, $s2, $zero
     ctx->r4 = ADD32(ctx->r18, 0);
@@ -22921,7 +22921,7 @@ L_8004CF0C:
     // 0x8004CF98: jal         0x800AA3E0
     // 0x8004CF9C: swc1        $f0, 0x3C($sp)
     MEM_W(0X3C, ctx->r29) = ctx->f0.u32l;
-    func_800AA3E0(rdram, ctx);
+    LOOKUP_FUNC(0x800AA3E0)(rdram, ctx);
         goto after_9;
     // 0x8004CF9C: swc1        $f0, 0x3C($sp)
     MEM_W(0X3C, ctx->r29) = ctx->f0.u32l;

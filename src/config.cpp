@@ -376,6 +376,14 @@ N64Recomp::Config::Config(const char* path) {
             use_absolute_symbols = false;
         }
 
+        std::optional<bool> use_lookup_for_all_function_calls_opt = input_data["use_lookup_for_all_function_calls"].value<bool>();
+        if (use_lookup_for_all_function_calls_opt.has_value()) {
+            use_lookup_for_all_function_calls = use_lookup_for_all_function_calls_opt.value();
+        }
+        else {
+            use_lookup_for_all_function_calls = false;
+        }
+
         // Manual functions (optional)
         toml::node_view manual_functions_data = input_data["manual_funcs"];
         if (manual_functions_data.is_array()) {

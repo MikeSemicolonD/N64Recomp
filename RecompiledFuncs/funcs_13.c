@@ -14822,7 +14822,7 @@ L_8005E450:
     // 0x8005E460: jal         0x800EFD6C
     // 0x8005E464: addiu       $a0, $zero, 0xFA
     ctx->r4 = ADD32(0, 0XFA);
-    noopHandler(rdram, ctx);
+    LOOKUP_FUNC(0x800EFD6C)(rdram, ctx);
         goto after_1;
     // 0x8005E464: addiu       $a0, $zero, 0xFA
     ctx->r4 = ADD32(0, 0XFA);
@@ -14869,7 +14869,7 @@ L_8005E494:
     // 0x8005E4A4: jal         0x800EFD6C
     // 0x8005E4A8: addiu       $a0, $zero, 0xFA
     ctx->r4 = ADD32(0, 0XFA);
-    noopHandler(rdram, ctx);
+    LOOKUP_FUNC(0x800EFD6C)(rdram, ctx);
         goto after_2;
     // 0x8005E4A8: addiu       $a0, $zero, 0xFA
     ctx->r4 = ADD32(0, 0XFA);
@@ -14945,7 +14945,7 @@ L_8005E4FC:
     // 0x8005E50C: jal         0x800EFD6C
     // 0x8005E510: addiu       $a0, $zero, 0xFA
     ctx->r4 = ADD32(0, 0XFA);
-    noopHandler(rdram, ctx);
+    LOOKUP_FUNC(0x800EFD6C)(rdram, ctx);
         goto after_3;
     // 0x8005E510: addiu       $a0, $zero, 0xFA
     ctx->r4 = ADD32(0, 0XFA);
@@ -15074,7 +15074,7 @@ L_8005E5D0:
     // 0x8005E5E0: jal         0x800EFD6C
     // 0x8005E5E4: addiu       $a0, $zero, 0xFA
     ctx->r4 = ADD32(0, 0XFA);
-    noopHandler(rdram, ctx);
+    LOOKUP_FUNC(0x800EFD6C)(rdram, ctx);
         goto after_4;
     // 0x8005E5E4: addiu       $a0, $zero, 0xFA
     ctx->r4 = ADD32(0, 0XFA);
@@ -18413,7 +18413,7 @@ RECOMP_FUNC void func_8005F6A8(uint8_t* rdram, recomp_context* ctx) {
     // 0x8005F758: jal         0x800F15B8
     // 0x8005F75C: sb          $v0, 0x32($v1)
     MEM_B(0X32, ctx->r3) = ctx->r2;
-    func_800F15B8(rdram, ctx);
+    LOOKUP_FUNC(0x800F15B8)(rdram, ctx);
         goto after_0;
     // 0x8005F75C: sb          $v0, 0x32($v1)
     MEM_B(0X32, ctx->r3) = ctx->r2;

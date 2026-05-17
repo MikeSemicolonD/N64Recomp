@@ -140,6 +140,16 @@ L_80064480:
 RECOMP_FUNC void func_80064488(uint8_t* rdram, recomp_context* ctx) {
     uint64_t hi = 0, lo = 0, result = 0;
     int c1cs = 0;
+    {
+    uint32_t a0 = (uint32_t)(uint64_t)ctx->r4;
+    if ((a0 - 0x80000000u) >= 0x800000u) {
+        return;
+    }
+    uint32_t tbl_base = (uint32_t)MEM_W(ctx->r4, 0x0);
+    if ((tbl_base - 0x80000000u) >= 0x800000u) {
+        return;
+    }
+}
     // 0x80064488: addiu       $sp, $sp, -0x20
     ctx->r29 = ADD32(ctx->r29, -0X20);
     // 0x8006448C: sw          $s1, 0x14($sp)
@@ -199,8 +209,15 @@ L_800644C4:
     skip_0:
     // 0x800644DC: lw          $s0, 0x0($v1)
     ctx->r16 = MEM_W(ctx->r3, 0X0);
-    // 0x800644E0: lw          $v0, 0x14($s0)
-    ctx->r2 = MEM_W(ctx->r16, 0X14);
+    {
+    if (((uint32_t)(uint64_t)ctx->r16 - 0x80000000u) >= 0x800000u) {
+        ctx->r6 = ADD32(ctx->r6, 0x1);
+        goto L_8006452C;
+    }
+    ctx->r2 = MEM_W(ctx->r16, 0x14);
+}
+    // 0x800644E0: nop
+
     // 0x800644E4: andi        $v0, $v0, 0x1
     ctx->r2 = ctx->r2 & 0X1;
     // 0x800644E8: beq         $v0, $zero, L_800644FC
@@ -1809,7 +1826,7 @@ L_80064D48:
     // 0x80064D48: jal         0x800F9E40
     // 0x80064D4C: addiu       $a0, $a0, -0x45F4
     ctx->r4 = ADD32(ctx->r4, -0X45F4);
-    load_model_animation(rdram, ctx);
+    LOOKUP_FUNC(0x800F9E40)(rdram, ctx);
         goto after_8;
     // 0x80064D4C: addiu       $a0, $a0, -0x45F4
     ctx->r4 = ADD32(ctx->r4, -0X45F4);
@@ -1819,7 +1836,7 @@ L_80064D48:
     // 0x80064D54: jal         0x800F9E40
     // 0x80064D58: addiu       $a0, $a0, -0x45E0
     ctx->r4 = ADD32(ctx->r4, -0X45E0);
-    load_model_animation(rdram, ctx);
+    LOOKUP_FUNC(0x800F9E40)(rdram, ctx);
         goto after_9;
     // 0x80064D58: addiu       $a0, $a0, -0x45E0
     ctx->r4 = ADD32(ctx->r4, -0X45E0);
@@ -1883,7 +1900,7 @@ L_80064DA4:
     // 0x80064DA4: jal         0x800F9E40
     // 0x80064DA8: addiu       $a0, $a0, -0x45BC
     ctx->r4 = ADD32(ctx->r4, -0X45BC);
-    load_model_animation(rdram, ctx);
+    LOOKUP_FUNC(0x800F9E40)(rdram, ctx);
         goto after_11;
     // 0x80064DA8: addiu       $a0, $a0, -0x45BC
     ctx->r4 = ADD32(ctx->r4, -0X45BC);
@@ -1893,7 +1910,7 @@ L_80064DA4:
     // 0x80064DB0: jal         0x800F9E40
     // 0x80064DB4: addiu       $a0, $a0, -0x45A8
     ctx->r4 = ADD32(ctx->r4, -0X45A8);
-    load_model_animation(rdram, ctx);
+    LOOKUP_FUNC(0x800F9E40)(rdram, ctx);
         goto after_12;
     // 0x80064DB4: addiu       $a0, $a0, -0x45A8
     ctx->r4 = ADD32(ctx->r4, -0X45A8);
@@ -1903,7 +1920,7 @@ L_80064DA4:
     // 0x80064DBC: jal         0x800F9E40
     // 0x80064DC0: addiu       $a0, $a0, -0x4590
     ctx->r4 = ADD32(ctx->r4, -0X4590);
-    load_model_animation(rdram, ctx);
+    LOOKUP_FUNC(0x800F9E40)(rdram, ctx);
         goto after_13;
     // 0x80064DC0: addiu       $a0, $a0, -0x4590
     ctx->r4 = ADD32(ctx->r4, -0X4590);
@@ -1948,7 +1965,7 @@ L_80064DF4:
     // 0x80064DF8: jal         0x800F9E40
     // 0x80064DFC: addiu       $a0, $a0, -0x4568
     ctx->r4 = ADD32(ctx->r4, -0X4568);
-    load_model_animation(rdram, ctx);
+    LOOKUP_FUNC(0x800F9E40)(rdram, ctx);
         goto after_14;
     // 0x80064DFC: addiu       $a0, $a0, -0x4568
     ctx->r4 = ADD32(ctx->r4, -0X4568);
@@ -1958,7 +1975,7 @@ L_80064DF4:
     // 0x80064E04: jal         0x800F9E40
     // 0x80064E08: addiu       $a0, $a0, -0x4554
     ctx->r4 = ADD32(ctx->r4, -0X4554);
-    load_model_animation(rdram, ctx);
+    LOOKUP_FUNC(0x800F9E40)(rdram, ctx);
         goto after_15;
     // 0x80064E08: addiu       $a0, $a0, -0x4554
     ctx->r4 = ADD32(ctx->r4, -0X4554);
@@ -1968,7 +1985,7 @@ L_80064DF4:
     // 0x80064E10: jal         0x800F9E40
     // 0x80064E14: addiu       $a0, $a0, -0x453C
     ctx->r4 = ADD32(ctx->r4, -0X453C);
-    load_model_animation(rdram, ctx);
+    LOOKUP_FUNC(0x800F9E40)(rdram, ctx);
         goto after_16;
     // 0x80064E14: addiu       $a0, $a0, -0x453C
     ctx->r4 = ADD32(ctx->r4, -0X453C);
